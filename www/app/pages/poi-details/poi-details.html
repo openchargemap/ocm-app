@@ -5,32 +5,41 @@
 </ion-navbar>
 <ion-content class="poi-details" padding>
     <ion-card>
- <icon heart></icon> 
-  <ion-card-content>
-    <h2 class="card-title">
-      OCM-{{selectedItem.ID}}: {{selectedItem.AddressInfo.Title}}
+        <icon heart></icon>
+        <ion-card-content>
+            <h2 class="card-title">
+      OCM-{{poi.ID}}: {{poi.AddressInfo.Title}}
     </h2>
-    <p>
-      {{selectedItem.AddressInfo.AddresssLine1}}
-      {{selectedItem.AddressInfo.AddresssLine2}}
-      {{selectedItem.AddressInfo.Town}}
-    </p>
-  </ion-card-content>
-</ion-card>
+            <p>
+                {{poi.AddressInfo.AddresssLine1}} {{poi.AddressInfo.AddresssLine2}} {{poi.AddressInfo.Town}}
+            </p>
+        </ion-card-content>
+    </ion-card>
 
-<h2>Equipment</h2>
-<ion-list>
+    <h2>Equipment</h2>
+    <ion-list>
 
-  <ion-item *ngFor="#item of selectedItem.Connections">
-    <ion-avatar item-left>
-      <icon heart></icon> 
-    </ion-avatar>
-    <h2>{{item.ConnectionType.Title}}</h2>
-    <h3>OCM-CN-{{item.ID}}</h3>
-    <p>{{item.Comments}}</p>
-  </ion-item>
+        <ion-item *ngFor="#item of poi.Connections">
+            <ion-avatar item-left>
+                <icon heart></icon>
+            </ion-avatar>
+            <h2>{{item.ConnectionType.Title}}</h2>
+            <h3>OCM-CN-{{item.ID}}</h3>
+            <p>{{item.Comments}}</p>
+        </ion-item>
 
-</ion-list>
+    </ion-list>
 
-<button >Edit</button>
+    <button>Edit</button>
+    <ion-card>
+        
+        <ion-card-content>
+            <h2 class="card-title">
+     About This Information
+    </h2>
+            <p>
+                Data Provider: {{poi.DataProvider.Title}}
+            </p>
+        </ion-card-content>
+    </ion-card>
 </ion-content>

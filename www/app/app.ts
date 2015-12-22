@@ -1,8 +1,8 @@
 
 import {App, Platform, Events} from 'ionic-framework/ionic';
-import {Search} from './pages/search/search';
-import {Journeys} from './pages/journeys/journeys';
-import {Page3} from './pages/page3/page3';
+import {SearchPage} from './pages/search/search';
+import {JourneysPage} from './pages/journeys/journeys';
+import {SettingsPage} from './pages/settings/settings';
 import {POIDetailsPage} from './pages/poi-details/poi-details';
 
 declare var plugin: any;
@@ -19,9 +19,9 @@ export class MyApp {
     constructor(platform: Platform, events: Events) {
         // this tells the tabs component which Pages
         // should be each tab's root Page
-        this.tabSearchRoot = Search;
-        this.tabJourneyRoot = Journeys;
-        this.tabSettingsRoot = Page3;
+        this.tabSearchRoot = SearchPage;
+        this.tabJourneyRoot = JourneysPage;
+        this.tabSettingsRoot = SettingsPage;
 
         platform.ready().then(() => {
             // Do any necessary cordova or native calls here now that the platform is ready

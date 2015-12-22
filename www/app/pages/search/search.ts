@@ -11,7 +11,7 @@ import {POIDetailsPage} from '../poi-details/poi-details';
     templateUrl: 'app/pages/search/search.html',
 })
 
-export class Search {
+export class SearchPage {
     mapping: Mapping;
 
     map: any;
