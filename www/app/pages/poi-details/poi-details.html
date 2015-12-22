@@ -1,0 +1,36 @@
+<ion-navbar *navbar>
+    <ion-title>
+        Details
+    </ion-title>
+</ion-navbar>
+<ion-content class="poi-details" padding>
+    <ion-card>
+ <icon heart></icon> 
+  <ion-card-content>
+    <h2 class="card-title">
+      OCM-{{selectedItem.ID}}: {{selectedItem.AddressInfo.Title}}
+    </h2>
+    <p>
+      {{selectedItem.AddressInfo.AddresssLine1}}
+      {{selectedItem.AddressInfo.AddresssLine2}}
+      {{selectedItem.AddressInfo.Town}}
+    </p>
+  </ion-card-content>
+</ion-card>
+
+<h2>Equipment</h2>
+<ion-list>
+
+  <ion-item *ngFor="#item of selectedItem.Connections">
+    <ion-avatar item-left>
+      <icon heart></icon> 
+    </ion-avatar>
+    <h2>{{item.ConnectionType.Title}}</h2>
+    <h3>OCM-CN-{{item.ID}}</h3>
+    <p>{{item.Comments}}</p>
+  </ion-item>
+
+</ion-list>
+
+<button >Edit</button>
+</ion-content>
