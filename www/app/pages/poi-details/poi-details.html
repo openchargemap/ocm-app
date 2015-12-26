@@ -4,26 +4,45 @@
     </ion-title>
 </ion-navbar>
 <ion-content class="poi-details" padding>
+    <ion-row>
+        <ion-col>
     <ion-card>
-        <icon heart></icon>
+        <img src="https://maps.googleapis.com/maps/api/staticmap?center=51.577389578844446,-0.22380352020263672&amp;zoom=14&amp;size=640x200&amp;maptype=roadmap&amp;markers=color:blue%7Clabel:A%7C{{Latitude+','+Longitude}}"/>
+        <ion-card-header> OCM-{{poi.ID}}: {{poi.AddressInfo.Title}}</ion-card-header>
+       
         <ion-card-content>
-            <h2 class="card-title">
-      OCM-{{poi.ID}}: {{poi.AddressInfo.Title}}
-    </h2>
-            <p>
+           
+            
+            
                 {{poi.AddressInfo.AddresssLine1}} {{poi.AddressInfo.AddresssLine2}} {{poi.AddressInfo.Town}}
-            </p>
+            
         </ion-card-content>
     </ion-card>
-
-    <h2>Equipment</h2>
+        </ion-col>
+        <ion-col>
+    
     <ion-list>
 
         <ion-item *ngFor="#item of poi.Connections">
             <ion-avatar item-left>
-                <icon heart></icon>
+                <icon flash></icon>
             </ion-avatar>
             <h2>{{item.ConnectionType.Title}}</h2>
+            <h3>OCM-CN-{{item.ID}}</h3>
+            <p>{{item.Comments}}</p>
+        </ion-item>
+
+    </ion-list>
+        </ion-col>
+    </ion-row>
+    <h2>Comments</h2>
+    <ion-list>
+
+        <ion-item *ngFor="#item of poi.UserComments">
+            <ion-avatar item-left>
+                <icon user></icon>
+            </ion-avatar>
+            <h2>{{item.Commentitle}}</h2>
             <h3>OCM-CN-{{item.ID}}</h3>
             <p>{{item.Comments}}</p>
         </ion-item>
@@ -32,14 +51,18 @@
 
     <button>Edit</button>
     <ion-card>
-        
+
         <ion-card-content>
-            <h2 class="card-title">
-     About This Information
-    </h2>
+            <h2 class="card-title">Data Provider </h2>
             <p>
-                Data Provider: {{poi.DataProvider.Title}}
+                Provided by: {{poi.DataProvider.Title}}</p>
+               
+            <p>
+                {{poi.DataProvider.WebsiteURL}}
             </p>
+            <p>{{poi.DataProvider.License}}</p>
+            
+           
         </ion-card-content>
     </ion-card>
 </ion-content>

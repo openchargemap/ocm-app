@@ -25,10 +25,10 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
     private markerList: collections.Dictionary<number, google.maps.Marker>;
     private mapManipulationCallback: any;
 
-private events:Events;
+    private events: Events;
 
     /** @constructor */
-    constructor(events:Events) {
+    constructor(events: Events) {
         super();
         this.events = events;
         this.mapAPIType = MappingAPI.GOOGLE_WEB;
@@ -40,11 +40,11 @@ private events:Events;
     * Performs one-time init of map object for this map provider
     * @param mapcanvasID  dom element for map canvas
     * @param mapConfig  general map config/options
-    * @param mapManipulationCallback  custom handler for map zoom/drag events
+    
     */
-    initMap(mapCanvasID, mapConfig: MapOptions, mapManipulationCallback: any, parentMapManager: Mapping) {
+    initMap(mapCanvasID, mapConfig: MapOptions, parentMapManager: Mapping) {
         this.mapCanvasID = mapCanvasID;
-        this.mapManipulationCallback = mapManipulationCallback;
+
 
         var apiLoaded = true;
         if (typeof google === 'undefined') {
@@ -88,11 +88,18 @@ private events:Events;
                     this.map = new google.maps.Map(mapCanvas, mapOptions);
 
                     //TODO: events for map manipulation to perform search
-                    google.maps.event.addListener(this.map, 'dragend', function () { mapManipulationCallback("drag"); });
-                    google.maps.event.addListener(this.map, 'zoom_changed', function () { mapManipulationCallback("zoom"); });
+                    var mapProviderContext = this;
+                    google.maps.event.addListener(this.map, 'dragend', function() {
+                        mapProviderContext.events.publish('ocm:mapping:dragend');
+                    });
+                    
+                    google.maps.event.addListener(this.map, 'zoom_changed', function() { 
+                        mapProviderContext.events.publish('ocm:mapping:zoom');
+                    });
 
                     this.mapReady = true;
-                    parentMapManager.mapReady = true;
+                    
+                    this.events.publish('ocm:mapping:ready');
                 }
             }
         }
@@ -114,7 +121,7 @@ private events:Events;
         var map = this.map;
         var bounds = new google.maps.LatLngBounds();
         var markersAdded = 0;
-var mapProviderContext = this;
+        var mapProviderContext = this;
 
         //clear existing markers (if enabled)
         if (clearMarkersOnRefresh == true) {
@@ -127,7 +134,7 @@ var mapProviderContext = this;
             }
             this.markerList = new collections.Dictionary<number, google.maps.Marker>();
         }
-
+        var mapzoom = map.getZoom();
         if (poiList != null) {
             //render poi markers
             var poiCount = poiList.length;
@@ -141,6 +148,10 @@ var mapProviderContext = this;
                             //find if this poi already exists in the marker list
                             if (this.markerList.containsKey(poi.ID)) {
                                 addMarker = false;
+                                
+                                //set marker scale based on zoom?
+                                //var m = this.markerList.getValue(poi.ID);
+                                //if (m.set())
                             }
                         }
 
@@ -165,6 +176,7 @@ var mapProviderContext = this;
                                 null,
                                 new google.maps.Point(15, 45),
                                 new google.maps.Size(34, 50)
+                                //new google.maps.Size(17, 25)
                             );
 
                             var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
@@ -182,10 +194,10 @@ var mapProviderContext = this;
                             newMarker.poi = poi;
 
                             var anchorElement = document.getElementById("body");
-                            google.maps.event.addListener(newMarker, 'click', function () {
+                            google.maps.event.addListener(newMarker, 'click', function() {
                                 //broadcast details of selected POI
-                                mapProviderContext.events.publish('ocm:poi:selected',poi);
-                                
+                                mapProviderContext.events.publish('ocm:poi:selected', poi);
+
                             });
 
                             bounds.extend(newMarker.getPosition());
@@ -203,7 +215,7 @@ var mapProviderContext = this;
         var uiContext = this;
         //zoom to bounds of markers
         if (poiList != null && poiList.length > 0) {
-            if (parentContext!=null && !parentContext.appConfig.enableLiveMapQuerying) {
+            if (parentContext != null && !parentContext.appConfig.enableLiveMapQuerying) {
                 this.log("Fitting to marker bounds:" + bounds);
                 map.setCenter(bounds.getCenter());
                 this.log("zoom before fit bounds:" + map.getZoom());

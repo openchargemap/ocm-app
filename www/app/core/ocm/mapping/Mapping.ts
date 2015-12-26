@@ -114,7 +114,7 @@ export class Mapping extends Base {
     public mapCentreMarker: any;
     public mapsInitialised: boolean; //initial map setup initiated
     public mapAPIReady: boolean; //api loaded
-    public mapReady: boolean; //map ready for any api calls (initialisation completed)
+    
     public mapOptions: MapOptions;
     public markerClusterer: any;
     public markerList: Array<any>;
@@ -126,22 +126,22 @@ export class Mapping extends Base {
     private mapProvider: IMapProvider;
     private debouncedMapPositionUpdate: any;
 
-private events:Events;
+    private events: Events;
 
     /** @constructor */
     constructor(events: Events) {
         super();
-this.events=events;
+
+        this.events = events;
         this.mapOptions = new MapOptions();
 
         this.mapAPIReady = false;
         this.mapsInitialised = false;
-        this.mapReady = false;
-
+     
         this.setMapAPI(this.mapOptions.mapAPI);
 
         var mapManagerContext = this;
-        this.debouncedMapPositionUpdate = Utils.debounce(function () {
+        this.debouncedMapPositionUpdate = Utils.debounce(function() {
             mapManagerContext.log("signaling map position change:");
             if (mapManagerContext.mapProvider.mapReady) {
                 //create new latlng from map centre so that values get normalised to 180/-180
@@ -221,10 +221,10 @@ this.events=events;
                 if (mapManagerContext.mapCentreMarker != null) {
                     mapManagerContext.log("Updating search marker position");
                     mapManagerContext.mapCentreMarker.setPosition(searchPos);
-                    if (this.mapReady) map.refreshLayout();
+                    map.refreshLayout();
                     //mapManagerContext.mapCentreMarker.setMap(map);
                 } else {
-                    if (this.mapReady) {
+                   
                         mapManagerContext.log("Adding search marker position");
 
                         map.addMarker({
@@ -233,12 +233,12 @@ this.events=events;
                             title: "Tap to Searching from here, Drag to change position.",
                             content: 'Your search position'
                             // icon: "images/icons/compass.png"
-                        }, function (marker) {
+                        }, function(marker) {
                             mapManagerContext.mapCentreMarker = marker;
 
                             //marker click
-                            marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function (marker) {
-                                marker.getPosition(function (pos) {
+                            marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function(marker) {
+                                marker.getPosition(function(pos) {
                                     mapManagerContext.log("Search marker tapped, requesting search from current position.");
 
                                     mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
@@ -247,14 +247,14 @@ this.events=events;
                             });
 
                             //marker drag
-                            marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function (marker) {
-                                marker.getPosition(function (pos) {
+                            marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function(marker) {
+                                marker.getPosition(function(pos) {
                                     mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
                                     mapManagerContext.mapOptions.requestSearchUpdate = true;
                                 });
                             });
                         });
-                    }
+                    
                 }
             }
 
@@ -279,14 +279,14 @@ this.events=events;
                     });
                     infowindow.open(map, mapManagerContext.mapCentreMarker);
 
-                    google.maps.event.addListener(mapManagerContext.mapCentreMarker, 'click', function () {
+                    google.maps.event.addListener(mapManagerContext.mapCentreMarker, 'click', function() {
                         mapManagerContext.log("Search markers tapped, requesting search.");
                         var pos = mapManagerContext.mapCentreMarker.getPosition();
                         mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
                         mapManagerContext.mapOptions.requestSearchUpdate = true;
                     });
 
-                    google.maps.event.addListener(mapManagerContext.mapCentreMarker, 'dragend', function () {
+                    google.maps.event.addListener(mapManagerContext.mapCentreMarker, 'dragend', function() {
                         mapManagerContext.log("Search marker moved, requesting search.");
                         var pos = mapManagerContext.mapCentreMarker.getPosition();
                         mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
@@ -313,7 +313,7 @@ this.events=events;
     initMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser) {
         if (this.map == null) {
             this.map = this.createMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser, 13);
-            this.mapReady = true;
+            
         }
     }
 
@@ -403,7 +403,7 @@ this.events=events;
                                 marker._isClicked = false; //workaround for double click event
                                 marker.poi = poi;
                                 marker.on('click',
-                                    function (e) {
+                                    function(e) {
                                         if (this._isClicked == false) {
                                             this._isClicked = true;
                                             appcontext.showDetailsView(anchorElement, this.poi);
@@ -411,7 +411,7 @@ this.events=events;
 
                                             //workaround double click event by clearing clicked state after short time
                                             var mk = this;
-                                            setTimeout(function () { mk._isClicked = false; }, 300);
+                                            setTimeout(function() { mk._isClicked = false; }, 300);
                                         }
                                     });
 
@@ -425,7 +425,7 @@ this.events=events;
                 map.fitBounds(markerClusterGroup.getBounds());
 
                 //refresh map view
-                setTimeout(function () { map.invalidateSize(false); }, 300);
+                setTimeout(function() { map.invalidateSize(false); }, 300);
             }
         }
     }
@@ -462,9 +462,9 @@ this.events=events;
 
     updateMapSize() {
         if (this.mapProvider) {
-            if (this.mapProvider.mapReady) {
+            
                 this.mapProvider.refreshMapLayout();
-            }
+            
         }
     }
 
@@ -535,10 +535,11 @@ this.events=events;
         }
     }
 
-    hideMap() {
+    /*hideMap() {
         if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
             this.log("Debug: Hiding Map");
-            if (this.map != null && this.mapReady) {
+            
+            if (this.map != null) {
                 this.map.setVisible(false);
                 this.map.setClickable(false);
             }
@@ -560,15 +561,15 @@ this.events=events;
             }
         }
     }
-
+*/
     unfocusMap() {
-        if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE && this.mapReady) {
+        if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
             this.map.setClickable(false);
         }
     }
 
     focusMap() {
-        if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE && this.mapReady) {
+        if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
             this.map.setClickable(true);
         }
     }
@@ -579,6 +580,10 @@ this.events=events;
     getMapZoom(): number {
         //TODO: normalize zoom between providers?
         return this.mapProvider.getMapZoom();
+    }
+
+    getMapCenter(): GeoPosition {
+        return this.mapProvider.getMapCenter();
     }
 
     showPOIOnStaticMap(mapcanvasID: string, poi, includeMapLink: boolean = false, isRunningUnderCordova: boolean = false, mapWidth: number = 200, mapHeight: number = 200) {

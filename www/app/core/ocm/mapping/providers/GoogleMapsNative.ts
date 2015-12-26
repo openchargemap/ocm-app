@@ -85,7 +85,7 @@ export class GoogleMapsNative extends Base implements IMapProvider {
                     mapManagerContext.map.setDiv(mapCanvas);
                     mapManagerContext.map.setVisible(true);
                     mapManagerContext.mapReady = true;
-                    parentMapManager.mapReady = true;
+                   
                 });
             }
         } else {

@@ -7,7 +7,7 @@ module.exports = {
     'es6-shim/es6-shim.min',
     'reflect-metadata',
     'web-animations.min',
-    'zone.js',
+    path.normalize('zone.js/dist/zone-microtask'),
     path.join(__dirname, paths.wwwDir, paths.appDir, paths.appSrcModule)
   ],
   output: {

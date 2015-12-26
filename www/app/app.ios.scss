@@ -29,3 +29,12 @@
 // App iOS Only Sass
 // --------------------------------------------------
 // CSS that should only apply to the iOS app
+
+ 
+.toolbar[light] .toolbar-background{
+    background-color: #5f872a;
+    
+}
+.toolbar[light] .toolbar-title{
+    color:white;
+}

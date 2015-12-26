@@ -18,7 +18,7 @@ export class Base {
 
     public log(msg: string, level: LogLevel = LogLevel.VERBOSE) {
         if (this.enableLogging && console) {
-                
+
             console.log("[" + LogLevel[level] + "] {" + (new Date().toLocaleTimeString()) + "} " + msg);
         }
     }

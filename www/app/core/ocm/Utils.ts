@@ -115,7 +115,7 @@ export class Utils {
         return '<a target="_blank" href="' + url + '">' + (title != null ? title : url) + '</a>';
     }
 
-    static formatPOIAddress = function (poi, includeLineBreaks: boolean = true) {
+    static formatPOIAddress = function(poi, includeLineBreaks: boolean = true) {
         var output = "";
         if (includeLineBreaks) {
             output = "" + this.formatTextField(poi.AddressInfo.AddressLine1) +
@@ -137,7 +137,7 @@ export class Utils {
         return output;
     }
 
-    static formatStringArray = function (list: Array<string>, separator: string = ", ") {
+    static formatStringArray = function(list: Array<string>, separator: string = ", ") {
         if (list == null) return "";
         var output = "";
         for (var i = 0; i < list.length; i++) {
@@ -311,9 +311,9 @@ export class Utils {
     //http://davidwalsh.name/javascript-debounce-function
     static debounce(func, wait, immediate) {
         var timeout;
-        return function () {
+        return function() {
             var context = this, args = arguments;
-            var later = function () {
+            var later = function() {
                 timeout = null;
                 if (!immediate) func.apply(context, args);
             };
