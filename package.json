@@ -3,7 +3,7 @@
     "angular2": "^2.0.0-beta.0",
     "es6-promise": "3.0.2",
     "es6-shim": "0.33.13",
-    "ionic-framework": "^2.0.0-alpha.45",
+    "ionic-framework": "2.0.0-alpha.47",
     "reflect-metadata": "0.1.2",
     "rxjs": "5.0.0-beta.0",
     "typescript-collections": "^1.0.5",
@@ -11,11 +11,6 @@
   },
   "devDependencies": {
     "awesome-typescript-loader": "^0.15.9",
-    "del": "^2.2.0",
-    "gulp": "^3.9.0",
-    "gulp-autoprefixer": "^3.1.0",
-    "gulp-sass": "^2.1.0",
-    "gulp-watch": "^4.3.5",
     "strip-sourcemap-loader": "0.0.1",
     "typescript": "^1.7.3"
   },
@@ -23,9 +18,6 @@
   "description": "Global EV Charging",
   "cordovaPlugins": [],
   "cordovaPlatforms": [
-    {
-      "platform": "android",
-      "locator": "browser"
-    }
+    "android"
   ]
 }

@@ -1,0 +1,131 @@
+<ion-navbar *navbar>
+    <ion-title>
+        Details
+    </ion-title>
+</ion-navbar>
+
+
+<ion-content class="poi-details">
+
+    <div class="poi-heading">
+        <img src="https://maps.googleapis.com/maps/api/staticmap?center=51.577389578844446,-0.22380352020263672&amp;zoom=14&amp;size=640x100&amp;maptype=roadmap&amp;markers=color:blue%7Clabel:S%7C11211%7C11206%7C11222"
+        />
+
+
+
+        <h2>OCM-{{poi.ID}}: {{poi.AddressInfo.Title}}</h2>
+
+        <button small>
+            <icon create></icon> Edit
+        </button>
+        <button small>
+            <icon contact></icon> Comment
+        </button>
+        <button small>
+            <icon camera></icon> Add Photos
+        </button>
+    </div>
+
+    <div padding>
+        <div class="row">
+            <div class="left-col">
+                <div *ngIf="poi.AddressInfo.AddressLine1"> {{poi.AddressInfo.AddresssLine1}}</div>
+                <div *ngIf="poi.AddressInfo.AddressLine2"> {{poi.AddressInfo.AddresssLine2}}</div>
+                <div *ngIf="poi.AddressInfo.Town"> {{poi.AddressInfo.Town}}</div>
+                <div *ngIf="poi.AddressInfo.StateOrProvince"> {{poi.AddressInfo.StateOrProvince}}</div>
+                <div *ngIf="poi.AddressInfo.Postcode"> {{poi.AddressInfo.Postcode}}</div>
+                <div *ngIf="poi.AddressInfo.Country"> {{poi.AddressInfo.Country.Title}}</div>
+            </div>
+            <div class="right-col">
+
+
+                <div *ngIf="poi.AddressInfo.ContactTelephone1">
+                    <icon call></icon> {{poi.AddressInfo.ContactTelephone1}} </div>
+                <div *ngIf="poi.AddressInfo.ContactTelephone2">
+                    <icon call></icon> {{poi.AddressInfo.ContactTelephone2}} </div>
+                <div *ngIf="poi.AddressInfo.ContactEmail">
+                    <icon mail></icon> {{poi.AddressInfo.ContactEmail}} </div>
+                <div *ngIf="poi.AddressInfo.AccessComments">
+                    <icon key></icon> {{poi.AddressInfo.AccessComments}} </div>
+                <div *ngIf="poi.AddressInfo.RelatedURL">
+                    <icon globe></icon> <a target="_system" href="{{poi.AddressInfo.RelatedURL}}">{{poi.AddressInfo.RelatedURL}}</a>                    </div>
+
+            </div>
+        </div>
+        <h2><icon battery-charging></icon> Equipment</h2>
+
+        <ion-list>
+
+            <ion-item *ngFor="#item of poi.Connections">
+                <ion-avatar item-left>
+                    <icon flash></icon>
+                </ion-avatar>
+                <h2>{{item.ConnectionType?.Title}}</h2>
+                <p>{{item.PowerKW}} kW</p>
+
+                <p>
+                    <span *ngIf="item.Amps" class="details-minor">{{item.Amps}}A</span>
+                    <span *ngIf="item.Voltage" class="details-minor">{{item.Voltage}}V</span>
+                    <span *ngIf="item.CurrentType" class="details-minor">{{item.CurrentType?.Title}}</span>
+                    <!--  <div *ngIf="item.Comments">{{item.Comments}}</div>
+                <div>OCM-CN-{{item.ID}} {{item.Reference}}</div>
+            -->
+                </p>
+
+            </ion-item>
+
+        </ion-list>
+
+        <h2><icon contacts></icon> Comments</h2>
+        <ion-list>
+
+            <ion-item *ngFor="#item of poi.UserComments">
+                <ion-avatar item-left>
+                    <icon contact></icon>
+                    <div *ngIf="item.User">{{item.User.Username}}</div>
+                    <div *ngIf="!item.User">{{item.Username}}</div>
+                </ion-avatar>
+
+
+                <p>{{item.Comment}}</p>
+                <p *ngIf="item.CommentType">
+                    {{item.CommentType?.Title}}
+
+                </p>
+                <p *ngIf="item.Rating">{{item.Rating}} out of 5</p>
+                <p *ngIf="item.CheckinStatusType">
+
+                    {{item.CheckinStatusType.Title}}</p>
+            </ion-item>
+
+        </ion-list>
+
+        <h2><icon camera></icon> Photos</h2>
+
+
+        <ion-slides pager loop="true" autoplay="true">
+
+            <ion-slide *ngFor="#item of poi.MediaItems">
+                <h3>{{item.User.Username}}</h3>
+
+                <img src="{{item.ItemThumbnailURL}}" />
+                <p>{{item.Comment}}</p>
+            </ion-slide>
+
+
+
+        </ion-slides>
+
+        <h3>Additional Information</h3>
+
+
+        <p>
+            Data Provided by: {{poi.DataProvider?.Title}}</p>
+
+        <p>
+            {{poi.DataProvider.WebsiteURL}}
+        </p>
+        <p>{{poi.DataProvider.License}}</p>
+
+
+    </div>

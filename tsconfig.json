@@ -6,14 +6,13 @@
     "rootDir": ".",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": true,
-    "sourceRoot": "www/app",
+    "sourceMap": false,
+    "sourceRoot": "",
     "inlineSourceMap": false,
-    "inlineSources": false,
-    "declaration": true
+    "inlineSources": false
   },
   "files": [
-    "www/app/app.ts"
+    "app/app.ts"
   ],
   "exclude": [
     "node_modules"

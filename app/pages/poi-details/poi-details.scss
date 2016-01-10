@@ -1,0 +1,35 @@
+.poi-details {
+
+}
+
+.poi-heading{
+    background-color: #cadfaa;
+    margin:0;
+    padding:1em;
+    margin-top:-2em;
+    z-index:1000;
+}
+
+
+.left-col{
+    float:left;
+    width:50%;
+     overflow: auto;
+}
+.right-col{
+    float:right;
+    width:50%;
+     overflow: auto;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+   overflow: auto;
+   
+}
+.row {
+    margin-bottom:1em;
+    
+}
