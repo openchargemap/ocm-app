@@ -68,20 +68,20 @@ export class SearchPage implements OnInit {
         
         //first start up, get fresh core reference data, then we can start getting POI results nearby
         
-        /*
+        
         this.poiManager.fetchCoreReferenceData().then(() => {
             console.log("Got core ref data. Updating local POIs");
             var params = new POISearchParams();
             this.poiManager.fetchPOIList(params);
         });
-        */
         
+        /*
         var appContext = this;
          this.poiManager.populateTestData();
         var testPOI = this.getPOIByID(52224);
   
         setTimeout(function() { appContext.viewPOIDetails(testPOI); }, 1000);
-        
+        */
     }
 
     showPOIListOnMap(listType: string) {
