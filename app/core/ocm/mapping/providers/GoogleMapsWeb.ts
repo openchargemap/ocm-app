@@ -60,7 +60,7 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                 if (mapCanvas != null) {
                     (<any>google.maps).visualRefresh = true;
 
-                    mapCanvas.style.width = '99.5%';
+                    mapCanvas.style.width = '100%';
                     mapCanvas.style.height = Utils.getClientHeight().toString();
 
                     //create map
@@ -92,13 +92,13 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                     google.maps.event.addListener(this.map, 'dragend', function() {
                         mapProviderContext.events.publish('ocm:mapping:dragend');
                     });
-                    
-                    google.maps.event.addListener(this.map, 'zoom_changed', function() { 
+
+                    google.maps.event.addListener(this.map, 'zoom_changed', function() {
                         mapProviderContext.events.publish('ocm:mapping:zoom');
                     });
 
                     this.mapReady = true;
-                    
+
                     this.events.publish('ocm:mapping:ready');
                 }
             }

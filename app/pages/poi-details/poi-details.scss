@@ -3,33 +3,58 @@
 }
 
 .poi-heading{
-    background-color: #cadfaa;
+    background-color: #000000;
     margin:0;
-    padding:1em;
-    margin-top:-2em;
-    z-index:1000;
+   color:white;
+    
+    h2 {
+       
+    }
+    h2 small {
+    font-size:0.6em;
+    color:#c0c0c0; 
+    }
 }
 
+.poi-heading-info {
+    background-color: rgba(0, 0, 0, 0.19);
+     padding:1em;
+}
 
 .left-col{
     float:left;
     width:50%;
-     overflow: auto;
+    overflow: auto;
 }
 .right-col{
-    float:right;
+   float:right;
     width:50%;
      overflow: auto;
 }
 
 .row:after {
-  content: "";
+   content: "";
   display: table;
   clear: both;
    overflow: auto;
    
 }
 .row {
+  
     margin-bottom:1em;
     
+}
+
+@media screen and (max-width: 768px) {
+    .left-col{
+      
+    float:none;
+   width:100%;
+    }
+    .right-col{
+        margin-top:1em;
+    float:none;
+        width:100%;
+        
+    }
 }

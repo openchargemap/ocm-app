@@ -14,6 +14,7 @@ module.exports = {
     filename: 'app.bundle.js',
     pathinfo: false // show module paths in the bundle, handy for debugging
   },
+  devtool:"source-map",
   module: {
     loaders: [
       {

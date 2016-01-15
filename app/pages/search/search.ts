@@ -2,7 +2,7 @@
 /// <reference path="../../lib/typings/collections/collections.d.ts" />
 import {Component, OnInit} from 'angular2/core';
 import {Http} from 'angular2/http';
-import {IonicApp, Page, NavController, NavParams, Events, Translate, TranslatePipe} from 'ionic-framework/ionic';
+import {IonicApp, Page, NavController, NavParams, Events} from 'ionic-framework/ionic';
 import {Base} from '../../core/ocm/Base';
 import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
 import {POIManager, POISearchParams} from '../../core/ocm/services/POIManager';
@@ -10,7 +10,7 @@ import {POIDetailsPage} from '../poi-details/poi-details';
 
 @Page({
     templateUrl: 'build/pages/search/search.html',
-    pipes: [TranslatePipe] // add in each component to invoke the transform method
+    //pipes: [TranslatePipe] // add in each component to invoke the transform method
 })
 
 export class SearchPage implements OnInit {
@@ -18,26 +18,27 @@ export class SearchPage implements OnInit {
 
     map: any;
     nav: any;
+    events: Events;
     //TODO: appmodel
     poiManager: POIManager;
-    translate: any;
+    // translate: any;
     mapDisplayed: boolean = false;
 
-    constructor(app: IonicApp, nav: NavController, navParams: NavParams, events: Events, translate: Translate, http: Http, poiManager: POIManager) {
+    constructor(app: IonicApp, nav: NavController, navParams: NavParams, events: Events, http: Http, poiManager: POIManager) {
         this.nav = nav;
         this.map = null;
-        this.translate = translate;
+        this.events = events;
+        // this.translate = translate;
 
         this.poiManager = poiManager;
 
         this.mapping = new Mapping(events);
 
         this.mapping.setMapAPI(MappingAPI.GOOGLE_WEB);
-        this.mapping.initMap("map-canvas");
-
+       
         //////
 
-        this.translate.translations('de', {
+        /*this.translate.translations('de', {
             'Location': 'lage',
             'ocm.test.key': 'wibble'
         });
@@ -48,40 +49,68 @@ export class SearchPage implements OnInit {
         console.log("trans: " + this.translate.translate('ocm.test.key')); // Shows 'Location'
     
         ///
+        */
 
-        
-        events.subscribe('ocm:poi:selected', (poi) => { this.viewPOIDetails(poi[0]); });
-        events.subscribe('ocm:mapping:zoom', () => { this.refreshResultsAfterMapChange(); });
-        events.subscribe('ocm:mapping:dragend', () => { this.refreshResultsAfterMapChange(); });
-        events.subscribe('ocm:poiList:updated', (listType) => { this.showPOIListOnMap(listType); });
 
-       
 
     }
 
+    onPageDidEnter() {
+        console.log("Entered search page");
+        if (this.mapping) {
+            this.mapping.updateMapSize();
+        }
+    }
+
+    enforceMapHeight(size: any) {
+        console.log("Would resize map:" + size.width + " " + size.height);
+
+
+        var preferredContentHeight = size.height - 94;
+        if (document.getElementById("map-canvas").offsetHeight != preferredContentHeight) {
+            document.getElementById("map-canvas").style.height = preferredContentHeight + "px";
+        }
+        if (this.mapping) {
+            this.mapping.updateMapSize();
+        }
+    }
+
     ngOnInit() {
-        
+
+        this.events.subscribe('ocm:poi:selected', (poi) => { this.viewPOIDetails(poi[0]); });
+        this.events.subscribe('ocm:mapping:zoom', () => { this.refreshResultsAfterMapChange(); });
+        this.events.subscribe('ocm:mapping:dragend', () => { this.refreshResultsAfterMapChange(); });
+        this.events.subscribe('ocm:poiList:updated', (listType) => { this.showPOIListOnMap(listType); });
+
+        this.events.subscribe('ocm:window:resized', (size) => {
+            //handle window resized event, updating map layout if required
+            this.enforceMapHeight(size[0]);
+        });
+
+        this.mapping.initMap("map-canvas");
+
         //centre map on users location before starting to fetch other info
         //get user position
         
         //centre map
         
+             
+        var appContext = this;
+        
+        
+        /*this.poiManager.populateTestData();
+        var testPOI = this.getPOIByID(52224);
+        setTimeout(function() { appContext.viewPOIDetails(testPOI); }, 1000);
+        */
+        
+        
         //first start up, get fresh core reference data, then we can start getting POI results nearby
-        
-        
         this.poiManager.fetchCoreReferenceData().then(() => {
             console.log("Got core ref data. Updating local POIs");
             var params = new POISearchParams();
             this.poiManager.fetchPOIList(params);
         });
-        
-        /*
-        var appContext = this;
-         this.poiManager.populateTestData();
-        var testPOI = this.getPOIByID(52224);
-  
-        setTimeout(function() { appContext.viewPOIDetails(testPOI); }, 1000);
-        */
+
     }
 
     showPOIListOnMap(listType: string) {
