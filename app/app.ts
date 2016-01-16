@@ -7,6 +7,7 @@ import {POIManager} from './core/ocm/services/POIManager'
 import {APIClient} from './core/ocm/services/APIClient';
 import {TabsPage} from './pages/tabs/tabs';
 
+import {Utils} from './core/ocm/Utils';
 
 declare var plugin: any;
 
@@ -23,6 +24,7 @@ export class MyApp implements OnInit {
 
     events: Events;
     root: any;
+    debouncedPublishResizeEvent: any;
 
     constructor(platform: Platform, events: Events) {
         this.events = events;
@@ -30,7 +32,7 @@ export class MyApp implements OnInit {
         //trans.setLanguage("zh");
         platform.ready().then(() => {
             // Do any necessary cordova or native calls here now that the platform is ready
-            console.log("cordova/ionic platform ready");
+            if (console) console.log("cordova/ionic platform ready");
 
             //check for native maps
             if ((<any>window).plugin) {
@@ -41,27 +43,29 @@ export class MyApp implements OnInit {
 
     ngOnInit() {
         //startup
-        var appContext = this;
+        this.debouncedPublishResizeEvent = Utils.debounce(this.publishWindowResizeEvent, 300, false)
         //notify subscribers of window resizes (map etc)
-        window.addEventListener("resize", function() {
-            var winWidth: number;
-            var winHeight: number;
-            if (typeof (window.innerWidth) == 'number') {
-                winWidth = window.innerWidth;
-                winHeight = window.innerHeight;
+        window.addEventListener("resize", () => { this.debouncedPublishResizeEvent(); });
+    }
+
+    publishWindowResizeEvent() {
+        var winWidth: number;
+        var winHeight: number;
+        if (typeof (window.innerWidth) == 'number') {
+            winWidth = window.innerWidth;
+            winHeight = window.innerHeight;
+        } else {
+            if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+                winWidth = document.documentElement.clientWidth;
+                winHeight = document.documentElement.clientHeight;
             } else {
-                if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
-                    winWidth = document.documentElement.clientWidth;
-                    winHeight = document.documentElement.clientHeight;
-                } else {
-                    if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
-                        winWidth = document.body.clientWidth;
-                        winHeight = document.body.clientHeight;
-                    }
+                if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
+                    winWidth = document.body.clientWidth;
+                    winHeight = document.body.clientHeight;
                 }
             }
-            console.log("window resized:" + winWidth + "x" + winHeight);
-            appContext.events.publish('ocm:window:resized', { width: winWidth, height: winHeight });
-        });
+        }
+
+        this.events.publish('ocm:window:resized', { width: winWidth, height: winHeight });
     }
 }

@@ -62,7 +62,7 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
 
                     mapCanvas.style.width = '100%';
                     mapCanvas.style.height = Utils.getClientHeight().toString();
-
+                    this.log("Defaulted map height to " + Utils.getClientHeight());
                     //create map
                     var mapOptions = {
                         zoom: 10,
@@ -192,11 +192,12 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                             });
 
                             newMarker.poi = poi;
-
+                            
                             var anchorElement = document.getElementById("body");
                             google.maps.event.addListener(newMarker, 'click', function() {
                                 //broadcast details of selected POI
-                                mapProviderContext.events.publish('ocm:poi:selected', poi);
+                                if (console) console.log("POI clicked:"+this.poi.ID);
+                                mapProviderContext.events.publish('ocm:poi:selected', this.poi);
 
                             });
 
@@ -237,7 +238,9 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
 
     refreshMapLayout() {
         if (this.map != null) {
-            google.maps.event.trigger(this.map, 'resize');
+            this.log("GoogleMapsWeb: refreshMapLayout", LogLevel.VERBOSE);
+            setTimeout(() => { google.maps.event.trigger(this.map, 'resize'); }, 200);
+
         }
     }
 

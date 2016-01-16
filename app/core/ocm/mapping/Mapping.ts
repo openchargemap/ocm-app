@@ -137,7 +137,7 @@ export class Mapping extends Base {
 
         this.mapAPIReady = false;
         this.mapsInitialised = false;
-     
+
         this.setMapAPI(this.mapOptions.mapAPI);
 
         var mapManagerContext = this;
@@ -224,37 +224,37 @@ export class Mapping extends Base {
                     map.refreshLayout();
                     //mapManagerContext.mapCentreMarker.setMap(map);
                 } else {
-                   
-                        mapManagerContext.log("Adding search marker position");
 
-                        map.addMarker({
-                            'position': searchPos,
-                            'draggable': true,
-                            title: "Tap to Searching from here, Drag to change position.",
-                            content: 'Your search position'
-                            // icon: "images/icons/compass.png"
-                        }, function(marker) {
-                            mapManagerContext.mapCentreMarker = marker;
+                    mapManagerContext.log("Adding search marker position");
 
-                            //marker click
-                            marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function(marker) {
-                                marker.getPosition(function(pos) {
-                                    mapManagerContext.log("Search marker tapped, requesting search from current position.");
+                    map.addMarker({
+                        'position': searchPos,
+                        'draggable': true,
+                        title: "Tap to Searching from here, Drag to change position.",
+                        content: 'Your search position'
+                        // icon: "images/icons/compass.png"
+                    }, function(marker) {
+                        mapManagerContext.mapCentreMarker = marker;
 
-                                    mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
-                                    mapManagerContext.mapOptions.requestSearchUpdate = true;
-                                });
-                            });
+                        //marker click
+                        marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function(marker) {
+                            marker.getPosition(function(pos) {
+                                mapManagerContext.log("Search marker tapped, requesting search from current position.");
 
-                            //marker drag
-                            marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function(marker) {
-                                marker.getPosition(function(pos) {
-                                    mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
-                                    mapManagerContext.mapOptions.requestSearchUpdate = true;
-                                });
+                                mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
+                                mapManagerContext.mapOptions.requestSearchUpdate = true;
                             });
                         });
-                    
+
+                        //marker drag
+                        marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function(marker) {
+                            marker.getPosition(function(pos) {
+                                mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
+                                mapManagerContext.mapOptions.requestSearchUpdate = true;
+                            });
+                        });
+                    });
+
                 }
             }
 
@@ -313,7 +313,7 @@ export class Mapping extends Base {
     initMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser) {
         if (this.map == null) {
             this.map = this.createMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser, 13);
-            
+
         }
     }
 
@@ -462,9 +462,7 @@ export class Mapping extends Base {
 
     updateMapSize() {
         if (this.mapProvider) {
-            
-                this.mapProvider.refreshMapLayout();
-            
+            this.mapProvider.refreshMapLayout();
         }
     }
 

@@ -3,17 +3,17 @@
 import {Component, OnInit} from 'angular2/core';
 import {Http} from 'angular2/http';
 import {IonicApp, Page, NavController, NavParams, Events} from 'ionic-framework/ionic';
-import {Base} from '../../core/ocm/Base';
 import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
 import {POIManager, POISearchParams} from '../../core/ocm/services/POIManager';
 import {POIDetailsPage} from '../poi-details/poi-details';
+import {Base, LogLevel} from '../../core/ocm/Base';
 
 @Page({
     templateUrl: 'build/pages/search/search.html',
     //pipes: [TranslatePipe] // add in each component to invoke the transform method
 })
 
-export class SearchPage implements OnInit {
+export class SearchPage extends Base implements OnInit {
     mapping: Mapping;
 
     map: any;
@@ -25,6 +25,7 @@ export class SearchPage implements OnInit {
     mapDisplayed: boolean = false;
 
     constructor(app: IonicApp, nav: NavController, navParams: NavParams, events: Events, http: Http, poiManager: POIManager) {
+        super();
         this.nav = nav;
         this.map = null;
         this.events = events;
@@ -56,14 +57,14 @@ export class SearchPage implements OnInit {
     }
 
     onPageDidEnter() {
-        console.log("Entered search page");
+        this.log("Entered search page.", LogLevel.VERBOSE);
         if (this.mapping) {
             this.mapping.updateMapSize();
         }
     }
 
     enforceMapHeight(size: any) {
-        console.log("Would resize map:" + size.width + " " + size.height);
+        this.log("Would resize map:" + size.width + " " + size.height, LogLevel.VERBOSE);
 
 
         var preferredContentHeight = size.height - 94;
@@ -106,7 +107,7 @@ export class SearchPage implements OnInit {
         
         //first start up, get fresh core reference data, then we can start getting POI results nearby
         this.poiManager.fetchCoreReferenceData().then(() => {
-            console.log("Got core ref data. Updating local POIs");
+            this.log("Got core ref data. Updating local POIs", LogLevel.VERBOSE);
             var params = new POISearchParams();
             this.poiManager.fetchPOIList(params);
         });
@@ -139,7 +140,7 @@ export class SearchPage implements OnInit {
 
 
     refreshResultsAfterMapChange() {
-        console.log("map moved/zoomed");
+        this.log("map moved/zoomed", LogLevel.VERBOSE);
 
         
         //this.appState.isSearchInProgress = true;
@@ -196,7 +197,7 @@ export class SearchPage implements OnInit {
     }
 
     viewPOIDetails(poi: any) {
-
+        this.log("Viewing POI Details "+poi.ID);
         this.nav.push(POIDetailsPage, {
             item: poi
         });
