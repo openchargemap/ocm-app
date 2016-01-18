@@ -1,6 +1,6 @@
-<ion-navbar *navbar light>
+<ion-navbar *navbar dark>
     <ion-title>
-        Details
+        {{ 'ocm.details.sectionTitle' | translate }}
     </ion-title>
 </ion-navbar>
 
@@ -8,28 +8,23 @@
 <ion-content class="poi-details">
 
     <div class="poi-heading">
-        <div style="max-height:32px;position:absolute;overflow:hidden;">
-            <img style="width:100%;" src="https://ocm.blob.core.windows.net/images/PL/OCM52224/OCM-52224.medi.2015092721105431.jpg">
-        
-        </div>
+        <div style="max-height:32px;position:absolute;overflow:hidden;"></div>
         <div class="poi-heading-info">
-
-
             <h2>{{poi.AddressInfo.Title}} <small>OCM-{{poi.ID}}</small></h2>
 
-              <button small>
-                <icon chatbubbles></icon> Check-In
+            <button small>
+                <ion-icon name="chatbubbles"></ion-icon> Check-In
             </button>
 
             <button small>
-                <icon camera></icon> Add Photos
+                <ion-icon name="camera"></ion-icon> Add Photos
             </button>
             <button small>
-                <icon create></icon> Edit
+                <ion-icon name="create"></ion-icon> Edit
             </button>
-            
+
             <button small>
-                <icon star></icon> Favourite
+                <ion-icon name="star"></ion-icon> Favourite
             </button>
         </div>
     </div>
@@ -44,14 +39,15 @@
                 <div *ngIf="poi.AddressInfo.StateOrProvince"> {{poi.AddressInfo.StateOrProvince}}</div>
                 <div *ngIf="poi.AddressInfo.Postcode"> {{poi.AddressInfo.Postcode}}</div>
                 <div *ngIf="poi.AddressInfo.Country"> {{poi.AddressInfo.Country.Title}}</div>
-                
-                <img src="https://maps.googleapis.com/maps/api/staticmap?center=51.577389578844446,-0.22380352020263672&amp;zoom=14&amp;size=240x100&amp;maptype=roadmap&amp;markers=color:blue%7Clabel:S%7C11211%7C11206%7C11222"/>
+
+                <img src="https://maps.googleapis.com/maps/api/staticmap?center=51.577389578844446,-0.22380352020263672&amp;zoom=14&amp;size=240x100&amp;maptype=roadmap&amp;markers=color:blue%7Clabel:S%7C11211%7C11206%7C11222"
+                />
             </div>
-          <div class="right-col">
+            <div class="right-col">
 
 
                 <div *ngIf="poi.AddressInfo.ContactTelephone1">
-                    <icon call></icon> {{poi.AddressInfo.ContactTelephone1}} </div>
+                    <ion-icon name="call"></ion-icon> {{poi.AddressInfo.ContactTelephone1}} </div>
                 <div *ngIf="poi.AddressInfo.ContactTelephone2">
                     <icon call></icon> {{poi.AddressInfo.ContactTelephone2}} </div>
                 <div *ngIf="poi.AddressInfo.ContactEmail">
@@ -63,55 +59,58 @@
 
             </div>
         </div>
-        
+
         <div class="row">
-            <div class="left-col">
-        <h3><icon battery-charging></icon> Equipment</h3>
+            <div class="left-col" padding>
+                <h3><ion-icon name="battery-charging"></ion-icon>   {{ 'ocm.details.equipment.sectionTitle' | translate }}</h3>
 
-        <ion-list>
+                <ion-list>
+                    <ion-item *ngFor="#item of poi.Connections">
+                        <ion-avatar item-left>
+                            <ion-icon name="flash"></ion-icon>
+                        </ion-avatar>
+                        <h3>{{item.ConnectionType?.Title}} <span class="details-minor" *ngIf="item.Quantity">x{{item.Quantity}}</span></h3>
+                        <p *ngIf="item.PowerKW">{{item.PowerKW}} kW</p>
 
-            <ion-item *ngFor="#item of poi.Connections">
-                <ion-avatar item-left>
-                    <icon flash></icon>
-                </ion-avatar>
-                <h3>{{item.ConnectionType?.Title}}</h3>
-                <p>{{item.PowerKW}} kW</p>
+                        <p>
+                            <span *ngIf="item.Amps" class="details-minor">{{item.Amps}}A</span>
+                            <span *ngIf="item.Voltage" class="details-minor">{{item.Voltage}}V</span>
+                            <span *ngIf="item.CurrentType" class="details-minor">{{item.CurrentType?.Title}}</span>
 
-                <p>
-                    <span *ngIf="item.Amps" class="details-minor">{{item.Amps}}A</span>
-                    <span *ngIf="item.Voltage" class="details-minor">{{item.Voltage}}V</span>
-                    <span *ngIf="item.CurrentType" class="details-minor">{{item.CurrentType?.Title}}</span>
-                   
-                </p>
+                        </p>
 
-            </ion-item>
+                    </ion-item>
 
-        </ion-list>
-        </div>
-        <div class="right-col">
-                  <h2><icon camera></icon> Photos</h2>
+                </ion-list>
+            </div>
+            <div class="right-col" padding>
+                <h2><ion-icon name="camera"></ion-icon>   {{ 'ocm.details.mediaItems.sectionTitle' | translate }}</h2>
+                <div *ngIf="poi._hasPhotos">
 
+                    <ion-slides pager loop="true" autoplay="true">
 
-        <ion-slides pager loop="true" autoplay="true">
+                        <ion-slide *ngFor="#item of poi.MediaItems">
+                            <h3>{{item.User.Username}}</h3>
 
-            <ion-slide *ngFor="#item of poi.MediaItems">
-                <h3>{{item.User.Username}}</h3>
-
-                <img src="{{item.ItemThumbnailURL}}" />
-                <p>{{item.Comment}}</p>
-            </ion-slide>
-
+                            <img src="{{item.ItemThumbnailURL}}" />
+                            <p>{{item.Comment}}</p>
+                        </ion-slide>
 
 
-        </ion-slides>
+
+                    </ion-slides>
+                </div>
+                <div *ngIf="!poi._hasPhotos">
+                    <p class='subtle'> {{ 'ocm.details.mediaItems.addPrompt' | translate }}</p>
+                </div>
             </div>
         </div>
-        <h3><icon contacts></icon> Check-Ins</h3>
+        <h3><ion-icon name="contacts"></ion-icon>   {{ 'ocm.details.commentsAndRatings.sectionTitle' | translate }}</h3>
         <ion-list>
 
             <ion-item *ngFor="#item of poi.UserComments">
                 <ion-avatar item-left>
-                    <icon contact></icon>
+                    <ion-icon name="contact"></ion-icon>
                     <div *ngIf="item.User">{{item.User.Username}}</div>
                     <div *ngIf="!item.User">{{item.Username}}</div>
                 </ion-avatar>
@@ -130,13 +129,13 @@
 
         </ion-list>
 
-   
 
-        <h3>Additional Information</h3>
+
+        <h3>  {{ 'ocm.details.advancedDetails' | translate }}</h3>
 
 
         <p>
-            Data Provided by: {{poi.DataProvider?.Title}}</p>
+            {{ 'ocm.details.dataProvider.sectionTitle' | translate }}: {{poi.DataProvider?.Title}}</p>
 
         <p>
             {{poi.DataProvider.WebsiteURL}}

@@ -7,10 +7,11 @@ import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
 import {POIManager, POISearchParams} from '../../core/ocm/services/POIManager';
 import {POIDetailsPage} from '../poi-details/poi-details';
 import {Base, LogLevel} from '../../core/ocm/Base';
+import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 
 @Page({
     templateUrl: 'build/pages/search/search.html',
-    //pipes: [TranslatePipe] // add in each component to invoke the transform method
+    pipes: [TranslatePipe] // add in each component to invoke the transform method
 })
 
 export class SearchPage extends Base implements OnInit {
@@ -23,13 +24,14 @@ export class SearchPage extends Base implements OnInit {
     poiManager: POIManager;
     // translate: any;
     mapDisplayed: boolean = false;
+    translate: TranslateService;
 
-    constructor(app: IonicApp, nav: NavController, navParams: NavParams, events: Events, http: Http, poiManager: POIManager) {
+    constructor(app: IonicApp, nav: NavController, navParams: NavParams, events: Events, http: Http, poiManager: POIManager, translate: TranslateService) {
         super();
         this.nav = nav;
         this.map = null;
         this.events = events;
-        // this.translate = translate;
+        this.translate = translate;
 
         this.poiManager = poiManager;
 
@@ -39,23 +41,9 @@ export class SearchPage extends Base implements OnInit {
        
         //////
 
-        /*this.translate.translations('de', {
-            'Location': 'lage',
-            'ocm.test.key': 'wibble'
-        });
-
-        //this.translate.setLanguage('de');
-
-        console.log("trans: " + this.translate.translate('Location')); // Shows 'Location'
-        console.log("trans: " + this.translate.translate('ocm.test.key')); // Shows 'Location'
-    
-        ///
-        */
-
-
-
+   
     }
-
+   
     onPageDidEnter() {
         this.log("Entered search page.", LogLevel.VERBOSE);
         if (this.mapping) {

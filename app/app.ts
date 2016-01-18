@@ -1,35 +1,65 @@
-
-import {OnInit} from 'angular2/core';
-import {Http} from 'angular2/http';
 import {App, Platform, Config, Events} from 'ionic-framework/ionic';
+import {Http, ConnectionBackend} from 'angular2/http';
+import {bootstrap} from 'angular2/bootstrap';
+import {OnInit} from 'angular2/core';
 
 import {POIManager} from './core/ocm/services/POIManager'
 import {APIClient} from './core/ocm/services/APIClient';
+import {Base} from './core/ocm/Base';
 import {TabsPage} from './pages/tabs/tabs';
 
 import {Utils} from './core/ocm/Utils';
+import {TranslateService, TranslatePipe, Parser} from 'ng2-translate/ng2-translate';
 
 declare var plugin: any;
 
+
 @App({
     template: '<ion-nav id="nav" [root]="root" #content></ion-nav>',
-    providers: [POIManager, APIClient, Events],
+    providers: [POIManager, APIClient, Events, TranslateService],
     // Check out the config API docs for more info
     // http://ionicframework.com/docs/v2/api/config/Config/
     config: {}
 })
 
-export class MyApp implements OnInit {
+
+export class MyApp extends Base implements OnInit {
 
 
     events: Events;
     root: any;
     debouncedPublishResizeEvent: any;
-
-    constructor(platform: Platform, events: Events) {
+    translate: TranslateService;
+    http: Http;
+    
+    constructor(platform: Platform, events: Events, translate: TranslateService, http:Http) {
+        super();
         this.events = events;
         this.root = TabsPage;
+        this.translate = translate;
+        this.http = http;
         //trans.setLanguage("zh");
+        
+        /*this.translate.translations('de', {
+         'Location': 'lage',
+         'ocm.test.key': 'wibble'
+     });
+
+     //this.translate.setLanguage('de');
+
+     console.log("trans: " + this.translate.translate('Location')); // Shows 'Location'
+     console.log("trans: " + this.translate.translate('ocm.test.key')); // Shows 'Location'
+ 
+     ///
+     */
+
+
+        this.translate = translate;
+        this.initTranslation();
+        
+        
+        //actions to perform when platform is ready
+        
         platform.ready().then(() => {
             // Do any necessary cordova or native calls here now that the platform is ready
             if (console) console.log("cordova/ionic platform ready");
@@ -41,6 +71,38 @@ export class MyApp implements OnInit {
         });
     }
 
+
+
+    
+    initTranslation() {
+        //init translation
+        this.translate.useStaticFilesLoader('lang', '.json');
+
+        var userLang = navigator.language.split('-')[0]; // use navigator lang if available
+        userLang = /(it|en)/gi.test(userLang) ? userLang : 'en';
+
+        // optional, default is "en"
+        this.translate.setDefaultLang('en');
+        // the lang to use, if the lang isn't available, it will use the current loader to get them
+        this.translate.use(userLang);
+     
+   
+        var test = this.translate.get("ocm.general.shortDescription");
+        test.subscribe(data => { 
+            this.log("Translation test:" + data);    
+        });
+        
+        /*
+          var test2 = this.translate.get("ocm.general.shortDescription");
+                    test2.subscribe(data => { 
+                        this.log("Translation test2:" + data);    
+                    });   
+        */
+       
+        //translate.getTranslation(userLang);
+    }
+
+    
     ngOnInit() {
         //startup
         this.debouncedPublishResizeEvent = Utils.debounce(this.publishWindowResizeEvent, 300, false)
@@ -69,3 +131,4 @@ export class MyApp implements OnInit {
         this.events.publish('ocm:window:resized', { width: winWidth, height: winHeight });
     }
 }
+
