@@ -61,7 +61,7 @@ export class POIManager {
         this.http = http;
         this.api = api;
         this.events = events;
-
+        this.api.clientName = "ocm.app.ionic";// TODO: version
         //this.populateTestData();
 
     }

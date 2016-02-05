@@ -43,7 +43,7 @@ export class SearchPage extends Base implements OnInit {
 
    
     }
-   
+
     onPageDidEnter() {
         this.log("Entered search page.", LogLevel.VERBOSE);
         if (this.mapping) {
@@ -83,7 +83,6 @@ export class SearchPage extends Base implements OnInit {
         
         //centre map
         
-             
         var appContext = this;
         
         
@@ -98,6 +97,8 @@ export class SearchPage extends Base implements OnInit {
             this.log("Got core ref data. Updating local POIs", LogLevel.VERBOSE);
             var params = new POISearchParams();
             this.poiManager.fetchPOIList(params);
+        }).catch((reason) => {
+            this.log("Error fetching core ref data:" + reason);
         });
 
     }
@@ -185,7 +186,7 @@ export class SearchPage extends Base implements OnInit {
     }
 
     viewPOIDetails(poi: any) {
-        this.log("Viewing POI Details "+poi.ID);
+        this.log("Viewing POI Details " + poi.ID);
         this.nav.push(POIDetailsPage, {
             item: poi
         });

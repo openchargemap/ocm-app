@@ -10,9 +10,9 @@ import {POISearchParams} from './POIManager';
 
 @Injectable()
 export class APIClient {
-    public serviceBaseURL: string = "http://api.openchargemap.io/v2";
-    public serviceBaseURL_Standard: string = "http://api.openchargemap.io/v2";
-    public serviceBaseURL_Sandbox: string = "http://sandbox.api.openchargemap.io/v2";
+    public serviceBaseURL: string = "https://api.openchargemap.io/v2";
+    public serviceBaseURL_Standard: string = "https://api.openchargemap.io/v2";
+    public serviceBaseURL_Sandbox: string = "https://sandbox.api.openchargemap.io/v2";
 
     public hasAuthorizationError: boolean = false;
 

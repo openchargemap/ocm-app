@@ -23,6 +23,7 @@ function loadGoogleMaps() {
 
     if (ocm_app.appState.isRunningUnderCordova) {
         var mappingManager = ocm_app.mappingManager;
+        return;
 
         if (mappingManager.mapOptions.mapAPI != MappingAPI.GOOGLE_NATIVE) {
             //for cordova, switch over to native google maps, if available

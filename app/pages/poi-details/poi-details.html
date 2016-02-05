@@ -33,15 +33,27 @@
     <div padding>
         <div class="row">
             <div class="left-col">
-                <div *ngIf="poi.AddressInfo.AddressLine1"> {{poi.AddressInfo.AddresssLine1}}</div>
-                <div *ngIf="poi.AddressInfo.AddressLine2"> {{poi.AddressInfo.AddresssLine2}}</div>
-                <div *ngIf="poi.AddressInfo.Town"> {{poi.AddressInfo.Town}}</div>
-                <div *ngIf="poi.AddressInfo.StateOrProvince"> {{poi.AddressInfo.StateOrProvince}}</div>
-                <div *ngIf="poi.AddressInfo.Postcode"> {{poi.AddressInfo.Postcode}}</div>
-                <div *ngIf="poi.AddressInfo.Country"> {{poi.AddressInfo.Country.Title}}</div>
+                <h3><ion-icon name="map"></ion-icon> {{ 'ocm.details.location.address' | translate }}</h3>
+                <div padding>
+                    <div *ngIf="poi.AddressInfo.AddressLine1"> {{poi.AddressInfo.AddresssLine1}}</div>
+                    <div *ngIf="poi.AddressInfo.AddressLine2"> {{poi.AddressInfo.AddresssLine2}}</div>
+                    <div *ngIf="poi.AddressInfo.Town"> {{poi.AddressInfo.Town}}</div>
+                    <div *ngIf="poi.AddressInfo.StateOrProvince"> {{poi.AddressInfo.StateOrProvince}}</div>
+                    <div *ngIf="poi.AddressInfo.Postcode"> {{poi.AddressInfo.Postcode}}</div>
+                    <div *ngIf="poi.AddressInfo.Country"> {{poi.AddressInfo.Country.Title}}</div>
 
-                <img src="https://maps.googleapis.com/maps/api/staticmap?center=51.577389578844446,-0.22380352020263672&amp;zoom=14&amp;size=240x100&amp;maptype=roadmap&amp;markers=color:blue%7Clabel:S%7C11211%7C11206%7C11222"
-                />
+                    <img src="https://maps.googleapis.com/maps/api/staticmap?center={{poi.AddressInfo.Latitude}},{{poi.AddressInfo.Longitude}}&amp;zoom=14&amp;size=240x100&amp;maptype=roadmap&amp;markers=color:blue"
+                    />
+
+                    <div class='subtle'>
+                        {{ 'ocm.details.location.latitude' | translate }}: {{poi.AddressInfo.Latitude | number:'1.1-8'}}
+                        <br/> {{ 'ocm.details.location.longitude' | translate }}: {{poi.AddressInfo.Longitude | number:'1.1-8'}}
+                    </div>
+
+                    <div *ngIf="poi.AddressInfo.AccessComments"> 
+                        <!--<h4>{{ 'ocm.details.accessComments' | translate }}</h4>-->
+                    <p> {{poi.AddressInfo.AccessComments}}</p></div>
+                </div>
             </div>
             <div class="right-col">
 
@@ -52,10 +64,18 @@
                     <icon call></icon> {{poi.AddressInfo.ContactTelephone2}} </div>
                 <div *ngIf="poi.AddressInfo.ContactEmail">
                     <icon mail></icon> {{poi.AddressInfo.ContactEmail}} </div>
-                <div *ngIf="poi.AddressInfo.AccessComments">
-                    <icon key></icon> {{poi.AddressInfo.AccessComments}} </div>
+               
                 <div *ngIf="poi.AddressInfo.RelatedURL">
                     <icon globe></icon> <a target="_system" href="{{poi.AddressInfo.RelatedURL}}">{{poi.AddressInfo.RelatedURL}}</a>                    </div>
+
+
+                <div *ngIf="poi.StatusType"> {{ 'ocm.details.operationalStatus' | translate }}: {{poi.StatusType.Title}}</div>
+                <div *ngIf="poi.UsageType"> {{ 'ocm.details.usageType' | translate }}: {{poi.UsageType.Title}}</div>
+                <div *ngIf="poi.UsageCost"> {{ 'ocm.details.usageCost' | translate }}: {{poi.UsageCost}}</div>
+                <div *ngIf="poi.NumberOfPoints"> {{ 'ocm.details.numberOfPoints' | translate }}: {{poi.NumberOfPoints}}</div>
+
+
+                <div *ngIf="poi.OperatorInfo"> {{ 'ocm.details.operator.sectionTitle' | translate }}: {{poi.OperatorInfo.Title}}</div>
 
             </div>
         </div>
@@ -105,42 +125,44 @@
                 </div>
             </div>
         </div>
-        <h3><ion-icon name="contacts"></ion-icon>   {{ 'ocm.details.commentsAndRatings.sectionTitle' | translate }}</h3>
-        <ion-list>
 
-            <ion-item *ngFor="#item of poi.UserComments">
-                <ion-avatar item-left>
-                    <ion-icon name="contact"></ion-icon>
-                    <div *ngIf="item.User">{{item.User.Username}}</div>
-                    <div *ngIf="!item.User">{{item.Username}}</div>
-                </ion-avatar>
+        <div padding>
+            <h3><ion-icon name="contacts"></ion-icon>   {{ 'ocm.details.commentsAndRatings.sectionTitle' | translate }}</h3>
+            <ion-list>
 
-
-                <p>{{item.Comment}}</p>
-                <p *ngIf="item.CommentType">
-                    {{item.CommentType?.Title}}
-
-                </p>
-                <p *ngIf="item.Rating">{{item.Rating}} out of 5</p>
-                <p *ngIf="item.CheckinStatusType">
-
-                    {{item.CheckinStatusType.Title}}</p>
-            </ion-item>
-
-        </ion-list>
+                <ion-item *ngFor="#item of poi.UserComments">
+                    <ion-avatar item-left>
+                        <ion-icon name="contact"></ion-icon>
+                        <div *ngIf="item.User">{{item.User.Username}}</div>
+                        <div *ngIf="!item.User">{{item.Username}}</div>
+                    </ion-avatar>
 
 
+                    <p>{{item.Comment}}</p>
+                    <p *ngIf="item.CommentType">
+                        {{item.CommentType?.Title}}
 
-        <h3>  {{ 'ocm.details.advancedDetails' | translate }}</h3>
+                    </p>
+                    <p *ngIf="item.Rating">{{item.Rating}} out of 5</p>
+                    <p *ngIf="item.CheckinStatusType">
+
+                        {{item.CheckinStatusType.Title}}</p>
+                </ion-item>
+
+            </ion-list>
 
 
-        <p>
-            {{ 'ocm.details.dataProvider.sectionTitle' | translate }}: {{poi.DataProvider?.Title}}</p>
 
-        <p>
-            {{poi.DataProvider.WebsiteURL}}
-        </p>
-        <p>{{poi.DataProvider.License}}</p>
+            <h3>  {{ 'ocm.details.advancedDetails' | translate }}</h3>
 
+
+            <p>
+                {{ 'ocm.details.dataProvider.sectionTitle' | translate }}: {{poi.DataProvider?.Title}}</p>
+
+            <p>
+                {{poi.DataProvider.WebsiteURL}}
+            </p>
+            <p>{{poi.DataProvider.License}}</p>
+        </div>
 
     </div>

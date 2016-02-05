@@ -12,6 +12,7 @@ import {Utils} from './core/ocm/Utils';
 import {TranslateService, TranslatePipe, Parser} from 'ng2-translate/ng2-translate';
 
 declare var plugin: any;
+declare var Connection: any;
 
 
 @App({
@@ -31,6 +32,7 @@ export class MyApp extends Base implements OnInit {
     debouncedPublishResizeEvent: any;
     translate: TranslateService;
     http: Http;
+   
     
     constructor(platform: Platform, events: Events, translate: TranslateService, http:Http) {
         super();
@@ -38,6 +40,7 @@ export class MyApp extends Base implements OnInit {
         this.root = TabsPage;
         this.translate = translate;
         this.http = http;
+        
         //trans.setLanguage("zh");
         
         /*this.translate.translations('de', {
@@ -68,6 +71,22 @@ export class MyApp extends Base implements OnInit {
             if ((<any>window).plugin) {
                 //we can switch over to Native Maps API
             }
+            
+            
+            var networkState = (<any>navigator).connection.type;
+ 
+            var states = {};
+            states[Connection.UNKNOWN]  = 'Unknown connection';
+            states[Connection.ETHERNET] = 'Ethernet connection';
+            states[Connection.WIFI]     = 'WiFi connection';
+            states[Connection.CELL_2G]  = 'Cell 2G connection';
+            states[Connection.CELL_3G]  = 'Cell 3G connection';
+            states[Connection.CELL_4G]  = 'Cell 4G connection';
+            states[Connection.CELL]     = 'Cell generic connection';
+            states[Connection.NONE]     = 'No network connection';
+ 
+            alert(states[networkState]);
+            
         });
     }
 
