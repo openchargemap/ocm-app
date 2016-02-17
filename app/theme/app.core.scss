@@ -7,13 +7,13 @@
 // By default each design mode includes these shared imports.
 // App Shared Sass variables belong in app.variables.scss.
 
-@import "pages/search/search";
+@import "../pages/search/search";
 
-@import "pages/journeys/journeys";
+@import "../pages/journeys/journeys";
 
-@import "pages/settings/settings";
+@import "../pages/settings/settings";
 
-@import "pages/poi-details/poi-details";
+@import "../pages/poi-details/poi-details";
 
 scroll-content {
     height: 100%;
