@@ -2,10 +2,11 @@
 /// <reference path="../../lib/typings/collections/collections.d.ts" />
 import {Component, OnInit} from 'angular2/core';
 import {Http} from 'angular2/http';
-import {IonicApp, Page, NavController, NavParams, Events} from 'ionic-framework/ionic';
+import {IonicApp, Page, NavController, NavParams, Events} from 'ionic-angular';
 import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
 import {POIManager, POISearchParams} from '../../core/ocm/services/POIManager';
 import {POIDetailsPage} from '../poi-details/poi-details';
+import {SignInPage} from '../signin/signin';
 import {Base, LogLevel} from '../../core/ocm/Base';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 
@@ -187,8 +188,15 @@ export class SearchPage extends Base implements OnInit {
 
     viewPOIDetails(poi: any) {
         this.log("Viewing POI Details " + poi.ID);
+        
+         /*this.nav.push(SignInPage, {
+            item: poi
+        });
+*/
+        
         this.nav.push(POIDetailsPage, {
             item: poi
         });
+        
     }
 }

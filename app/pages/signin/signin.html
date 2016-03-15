@@ -1,0 +1,25 @@
+<ion-navbar *navbar dark>
+    <ion-title>
+        Sign In
+    </ion-title>
+</ion-navbar>
+<ion-content class="signin-page" padding>
+
+    <ion-list>
+
+        <ion-item>
+            <ion-label floating>Email</ion-label>
+            <ion-input type="text" [(ngModel)]="email"></ion-input>
+        </ion-item>
+
+        <ion-item>
+            <ion-label floating>Password</ion-label>
+            <ion-input type="password" [(ngModel)]="password"></ion-input>
+        </ion-item>
+
+    </ion-list>
+    
+    <button (click)="performSignIn()">Sign In</button>
+
+    <p>If you normally use Twitter or Facebook to login, start here</p>
+</ion-content>

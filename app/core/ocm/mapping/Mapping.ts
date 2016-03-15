@@ -10,7 +10,7 @@ import {Utils} from '../Utils';
 import {Base, LogLevel} from '../Base';
 import {GoogleMapsNative} from './providers/GoogleMapsNative';
 import {GoogleMapsWeb} from './providers/GoogleMapsWeb';
-import {Events} from 'ionic-framework/ionic';
+import {Events} from 'ionic-angular'; //TODO remove dependency on ionic here
 
 declare var plugin: any;
 declare var L: any;

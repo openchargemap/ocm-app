@@ -1,4 +1,4 @@
-import {IonicApp, Page, NavController, NavParams} from 'ionic-framework/ionic';
+import {IonicApp, Page, NavController, NavParams} from 'ionic-angular';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 
 

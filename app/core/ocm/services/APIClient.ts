@@ -4,8 +4,7 @@
 */
 
 import {Injectable} from 'angular2/core';
-import {Http} from 'angular2/http';
-import {Events} from 'ionic-framework/ionic'
+import {Http, Headers, RequestOptions} from 'angular2/http';
 import {POISearchParams} from './POIManager';
 
 @Injectable()
@@ -13,11 +12,13 @@ export class APIClient {
     public serviceBaseURL: string = "https://api.openchargemap.io/v2";
     public serviceBaseURL_Standard: string = "https://api.openchargemap.io/v2";
     public serviceBaseURL_Sandbox: string = "https://sandbox.api.openchargemap.io/v2";
+    public serviceBaseURL_LocalDev: string = "http://localhost:8080/v3";
 
     public hasAuthorizationError: boolean = false;
 
     public ATTRIBUTION_METADATAFIELDID = 4;
     public referenceData: any;
+    public authResponse: any;
     public clientName: string = "ocm.api.default";
 
     public authorizationErrorCallback: any;
@@ -25,13 +26,10 @@ export class APIClient {
     public allowMirror: boolean = false;
 
     http: Http;
-    events:Events;
-    data: any;
-
-
-    constructor(http: Http, events:Events) {
+   
+    constructor(http: Http) {
         this.http = http;
-        this.events= events;
+        this.serviceBaseURL = this.serviceBaseURL_LocalDev;
     }
 
     fetchPOIListByParam(params: POISearchParams) {
@@ -85,7 +83,7 @@ export class APIClient {
 
         //this.http.get(serviceURL).subscribe((res:Response) => doSomething(res));
 
-            
+
         return new Promise(resolve => {
             // We're using Angular Http provider to request the data,
             // then on the response it'll map the JSON data to a parsed JS object.
@@ -93,39 +91,69 @@ export class APIClient {
             this.http.get(apiCallURL).subscribe(res => {
                 // we've got back the raw data, now generate the core schedule data
                 // and save the data for later reference
-                this.data = this.hydrateCompactPOIList(res.json());
-                resolve(this.data);
+                let poiResults =  this.hydrateCompactPOIList(res.json());
+                resolve(poiResults);
             });
         });
     }
 
-    fetchCoreReferenceData(authSessionInfo) {
-        var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
+    getHttpRequestOptions(): RequestOptions {
 
-        var serviceURL = this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json" + (this.allowMirror ? "&allowmirror=true" : "") + "&verbose=false&" + authInfoParams;
+        //attach auth header if we have auth info for client api        
+
+        if (this.authResponse && this.authResponse.Data && this.authResponse.Data.access_token) {
+            let headers = new Headers();
+            headers.set('Authorization', 'Bearer ' + this.authResponse.Data.access_token);
+            let options = new RequestOptions({ headers: headers });
+
+            return options;
+        } else {
+            //no auth present
+            return null;
+            
+        }
+    }
+
+    fetchCoreReferenceData(authSessionInfo) {
+
+        var serviceURL = this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json" + (this.allowMirror ? "&allowmirror=true" : "") + "&verbose=false&";
 
         return new Promise(resolve => {
-            this.http.get(serviceURL).subscribe(res => {
+            this.http.get(serviceURL, this.getHttpRequestOptions()).subscribe(res => {
                 this.referenceData = res.json();
                 resolve(this.referenceData);
             });
         });
     }
 
-    getAuthParamsFromSessionInfo(authSessionInfo) {
-        var authInfoParams = "";
+    performSignIn(username: string, password: string) {
 
-        if (authSessionInfo != null) {
-            if (authSessionInfo.Identifier != null) authInfoParams += "&Identifier=" + authSessionInfo.Identifier;
-            if (authSessionInfo.SessionToken != null) authInfoParams += "&SessionToken=" + authSessionInfo.SessionToken;
+        var serviceURL = this.serviceBaseURL + "/profile/signin/?emailaddress=" + username + "&password=" + password + "&output=json";
 
-            return authInfoParams;
-        }
-        return "";
+        return new Promise(resolve => {
+            this.http.get(serviceURL).subscribe(res => {
+                this.authResponse = res.json();
+                resolve(this.authResponse);
+            });
+        });
+    }
+
+    submitUserComment(data) {
+        var jsonString = JSON.stringify(data);
+        alert("comment " + this.authResponse.Data.access_token);
+
+       
+
+        return new Promise(resolve => {
+            this.http.post(this.serviceBaseURL + "/comment/?action=comment_submission&format=json", jsonString, this.getHttpRequestOptions()).subscribe(res => {
+                resolve(res.json());
+            });
+        });
+
     }
 
     /* fetchLocationById(id, callbackname, errorcallback, disableCaching) {
-         var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&output=json&includecomments=true&chargepointid=" + id;
+         var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&output=json&includecomments.=true&chargepointid=" + id;
          if (disableCaching) serviceURL += "&enablecaching=false";
          if (!errorcallback) errorcallback = this.handleGeneralAjaxError;
  

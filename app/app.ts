@@ -1,48 +1,53 @@
-import {App, Platform, Config, Events} from 'ionic-framework/ionic';
+import {App, Platform, Config, Events} from 'ionic-angular';
 import {Http, ConnectionBackend} from 'angular2/http';
 import {bootstrap} from 'angular2/bootstrap';
-import {OnInit} from 'angular2/core';
+import {OnInit, provide, enableProdMode} from 'angular2/core';
 
-import {POIManager} from './core/ocm/services/POIManager'
-import {APIClient} from './core/ocm/services/APIClient';
+import {AppManager} from './core/ocm/services/AppManager'
 import {Base} from './core/ocm/Base';
 import {TabsPage} from './pages/tabs/tabs';
 
 import {Utils} from './core/ocm/Utils';
-import {TranslateService, TranslatePipe, Parser} from 'ng2-translate/ng2-translate';
+import {TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader, Parser} from 'ng2-translate';
 
 declare var plugin: any;
 declare var Connection: any;
 
+enableProdMode();
 
 @App({
     template: '<ion-nav id="nav" [root]="root" #content></ion-nav>',
-    providers: [POIManager, APIClient, Events, TranslateService],
-    // Check out the config API docs for more info
-    // http://ionicframework.com/docs/v2/api/config/Config/
+    providers: [
+        AppManager,
+        Events,
+        provide(TranslateLoader, {
+            useFactory: (http: Http) => new TranslateStaticLoader(http, 'lang', '.json'),
+            deps: [Http]
+        }),
+        TranslateService],
+
     config: {}
 })
 
 
 export class MyApp extends Base implements OnInit {
-
-
     events: Events;
     root: any;
     debouncedPublishResizeEvent: any;
     translate: TranslateService;
     http: Http;
+    appManager: AppManager;
    
-    
-    constructor(platform: Platform, events: Events, translate: TranslateService, http:Http) {
+    constructor(platform: Platform, events: Events, translate: TranslateService, http: Http, appManager:AppManager) {
         super();
         this.events = events;
         this.root = TabsPage;
         this.translate = translate;
         this.http = http;
-        
+        this.appManager = appManager;
+
         //trans.setLanguage("zh");
-        
+
         /*this.translate.translations('de', {
          'Location': 'lage',
          'ocm.test.key': 'wibble'
@@ -59,10 +64,10 @@ export class MyApp extends Base implements OnInit {
 
         this.translate = translate;
         this.initTranslation();
-        
-        
+
+
         //actions to perform when platform is ready
-        
+
         platform.ready().then(() => {
             // Do any necessary cordova or native calls here now that the platform is ready
             if (console) console.log("cordova/ionic platform ready");
@@ -71,31 +76,31 @@ export class MyApp extends Base implements OnInit {
             if ((<any>window).plugin) {
                 //we can switch over to Native Maps API
             }
-            
-            
+
+
             var networkState = (<any>navigator).connection.type;
- 
+
             var states = {};
-            states[Connection.UNKNOWN]  = 'Unknown connection';
+            states[Connection.UNKNOWN] = 'Unknown connection';
             states[Connection.ETHERNET] = 'Ethernet connection';
-            states[Connection.WIFI]     = 'WiFi connection';
-            states[Connection.CELL_2G]  = 'Cell 2G connection';
-            states[Connection.CELL_3G]  = 'Cell 3G connection';
-            states[Connection.CELL_4G]  = 'Cell 4G connection';
-            states[Connection.CELL]     = 'Cell generic connection';
-            states[Connection.NONE]     = 'No network connection';
- 
+            states[Connection.WIFI] = 'WiFi connection';
+            states[Connection.CELL_2G] = 'Cell 2G connection';
+            states[Connection.CELL_3G] = 'Cell 3G connection';
+            states[Connection.CELL_4G] = 'Cell 4G connection';
+            states[Connection.CELL] = 'Cell generic connection';
+            states[Connection.NONE] = 'No network connection';
+
             alert(states[networkState]);
-            
+
         });
     }
 
 
 
-    
+
     initTranslation() {
         //init translation
-        this.translate.useStaticFilesLoader('lang', '.json');
+        //this.translate.useStaticFilesLoader('lang', '.json');
 
         var userLang = navigator.language.split('-')[0]; // use navigator lang if available
         userLang = /(it|en)/gi.test(userLang) ? userLang : 'en';
@@ -104,29 +109,31 @@ export class MyApp extends Base implements OnInit {
         this.translate.setDefaultLang('en');
         // the lang to use, if the lang isn't available, it will use the current loader to get them
         this.translate.use(userLang);
-     
-   
+
+
         var test = this.translate.get("ocm.general.shortDescription");
-        test.subscribe(data => { 
-            this.log("Translation test:" + data);    
+        test.subscribe(data => {
+            this.log("Translation test:" + data);
         });
-        
+
         /*
           var test2 = this.translate.get("ocm.general.shortDescription");
                     test2.subscribe(data => { 
                         this.log("Translation test2:" + data);    
                     });   
         */
-       
+
         //translate.getTranslation(userLang);
     }
 
-    
+
     ngOnInit() {
         //startup
         this.debouncedPublishResizeEvent = Utils.debounce(this.publishWindowResizeEvent, 300, false)
         //notify subscribers of window resizes (map etc)
         window.addEventListener("resize", () => { this.debouncedPublishResizeEvent(); });
+
+        this.appManager.initAuthFromStorage();
     }
 
     publishWindowResizeEvent() {

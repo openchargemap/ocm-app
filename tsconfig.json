@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "es5",
     "module": "commonjs",
     "noEmitOnError": false,
     "rootDir": ".",
@@ -11,11 +11,17 @@
     "inlineSourceMap": false,
     "inlineSources": false
   },
-  "files": [
-    "app/app.ts"
+  "filesGlob": [
+    "**/*.ts",
+    "!node_modules/**/*"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "typings/main",
+    "typings/main.d.ts"
   ],
-  "compileOnSave": false
+  "compileOnSave": false,
+  "atom": {
+    "rewriteTsconfig": false
+  }
 }

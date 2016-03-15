@@ -10,7 +10,7 @@ import {Base, LogLevel} from '../../Base';
 import {Utils} from '../../Utils';
 import {MappingAPI, IMapProvider, MapOptions, Mapping, GeoLatLng, GeoPosition} from '../Mapping';
 
-import {Events} from 'ionic-framework/ionic';
+import {Events} from 'ionic-angular';
 
 /**Map Provider for Google Maps Web API
 * @module MapProviders
