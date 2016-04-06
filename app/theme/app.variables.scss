@@ -1,5 +1,6 @@
 // http://ionicframework.com/docs/v2/theming/
 
+
 // App Shared Variables
 // --------------------------------------------------
 // To customize the look and feel of this app, you can override
@@ -8,6 +9,7 @@
 // Ionic's default Sass variable values. App Shared Sass imports belong
 // in the app.core.scss file and not this file. Sass variables specific
 // to the mode belong in either the app.ios.scss or app.md.scss files.
+
 
 // App Shared Color Variables
 // --------------------------------------------------
@@ -18,4 +20,11 @@
 // Both iOS and MD colors can be further customized if colors
 // are different per mode.
 
-$colors: ( primary: #387ef5, secondary: #32db64, danger: #f53d3d, light: #f4f4f4, dark: #69BB7B, favorite: #69BB7B );
+$colors: (
+  primary:    #387ef5,
+  secondary:  #32db64,
+  danger:     #f53d3d,
+  light:      #f4f4f4,
+  dark:       #222,
+  favorite:   #69BB7B
+);

@@ -1,9 +1,11 @@
-import {App, Platform, Config, Events} from 'ionic-angular';
+import {App, Platform, Config, Events, NavController} from 'ionic-angular';
 import {Http, ConnectionBackend} from 'angular2/http';
 import {bootstrap} from 'angular2/bootstrap';
 import {OnInit, provide, enableProdMode} from 'angular2/core';
 
+import {APIClient} from './core/ocm/services/APIClient';
 import {AppManager} from './core/ocm/services/AppManager'
+import {POIManager} from './core/ocm/services/POIManager'
 import {Base} from './core/ocm/Base';
 import {TabsPage} from './pages/tabs/tabs';
 
@@ -16,15 +18,17 @@ declare var Connection: any;
 enableProdMode();
 
 @App({
-    template: '<ion-nav id="nav" [root]="root" #content></ion-nav>',
+    template: '<ion-nav [root]="rootPage"></ion-nav>',
     providers: [
         AppManager,
+        POIManager,
         Events,
         provide(TranslateLoader, {
             useFactory: (http: Http) => new TranslateStaticLoader(http, 'lang', '.json'),
             deps: [Http]
         }),
-        TranslateService],
+        TranslateService,
+        APIClient],
 
     config: {}
 })
@@ -32,7 +36,7 @@ enableProdMode();
 
 export class MyApp extends Base implements OnInit {
     events: Events;
-    root: any;
+    rootPage: any = TabsPage;
     debouncedPublishResizeEvent: any;
     translate: TranslateService;
     http: Http;
@@ -41,7 +45,7 @@ export class MyApp extends Base implements OnInit {
     constructor(platform: Platform, events: Events, translate: TranslateService, http: Http, appManager:AppManager) {
         super();
         this.events = events;
-        this.root = TabsPage;
+        
         this.translate = translate;
         this.http = http;
         this.appManager = appManager;
@@ -77,7 +81,7 @@ export class MyApp extends Base implements OnInit {
                 //we can switch over to Native Maps API
             }
 
-
+/*
             var networkState = (<any>navigator).connection.type;
 
             var states = {};
@@ -91,7 +95,7 @@ export class MyApp extends Base implements OnInit {
             states[Connection.NONE] = 'No network connection';
 
             alert(states[networkState]);
-
+*/
         });
     }
 

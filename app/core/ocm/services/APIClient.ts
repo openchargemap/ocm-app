@@ -6,11 +6,12 @@
 import {Injectable} from 'angular2/core';
 import {Http, Headers, RequestOptions} from 'angular2/http';
 import {POISearchParams} from './POIManager';
+import {AsyncResult} from '../model/AsyncResult';
 
 @Injectable()
 export class APIClient {
-    public serviceBaseURL: string = "https://api.openchargemap.io/v2";
-    public serviceBaseURL_Standard: string = "https://api.openchargemap.io/v2";
+    public serviceBaseURL: string = "https://api.openchargemap.io/v3";
+    public serviceBaseURL_Standard: string = "https://api.openchargemap.io/v3";
     public serviceBaseURL_Sandbox: string = "https://sandbox.api.openchargemap.io/v2";
     public serviceBaseURL_LocalDev: string = "http://localhost:8080/v3";
 
@@ -26,10 +27,10 @@ export class APIClient {
     public allowMirror: boolean = false;
 
     http: Http;
-   
+
     constructor(http: Http) {
         this.http = http;
-        this.serviceBaseURL = this.serviceBaseURL_LocalDev;
+        this.serviceBaseURL = this.serviceBaseURL_Standard;
     }
 
     fetchPOIListByParam(params: POISearchParams) {
@@ -91,7 +92,7 @@ export class APIClient {
             this.http.get(apiCallURL).subscribe(res => {
                 // we've got back the raw data, now generate the core schedule data
                 // and save the data for later reference
-                let poiResults =  this.hydrateCompactPOIList(res.json());
+                let poiResults = this.hydrateCompactPOIList(res.json());
                 resolve(poiResults);
             });
         });
@@ -110,7 +111,7 @@ export class APIClient {
         } else {
             //no auth present
             return null;
-            
+
         }
     }
 
@@ -121,28 +122,33 @@ export class APIClient {
         return new Promise(resolve => {
             this.http.get(serviceURL, this.getHttpRequestOptions()).subscribe(res => {
                 this.referenceData = res.json();
+
                 resolve(this.referenceData);
             });
         });
     }
 
     performSignIn(username: string, password: string) {
+        
+        var serviceURL = this.serviceBaseURL + "/profile/signin/";
 
-        var serviceURL = this.serviceBaseURL + "/profile/signin/?emailaddress=" + username + "&password=" + password + "&output=json";
+        var data = { "emailaddress": username, "password": password };
 
-        return new Promise(resolve => {
-            this.http.get(serviceURL).subscribe(res => {
-                this.authResponse = res.json();
-                resolve(this.authResponse);
+        //observable result is wrapper in a Promise for API consumer to handle result/rejection etc        
+        return new Promise((resolve, reject) => {
+            this.http.post(serviceURL, JSON.stringify(data)).subscribe(res => {
+                if (res.status>=300) {
+                    reject(new AsyncResult(null, true, "LoginFailed", res));
+                } else {
+                    this.authResponse = res.json();
+                    resolve(this.authResponse);
+                }
             });
         });
     }
 
     submitUserComment(data) {
         var jsonString = JSON.stringify(data);
-        alert("comment " + this.authResponse.Data.access_token);
-
-       
 
         return new Promise(resolve => {
             this.http.post(this.serviceBaseURL + "/comment/?action=comment_submission&format=json", jsonString, this.getHttpRequestOptions()).subscribe(res => {
@@ -169,30 +175,6 @@ export class APIClient {
  
          $.ajax(ajaxSettings);
      }
- 
-     handleGeneralAjaxError(result, ajaxOptions, thrownError) {
-         this.hasAuthorizationError = false;
- 
-         if (result.status == 200) {
-             //all ok
-         } else if (result.status == 401) {
-             //unauthorised, user session has probably expired
-             this.hasAuthorizationError = true;
-             if (this.authorizationErrorCallback) {
-                 this.authorizationErrorCallback();
-             } else {
-                 if (console) console.log("Your session has expired. Please sign in again.");
-             }
-         }
-         else {
-             if (this.generalErrorCallback) {
-                 this.generalErrorCallback();
-             } else {
-                 if (console) console.log("There was a problem transferring data. Please check your internet connection.");
-             }
-         }
-     }
- 
  
      fetchGeocodeResult(address, successCallback, authSessionInfo, errorCallback) {
          var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);

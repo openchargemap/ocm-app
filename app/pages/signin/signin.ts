@@ -1,5 +1,6 @@
-import {Page} from 'ionic-angular';
-import {APIClient} from '../../core/ocm/services/APIClient';
+import {Page, NavController, NavParams, Alert} from 'ionic-angular';
+import {AppManager} from '../../core/ocm/services/AppManager';
+import {UserProfile, AsyncResult} from '../../ocm-model';
 
 
 @Page({
@@ -8,42 +9,63 @@ import {APIClient} from '../../core/ocm/services/APIClient';
 export class SignInPage {
     email: string;
     password: string;
-    api: APIClient;
 
-    constructor(api: APIClient) {
+    constructor(public appManager: AppManager, public nav: NavController, params: NavParams) {
         this.email = "test@gmail.com";
-        this.api = api;
+
+        var currentProfile = <UserProfile>params.get("Profile");
+        if (currentProfile != null) {
+            this.email = currentProfile.EmailAddress;
+        }
     }
+
+    cancelSignIn() {
+        this.nav.pop();
+    }
+
     performSignIn() {
 
         //sign in with supplied email address and password
-        this.api.performSignIn(this.email, this.password).then(() => {
-            this.log("Got sign in response");
-            alert("Signed in as " + this.api.authResponse.Data.UserProfile.Username);
-            localStorage.setItem("authResponse", JSON.stringify(this.api.authResponse));
+        this.appManager.api.performSignIn(this.email, this.password).then((response) => {
+
+
+            let alert = Alert.create({
+                title: 'Open Charge Map',
+                subTitle: 'You are now signed in as ' + this.appManager.api.authResponse.Data.UserProfile.Username,
+                buttons: ['Ok']
+            });
+            this.nav.present(alert);
+
+            localStorage.setItem("authResponse", JSON.stringify(this.appManager.api.authResponse));
 
             //post test comment
-/*
-            var comment = {
-                "ChargePointID": 60624,
-                "CommentTypeID": 10,
-                "UserName": "A. Nickname",
-                "Comment": "This place is awesome, free cake for EV owners!",
-                "Rating": 5,
-                "RelatedURL": "http://awesomevplace.com",
-                "CheckinStatusTypeID": 0
-            };
-            this.api.submitUserComment(comment);
-*/
-        }).catch((reason) => {
-            alert("Invalid email addresss or password");
-            this.log("Error logging in:" + reason);
-        });
-    }
+            /*
+                        var comment = {
+                            "ChargePointID": 60624,
+                            "CommentTypeID": 10,
+                            "UserName": "A. Nickname",
+                            "Comment": "This place is awesome, free cake for EV owners!",
+                            "Rating": 5,
+                            "RelatedURL": "http://awesomevplace.com",
+                            "CheckinStatusTypeID": 0
+                        };
+                        this.api.submitUserComment(comment);
+            */
+        }, (reason?:AsyncResult) => {
 
-    log(msg: string) {
-        if (window.console) {
-            console.log(msg);
-        }
+            let alert = Alert.create({
+                title: 'Open Charge Map',
+                subTitle: 'Email or Password not recognised:'+JSON.stringify(reason),
+                buttons: ['Ok']
+            });
+            this.nav.present(alert);
+
+            this.appManager.log("Error logging in:" + reason);
+
+
+        }).catch(err => {
+            alert(err);
+            this.appManager.log("Error logging in:" + err);
+        });
     }
 }

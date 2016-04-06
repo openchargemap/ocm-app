@@ -1,0 +1,20 @@
+<ion-navbar *navbar dark>
+    <ion-title>
+       Profile
+    </ion-title>
+</ion-navbar>
+<ion-content class="profile-page" padding>
+<h1>Profile</h1>
+
+     
+     <div *ngIf="userProfile==null">
+         You are not signed in
+     </div>
+      <div *ngIf="userProfile!=null">
+      {{userProfile.Username}}
+ <p>
+     {{userProfile.Profile}}
+     </p>
+      <button (click)="signOut()">Sign Out</button>
+      </div>
+</ion-content>
