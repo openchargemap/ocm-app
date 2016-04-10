@@ -1,6 +1,8 @@
 import {Page, NavController, Modal, Alert} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {SignInPage} from '../signin/signin';
+import {MediaUploadPage} from '../mediaupload/mediaupload';
+import {CommentPage} from '../comment/comment';
 
 @Page({
     templateUrl: 'build/pages/profile/profile.html'
@@ -35,4 +37,15 @@ export class ProfilePage {
         this.nav.present(alert);
     }
 
+    testComment() {
+          this.nav.push(CommentPage, {
+            id: 30798
+        });
+    }
+    testUpload() {
+       
+        this.nav.push(MediaUploadPage, {
+            id: 30798
+        });
+    }
 }

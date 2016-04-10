@@ -6,7 +6,8 @@
 import {Injectable} from 'angular2/core';
 import {Http, Headers, RequestOptions} from 'angular2/http';
 import {POISearchParams} from './POIManager';
-import {AsyncResult} from '../model/AsyncResult';
+import {AsyncResult, SubmissionType} from '../model/AppModels';
+
 
 @Injectable()
 export class APIClient {
@@ -30,7 +31,7 @@ export class APIClient {
 
     constructor(http: Http) {
         this.http = http;
-        this.serviceBaseURL = this.serviceBaseURL_Standard;
+        this.serviceBaseURL = this.serviceBaseURL_LocalDev;
     }
 
     fetchPOIListByParam(params: POISearchParams) {
@@ -120,7 +121,7 @@ export class APIClient {
         var serviceURL = this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json" + (this.allowMirror ? "&allowmirror=true" : "") + "&verbose=false&";
 
         return new Promise(resolve => {
-            this.http.get(serviceURL, this.getHttpRequestOptions()).subscribe(res => {
+            this.http.get(serviceURL).subscribe(res => {
                 this.referenceData = res.json();
 
                 resolve(this.referenceData);
@@ -129,7 +130,7 @@ export class APIClient {
     }
 
     performSignIn(username: string, password: string) {
-        
+
         var serviceURL = this.serviceBaseURL + "/profile/signin/";
 
         var data = { "emailaddress": username, "password": password };
@@ -137,7 +138,7 @@ export class APIClient {
         //observable result is wrapper in a Promise for API consumer to handle result/rejection etc        
         return new Promise((resolve, reject) => {
             this.http.post(serviceURL, JSON.stringify(data)).subscribe(res => {
-                if (res.status>=300) {
+                if (res.status >= 300) {
                     reject(new AsyncResult(null, true, "LoginFailed", res));
                 } else {
                     this.authResponse = res.json();
@@ -147,11 +148,34 @@ export class APIClient {
         });
     }
 
+    performSubmission(type: SubmissionType, data: any): Promise<any> {
+        if (type == SubmissionType.POI) {
+            //return this.submitPOI(data);
+        }
+        if (type == SubmissionType.Comment) {
+            return this.submitUserComment(data);
+        }
+        if (type == SubmissionType.Media) {
+            this.submitMediaItem(data);
+        }
+    }
+
     submitUserComment(data) {
         var jsonString = JSON.stringify(data);
 
         return new Promise(resolve => {
             this.http.post(this.serviceBaseURL + "/comment/?action=comment_submission&format=json", jsonString, this.getHttpRequestOptions()).subscribe(res => {
+                resolve(res.json());
+            });
+        });
+
+    }
+
+    submitMediaItem(data) {
+        var jsonString = JSON.stringify(data);
+
+        return new Promise(resolve => {
+            this.http.post(this.serviceBaseURL + "/comment/?action=mediaitem_submission&format=json", jsonString, this.getHttpRequestOptions()).subscribe(res => {
                 resolve(res.json());
             });
         });

@@ -1,0 +1,18 @@
+<div>
+    Select photo to upload {{mode}}: 
+    
+    <div *ngIf="mode=='cordova'">
+    <button (click)="loadCameraOrLibraryImage()">Select Photo</button>
+    </div>
+    
+    <div *ngIf="mode=='web'">
+        <input type="file" id="img-upload-media" (onchange)="loadCameraOrLibraryImage()">
+        
+        <canvas id="img-upload-canvas" style="width:500;height:500;border:1px solid red;"></canvas>
+          <button (click)="loadCameraOrLibraryImage()">Process Photo</button>
+          <button (click)="rotateImage()">Rotate</button>
+          <button (click)="performUpload()">Upload Photo</button>
+          
+          <img id="test" />
+    </div>
+  </div>

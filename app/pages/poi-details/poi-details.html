@@ -12,18 +12,18 @@
         <div class="poi-heading-info">
             <h2>{{poi.AddressInfo.Title}} <small>OCM-{{poi.ID}}</small></h2>
 
-            <button small>
+            <button small (click)="addComment()">
                 <ion-icon name="chatbubbles"></ion-icon> Check-In
             </button>
 
-            <button small>
+            <button small (click)="addMedia()">
                 <ion-icon name="camera"></ion-icon> Add Photos
             </button>
-            <button small>
+            <button small (click)="edit()">
                 <ion-icon name="create"></ion-icon> Edit
             </button>
 
-            <button small>
+            <button small (click)="toggleFavourite()">
                 <ion-icon name="star"></ion-icon> Favourite
             </button>
         </div>

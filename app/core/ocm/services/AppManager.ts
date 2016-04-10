@@ -8,19 +8,36 @@ import {Injectable} from 'angular2/core';
 import {Events, NavController} from 'ionic-angular';
 import {Base, LogLevel} from '../Base';
 import {JwtHelper} from 'angular2-jwt';
-import {UserProfile} from '../../../ocm-model'
+import {UserProfile, SubmissionType} from '../model/AppModels'
+import {SubmissionQueue} from './SubmissionQueue';
+
 @Injectable()
 
 export class AppManager extends Base {
     jwtHelper = new JwtHelper();
+    enableSubmissionQueue: boolean;
+    public referenceData: any;
 
-    constructor(public http: Http, public events: Events, public api: APIClient) {
+    constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue) {
         super();
         this.api.clientName = "ocm.app.ionic";// TODO: version
+        this.enableSubmissionQueue = false;
+        this.submissionQueue.setAppManager(this);
     }
 
     public initAppManager() {
         this.initAuthFromStorage();
+
+        //if user authenticated and submission queue active and pending then start processing queue again        
+        if (this.isUserAuthenticated()) {
+            if (this.enableSubmissionQueue) {
+                if (this.submissionQueue != null) {
+                    if (this.submissionQueue.hasPendingItems()) {
+                        this.submissionQueue.processNextQueueItem();
+                    }
+                }
+            }
+        }
     }
 
     public initAuthFromStorage() {
@@ -62,5 +79,32 @@ export class AppManager extends Base {
     public signOutCurrentUser() {
         localStorage.removeItem("authResponse");
         this.api.authResponse = null;
+    }
+
+    public submitComment(data: any) {
+        if (this.enableSubmissionQueue) {
+            this.submissionQueue.add(SubmissionType.Comment, data);
+            this.submissionQueue.processNextQueueItem();
+        } else {
+            this.api.performSubmission(SubmissionType.Comment, data);
+        }
+    }
+
+    public submitMediaItem(data: any) {
+        if (this.enableSubmissionQueue) {
+            this.submissionQueue.add(SubmissionType.Media, data);
+            this.submissionQueue.processNextQueueItem();
+        } else {
+            this.api.performSubmission(SubmissionType.Media, data);
+        }
+    }
+
+    public submitPOI(data: any) {
+        if (this.enableSubmissionQueue) {
+            this.submissionQueue.add(SubmissionType.POI, data);
+            this.submissionQueue.processNextQueueItem();
+        } else {
+            this.api.performSubmission(SubmissionType.POI, data);
+        }
     }
 }

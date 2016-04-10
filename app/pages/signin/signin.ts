@@ -1,6 +1,6 @@
 import {Page, NavController, NavParams, Alert} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
-import {UserProfile, AsyncResult} from '../../ocm-model';
+import {UserProfile, AsyncResult} from '../../core/ocm/model/AppModels';
 
 
 @Page({
@@ -29,14 +29,15 @@ export class SignInPage {
         this.appManager.api.performSignIn(this.email, this.password).then((response) => {
 
 
-            let alert = Alert.create({
+           /* let alert = Alert.create({
                 title: 'Open Charge Map',
                 subTitle: 'You are now signed in as ' + this.appManager.api.authResponse.Data.UserProfile.Username,
                 buttons: ['Ok']
             });
-            this.nav.present(alert);
-
+            this.nav.present(alert);*/
             localStorage.setItem("authResponse", JSON.stringify(this.appManager.api.authResponse));
+
+            this.nav.popToRoot();
 
             //post test comment
             /*

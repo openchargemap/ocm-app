@@ -38,11 +38,12 @@ export class SearchPage extends Base implements OnInit {
 
         this.mapping = new Mapping(events);
 
+        //this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
         this.mapping.setMapAPI(MappingAPI.GOOGLE_WEB);
-       
+
         //////
 
-   
+
     }
 
     onPageDidEnter() {
@@ -81,31 +82,34 @@ export class SearchPage extends Base implements OnInit {
 
         //centre map on users location before starting to fetch other info
         //get user position
-        
+
         //centre map
-        
+
         var appContext = this;
-        
-        
+
+
         /*this.poiManager.populateTestData();
         var testPOI = this.getPOIByID(52224);
         setTimeout(function() { appContext.viewPOIDetails(testPOI); }, 1000);
         */
-        
-        
+
+
         //first start up, get fresh core reference data, then we can start getting POI results nearby
         this.poiManager.fetchCoreReferenceData().then(() => {
             this.log("Got core ref data. Updating local POIs", LogLevel.VERBOSE);
-            var params = new POISearchParams();
-            this.poiManager.fetchPOIList(params);
+
+
         }).catch((reason) => {
             this.log("Error fetching core ref data:" + reason);
+        }).then(() => {
+            var params = new POISearchParams();
+            this.poiManager.fetchPOIList(params);
         });
 
     }
 
     showPOIListOnMap(listType: string) {
-        
+
         //TODO: vary by list type
         this.mapping.refreshMapView(500, this.poiManager.poiList, null);
 
@@ -132,7 +136,7 @@ export class SearchPage extends Base implements OnInit {
     refreshResultsAfterMapChange() {
         this.log("map moved/zoomed", LogLevel.VERBOSE);
 
-        
+
         //this.appState.isSearchInProgress = true;
 
         var params = new POISearchParams();
@@ -188,15 +192,15 @@ export class SearchPage extends Base implements OnInit {
 
     viewPOIDetails(poi: any) {
         this.log("Viewing POI Details " + poi.ID);
-        
-         /*this.nav.push(SignInPage, {
-            item: poi
-        });
+
+        /*this.nav.push(SignInPage, {
+           item: poi
+       });
 */
-        
+
         this.nav.push(POIDetailsPage, {
             item: poi
         });
-        
+
     }
 }

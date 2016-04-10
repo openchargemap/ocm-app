@@ -1,0 +1,47 @@
+<ion-navbar *navbar dark>
+    <ion-title>
+       Add Comment
+    </ion-title>
+</ion-navbar>
+<ion-content class="comment-page" padding>
+
+<ion-list>
+
+  <ion-item>
+    <ion-label stacked>Comment</ion-label>
+    <ion-input type="text" [(ngModel)]="commentModel.Comment"></ion-input>
+  </ion-item>
+
+ 
+<ion-list>
+  <ion-item>
+    <ion-label>Status</ion-label>
+    <ion-select [(ngModel)]="commentModel.CheckStatusTypeID">
+      <ion-option *ngFor="#item of refData.CheckinStatusTypes" [value] = "item.ID" [checked]="false">{{item.Title}}</ion-option>
+    </ion-select>
+    
+      </ion-item>
+</ion-list>
+
+<ion-list>
+  <ion-item>
+    <ion-label>Comment Type</ion-label>
+    <ion-select [(ngModel)]="commentModel.UserCommentTypeID">
+      <ion-option *ngFor="#item of refData.UserCommentTypes" [value] = "item.ID" [checked]="false">{{item.Title}}</ion-option>
+    </ion-select>
+    
+      </ion-item>
+</ion-list>
+
+
+<ion-item>
+    <ion-label stacked>Rating</ion-label>
+    <ion-input type="number" [(ngModel)]="commentModel.Rating"></ion-input>
+  </ion-item>
+</ion-list>
+     
+<div padding>
+    <button block (click)="cancel()">Cancel</button>
+    <button primary block (click)="addComment()">Add Comment</button>
+  </div>
+</ion-content>

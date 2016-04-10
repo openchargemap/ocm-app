@@ -6,6 +6,7 @@ import {OnInit, provide, enableProdMode} from 'angular2/core';
 import {APIClient} from './core/ocm/services/APIClient';
 import {AppManager} from './core/ocm/services/AppManager'
 import {POIManager} from './core/ocm/services/POIManager'
+import {SubmissionQueue} from './core/ocm/services/SubmissionQueue'
 import {Base} from './core/ocm/Base';
 import {TabsPage} from './pages/tabs/tabs';
 
@@ -28,7 +29,7 @@ enableProdMode();
             deps: [Http]
         }),
         TranslateService,
-        APIClient],
+        APIClient, SubmissionQueue],
 
     config: {}
 })
