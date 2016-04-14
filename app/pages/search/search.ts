@@ -8,6 +8,7 @@ import {POIManager, POISearchParams} from '../../core/ocm/services/POIManager';
 import {POIDetailsPage} from '../poi-details/poi-details';
 import {SignInPage} from '../signin/signin';
 import {Base, LogLevel} from '../../core/ocm/Base';
+import {Utils} from '../../core/ocm/Utils';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 
 @Page({
@@ -27,6 +28,7 @@ export class SearchPage extends Base implements OnInit {
     mapDisplayed: boolean = false;
     translate: TranslateService;
 
+debouncedRefreshResults:any;
     constructor(app: IonicApp, nav: NavController, navParams: NavParams, events: Events, http: Http, poiManager: POIManager, translate: TranslateService) {
         super();
         this.nav = nav;
@@ -53,11 +55,19 @@ export class SearchPage extends Base implements OnInit {
         }
     }
 
+    getPreferredMapHeight(clientHeight: number): number {
+        if (clientHeight == null) {
+            clientHeight = Utils.getClientHeight();
+        }
+        var preferredContentHeight = clientHeight - 94;
+        return preferredContentHeight;
+    }
+
     enforceMapHeight(size: any) {
         this.log("Would resize map:" + size.width + " " + size.height, LogLevel.VERBOSE);
 
+        let preferredContentHeight = this.getPreferredMapHeight(size[0]);
 
-        var preferredContentHeight = size.height - 94;
         if (document.getElementById("map-canvas").offsetHeight != preferredContentHeight) {
             document.getElementById("map-canvas").style.height = preferredContentHeight + "px";
         }
@@ -68,8 +78,10 @@ export class SearchPage extends Base implements OnInit {
 
     ngOnInit() {
 
+        this.debouncedRefreshResults = Utils.debounce(this.refreshResultsAfterMapChange, 300, false);
+      
         this.events.subscribe('ocm:poi:selected', (poi) => { this.viewPOIDetails(poi[0]); });
-        this.events.subscribe('ocm:mapping:zoom', () => { this.refreshResultsAfterMapChange(); });
+        this.events.subscribe('ocm:mapping:zoom', () => {this.debouncedRefreshResults(); });
         this.events.subscribe('ocm:mapping:dragend', () => { this.refreshResultsAfterMapChange(); });
         this.events.subscribe('ocm:poiList:updated', (listType) => { this.showPOIListOnMap(listType); });
 
@@ -95,23 +107,33 @@ export class SearchPage extends Base implements OnInit {
 
 
         //first start up, get fresh core reference data, then we can start getting POI results nearby
-        this.poiManager.fetchCoreReferenceData().then(() => {
-            this.log("Got core ref data. Updating local POIs", LogLevel.VERBOSE);
+        if (this.poiManager.appManager.api.referenceData == null) {
+              this.log("No cached ref dat, fetching ..", LogLevel.VERBOSE);
+            this.poiManager.fetchCoreReferenceData().then(() => {
+                this.log("Got core ref data. Updating local POIs", LogLevel.VERBOSE);
 
 
-        }).catch((reason) => {
-            this.log("Error fetching core ref data:" + reason);
-        }).then(() => {
+            }).catch((reason) => {
+                this.log("Error fetching core ref data:" + reason);
+            }).then(() => {
+                var params = new POISearchParams();
+                this.poiManager.fetchPOIList(params);
+            });
+        } else {
+         this.log(" cached ref dat, fetching pois..", LogLevel.VERBOSE);
             var params = new POISearchParams();
             this.poiManager.fetchPOIList(params);
-        });
+            
+            //fetch ref data async
+                this.poiManager.fetchCoreReferenceData()
+        }
 
     }
 
     showPOIListOnMap(listType: string) {
 
         //TODO: vary by list type
-        this.mapping.refreshMapView(500, this.poiManager.poiList, null);
+        this.mapping.refreshMapView(null, this.poiManager.poiList, null);
 
         if (!this.mapDisplayed) {
             //centre map on first load
