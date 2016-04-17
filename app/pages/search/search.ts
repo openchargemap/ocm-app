@@ -7,6 +7,7 @@ import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
 import {POIManager, POISearchParams} from '../../core/ocm/services/POIManager';
 import {POIDetailsPage} from '../poi-details/poi-details';
 import {SignInPage} from '../signin/signin';
+import {SearchOptionsPage} from './search-options';
 import {Base, LogLevel} from '../../core/ocm/Base';
 import {Utils} from '../../core/ocm/Utils';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
@@ -142,6 +143,7 @@ debouncedRefreshResults:any;
             this.mapDisplayed = true;
         }
 
+ this.mapping.updateMapSize();        
     }
 
     getPOIByID(poiID) {
@@ -225,4 +227,8 @@ debouncedRefreshResults:any;
         });
 
     }
+
+    openSearchOptions() {
+     this.nav.push(SearchOptionsPage);
+}
 }

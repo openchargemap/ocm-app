@@ -1,6 +1,12 @@
 <ion-navbar *navbar dark>
     <ion-title>{{ 'ocm.search.sectionTitle' | translate }}</ion-title>
+    <ion-buttons end>
+    <button (click)="openSearchOptions()">
+      <ion-icon name="search"></ion-icon>
+    </button>
+  </ion-buttons>
 </ion-navbar>
+
 <ion-content class="search-page">
    
     <div id="map-canvas"></div>

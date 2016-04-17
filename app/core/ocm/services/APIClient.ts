@@ -33,19 +33,19 @@ export class APIClient {
         this.http = http;
         this.serviceBaseURL = this.serviceBaseURL_Standard;
         this.loadCachedRefData();
-        
+
     }
-    loadCachedRefData(){
+    loadCachedRefData() {
         let cachedRefData = localStorage.getItem("referenceData");
-        if (cachedRefData!=null){
-            this.referenceData=JSON.parse(cachedRefData);
+        if (cachedRefData != null) {
+            this.referenceData = JSON.parse(cachedRefData);
         }
     }
-cacheRefData(){
-    if (this.referenceData!=null){
-        localStorage.setItem("referenceData", JSON.stringify(this.referenceData));
+    cacheRefData() {
+        if (this.referenceData != null) {
+            localStorage.setItem("referenceData", JSON.stringify(this.referenceData));
+        }
     }
-}
     fetchPOIListByParam(params: POISearchParams) {
         var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&output=json";
 
@@ -135,7 +135,7 @@ cacheRefData(){
         return new Promise(resolve => {
             this.http.get(serviceURL).subscribe(res => {
                 this.referenceData = res.json();
-this.cacheRefData();
+                this.cacheRefData();
                 resolve(this.referenceData);
             });
         });

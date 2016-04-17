@@ -7,4 +7,15 @@
     <p>
         You can create and plan journeys to group your favourite charging routes together.
     </p>
+    
+       <ion-item *ngFor="#journey of journeys">
+            <ion-icon name="map" item-left></ion-icon>
+                  <h2>{{journey.Title}}</h2> 
+                  <p>{{journey.Notes}}</p>
+                  <ul>
+                      <li *ngFor="#w of journey.WayPoints">
+                          {{w.Title}}
+                          </li>
+                      </ul>
+     </ion-item>
 </ion-content>
