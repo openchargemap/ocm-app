@@ -29,7 +29,7 @@ export class SearchPage extends Base implements OnInit {
     mapDisplayed: boolean = false;
     translate: TranslateService;
 
-debouncedRefreshResults:any;
+    debouncedRefreshResults: any;
     constructor(app: IonicApp, nav: NavController, navParams: NavParams, events: Events, http: Http, poiManager: POIManager, translate: TranslateService) {
         super();
         this.nav = nav;
@@ -80,9 +80,9 @@ debouncedRefreshResults:any;
     ngOnInit() {
 
         this.debouncedRefreshResults = Utils.debounce(this.refreshResultsAfterMapChange, 300, false);
-      
+
         this.events.subscribe('ocm:poi:selected', (poi) => { this.viewPOIDetails(poi[0]); });
-        this.events.subscribe('ocm:mapping:zoom', () => {this.debouncedRefreshResults(); });
+        this.events.subscribe('ocm:mapping:zoom', () => { this.debouncedRefreshResults(); });
         this.events.subscribe('ocm:mapping:dragend', () => { this.refreshResultsAfterMapChange(); });
         this.events.subscribe('ocm:poiList:updated', (listType) => { this.showPOIListOnMap(listType); });
 
@@ -109,7 +109,7 @@ debouncedRefreshResults:any;
 
         //first start up, get fresh core reference data, then we can start getting POI results nearby
         if (this.poiManager.appManager.api.referenceData == null) {
-              this.log("No cached ref dat, fetching ..", LogLevel.VERBOSE);
+            this.log("No cached ref dat, fetching ..", LogLevel.VERBOSE);
             this.poiManager.fetchCoreReferenceData().then(() => {
                 this.log("Got core ref data. Updating local POIs", LogLevel.VERBOSE);
 
@@ -121,12 +121,12 @@ debouncedRefreshResults:any;
                 this.poiManager.fetchPOIList(params);
             });
         } else {
-         this.log(" cached ref dat, fetching pois..", LogLevel.VERBOSE);
+            this.log(" cached ref dat, fetching pois..", LogLevel.VERBOSE);
             var params = new POISearchParams();
             this.poiManager.fetchPOIList(params);
-            
+
             //fetch ref data async
-                this.poiManager.fetchCoreReferenceData()
+            this.poiManager.fetchCoreReferenceData()
         }
 
     }
@@ -143,7 +143,7 @@ debouncedRefreshResults:any;
             this.mapDisplayed = true;
         }
 
- this.mapping.updateMapSize();        
+        this.mapping.updateMapSize();
     }
 
     getPOIByID(poiID) {
@@ -229,6 +229,20 @@ debouncedRefreshResults:any;
     }
 
     openSearchOptions() {
-     this.nav.push(SearchOptionsPage);
-}
+        this.nav.push(SearchOptionsPage);
+    }
+
+    locateUser() {
+        if(navigator.geolocation) {
+           
+            navigator.geolocation.getCurrentPosition((position)=> {
+                var userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                
+                this.mapping.updateMapCentrePos(userLocation.lat(), userLocation.lng(), true);
+                this.mapping.setMapZoom(13); //TODO: provider specific ideal zoom for 'summary'
+            }, function() {
+                ///no geolocation
+            });
+        }
+    }
 }

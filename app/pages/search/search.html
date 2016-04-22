@@ -1,6 +1,9 @@
 <ion-navbar *navbar dark>
     <ion-title>{{ 'ocm.search.sectionTitle' | translate }}</ion-title>
     <ion-buttons end>
+      <button (click)="locateUser()">
+      <ion-icon name="locate"></ion-icon>
+    </button>
     <button (click)="openSearchOptions()">
       <ion-icon name="search"></ion-icon>
     </button>

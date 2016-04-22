@@ -114,7 +114,7 @@ export class Mapping extends Base {
     public mapCentreMarker: any;
     public mapsInitialised: boolean; //initial map setup initiated
     public mapAPIReady: boolean; //api loaded
-    
+
     public mapOptions: MapOptions;
     public markerClusterer: any;
     public markerList: Array<any>;
@@ -141,7 +141,7 @@ export class Mapping extends Base {
         this.setMapAPI(this.mapOptions.mapAPI);
 
         var mapManagerContext = this;
-        this.debouncedMapPositionUpdate = Utils.debounce(function() {
+        this.debouncedMapPositionUpdate = Utils.debounce(function () {
             mapManagerContext.log("signaling map position change:");
             if (mapManagerContext.mapProvider.mapReady) {
                 //create new latlng from map centre so that values get normalised to 180/-180
@@ -233,12 +233,12 @@ export class Mapping extends Base {
                         title: "Tap to Searching from here, Drag to change position.",
                         content: 'Your search position'
                         // icon: "images/icons/compass.png"
-                    }, function(marker) {
+                    }, function (marker) {
                         mapManagerContext.mapCentreMarker = marker;
 
                         //marker click
-                        marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function(marker) {
-                            marker.getPosition(function(pos) {
+                        marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function (marker) {
+                            marker.getPosition(function (pos) {
                                 mapManagerContext.log("Search marker tapped, requesting search from current position.");
 
                                 mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
@@ -247,8 +247,8 @@ export class Mapping extends Base {
                         });
 
                         //marker drag
-                        marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function(marker) {
-                            marker.getPosition(function(pos) {
+                        marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function (marker) {
+                            marker.getPosition(function (pos) {
                                 mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
                                 mapManagerContext.mapOptions.requestSearchUpdate = true;
                             });
@@ -279,14 +279,14 @@ export class Mapping extends Base {
                     });
                     infowindow.open(map, mapManagerContext.mapCentreMarker);
 
-                    google.maps.event.addListener(mapManagerContext.mapCentreMarker, 'click', function() {
+                    google.maps.event.addListener(mapManagerContext.mapCentreMarker, 'click', function () {
                         mapManagerContext.log("Search markers tapped, requesting search.");
                         var pos = mapManagerContext.mapCentreMarker.getPosition();
                         mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
                         mapManagerContext.mapOptions.requestSearchUpdate = true;
                     });
 
-                    google.maps.event.addListener(mapManagerContext.mapCentreMarker, 'dragend', function() {
+                    google.maps.event.addListener(mapManagerContext.mapCentreMarker, 'dragend', function () {
                         mapManagerContext.log("Search marker moved, requesting search.");
                         var pos = mapManagerContext.mapCentreMarker.getPosition();
                         mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
@@ -403,7 +403,7 @@ export class Mapping extends Base {
                                 marker._isClicked = false; //workaround for double click event
                                 marker.poi = poi;
                                 marker.on('click',
-                                    function(e) {
+                                    function (e) {
                                         if (this._isClicked == false) {
                                             this._isClicked = true;
                                             appcontext.showDetailsView(anchorElement, this.poi);
@@ -411,7 +411,7 @@ export class Mapping extends Base {
 
                                             //workaround double click event by clearing clicked state after short time
                                             var mk = this;
-                                            setTimeout(function() { mk._isClicked = false; }, 300);
+                                            setTimeout(function () { mk._isClicked = false; }, 300);
                                         }
                                     });
 
@@ -425,7 +425,7 @@ export class Mapping extends Base {
                 map.fitBounds(markerClusterGroup.getBounds());
 
                 //refresh map view
-                setTimeout(function() { map.invalidateSize(false); }, 300);
+                setTimeout(function () { map.invalidateSize(false); }, 300);
             }
         }
     }
@@ -579,7 +579,9 @@ export class Mapping extends Base {
         //TODO: normalize zoom between providers?
         return this.mapProvider.getMapZoom();
     }
-
+    setMapZoom(zoom: number) {
+        this.mapProvider.setMapZoom(zoom);
+    }
     getMapCenter(): GeoPosition {
         return this.mapProvider.getMapCenter();
     }
