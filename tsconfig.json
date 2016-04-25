@@ -6,9 +6,10 @@
     "rootDir": ".",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "sourceMap": false,
+    "removeComments": false,
+    "sourceMap": true,
     "sourceRoot": "",
-    "inlineSourceMap": false,
+    "inlineSourceMap": true,
     "inlineSources": false
   },
   "filesGlob": [

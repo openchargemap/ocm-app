@@ -5,7 +5,7 @@
 import {APIClient} from './APIClient';
 import {Http} from 'angular2/http';
 import {Injectable} from 'angular2/core';
-import {Events, NavController} from 'ionic-angular';
+import {Events, NavController, Platform} from 'ionic-angular';
 import {Base, LogLevel} from '../Base';
 import {JwtHelper} from 'angular2-jwt';
 import {UserProfile, SubmissionType} from '../model/AppModels'
@@ -17,12 +17,19 @@ export class AppManager extends Base {
     jwtHelper = new JwtHelper();
     enableSubmissionQueue: boolean;
     public referenceData: any;
+    public platformMode: string;
 
-    constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue) {
+    constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue, private platform: Platform) {
         super();
         this.api.clientName = "ocm.app.ionic";// TODO: version
         this.enableSubmissionQueue = false;
         this.submissionQueue.setAppManager(this);
+
+        if (platform.is("cordova")) {
+            this.platformMode = "cordova";
+        } else {
+            this.platformMode = "web";
+        }
     }
 
     public initAppManager() {

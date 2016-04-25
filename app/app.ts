@@ -1,4 +1,5 @@
 import {App, Platform, Config, Events, NavController} from 'ionic-angular';
+import {StatusBar} from 'ionic-native';
 import {Http, ConnectionBackend} from 'angular2/http';
 import {bootstrap} from 'angular2/bootstrap';
 import {OnInit, provide, enableProdMode} from 'angular2/core';
@@ -81,7 +82,9 @@ export class MyApp extends Base implements OnInit {
             if ((<any>window).plugin) {
                 //we can switch over to Native Maps API
             }
-
+            if (StatusBar) {
+                StatusBar.hide();//styleDefault();
+}
 /*
             var networkState = (<any>navigator).connection.type;
 

@@ -4,26 +4,29 @@
 */
 import {AppManager} from './AppManager';
 import {Injectable} from 'angular2/core';
+import {Observable} from 'rxjs/Observable';
 
 export class POISearchParams {
     constructor() { }
+
+    public poiIdList: Array<number> = null;
     public countryCode: string = null;
     public latitude: number = null;
     public longitude: number = null;
     public locationTitle: string = null;
     public distance: number = null;
     public distanceUnit: string = null;
-    public connectionTypeID: number = null;
-    public operatorID: number = null;
-    public levelID: number = null;
-    public countryID: number = null;
-    public usageTypeID: number = null;
-    public statusTypeID: number = null;
+    public connectionTypeIdList: Array<number> = null;
+    public operatorIdList: Array<number> = null;
+    public levelIdList: Array<number> = null;
+    public countryIdList: Array<number> = null;
+    public usageTypeIdList: Array<number> = null;
+    public statusTypeIdList: Array<number> = null;
     public minPowerKW: number = null;
 
-    public submissionStatusTypeID: number = null;
+    public submissionStatusTypeIdList: Array<number> = null;
 
-    public maxResults: number = 1000;
+    public maxResults: number = 500;
     public additionalParams: string = null;
     public includeComments: boolean = false;
     public compact: boolean = true;
@@ -82,5 +85,26 @@ export class POIManager {
                 console.log('Handle rejected promise (' + reason + ') here.');
             });
             */
+    }
+
+    getPOIById(poiId: number, fetchInfo:boolean=false):Observable<any> {
+        if (this.poiList != null) {
+            for (var i = 0; i < this.poiList.length; i++) {
+                if (this.poiList[i].ID == poiId) {
+                    //wrap result in observable
+                    let obs = Observable.create(observer => {
+                        observer.next(this.poiList[i]);
+                        observer.complete();
+                    });
+                    return obs;
+                }
+            }
+        }    
+
+                  
+        //still not found it, fetch via api
+        var params = new POISearchParams();
+        params.poiIdList = [poiId];
+        return this.appManager.api.fetchPOIListByParam(params, true);
     }
 }

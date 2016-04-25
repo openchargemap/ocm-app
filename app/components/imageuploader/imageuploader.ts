@@ -1,5 +1,4 @@
 import {Component} from 'angular2/core';
-import {Platform} from 'ionic-angular';
 import {Camera} from 'ionic-native';
 import {AppManager} from '../../core/ocm/services/AppManager';
 
@@ -15,12 +14,8 @@ export class ImageUploader {
     targetWidth: number;
     targetHeight: number;
 
-    constructor(private platform: Platform, private appManager: AppManager) {
-        if (platform.is("cordova")) {
-            this.mode = "cordova";
-        } else {
-            this.mode = "web";
-        }
+    constructor(private appManager: AppManager) {
+      
 
         this.processingQuality = 0.8;
         this.targetWidth = 1024;

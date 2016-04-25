@@ -2,7 +2,7 @@
 /// <reference path="../../lib/typings/collections/collections.d.ts" />
 import {Component, OnInit} from 'angular2/core';
 import {Http} from 'angular2/http';
-import {IonicApp, Page, NavController, NavParams, Events} from 'ionic-angular';
+import {IonicApp, Page, NavController, NavParams, Events, Platform} from 'ionic-angular';
 import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
 import {POIManager, POISearchParams} from '../../core/ocm/services/POIManager';
 import {POIDetailsPage} from '../poi-details/poi-details';
@@ -30,7 +30,7 @@ export class SearchPage extends Base implements OnInit {
     translate: TranslateService;
 
     debouncedRefreshResults: any;
-    constructor(app: IonicApp, nav: NavController, navParams: NavParams, events: Events, http: Http, poiManager: POIManager, translate: TranslateService) {
+    constructor(app: IonicApp, nav: NavController, navParams: NavParams, events: Events, http: Http, poiManager: POIManager, translate: TranslateService, platform: Platform) {
         super();
         this.nav = nav;
         this.map = null;
@@ -41,8 +41,14 @@ export class SearchPage extends Base implements OnInit {
 
         this.mapping = new Mapping(events);
 
-        //this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
-        this.mapping.setMapAPI(MappingAPI.GOOGLE_WEB);
+        //decide whether to use native google maps ssdsdk or google web api        
+        if (platform.is("ios") || platform.is("android")) {
+            this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
+        } else {
+            this.mapping.setMapAPI(MappingAPI.LEAFLET);
+        }
+
+
 
         //////
 
@@ -51,10 +57,20 @@ export class SearchPage extends Base implements OnInit {
 
     onPageDidEnter() {
         this.log("Entered search page.", LogLevel.VERBOSE);
+        //give input focus to native map
+        this.mapping.focusMap();
+
+        //attempt to find user current position
+        this.locateUser();
         if (this.mapping) {
             this.mapping.updateMapSize();
         }
     }
+    
+     onPageWillLeave() {
+        //remove input focus from native map
+        this.mapping.unfocusMap();
+  }
 
     getPreferredMapHeight(clientHeight: number): number {
         if (clientHeight == null) {
@@ -81,7 +97,11 @@ export class SearchPage extends Base implements OnInit {
 
         this.debouncedRefreshResults = Utils.debounce(this.refreshResultsAfterMapChange, 300, false);
 
-        this.events.subscribe('ocm:poi:selected', (poi) => { this.viewPOIDetails(poi[0]); });
+        this.events.subscribe('ocm:poi:selected', (args) => {
+        
+                this.viewPOIDetails(args[0]);
+        
+        });
         this.events.subscribe('ocm:mapping:zoom', () => { this.debouncedRefreshResults(); });
         this.events.subscribe('ocm:mapping:dragend', () => { this.refreshResultsAfterMapChange(); });
         this.events.subscribe('ocm:poiList:updated', (listType) => { this.showPOIListOnMap(listType); });
@@ -133,13 +153,16 @@ export class SearchPage extends Base implements OnInit {
 
     showPOIListOnMap(listType: string) {
 
+        var preferredMapHeight = this.getPreferredMapHeight(null);
         //TODO: vary by list type
-        this.mapping.refreshMapView(null, this.poiManager.poiList, null);
+        this.mapping.refreshMapView(preferredMapHeight, this.poiManager.poiList, null);
 
         if (!this.mapDisplayed) {
             //centre map on first load
-            var lastPOI = this.poiManager.poiList[0];
-            this.mapping.updateMapCentrePos(lastPOI.AddressInfo.Latitude, lastPOI.AddressInfo.Longitude, true);
+            /*var lastPOI = this.poiManager.poiList[0];
+            if (lastPOI != null) {
+                this.mapping.updateMapCentrePos(lastPOI.AddressInfo.Latitude, lastPOI.AddressInfo.Longitude, true);
+            } */
             this.mapDisplayed = true;
         }
 
@@ -164,68 +187,93 @@ export class SearchPage extends Base implements OnInit {
         //this.appState.isSearchInProgress = true;
 
         var params = new POISearchParams();
-        var mapcentre = this.mapping.getMapCenter();
-        params.latitude = mapcentre.coords.latitude;
-        params.longitude = mapcentre.coords.longitude;
-        //params.distance = distance;
-        // params.distanceUnit = distance_unit;
-        // params.maxResults = this.appConfig.maxResults;
-        params.includeComments = true;
-        params.enableCaching = true;
+        this.mapping.getMapCenter().subscribe((mapcentre) => {
+            if (mapcentre != null) {
+                params.latitude = mapcentre.coords.latitude;
+                params.longitude = mapcentre.coords.longitude;
+            }
 
-        //map viewport search on bounding rectangle instead of map centre
+            /////
+            //params.distance = distance;
+            // params.distanceUnit = distance_unit;
+            // params.maxResults = this.appConfig.maxResults;
+            params.includeComments = true;
+            params.enableCaching = true;
 
-        //if (this.appConfig.enableLiveMapQuerying) {
-        // if (this.mappingManager.isMapReady()) {
-        var bounds = this.mapping.getMapBounds();
-        if (bounds != null) {
-            params.boundingbox = "(" + bounds[0].latitude + "," + bounds[0].longitude + "),(" + bounds[1].latitude + "," + bounds[1].longitude + ")";
-        }
+            //map viewport search on bounding rectangle instead of map centre
 
-        //close zooms are 1:1 level of detail, zoomed out samples less data
-        var zoomLevel = this.mapping.getMapZoom();
+            //if (this.appConfig.enableLiveMapQuerying) {
+            // if (this.mappingManager.isMapReady()) {
+            this.mapping.getMapBounds().subscribe((bounds) => {
+                if (bounds != null) {
 
-        if (zoomLevel > 10) {
-            params.levelOfDetail = 1;
-        } else if (zoomLevel > 6) {
-            params.levelOfDetail = 3;
-        } else if (zoomLevel > 4) {
-            params.levelOfDetail = 5;
-        } else if (zoomLevel > 3) {
-            params.levelOfDetail = 10;
-        }
-        else {
-            params.levelOfDetail = 20;
-        }
-        //this.log("zoomLevel:" + zoomLevel + "  :Level of detail:" + params.levelOfDetail);
-        //    }
-        //}
+                    params.boundingbox = "(" + bounds[0].latitude + "," + bounds[0].longitude + "),(" + bounds[1].latitude + "," + bounds[1].longitude + ")";
+                    this.log(JSON.stringify(bounds), LogLevel.VERBOSE);
 
-        //apply filter settings from UI
-        /*
-        if ($("#filter-submissionstatus").val() != 200) params.submissionStatusTypeID = $("#filter-submissionstatus").val();
-        if ($("#filter-connectiontype").val() != "") params.connectionTypeID = $("#filter-connectiontype").val();
-        if ($("#filter-minpowerkw").val() != "") params.minPowerKW = $("#filter-minpowerkw").val();
-        if ($("#filter-operator").val() != "") params.operatorID = $("#filter-operator").val();
-        if ($("#filter-connectionlevel").val() != "") params.levelID = $("#filter-connectionlevel").val();
-        if ($("#filter-usagetype").val() != "") params.usageTypeID = $("#filter-usagetype").val();
-        if ($("#filter-statustype").val() != "") params.statusTypeID = $("#filter-statustype").val();
-        */
-        this.poiManager.fetchPOIList(params);
-    }
+                }
+                //close zooms are 1:1 level of detail, zoomed out samples less data
+                this.mapping.getMapZoom().subscribe((zoomLevel: number) => {
+                    this.log("map zoom level to be converted to level of detail:"+zoomLevel);
+                    if (zoomLevel > 10) {
+                        params.levelOfDetail = 1;
+                    } else if (zoomLevel > 6) {
+                        params.levelOfDetail = 3;
+                    } else if (zoomLevel > 4) {
+                        params.levelOfDetail = 5;
+                    } else if (zoomLevel > 3) {
+                        params.levelOfDetail = 10;
+                    }
+                    else {
+                        params.levelOfDetail = 20;
+                    }
+                    //this.log("zoomLevel:" + zoomLevel + "  :Level of detail:" + params.levelOfDetail);
+                    //    }
+                    //}
 
-    viewPOIDetails(poi: any) {
-        this.log("Viewing POI Details " + poi.ID);
+                    //apply filter settings from UI
+                    /*
+                    if ($("#filter-submissionstatus").val() != 200) params.submissionStatusTypeID = $("#filter-submissionstatus").val();
+                    if ($("#filter-connectiontype").val() != "") params.connectionTypeID = $("#filter-connectiontype").val();
+                    if ($("#filter-minpowerkw").val() != "") params.minPowerKW = $("#filter-minpowerkw").val();
+                    if ($("#filter-operator").val() != "") params.operatorID = $("#filter-operator").val();
+                    if ($("#filter-connectionlevel").val() != "") params.levelID = $("#filter-connectionlevel").val();
+                    if ($("#filter-usagetype").val() != "") params.usageTypeID = $("#filter-usagetype").val();
+                    if ($("#filter-statustype").val() != "") params.statusTypeID = $("#filter-statustype").val();
+                    */
+                    this.poiManager.fetchPOIList(params);
 
-        /*this.nav.push(SignInPage, {
-           item: poi
-       });
-*/
+                });
 
-        this.nav.push(POIDetailsPage, {
-            item: poi
+
+
+            });
+
+
         });
 
+
+    }
+
+    viewPOIDetails(args: any) {
+       
+        if (args.poi!=null) {
+            this.log("Viewing POI Details " + args.poi.ID);
+            this.nav.push(POIDetailsPage, {
+                item: args.poi
+            });
+
+        } else {
+            //may need to fetch POI details
+            this.log("Viewing/fetching POI Details " + args.poiId);
+            this.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
+
+                this.nav.push(POIDetailsPage, {
+                    item: poi
+                });
+            });
+
+        }
+ 
     }
 
     openSearchOptions() {
@@ -233,14 +281,15 @@ export class SearchPage extends Base implements OnInit {
     }
 
     locateUser() {
-        if(navigator.geolocation) {
-           
-            navigator.geolocation.getCurrentPosition((position)=> {
+        if (navigator.geolocation) {
+
+            navigator.geolocation.getCurrentPosition((position) => {
                 var userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                
+
                 this.mapping.updateMapCentrePos(userLocation.lat(), userLocation.lng(), true);
                 this.mapping.setMapZoom(13); //TODO: provider specific ideal zoom for 'summary'
-            }, function() {
+                this.mapping.updateMapSize();
+            }, function () {
                 ///no geolocation
             });
         }

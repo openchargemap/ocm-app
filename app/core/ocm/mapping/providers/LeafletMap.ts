@@ -2,33 +2,31 @@
 * @author Christopher Cook
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
-/// <reference path="../../../../lib/typings/googlemaps/google.maps.d.ts" />
-
+/// <reference path="../../../../lib/typings/leaflet/leaflet.d.ts" />
 import {Base, LogLevel} from '../../Base';
 import {Utils} from '../../Utils';
 import {MappingAPI, IMapProvider, MapOptions, Mapping, GeoLatLng, GeoPosition} from '../Mapping';
 import {Events} from 'ionic-angular';
 import {Observable} from 'rxjs/Observable';
 
-/**Map Provider for Google Maps Web API
+/**Map Provider for Leaflet API
 * @module MapProviders
 */
-export class GoogleMapsWeb extends Base implements IMapProvider {
+export class LeafletMap extends Base implements IMapProvider {
     mapAPIType: MappingAPI;
     mapReady: boolean;
     providerError: string;
     mapCanvasID: string;
 
-    private map: google.maps.Map;
-    private markerList: collections.Dictionary<number, google.maps.Marker>;
+    private map: L.Map;
+    private markerList: collections.Dictionary<number, any>;
 
-    private events: Events;
-
+   
     /** @constructor */
-    constructor(events: Events) {
+    constructor(private events: Events) {
         super();
         this.events = events;
-        this.mapAPIType = MappingAPI.GOOGLE_WEB;
+        this.mapAPIType = MappingAPI.LEAFLET;
         this.mapReady = false;
         this.markerList = new collections.Dictionary<number, google.maps.Marker>();
     }
@@ -43,56 +41,35 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
         this.mapCanvasID = mapCanvasID;
 
         var apiLoaded = true;
-        if (typeof google === 'undefined') {
+        if (typeof L === 'undefined') {
             apiLoaded = false;
-        } else if (typeof google.maps === 'undefined') {
-            apiLoaded = false;
-        }
-
+        } 
+        
         if (apiLoaded) {
             if (this.map == null) {
                 var mapCanvas = document.getElementById(mapCanvasID);
 
                 if (mapCanvas != null) {
-                    (<any>google.maps).visualRefresh = true;
+                    this.map = L.map(mapCanvasID).setView(new L.LatLng(51.505, -0.09), 13);
 
+                    var t = new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    });
+                    this.map.addLayer(t);
+                    
                     mapCanvas.style.width = '100%';
                     mapCanvas.style.height = Utils.getClientHeight().toString();
                     this.log("Defaulted map height to " + Utils.getClientHeight());
-                    //create map
-                    var mapOptions = {
-                        zoom: 10,
-                        minZoom: mapConfig.minZoomLevel,
-                        mapTypeId: google.maps.MapTypeId.ROADMAP,
-                        mapTypeControl: true,
-                        mapTypeControlOptions: {
-                            style: google.maps.MapTypeControlStyle.DEFAULT,
-                            position: google.maps.ControlPosition.BOTTOM_RIGHT
-                        },
-                        zoomControl: true,
-                        zoomControlOptions: {
-                            style: google.maps.ZoomControlStyle.DEFAULT,
-                            position: google.maps.ControlPosition.BOTTOM_RIGHT
-                        },
 
-                        streetViewControl: true,
-                        streetViewControlOptions: {
-                            position: google.maps.ControlPosition.BOTTOM_RIGHT
-                        }
-                    };
-
-                    this.map = new google.maps.Map(mapCanvas, mapOptions);
-
-                    //TODO: events for map manipulation to perform search
-                    var mapProviderContext = this;
-                    google.maps.event.addListener(this.map, 'dragend', function () {
-                        mapProviderContext.events.publish('ocm:mapping:dragend');
+                    //events for map manipulation to perform search
+                    var providerContext = this;
+                     this.map.on('moveend', () => { 
+                         providerContext.events.publish('ocm:mapping:dragend');
                     });
-
-                    google.maps.event.addListener(this.map, 'zoom_changed', function () {
-                        mapProviderContext.events.publish('ocm:mapping:zoom');
+                    this.map.on('zoomend', () => { 
+                         providerContext.events.publish('ocm:mapping:zoom');
                     });
-
+                   
                     this.mapReady = true;
 
                     this.events.publish('ocm:mapping:ready');
@@ -113,6 +90,7 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
     * @param parentContext  parent app context
     */
     showPOIListOnMap(poiList: Array<any>, parentContext: any) {
+        return;
         var clearMarkersOnRefresh = false;
         var map = this.map;
         var bounds = new google.maps.LatLngBounds();
@@ -212,6 +190,7 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
 
         var uiContext = this;
         //zoom to bounds of markers
+/*
         if (poiList != null && poiList.length > 0) {
             if (parentContext != null && !parentContext.appConfig.enableLiveMapQuerying) {
                 this.log("Fitting to marker bounds:" + bounds);
@@ -229,6 +208,7 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                 }
             }
         }
+*/
 
         //this.refreshMapLayout();
     }
@@ -236,17 +216,13 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
     refreshMapLayout() {
         if (this.map != null) {
 
-            setTimeout(() => {
-                this.log("GoogleMapsWeb: refreshMapLayout", LogLevel.VERBOSE);
-                google.maps.event.trigger(this.map, 'resize');
-            }, 200);
-
+            
         }
     }
 
     setMapCenter(pos: GeoPosition) {
         if (this.mapReady) {
-            this.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+           // this.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
         }
     };
 
@@ -255,7 +231,7 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
         //wrap getCenter in an observable
         let obs = Observable.create(observer => {
             var pos = this.map.getCenter();
-            observer.next(new GeoPosition(pos.lat(),pos.lng()));
+            observer.next(new GeoPosition(pos.lat,pos.lng));
             observer.complete();
         });
 
@@ -280,11 +256,11 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
     }
 
     setMapType(mapType: string) {
-        try {
+        /*try {
             this.map.setMapTypeId(eval("google.maps.MapTypeId." + mapType));
         } catch (exception) {
             this.log("Failed to set map type:" + mapType + " : " + exception.toString());
-        }
+        }*/
     }
 
     getMapBounds(): Observable<Array<GeoLatLng>> {
@@ -294,8 +270,8 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
             var bounds = new Array<GeoLatLng>();
 
             var mapBounds = this.map.getBounds();
-            bounds.push(new GeoLatLng(mapBounds.getNorthEast().lat(), mapBounds.getNorthEast().lng()));
-            bounds.push(new GeoLatLng(mapBounds.getSouthWest().lat(), mapBounds.getSouthWest().lng()));
+            bounds.push(new GeoLatLng(mapBounds.getNorthEast().lat, mapBounds.getNorthEast().lng));
+            bounds.push(new GeoLatLng(mapBounds.getSouthWest().lat, mapBounds.getSouthWest().lng));
 
 
             observer.next(bounds);
@@ -306,15 +282,6 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
 
     renderMap(poiList: Array<any>, mapHeight: number, parentContext: any): boolean {
         document.getElementById(this.mapCanvasID).style.height = mapHeight + "px";
-
-        if (typeof (google) == "undefined") {
-            //no google maps currently available
-            this.providerError = "Google maps cannot be loaded. Please check your data connection.";
-            return false;
-        }
-
-        //finish init of map view if not already initialised (could previously be called before api ready)
-        //this.initMap(this.mapCanvasID, parentContext.mappingManager.mapOptions, this.mapManipulationCallback);
 
         if (this.mapReady) {
             this.showPOIListOnMap(poiList, parentContext);

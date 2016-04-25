@@ -33,20 +33,31 @@ export class APIClient {
         this.http = http;
         this.serviceBaseURL = this.serviceBaseURL_Standard;
         this.loadCachedRefData();
-
     }
+
     loadCachedRefData() {
         let cachedRefData = localStorage.getItem("referenceData");
         if (cachedRefData != null) {
             this.referenceData = JSON.parse(cachedRefData);
         }
     }
+
     cacheRefData() {
         if (this.referenceData != null) {
             localStorage.setItem("referenceData", JSON.stringify(this.referenceData));
         }
     }
-    fetchPOIListByParam(params: POISearchParams) {
+
+    getNumberListString(numberList: Array<number>): string {
+        var output = "";
+        for (var i = 0; i < numberList.length; i++) {
+            output += numberList[i];
+            if (i < numberList.length) output += ",";
+        }
+        return output;
+    }
+
+    fetchPOIListByParam(params: POISearchParams, asObservable: boolean = false): any {
         var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&output=json";
 
         var serviceParams = "";
@@ -57,15 +68,16 @@ export class APIClient {
         if (params.distanceUnit != null) serviceParams += "&distanceunit=" + params.distanceUnit;
         if (params.includeComments != null) serviceParams += "&includecomments=" + params.includeComments;
         if (params.maxResults != null) serviceParams += "&maxresults=" + params.maxResults;
-        if (params.countryID != null) serviceParams += "&countryid=" + params.countryID;
-        if (params.levelID != null) serviceParams += "&levelid=" + params.levelID;
-        if (params.connectionTypeID != null) serviceParams += "&connectiontypeid=" + params.connectionTypeID;
-        if (params.operatorID != null) serviceParams += "&operatorid=" + params.operatorID;
-        if (params.usageTypeID != null) serviceParams += "&usagetypeid=" + params.usageTypeID;
-        if (params.statusTypeID != null) serviceParams += "&statustypeid=" + params.statusTypeID;
+        if (params.countryIdList != null) serviceParams += "&countryid=" + this.getNumberListString(params.countryIdList);
+        if (params.levelIdList != null) serviceParams += "&levelid=" + this.getNumberListString(params.levelIdList);
+        if (params.connectionTypeIdList != null) serviceParams += "&connectiontypeid=" + this.getNumberListString(params.connectionTypeIdList);
+        if (params.operatorIdList != null) serviceParams += "&operatorid=" + this.getNumberListString(params.operatorIdList);
+        if (params.usageTypeIdList != null) serviceParams += "&usagetypeid=" + this.getNumberListString(params.usageTypeIdList);
+        if (params.statusTypeIdList != null) serviceParams += "&statustypeid=" + this.getNumberListString(params.statusTypeIdList);
         if (params.locationTitle != null) serviceParams += "&locationtitle=" + params.locationTitle;
         if (params.minPowerKW != null) serviceParams += "&minpowerkw=" + params.minPowerKW;
-        if (params.submissionStatusTypeID != null) serviceParams += "&submissionstatustypeid=" + params.submissionStatusTypeID;
+        if (params.submissionStatusTypeIdList != null) serviceParams += "&submissionstatustypeid=" + this.getNumberListString(params.submissionStatusTypeIdList);
+        if (params.poiIdList != null) serviceParams += "&chargepointid=" + this.getNumberListString(params.poiIdList);
 
         if (params.enableCaching == false) serviceParams += "&enablecaching=false";
         if (params.compact != null) serviceParams += "&compact=" + params.compact;
@@ -74,7 +86,6 @@ export class APIClient {
         if (params.boundingbox != null) serviceParams += "&boundingbox=" + params.boundingbox;
         if (params.additionalParams != null) serviceParams += "&" + params.additionalParams;
 
-        // if (!errorcallback) errorcallback = this.handleGeneralAjaxError;
 
         var apiCallURL = serviceURL + serviceParams;
         //+ "&polyline=u`lyH|iW{}D|dHweCboEasA|x@_gAupBs}A{yE}n@ydG}bBi~FybCsnBmeCse@otLm{BshGscAw`E|nDawLykJq``@flAqbRczR";
@@ -83,32 +94,30 @@ export class APIClient {
             console.log("API Call:" + apiCallURL);
         }
 
-        /*var ajaxSettings: JQueryAjaxSettings = {
-            type: "GET",
-            url: apiCallURL + "&callback=" + callbackname,
-            jsonp: "false",
-            contentType: "application/json;",
-            dataType: "jsonp",
-            crossDomain: true,
-            error: errorcallback
-        };
 
-        $.ajax(ajaxSettings);*/
+        if (!asObservable) {
 
-        //this.http.get(serviceURL).subscribe((res:Response) => doSomething(res));
-
-
-        return new Promise(resolve => {
-            // We're using Angular Http provider to request the data,
-            // then on the response it'll map the JSON data to a parsed JS object.
-            // Next we process the data and resolve the promise with the new data.
-            this.http.get(apiCallURL).subscribe(res => {
-                // we've got back the raw data, now generate the core schedule data
-                // and save the data for later reference
-                let poiResults = this.hydrateCompactPOIList(res.json());
-                resolve(poiResults);
+            //return as Promise
+            return new Promise(resolve => {
+                // We're using Angular Http provider to request the data,
+                // then on the response it'll map the JSON data to a parsed JS object.
+                // Next we process the data and resolve the promise with the new data.
+                this.http.get(apiCallURL).subscribe(res => {
+                    // we've got back the raw data, now generate the core schedule data
+                    // and save the data for later reference
+                    let poiResults = this.hydrateCompactPOIList(res.json());
+                    resolve(poiResults);
+                });
             });
-        });
+        } else {
+            //return as Observable
+            this.http.get(apiCallURL).map(res => {
+                return this.hydrateCompactPOIList(res.json());
+            }).subscribe(results => {
+                return results;
+            });
+
+        }
     }
 
     getHttpRequestOptions(): RequestOptions {

@@ -4,12 +4,14 @@
 */
 
 /// <reference path="../../../lib/typings/googlemaps/google.maps.d.ts" />
-/// <reference path="../../../lib/typings/leaflet/leaflet.d.ts" />
 
+
+import {Observable} from 'rxjs/Observable';
 import {Utils} from '../Utils';
 import {Base, LogLevel} from '../Base';
 import {GoogleMapsNative} from './providers/GoogleMapsNative';
 import {GoogleMapsWeb} from './providers/GoogleMapsWeb';
+import {LeafletMap} from './providers/LeafletMap';
 import {Events} from 'ionic-angular'; //TODO remove dependency on ionic here
 
 declare var plugin: any;
@@ -95,15 +97,15 @@ export interface IMapProvider {
     mapReady: boolean;
     providerError: string;
 
-    initMap(mapCanvasID: string, mapConfig: MapOptions, mapManipulationCallback: any, mapManagerContext: Mapping);
+    initMap(mapCanvasID: string, mapConfig: MapOptions, mapManagerContext: Mapping);
     refreshMapLayout();
     renderMap(poiList: Array<any>, mapHeight: number, parentContext: any);
-    getMapZoom(): number;
+    getMapZoom(): Observable<number>;
     setMapZoom(zoomLevel: number);
-    getMapCenter(): GeoPosition;
+    getMapCenter(): Observable<GeoPosition>;
     setMapCenter(pos: GeoPosition);
     setMapType(mapType: string);
-    getMapBounds(): Array<GeoLatLng>;
+    getMapBounds(): Observable<Array<GeoLatLng>>;
 }
 
 /** Mapping - provides a way to render to various mapping APIs
@@ -144,11 +146,17 @@ export class Mapping extends Base {
         this.debouncedMapPositionUpdate = Utils.debounce(function () {
             mapManagerContext.log("signaling map position change:");
             if (mapManagerContext.mapProvider.mapReady) {
+
                 //create new latlng from map centre so that values get normalised to 180/-180
 
-                var centerPos: GeoPosition = mapManagerContext.mapProvider.getMapCenter();
-                mapManagerContext.log("Map centre/zoom changed, updating search position:" + centerPos);
-                mapManagerContext.updateMapCentrePos(centerPos.coords.latitude, centerPos.coords.longitude, false);
+                mapManagerContext.getMapCenter().subscribe((centerPos: GeoPosition) => {
+                    if (centerPos != null) {
+                        mapManagerContext.log("Map centre/zoom changed, updating search position:" + centerPos);
+                        mapManagerContext.updateMapCentrePos(centerPos.coords.latitude, centerPos.coords.longitude, false);
+                    } else {
+                        mapManagerContext.log("Map centre/zoom changed - map not ready to change centre pos:");
+                    }
+                });    
             }
         }, 300, false);
     }
@@ -161,11 +169,15 @@ export class Mapping extends Base {
         this.mapOptions.mapAPI = api;
 
         if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
-            this.mapProvider = new GoogleMapsNative();
+            this.mapProvider = new GoogleMapsNative(this.events);
         }
 
         if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
             this.mapProvider = new GoogleMapsWeb(this.events);
+        }
+
+        if (this.mapOptions.mapAPI == MappingAPI.LEAFLET) {
+            this.mapProvider = new LeafletMap(this.events);
         }
     }
 
@@ -195,7 +207,11 @@ export class Mapping extends Base {
             this.log("Mapping Manager: Init " + MappingAPI[this.mapProvider.mapAPIType]);
 
             //TODO: proxy 'this'?
-            this.mapProvider.initMap(mapcanvasID, this.mapOptions, this.mapManipulationPerformed, this);
+            this.mapProvider.initMap(
+                mapcanvasID,
+                this.mapOptions,
+                this
+                );
         } else {
             if (this.mapsInitialised) {
                 this.log("initMap: map already initialised");
@@ -572,17 +588,17 @@ export class Mapping extends Base {
         }
     }
 
-    getMapBounds(): Array<GeoLatLng> {
+    getMapBounds(): Observable<Array<GeoLatLng>> {
         return this.mapProvider.getMapBounds();
     }
-    getMapZoom(): number {
+    getMapZoom(): Observable<number> {
         //TODO: normalize zoom between providers?
         return this.mapProvider.getMapZoom();
     }
     setMapZoom(zoom: number) {
         this.mapProvider.setMapZoom(zoom);
     }
-    getMapCenter(): GeoPosition {
+    getMapCenter(): Observable<GeoPosition> {
         return this.mapProvider.getMapCenter();
     }
 
