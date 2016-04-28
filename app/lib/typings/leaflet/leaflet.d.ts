@@ -1,10 +1,14 @@
-// Type definitions for Leaflet.js 0.6.4
+// Type definitions for Leaflet.js 0.7.3
 // Project: https://github.com/Leaflet/Leaflet
 // Definitions by: Vladimir Zotov <https://github.com/rgripper>
-// Definitions: https://github.com/borisyankov/DefinitelyTyped
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
+declare namespace L {
+    type LatLngExpression = LatLng | number[] | ({ lat: number; lng: number })
+    type LatLngBoundsExpression = LatLngBounds | LatLngExpression[];
+}
 
-declare module L {
+declare namespace L {
 
     export interface AttributionOptions {
 
@@ -23,7 +27,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
         * Creates a Bounds object from two coordinates (usually top-left and bottom-right
@@ -36,19 +40,22 @@ declare module L {
         */
     export function bounds(points: Point[]): Bounds;
 
-    export class Bounds {
 
+    export interface BoundsStatic {
         /**
           * Creates a Bounds object from two coordinates (usually top-left and bottom-right
           * corners).
           */
-        constructor(topLeft: Point, bottomRight: Point);
+        new(topLeft: Point, bottomRight: Point): Bounds;
 
         /**
           * Creates a Bounds object defined by the points it contains.
           */
-        constructor(points: Point[]);
+        new(points: Point[]): Bounds;
+    }
+    export var Bounds: BoundsStatic;
 
+    export interface Bounds {
         /**
           * Extends the bounds to contain the given point.
           */
@@ -96,97 +103,99 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
-    export class Browser {
+    namespace Browser {
 
         /**
           * true for all Internet Explorer versions.
           */
-        static ie: boolean;
+        export var ie: boolean;
 
         /**
           * true for Internet Explorer 6.
           */
-        static ie6: boolean;
+        export var ie6: boolean;
 
         /**
           * true for Internet Explorer 6.
           */
-        static ie7: boolean;
+        export var ie7: boolean;
 
         /**
           * true for webkit-based browsers like Chrome and Safari (including mobile
           * versions).
           */
-        static webkit: boolean;
+        export var webkit: boolean;
 
         /**
           * true for webkit-based browsers that support CSS 3D transformations.
           */
-        static webkit3d: boolean;
+        export var webkit3d: boolean;
 
         /**
           * true for Android mobile browser.
           */
-        static android: boolean;
+        export var android: boolean;
 
         /**
           * true for old Android stock browsers (2 and 3).
           */
-        static android23: boolean;
+        export var android23: boolean;
 
         /**
           * true for modern mobile browsers (including iOS Safari and different Android
           * browsers).
           */
-        static mobile: boolean;
+        export var mobile: boolean;
 
         /**
           * true for mobile webkit-based browsers.
           */
-        static mobileWebkit: boolean;
+        export var mobileWebkit: boolean;
 
         /**
           * true for mobile Opera.
           */
-        static mobileOpera: boolean;
+        export var mobileOpera: boolean;
 
         /**
           * true for all browsers on touch devices.
           */
-        static touch: boolean;
+        export var touch: boolean;
 
         /**
           * true for browsers with Microsoft touch model (e.g. IE10).
           */
-        static msTouch: boolean;
+        export var msTouch: boolean;
 
         /**
           * true for devices with Retina screens.
           */
-        static retina: boolean;
+        export var retina: boolean;
 
     }
 }
 
 
-declare module L {
+declare namespace L {
 
     /**
       * Instantiates a circle object given a geographical point, a radius in meters
       * and optionally an options object.
       */
-    function circle(latlng: LatLng, radius: number, options?: PathOptions): Circle;
+    function circle(latlng: LatLngExpression, radius: number, options?: PathOptions): Circle;
 
-    export class Circle extends Path {
-
+    export interface CircleStatic extends ClassStatic {
         /**
           * Instantiates a circle object given a geographical point, a radius in meters
           * and optionally an options object.
           */
-        constructor(latlng: LatLng, radius: number, options?: PathOptions);
+        new(latlng: LatLngExpression, radius: number, options?: PathOptions): Circle;
+    }
+    export var Circle: CircleStatic;
 
+    export interface Circle extends Path {
         /**
           * Returns the current geographical position of the circle.
           */
@@ -200,7 +209,7 @@ declare module L {
         /**
           * Sets the position of a circle to a new location.
           */
-        setLatLng(latlng: LatLng): Circle;
+        setLatLng(latlng: LatLngExpression): Circle;
 
         /**
           * Sets the radius of a circle. Units are in meters.
@@ -215,28 +224,31 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Instantiates a circle marker given a geographical point and optionally
       * an options object. The default radius is 10 and can be altered by passing a
       * "radius" member in the path options object.
       */
-    function circleMarker(latlng: LatLng, options?: PathOptions): CircleMarker;
+    function circleMarker(latlng: LatLngExpression, options?: PathOptions): CircleMarker;
 
-    export class CircleMarker extends Circle {
 
+    export interface CircleMarkerStatic extends ClassStatic {
         /**
           * Instantiates a circle marker given a geographical point and optionally
           * an options object. The default radius is 10 and can be altered by passing a
           * "radius" member in the path options object.
           */
-        constructor(latlng: LatLng, options?: PathOptions);
+        new(latlng: LatLngExpression, options?: PathOptions): CircleMarker;
+    }
+    export var CircleMarker: CircleMarkerStatic;
 
+    export interface CircleMarker extends Circle {
         /**
           * Sets the position of a circle marker to a new location.
           */
-        setLatLng(latlng: LatLng): CircleMarker;
+        setLatLng(latlng: LatLngExpression): CircleMarker;
 
         /**
           * Sets the radius of a circle marker. Units are in pixels.
@@ -250,65 +262,84 @@ declare module L {
     }
 }
 
-declare module L {
-
+declare namespace L {
     export interface ClassExtendOptions {
         /**
-          * options is a special property that unlike other objects that you pass 
-          * to extend will be merged with the parent one instead of overriding it 
-          * completely, which makes managing configuration of objects and default 
+          * Your class's constructor function, meaning that it gets called when you do 'new MyClass(...)'.
+          */
+        initialize?: Function;
+
+        /**
+          * options is a special property that unlike other objects that you pass
+          * to extend will be merged with the parent one instead of overriding it
+          * completely, which makes managing configuration of objects and default
           * values convenient.
           */
         options?: any;
 
         /**
-          * includes is a special class property that merges all specified objects 
+          * includes is a special class property that merges all specified objects
           * into the class (such objects are called mixins). A good example of this
-          * is L.Mixin.Events that event-related methods like on, off and fire 
+          * is L.Mixin.Events that event-related methods like on, off and fire
           * to the class.
           */
         includes?: any;
 
         /**
-          * statics is just a convenience property that injects specified object 
-          * properties as the static properties of the class, useful for defining 
+          * statics is just a convenience property that injects specified object
+          * properties as the static properties of the class, useful for defining
           * constants.
           */
         static?: any;
+
+        [prop: string]: any;
     }
 
-    /**
-      * L.Class powers the OOP facilities of Leaflet and is used to create
-      * almost all of the Leaflet classes documented.
-      */
-    export class Class {
-
+    export interface ClassStatic {
         /**
           * You use L.Class.extend to define new classes, but you can use the
           * same method on any class to inherit from it.
           */
-        static extend(options: ClassExtendOptions): any;
+        extend(options: ClassExtendOptions): any;
+        extend<Options, NewClass>(options: ClassExtendOptions): { new(options?: Options): NewClass };
 
         /**
           * You can also use the following shortcut when you just need to make
           * one additional method call.
           */
-        static addInitHook(methodName: string, ...args: any[]): void;
+        addInitHook(methodName: string, ...args: any[]): void;
+    }
+
+
+    /**
+      * L.Class powers the OOP facilities of Leaflet and is used to create
+      * almost all of the Leaflet classes documented.
+      */
+    namespace Class {
+        /**
+          * You use L.Class.extend to define new classes, but you can use the
+          * same method on any class to inherit from it.
+          */
+        function extend(options: ClassExtendOptions): any;
     }
 
 }
 
-
-
-declare module L {
-
-    export class Control extends Class implements IControl {
-
+declare namespace L {
+    export interface ControlStatic extends ClassStatic {
         /**
           * Creates a control with the given options.
           */
-        constructor(options?: ControlOptions);
+        new(options?: ControlOptions): Control;
 
+        Zoom: Control.ZoomStatic;
+        Attribution: Control.AttributionStatic;
+        Layers: Control.LayersStatic;
+        Scale: Control.ScaleStatic;
+    }
+    export var Control: ControlStatic;
+
+    export interface Control extends IControl {
         /**
           * Sets the position of the control. See control positions.
           */
@@ -351,23 +382,63 @@ declare module L {
         onRemove(map: Map): void;
     }
 
-    module Control {
-
-        export class Zoom extends L.Control {
-
+    namespace Control {
+        export interface ZoomStatic extends ClassStatic {
             /**
               * Creates a zoom control.
               */
-            constructor(options?: ZoomOptions);
+            new (options?: ZoomOptions): Zoom;
         }
 
-        export class Attribution extends L.Control {
+        export interface Zoom extends L.Control {
+        }
 
+        export interface ZoomOptions {
+            /**
+              * The position of the control (one of the map corners).
+              * Can be 'topleft', 'topright', 'bottomleft', or 'bottomright'.
+              *
+              * Default value: 'topright'.
+              */
+            position?: string; // 'topleft' | 'topright' | 'bottomleft' | 'bottomright'
+
+            /**
+             * The text set on the zoom in button.
+             *
+             * Default value: '+'
+             */
+            zoomInText?: string;
+
+            /**
+             * The text set on the zoom out button.
+             *
+             * Default value: '-'
+             */
+            zoomOutText?: string;
+
+            /**
+             * The title set on the zoom in button.
+             *
+             * Default value: 'Zoom in'
+             */
+            zoomInTitle?: string;
+
+            /**
+             * The title set on the zoom out button.
+             *
+             * Default value: 'Zoom out'
+             */
+            zoomOutTitle?: string;
+        }
+
+        export interface AttributionStatic extends ClassStatic {
             /**
               * Creates an attribution control.
               */
-            constructor(options?: AttributionOptions);
+            new(options?: AttributionOptions): Attribution;
+        }
 
+        export interface Attribution extends L.Control {
             /**
               * Sets the text before the attributions.
               */
@@ -385,14 +456,15 @@ declare module L {
 
         }
 
-        export class Layers extends L.Control implements IEventPowered<Layers> {
-
+        export interface LayersStatic extends ClassStatic {
             /**
               * Creates an attribution control with the given layers. Base layers will be
               * switched with radio buttons, while overlays will be switched with checkboxes.
               */
-            constructor(baseLayers?: any, overlays?: any, options?: LayersOptions);
+            new(baseLayers?: any, overlays?: any, options?: LayersOptions): Layers;
+        }
 
+        export interface Layers extends L.Control, IEventPowered<Layers> {
             /**
               * Adds a base layer (radio button entry) with the given name to the control.
               */
@@ -418,54 +490,58 @@ declare module L {
             on(type: string, fn: (e: LeafletEvent) => void, context?: any): Layers;
             once(type: string, fn: (e: LeafletEvent) => void, context?: any): Layers;
             off(type: string, fn?: (e: LeafletEvent) => void, context?: any): Layers;
-            fire(type: string, data?: any): Layers; addEventListener(eventMap: any, context?: any): Layers;
+            fire(type: string, data?: any): Layers;
+            addEventListener(eventMap: any, context?: any): Layers;
             removeEventListener(eventMap?: any, context?: any): Layers;
             clearAllEventListeners(): Layers;
             on(eventMap: any, context?: any): Layers;
             off(eventMap?: any, context?: any): Layers;
         }
 
-        export class Scale extends L.Control {
-
+        export interface ScaleStatic extends ClassStatic {
             /**
               * Creates an scale control with the given options.
               */
-            constructor(options?: ScaleOptions);
+            new(options?: ScaleOptions): Scale;
+        }
 
+        export interface Scale extends L.Control {
         }
     }
 
-    export class control {
-
+    export interface control {
         /**
           * Creates a control with the given options.
           */
-        function(options?: ControlOptions): Control;
+        (options?: ControlOptions): Control;
+    }
+
+    export namespace control {
 
         /**
           * Creates a zoom control.
           */
-        static zoom(options?: ZoomOptions): L.Control.Zoom;
+        export function zoom(options?: Control.ZoomOptions): L.Control.Zoom;
 
         /**
           * Creates an attribution control.
           */
-        static attribution(options?: AttributionOptions): L.Control.Attribution;
+        export function attribution(options?: AttributionOptions): L.Control.Attribution;
 
         /**
             * Creates an attribution control with the given layers. Base layers will be
             * switched with radio buttons, while overlays will be switched with checkboxes.
             */
-        static layers(baseLayers?: any, overlays?: any, options?: LayersOptions): L.Control.Layers;
+        export function layers(baseLayers?: any, overlays?: any, options?: LayersOptions): L.Control.Layers;
 
         /**
           * Creates an scale control with the given options.
           */
-        static scale(options?: ScaleOptions): L.Control.Scale;
+        export function scale(options?: ScaleOptions): L.Control.Scale;
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface ControlOptions {
 
@@ -474,60 +550,63 @@ declare module L {
           * positions.
           * Default value: 'topright'.
           */
-        position: string;
+        position?: string;
 
     }
 }
 
-declare module L {
+declare namespace L {
 
-    export class CRS {
+    namespace CRS {
 
         /**
           * The most common CRS for online maps, used by almost all free and commercial
           * tile providers. Uses Spherical Mercator projection. Set in by default in
           * Map's crs option.
           */
-        static EPSG3857: ICRS;
+        export var EPSG3857: ICRS;
 
         /**
           * A common CRS among GIS enthusiasts. Uses simple Equirectangular projection.
           */
-        static EPSG4326: ICRS;
+        export var EPSG4326: ICRS;
 
         /**
           * Rarely used by some commercial tile providers. Uses Elliptical Mercator
           * projection.
           */
-        static EPSG3395: ICRS;
+        export var EPSG3395: ICRS;
 
         /**
           * A simple CRS that maps longitude and latitude into x and y directly. May be
           * used for maps of flat surfaces (e.g. game maps). Note that the y axis should
           * still be inverted (going from bottom to top).
           */
-        static Simple: ICRS;
+        export var Simple: ICRS;
 
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Creates a div icon instance with the given options.
       */
     function divIcon(options: DivIconOptions): DivIcon;
 
-    export class DivIcon extends Icon {
-
+    export interface DivIconStatic extends ClassStatic {
         /**
           * Creates a div icon instance with the given options.
           */
-        constructor(options: DivIconOptions);
+        new(options: DivIconOptions): DivIcon;
+    }
+    export var DivIcon: DivIconStatic;
+
+    export interface DivIcon extends Icon {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface DivIconOptions {
 
@@ -561,20 +640,22 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
-    export class DomEvent {
+    export interface DomEvent {
 
         /**
           * Adds a listener fn to the element's DOM event of the specified type. this keyword
           * inside the listener will point to context, or to the element if not specified.
           */
-        static addListener(el: HTMLElement, type: string, fn: (e: Event) => void, context?: any): DomEvent;
+        addListener(el: HTMLElement, type: string, fn: (e: Event) => void, context?: any): DomEvent;
+        on(el: HTMLElement, type: string, fn: (e: Event) => void, context?: any): DomEvent;
 
         /**
           * Removes an event listener from the element.
           */
-        static removeListener(el: HTMLElement, type: string, fn: (e: Event) => void): DomEvent;
+        removeListener(el: HTMLElement, type: string, fn: (e: Event) => void, context?: any): DomEvent;
+        off(el: HTMLElement, type: string, fn: (e: Event) => void, context?: any): DomEvent;
 
         /**
           * Stop the given event from propagation to parent elements. Used inside the
@@ -584,116 +665,118 @@ declare module L {
           * L.DomEvent.stopPropagation(e);
           * });
           */
-        static stopPropagation(e: Event): DomEvent;
+        stopPropagation(e: Event): DomEvent;
 
         /**
           * Prevents the default action of the event from happening (such as following
           * a link in the href of the a element, or doing a POST request with page reload
           * when form is submitted). Use it inside listener functions.
           */
-        static preventDefault(e: Event): DomEvent;
+        preventDefault(e: Event): DomEvent;
 
         /**
           * Does stopPropagation and preventDefault at the same time.
           */
-        static stop(e: Event): DomEvent;
+        stop(e: Event): DomEvent;
 
         /**
           * Adds stopPropagation to the element's 'click', 'doubleclick', 'mousedown'
           * and 'touchstart' events.
           */
-        static disableClickPropagation(el: HTMLElement): DomEvent;
+        disableClickPropagation(el: HTMLElement): DomEvent;
 
         /**
           * Gets normalized mouse position from a DOM event relative to the container
           * or to the whole page if not specified.
           */
-        static getMousePosition(e: Event, container?: HTMLElement): Point;
+        getMousePosition(e: Event, container?: HTMLElement): Point;
 
         /**
           * Gets normalized wheel delta from a mousewheel DOM event.
           */
-        static getWheelDelta(e: Event): number;
+        getWheelDelta(e: Event): number;
 
     }
+
+    export var DomEvent: DomEvent;
 }
 
-declare module L {
+declare namespace L {
 
-    export class DomUtil {
+    namespace DomUtil {
 
         /**
           * Returns an element with the given id if a string was passed, or just returns
           * the element if it was passed directly.
           */
-        static get(id: string): HTMLElement;
+        export function get(id: string): HTMLElement;
 
         /**
           * Returns the value for a certain style attribute on an element, including
           * computed values or values set through CSS.
           */
-        static getStyle(el: HTMLElement, style: string): string;
+        export function getStyle(el: HTMLElement, style: string): string;
 
         /**
           * Returns the offset to the viewport for the requested element.
           */
-        static getViewportOffset(el: HTMLElement): Point;
+        export function getViewportOffset(el: HTMLElement): Point;
 
         /**
           * Creates an element with tagName, sets the className, and optionally appends
           * it to container element.
           */
-        static create(tagName: string, className: string, container?: HTMLElement): HTMLElement;
+        export function create(tagName: string, className: string, container?: HTMLElement): HTMLElement;
 
         /**
           * Makes sure text cannot be selected, for example during dragging.
           */
-        static disableTextSelection(): void;
+        export function disableTextSelection(): void;
 
         /**
           * Makes text selection possible again.
           */
-        static enableTextSelection(): void;
+        export function enableTextSelection(): void;
 
         /**
           * Returns true if the element class attribute contains name.
           */
-        static hasClass(el: HTMLElement, name: string): boolean;
+        export function hasClass(el: HTMLElement, name: string): boolean;
 
         /**
           * Adds name to the element's class attribute.
           */
-        static addClass(el: HTMLElement, name: string): void;
+        export function addClass(el: HTMLElement, name: string): void;
 
         /**
           * Removes name from the element's class attribute.
           */
-        static removeClass(el: HTMLElement, name: string): void;
+        export function removeClass(el: HTMLElement, name: string): void;
 
         /**
           * Set the opacity of an element (including old IE support). Value must be from
           * 0 to 1.
           */
-        static setOpacity(el: HTMLElement, value: number): void;
+        export function setOpacity(el: HTMLElement, value: number): void;
 
         /**
           * Goes through the array of style names and returns the first name that is a valid
           * style name for an element. If no such name is found, it returns false. Useful
           * for vendor-prefixed styles like transform.
           */
-        static testProp(props: string[]): any;
+        export function testProp(props: string[]): any;
 
         /**
           * Returns a CSS transform string to move an element by the offset provided in
           * the given point. Uses 3D translate on WebKit for hardware-accelerated transforms
           * and 2D on other browsers.
           */
-        static getTranslateString(point: Point): string;
+        export function getTranslateString(point: Point): string;
 
         /**
           * Returns a CSS transform string to scale an element (with the given scale origin).
           */
-        static getScaleString(scale: number, origin: Point): string;
+        export function getScaleString(scale: number, origin: Point): string;
 
         /**
           * Sets the position of an element to coordinates specified by point, using
@@ -701,42 +784,38 @@ declare module L {
           * Leaflet internally to position its layers). Forces top/left positioning
           * if disable3D is true.
           */
-        static setPosition(el: HTMLElement, point: Point, disable3D?: boolean): void;
+        export function setPosition(el: HTMLElement, point: Point, disable3D?: boolean): void;
 
         /**
           * Returns the coordinates of an element previously positioned with setPosition.
           */
-        static getPosition(el: HTMLElement): Point;
+        export function getPosition(el: HTMLElement): Point;
 
         /**
           * Vendor-prefixed transition style name (e.g. 'webkitTransition' for WebKit).
           */
-        static TRANSITION: string;
+        export var TRANSITION: string;
 
         /**
           * Vendor-prefixed transform style name.
           */
-        static TRANSFORM: string;
+        export var TRANSFORM: string;
 
     }
 }
 
-declare module L {
-
-    /**
-      * Creates a Draggable object for moving the given element when you start dragging
-      * the dragHandle element (equals the element itself by default).
-      */
-    function draggable(element: HTMLElement, dragHandle?: HTMLElement): Draggable;
-
-    export class Draggable extends Class implements IEventPowered<Draggable> {
-
+declare namespace L {
+    export interface DraggableStatic extends ClassStatic {
         /**
           * Creates a Draggable object for moving the given element when you start dragging
           * the dragHandle element (equals the element itself by default).
           */
-        constructor(element: HTMLElement, dragHandle?: HTMLElement);
+        new(element: HTMLElement, dragHandle?: HTMLElement): Draggable;
+    }
+    export var Draggable: DraggableStatic;
 
+
+    export interface Draggable extends IEventPowered<Draggable> {
         /**
           * Enables the dragging ability.
           */
@@ -768,25 +847,28 @@ declare module L {
 
 
 
-declare module L {
+declare namespace L {
 
     /**
       * Create a layer group, optionally given an initial set of layers.
       */
-    function featureGroup(layers?: ILayer[]): FeatureGroup;
+    function featureGroup<T extends ILayer>(layers?: T[]): FeatureGroup<T>;
 
-    export class FeatureGroup extends LayerGroup implements ILayer, IEventPowered<FeatureGroup> {
 
+    export interface FeatureGroupStatic extends ClassStatic {
         /**
           * Create a layer group, optionally given an initial set of layers.
           */
-        constructor(layers?: ILayer[]);
+        new<T extends ILayer>(layers?: T[]): FeatureGroup<T>;
+    }
+    export var FeatureGroup: FeatureGroupStatic;
 
+    export interface FeatureGroup<T extends ILayer> extends LayerGroup<T>, ILayer, IEventPowered<FeatureGroup<T>> {
         /**
           * Binds a popup with a particular HTML content to a click on any layer from the
           * group that has a bindPopup method.
           */
-        bindPopup(htmlContent: string, options?: PopupOptions): FeatureGroup;
+        bindPopup(htmlContent: string, options?: PopupOptions): FeatureGroup<T>;
 
         /**
           * Returns the LatLngBounds of the Feature Group (created from bounds and coordinates
@@ -797,17 +879,17 @@ declare module L {
         /**
           * Sets the given path options to each layer of the group that has a setStyle method.
           */
-        setStyle(style: PathOptions): FeatureGroup;
+        setStyle(style: PathOptions): FeatureGroup<T>;
 
         /**
           * Brings the layer group to the top of all other layers.
           */
-        bringToFront(): FeatureGroup;
+        bringToFront(): FeatureGroup<T>;
 
         /**
           * Brings the layer group to the bottom of all other layers.
           */
-        bringToBack(): FeatureGroup;
+        bringToBack(): FeatureGroup<T>;
 
         ////////////
         ////////////
@@ -826,54 +908,24 @@ declare module L {
 
         ////////////////
         ////////////////
-        addEventListener(type: string, fn: (e: LeafletEvent) => void, context?: any): FeatureGroup;
-        addOneTimeEventListener(type: string, fn: (e: LeafletEvent) => void, context?: any): FeatureGroup;
-        removeEventListener(type: string, fn?: (e: LeafletEvent) => void, context?: any): FeatureGroup;
+        addEventListener(type: string, fn: (e: LeafletEvent) => void, context?: any): FeatureGroup<T>;
+        addOneTimeEventListener(type: string, fn: (e: LeafletEvent) => void, context?: any): FeatureGroup<T>;
+        removeEventListener(type: string, fn?: (e: LeafletEvent) => void, context?: any): FeatureGroup<T>;
         hasEventListeners(type: string): boolean;
-        fireEvent(type: string, data?: any): FeatureGroup;
-        on(type: string, fn: (e: LeafletEvent) => void, context?: any): FeatureGroup;
-        once(type: string, fn: (e: LeafletEvent) => void, context?: any): FeatureGroup;
-        off(type: string, fn?: (e: LeafletEvent) => void, context?: any): FeatureGroup;
-        fire(type: string, data?: any): FeatureGroup;
-        addEventListener(eventMap: any, context?: any): FeatureGroup;
-        removeEventListener(eventMap?: any, context?: any): FeatureGroup;
-        clearAllEventListeners(): FeatureGroup;
-        on(eventMap: any, context?: any): FeatureGroup;
-        off(eventMap?: any, context?: any): FeatureGroup;
+        fireEvent(type: string, data?: any): FeatureGroup<T>;
+        on(type: string, fn: (e: LeafletEvent) => void, context?: any): FeatureGroup<T>;
+        once(type: string, fn: (e: LeafletEvent) => void, context?: any): FeatureGroup<T>;
+        off(type: string, fn?: (e: LeafletEvent) => void, context?: any): FeatureGroup<T>;
+        fire(type: string, data?: any): FeatureGroup<T>;
+        addEventListener(eventMap: any, context?: any): FeatureGroup<T>;
+        removeEventListener(eventMap?: any, context?: any): FeatureGroup<T>;
+        clearAllEventListeners(): FeatureGroup<T>;
+        on(eventMap: any, context?: any): FeatureGroup<T>;
+        off(eventMap?: any, context?: any): FeatureGroup<T>;
     }
 }
 
-declare module L {
-
-    export interface FitBoundsOptions extends ZoomPanOptions {
-
-        /**
-          * Sets the amount of padding in the top left corner of a map container that
-          * shouldn't be accounted for when setting the view to fit bounds. Useful if
-          * you have some control overlays on the map like a sidebar and you don't
-          * want them to obscure objects you're zooming to.
-          *
-          * Default value: [0, 0].
-          */
-        paddingTopLeft?: Point;
-
-        /**
-          * The same for bottom right corner of the map.
-          * 
-          * Default value: [0, 0].
-          */
-        paddingBottomRight?: Point;
-
-        /**
-          * Equivalent of setting both top left and bottom right padding to the same value.
-          * 
-          * Default value: [0, 0].
-          */
-        padding?: Point;
-    }
-}
-
-declare module L {
+declare namespace L {
 
     /**
       * Creates a GeoJSON layer. Optionally accepts an object in GeoJSON format
@@ -882,17 +934,39 @@ declare module L {
       */
     function geoJson(geojson?: any, options?: GeoJSONOptions): GeoJSON;
 
-    export class GeoJSON extends FeatureGroup {
-
+    export interface GeoJSONStatic extends ClassStatic {
         /**
           * Creates a GeoJSON layer. Optionally accepts an object in GeoJSON format
           * to display on the map (you can alternatively add it later with addData method)
           * and an options object.
           */
-        constructor(geojson?: any, options?: GeoJSONOptions);
+        new(geojson?: any, options?: GeoJSONOptions): GeoJSON;
 
         /**
-          * Adds a GeoJSON object to the layer. 
+          * Creates a layer from a given GeoJSON feature.
+          */
+        geometryToLayer(featureData: GeoJSON, pointToLayer?: (featureData: any, latlng: LatLng) => ILayer): ILayer;
+
+        /**
+          * Creates a LatLng object from an array of 2 numbers (latitude, longitude)
+          * used in GeoJSON for points. If reverse is set to true, the numbers will be interpreted
+          * as (longitude, latitude).
+          */
+        coordsToLatLng(coords: number[], reverse?: boolean): LatLng;
+
+        /**
+          * Creates a multidimensional array of LatLng objects from a GeoJSON coordinates
+          * array. levelsDeep specifies the nesting level (0 is for an array of points,
+          * 1 for an array of arrays of points, etc., 0 by default). If reverse is set to
+          * true, the numbers will be interpreted as (longitude, latitude).
+          */
+        coordsToLatLngs(coords: any[], levelsDeep?: number, reverse?: boolean): any[];
+    }
+    export var GeoJSON: GeoJSONStatic;
+
+    export interface GeoJSON extends FeatureGroup<ILayer> {
+        /**
+          * Adds a GeoJSON object to the layer.
           */
         addData(data: any): boolean;
 
@@ -902,35 +976,19 @@ declare module L {
         setStyle(style: (featureData: any) => any): GeoJSON;
 
         /**
+          * Changes styles of GeoJSON vector layers with the given style options.
+          */
+        setStyle(style: PathOptions): GeoJSON;
+
+        /**
           * Resets the the given vector layer's style to the original GeoJSON style,
           * useful for resetting style after hover events.
           */
         resetStyle(layer: Path): GeoJSON;
-
-        /**
-          * Creates a layer from a given GeoJSON feature.
-          */
-        static geometryToLayer(featureData: GeoJSON, pointToLayer?: (featureData: any, latlng: LatLng) => ILayer): ILayer;
-
-        /**
-          * Creates a LatLng object from an array of 2 numbers (latitude, longitude)
-          * used in GeoJSON for points. If reverse is set to true, the numbers will be interpreted
-          * as (longitude, latitude).
-          */
-        static coordsToLatlng(coords: number[], reverse?: boolean): LatLng;
-
-        /**
-          * Creates a multidimensional array of LatLng objects from a GeoJSON coordinates
-          * array. levelsDeep specifies the nesting level (0 is for an array of points,
-          * 1 for an array of arrays of points, etc., 0 by default). If reverse is set to
-          * true, the numbers will be interpreted as (longitude, latitude).
-          */
-        static coordsToLatlngs(coords: number[], levelsDeep?: number, reverse?: boolean): LatLng[];
-
     }
 }
 
-declare module L {
+declare namespace L {
     export interface GeoJSONOptions {
         /**
           * Function that will be used for creating layers for GeoJSON points (if not
@@ -967,40 +1025,44 @@ declare module L {
 
 
 
-declare module L {
+declare namespace L {
 
     /**
       * Creates an icon instance with the given options.
       */
     function icon(options: IconOptions): Icon;
 
-    export class Icon extends Class {
-
+    export interface IconStatic extends ClassStatic {
         /**
           * Creates an icon instance with the given options.
           */
-        constructor(options: IconOptions);
+        new(options: IconOptions): Icon;
+
+        Default: {
+            /**
+              * Creates a default icon instance with the given options.
+              */
+            new(options?: IconOptions): Icon.Default;
+
+            imagePath: string;
+        };
+    }
+    export var Icon: IconStatic;
+
+    export interface Icon {
     }
 
-    module Icon {
-
+    namespace Icon {
         /**
           * L.Icon.Default extends L.Icon and is the blue icon Leaflet uses
           * for markers by default.
           */
-        export class Default extends Icon {
-
-            /**
-              * Creates an icon instance with default options.
-              */
-            constructor(options: IconOptions);
-
-            static imagePath: string;
+        export interface Default extends Icon {
         }
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface IconOptions {
 
@@ -1019,7 +1081,7 @@ declare module L {
         /**
           * Size of the icon image in pixels.
           */
-        iconSize?: Point;
+        iconSize?: Point|[number, number];
 
         /**
           * The coordinates of the "tip" of the icon (relative to its top left corner).
@@ -1027,7 +1089,7 @@ declare module L {
           * location. Centered by default if size is specified, also can be set in CSS
           * with negative margins.
           */
-        iconAnchor?: Point;
+        iconAnchor?: Point|[number, number];
 
         /**
           * The URL to the icon shadow image. If not specified, no shadow image will be
@@ -1044,19 +1106,19 @@ declare module L {
         /**
           * Size of the shadow image in pixels.
           */
-        shadowSize?: Point;
+        shadowSize?: Point|[number, number];
 
         /**
           * The coordinates of the "tip" of the shadow (relative to its top left corner)
           * (the same as iconAnchor if not specified).
           */
-        shadowAnchor?: Point;
+        shadowAnchor?: Point|[number, number];
 
         /**
           * The coordinates of the point from which popups will "open", relative to the
           * icon anchor.
           */
-        popupAnchor?: Point;
+        popupAnchor?: Point|[number, number];
 
         /**
           * A custom class name to assign to both icon and shadow images. Empty by default.
@@ -1065,7 +1127,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface IControl {
 
@@ -1085,7 +1147,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface ICRS {
 
@@ -1129,10 +1191,15 @@ declare module L {
           */
         scale(zoom: number): number;
 
+        /**
+          * Returns the size of the world in pixels for a particular zoom.
+          */
+        getSize(zoom: number): Point;
+
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface IEventPowered<T> {
 
@@ -1212,7 +1279,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface IHandler {
 
@@ -1231,9 +1298,13 @@ declare module L {
           */
         enabled(): boolean;
     }
+
+    export interface Handler {
+        initialize(map: Map): void;
+    }
 }
 
-declare module L {
+declare namespace L {
 
     export interface ILayer {
 
@@ -1252,7 +1323,16 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
+    namespace Mixin {
+        export interface LeafletMixinEvents extends IEventPowered<LeafletMixinEvents> {
+        }
+
+        export var Events: LeafletMixinEvents;
+    }
+}
+
+declare namespace L {
 
     /**
       * Instantiates an image overlay object given the URL of the image and the geographical
@@ -1260,14 +1340,16 @@ declare module L {
       */
     function imageOverlay(imageUrl: string, bounds: LatLngBounds, options?: ImageOverlayOptions): ImageOverlay;
 
-    export class ImageOverlay extends Class implements ILayer {
-
+    export interface ImageOverlayStatic extends ClassStatic {
         /**
           * Instantiates an image overlay object given the URL of the image and the geographical
           * bounds it is tied to.
           */
-        constructor(imageUrl: string, bounds: LatLngBounds, options?: ImageOverlayOptions);
+        new(imageUrl: string, bounds: LatLngBounds, options?: ImageOverlayOptions): ImageOverlay;
+    }
+    export var ImageOverlay: ImageOverlayStatic;
 
+    export interface ImageOverlay extends ILayer {
         /**
           * Adds the overlay to the map.
           */
@@ -1277,6 +1359,11 @@ declare module L {
           * Sets the opacity of the overlay.
           */
         setOpacity(opacity: number): ImageOverlay;
+
+        /**
+          * Changes the URL of the image.
+          */
+        setUrl(imageUrl: string): ImageOverlay;
 
         /**
           * Brings the layer to the top of all overlays.
@@ -1305,7 +1392,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface ImageOverlayOptions {
 
@@ -1316,7 +1403,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface IProjection {
 
@@ -1332,7 +1419,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
     * A constant that represents the Leaflet version in use.
@@ -1346,8 +1433,7 @@ declare module L {
     export function noConflict(): typeof L;
 }
 
-declare module L {
-
+declare namespace L {
     /**
       * Creates an object representing a geographical point with the given latitude
       * and longitude.
@@ -1358,33 +1444,56 @@ declare module L {
       * Creates an object representing a geographical point with the given latitude
       * and longitude.
       */
-    function latLng(coords: number[]): LatLng;
+    function latLng(coords: LatLngExpression): LatLng;
 
-    export class LatLng {
+    export interface LatLngStatic {
+        /**
+          * Creates an object representing a geographical point with the given latitude
+          * and longitude.
+          */
+        new(latitude: number, longitude: number): LatLng;
 
         /**
           * Creates an object representing a geographical point with the given latitude
           * and longitude.
           */
-        constructor(latitude: number, longitude: number);
+        new(coords: LatLngExpression): LatLng;
 
         /**
-          * Creates an object representing a geographical point with the given latitude
-          * and longitude.
+          * A multiplier for converting degrees into radians.
+          *
+          * Value: Math.PI / 180.
           */
-        constructor(coords: number[]);
+        DEG_TO_RAD: number;
 
+        /**
+          * A multiplier for converting radians into degrees.
+          *
+          * Value: 180 / Math.PI.
+          */
+        RAD_TO_DEG: number;
+
+        /**
+          * Max margin of error for the equality check.
+          *
+          * Value: 1.0E-9.
+          */
+        MAX_MARGIN: number;
+    }
+    export var LatLng: LatLngStatic;
+
+    export interface LatLng {
         /**
           * Returns the distance (in meters) to the given LatLng calculated using the
           * Haversine formula. See description on wikipedia
           */
-        distanceTo(otherLatlng: LatLng): number;
+        distanceTo(otherLatlng: LatLngExpression): number;
 
         /**
           * Returns true if the given LatLng point is at the same position (within a small
           * margin of error).
           */
-        equals(otherLatlng: LatLng): boolean;
+        equals(otherLatlng: LatLngExpression): boolean;
 
         /**
           * Returns a string representation of the point (for debugging purposes).
@@ -1406,67 +1515,48 @@ declare module L {
           * Longitude in degrees.
           */
         lng: number;
-
-        /**
-          * A multiplier for converting degrees into radians.
-          *
-          * Value: Math.PI / 180.
-          */
-        static DEG_TO_RAD: number;
-
-        /**
-          * A multiplier for converting radians into degrees.
-          *
-          * Value: 180 / Math.PI.
-          */
-        static RAD_TO_DEG: number;
-
-        /**
-          * Max margin of error for the equality check.
-          *
-          * Value: 1.0E-9.
-          */
-        static MAX_MARGIN: number;
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Creates a LatLngBounds object by defining south-west and north-east corners
       * of the rectangle.
       */
-    function latLngBounds(southWest: LatLng, northEast: LatLng): LatLngBounds;
+    function latLngBounds(southWest: LatLngExpression, northEast: LatLngExpression): LatLngBounds;
 
     /**
       * Creates a LatLngBounds object defined by the geographical points it contains.
       * Very useful for zooming the map to fit a particular set of locations with fitBounds.
       */
-    function latLngBounds(latlngs: LatLng[]): LatLngBounds;
+    function latLngBounds(latlngs: LatLngBoundsExpression): LatLngBounds;
 
-    export class LatLngBounds {
-
+    export interface LatLngBoundsStatic {
         /**
           * Creates a LatLngBounds object by defining south-west and north-east corners
           * of the rectangle.
           */
-        constructor(southWest: LatLng, northEast: LatLng);
+        new(southWest: LatLngExpression, northEast: LatLngExpression): LatLngBounds;
 
         /**
           * Creates a LatLngBounds object defined by the geographical points it contains.
           * Very useful for zooming the map to fit a particular set of locations with fitBounds.
           */
-        constructor(latlngs: LatLng[]);
+        new(latlngs: LatLngBoundsExpression): LatLngBounds;
+    }
+    export var LatLngBounds: LatLngBoundsStatic;
 
+    export interface LatLngBounds {
         /**
           * Extends the bounds to contain the given point.
           */
-        extend(latlng: LatLng): LatLngBounds;
+        extend(latlng: LatLngExpression): LatLngBounds;
 
         /**
           * Extends the bounds to contain the given bounds.
           */
-        extend(latlng: LatLngBounds): LatLngBounds;
+        extend(latlng: LatLngBoundsExpression): LatLngBounds;
 
         /**
           * Returns the south-west point of the bounds.
@@ -1488,6 +1578,26 @@ declare module L {
           */
         getSouthEast(): LatLng;
 
+      	/**
+          * Returns the west longitude in degrees of the bounds.
+          */
+	getWest(): number;
+
+        /**
+          * Returns the east longitude in degrees of the bounds.
+          */
+	getEast(): number;
+
+        /**
+          * Returns the north latitude in degrees of the bounds.
+          */
+	getNorth(): number;
+
+        /**
+          * Returns the south latitude in degrees of the bounds.
+          */
+	getSouth(): number;
+
         /**
           * Returns the center point of the bounds.
           */
@@ -1496,23 +1606,23 @@ declare module L {
         /**
           * Returns true if the rectangle contains the given one.
           */
-        contains(otherBounds: LatLngBounds): boolean;
+        contains(otherBounds: LatLngBoundsExpression): boolean;
 
         /**
           * Returns true if the rectangle contains the given point.
           */
-        contains(latlng: LatLng): boolean;
+        contains(latlng: LatLngExpression): boolean;
 
         /**
           * Returns true if the rectangle intersects the given bounds.
           */
-        intersects(otherBounds: LatLngBounds): boolean;
+        intersects(otherBounds: LatLngBoundsExpression): boolean;
 
         /**
           * Returns true if the rectangle is equivalent (within a small margin of error)
           * to the given bounds.
           */
-        equals(otherBounds: LatLngBounds): boolean;
+        equals(otherBounds: LatLngBoundsExpression): boolean;
 
         /**
           * Returns a string with bounding box coordinates in a 'southwest_lng,southwest_lat,northeast_lng,northeast_lat'
@@ -1534,65 +1644,68 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Create a layer group, optionally given an initial set of layers.
       */
-    function layerGroup(layers?: ILayer[]): LayerGroup;
+    function layerGroup<T extends ILayer>(layers?: T[]): LayerGroup<T>;
 
-    export class LayerGroup extends Class implements ILayer {
 
+    export interface LayerGroupStatic extends ClassStatic {
         /**
           * Create a layer group, optionally given an initial set of layers.
           */
-        constructor(layers?: ILayer[]);
+        new<T extends ILayer>(layers?: T[]): LayerGroup<T>;
+    }
+    export var LayerGroup: LayerGroupStatic;
 
+    export interface LayerGroup<T extends ILayer> extends ILayer {
         /**
           * Adds the group of layers to the map.
           */
-        addTo(map: Map): LayerGroup;
+        addTo(map: Map): LayerGroup<T>;
 
         /**
           * Adds a given layer to the group.
           */
-        addLayer(layer: ILayer): LayerGroup;
+        addLayer(layer: T): LayerGroup<T>;
 
         /**
           * Removes a given layer from the group.
           */
-        removeLayer(layer: ILayer): LayerGroup;
+        removeLayer(layer: T): LayerGroup<T>;
 
         /**
           * Removes a given layer of the given id from the group.
           */
-        removeLayer(id: string): LayerGroup;
+        removeLayer(id: string): LayerGroup<T>;
 
         /**
           * Returns true if the given layer is currently added to the group.
           */
-        hasLayer(layer: ILayer): boolean;
+        hasLayer(layer: T): boolean;
 
         /**
           * Returns the layer with the given id.
           */
-        getLayer(id: string): ILayer;
+        getLayer(id: string): T;
 
         /**
           * Returns an array of all the layers added to the group.
           */
-        getLayers(): ILayer[];
+        getLayers(): T[];
 
         /**
           * Removes all the layers from the group.
           */
-        clearLayers(): LayerGroup;
+        clearLayers(): LayerGroup<T>;
 
         /**
           * Iterates over the layers of the group, optionally specifying context of
           * the iterator function.
           */
-        eachLayer(fn: (layer: ILayer) => void, context?: any): LayerGroup;
+        eachLayer(fn: (layer: T) => void, context?: any): LayerGroup<T>;
 
         /**
           * Returns a GeoJSON representation of the layer group (GeoJSON FeatureCollection).
@@ -1617,7 +1730,7 @@ declare module L {
 }
 
 
-declare module L {
+declare namespace L {
 
     export interface LayersOptions {
 
@@ -1647,7 +1760,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface LeafletErrorEvent extends LeafletEvent {
 
@@ -1663,7 +1776,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface LeafletEvent {
 
@@ -1679,7 +1792,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface LeafletGeoJSONEvent extends LeafletEvent {
 
@@ -1705,7 +1818,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface LeafletLayerEvent extends LeafletEvent {
 
@@ -1716,7 +1829,23 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
+
+    export interface LeafletLayersControlEvent extends LeafletEvent {
+
+        /**
+          * The layer that was added or removed.
+          */
+        layer: ILayer;
+
+        /**
+          * The name of the layer that was added or removed.
+          */
+        name: string;
+    }
+}
+
+declare namespace L {
 
     export interface LeafletLocationEvent extends LeafletEvent {
 
@@ -1764,7 +1893,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface LeafletMouseEvent extends LeafletEvent {
 
@@ -1792,7 +1921,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface LeafletPopupEvent extends LeafletEvent {
 
@@ -1803,7 +1932,18 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
+
+    export interface LeafletDragEndEvent extends LeafletEvent {
+
+        /**
+          * The distance in pixels the draggable element was moved by.
+          */
+        distance: number;
+    }
+}
+
+declare namespace L {
 
     export interface LeafletResizeEvent extends LeafletEvent {
 
@@ -1819,7 +1959,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface LeafletTileEvent extends LeafletEvent {
 
@@ -1835,9 +1975,9 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
-    export class LineUtil {
+    namespace LineUtil {
 
         /**
           * Dramatically reduces the number of points in a polyline while retaining
@@ -1847,29 +1987,29 @@ declare module L {
           * (lesser value means higher quality but slower and with more points). Also
           * released as a separated micro-library Simplify.js.
           */
-        static simplify(points: Point[], tolerance: number): Point[];
+        export function simplify(points: Point[], tolerance: number): Point[];
 
         /**
           * Returns the distance between point p and segment p1 to p2.
           */
-        static pointToSegmentDistance(p: Point, p1: Point, p2: Point): number;
+        export function pointToSegmentDistance(p: Point, p1: Point, p2: Point): number;
 
         /**
           * Returns the closest point from a point p on a segment p1 to p2.
           */
-        static closestPointOnSegment(p: Point, p1: Point, p2: Point): number;
+        export function closestPointOnSegment(p: Point, p1: Point, p2: Point): Point;
 
         /**
-          * Clips the segment a to b by rectangular bounds (modifying the segment points
-          * directly!). Used by Leaflet to only show polyline points that are on the screen
-          * or near, increasing performance.
+          * Clips the segment a to b by rectangular bounds. Used by Leaflet to only show 
+          * polyline points that are on the screen or near, increasing performance. Returns
+          * either false or a length-2 array of clipped points.
           */
-        static clipSegment(a: Point, b: Point, bounds: Bounds): void;
+        export function clipSegment(a: Point, b: Point, bounds: Bounds): Point[] | boolean;
 
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface LocateOptions {
 
@@ -1922,29 +2062,29 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Instantiates a map object given a div element and optionally an
       * object literal with map options described below.
       */
-    function map(id: HTMLElement, options?: MapOptions): Map;
+    function map(id: HTMLElement, options?: Map.MapOptions): Map;
 
     /**
       * Instantiates a map object given a div element id and optionally an
       * object literal with map options described below.
       */
-    function map(id: string, options?: MapOptions): Map;
+    function map(id: string, options?: Map.MapOptions): Map;
 
-    export class Map extends Class implements IEventPowered<Map> {
 
+    export interface MapStatic extends ClassStatic {
         /**
           * Instantiates a map object given a div element and optionally an
           * object literal with map options described below.
           *
           * @constructor
           */
-        constructor(id: HTMLElement, options?: MapOptions);
+        new(id: HTMLElement, options?: Map.MapOptions): Map;
 
         /**
           * Instantiates a map object given a div element id and optionally an
@@ -1952,54 +2092,57 @@ declare module L {
           *
           * @constructor
           */
-        constructor(id: string, options?: MapOptions);
+        new(id: string, options?: Map.MapOptions): Map;
+    }
+    export var Map: MapStatic;
 
+    export interface Map extends IEventPowered<Map> {
         // Methods for Modifying Map State
 
         /**
           * Sets the view of the map (geographical center and zoom) with the given
           * animation options.
           */
-        setView(center: LatLng, zoom: number, options?: ZoomPanOptions): Map;
+        setView(center: LatLngExpression, zoom?: number, options?: Map.ZoomPanOptions): Map;
 
         /**
           * Sets the zoom of the map.
           */
-        setZoom(zoom: number, options?: ZoomOptions): Map;
+        setZoom(zoom: number, options?: Map.ZoomPanOptions): Map;
 
         /**
           * Increases the zoom of the map by delta (1 by default).
           */
-        zoomIn(delta?: number, options?: ZoomOptions): Map;
+        zoomIn(delta?: number, options?: Map.ZoomPanOptions): Map;
 
         /**
           * Decreases the zoom of the map by delta (1 by default).
           */
-        zoomOut(delta?: number, options?: ZoomOptions): Map;
+        zoomOut(delta?: number, options?: Map.ZoomPanOptions): Map;
 
         /**
           * Zooms the map while keeping a specified point on the map stationary
           * (e.g. used internally for scroll zoom and double-click zoom).
           */
-        setZoomAround(latlng: LatLng, zoom: number, options?: ZoomOptions): Map;
+        setZoomAround(latlng: LatLngExpression, zoom: number, options?: Map.ZoomPanOptions): Map;
 
         /**
           * Sets a map view that contains the given geographical bounds with the maximum
           * zoom level possible.
           */
-        fitBounds(bounds: LatLngBounds, options?: FitBoundsOptions): Map;
+        fitBounds(bounds: LatLngBounds, options?: Map.FitBoundsOptions): Map;
 
         /**
           * Sets a map view that mostly contains the whole world with the maximum zoom
           * level possible.
           */
-        fitWorld(options?: FitBoundsOptions): Map;
+        fitWorld(options?: Map.FitBoundsOptions): Map;
 
         /**
           * Pans the map to a given center. Makes an animated pan if new center is not more
           * than one screen away from the current one.
           */
-        panTo(latlng: LatLng, options?: PanOptions): Map;
+        panTo(latlng: LatLngExpression, options?: PanOptions): Map;
 
         /**
           * Pans the map to the closest view that would lie inside the given bounds (if
@@ -2017,7 +2160,7 @@ declare module L {
           * after you've changed the map size dynamically, also animating pan by default.
           * If options.pan is false, panning will not occur.
           */
-        invalidateSize(options: ZoomPanOptions): Map;
+        invalidateSize(options: Map.ZoomPanOptions): Map;
 
         /**
           * Checks if the map container size changed and updates the map if so — call it
@@ -2029,7 +2172,7 @@ declare module L {
           * Restricts the map view to the given bounds (see map maxBounds option),
           * passing the given animation options through to `setView`, if required.
           */
-        setMaxBounds(bounds: LatLngBounds, options?: ZoomPanOptions): Map;
+        setMaxBounds(bounds: LatLngBounds, options?: Map.ZoomPanOptions): Map;
 
         /**
           * Tries to locate the user using Geolocation API, firing locationfound event
@@ -2128,21 +2271,21 @@ declare module L {
         openPopup(popup: Popup): Map;
 
         /**
-          * Creates a popup with the specified options and opens it in the given point 
+          * Creates a popup with the specified options and opens it in the given point
           * on a map.
           */
-        openPopup(html: string, latlng: LatLng, options?: PopupOptions): Map;
+        openPopup(html: string, latlng: LatLngExpression, options?: PopupOptions): Map;
 
         /**
-          * Creates a popup with the specified options and opens it in the given point 
+          * Creates a popup with the specified options and opens it in the given point
           * on a map.
           */
-        openPopup(el: HTMLElement, latlng: LatLng, options?: PopupOptions): Map;
+        openPopup(el: HTMLElement, latlng: LatLngExpression, options?: PopupOptions): Map;
 
         /**
           * Closes the popup previously opened with openPopup (or the given one).
           */
-        closePopup(): Map;
+        closePopup(popup?: Popup): Map;
 
         /**
           * Adds the given control to the map.
@@ -2160,7 +2303,7 @@ declare module L {
           * Returns the map layer point that corresponds to the given geographical coordinates
           * (useful for placing overlays on the map).
           */
-        latLngToLayerPoint(latlng: LatLng): Point;
+        latLngToLayerPoint(latlng: LatLngExpression): Point;
 
         /**
           * Returns the geographical coordinates of a given map layer point.
@@ -2183,7 +2326,7 @@ declare module L {
           * Returns the map container point that corresponds to the given geographical
           * coordinates.
           */
-        latLngToContainerPoint(latlng: LatLng): Point;
+        latLngToContainerPoint(latlng: LatLngExpression): Point;
 
         /**
           * Returns the geographical coordinates of a given map container point.
@@ -2194,7 +2337,7 @@ declare module L {
           * Projects the given geographical coordinates to absolute pixel coordinates
           * for the given zoom level (current zoom level by default).
           */
-        project(latlng: LatLng, zoom?: number): Point;
+        project(latlng: LatLngExpression, zoom?: number): Point;
 
         /**
           * Projects the given absolute pixel coordinates to geographical coordinates
@@ -2286,6 +2429,16 @@ declare module L {
           */
         attributionControl: Control.Attribution;
 
+        /**
+          * Map state options
+          */
+        options: Map.MapOptions;
+
+        /**
+          * Iterates over the layers of the map, optionally specifying context
+		  * of the iterator function.
+          */
+        eachLayer(fn: (layer: ILayer) => void, context?: any): Map;
 
         ////////////////
         ////////////////
@@ -2297,7 +2450,7 @@ declare module L {
         on(type: string, fn: (e: LeafletEvent) => void, context?: any): Map;
         once(type: string, fn: (e: LeafletEvent) => void, context?: any): Map;
         off(type: string, fn?: (e: LeafletEvent) => void, context?: any): Map;
-        fire(type: string, data?: any): Map; addEventListener(eventMap: any, context?: any): Map;
+        fire(type: string, data?: any): Map;addEventListener(eventMap: any, context?: any): Map;
         removeEventListener(eventMap?: any, context?: any): Map;
         clearAllEventListeners(): Map;
         on(eventMap: any, context?: any): Map;
@@ -2305,7 +2458,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L.Map {
 
     export interface MapOptions {
 
@@ -2370,13 +2523,18 @@ declare module L {
 
         /**
           * Whether the map can be zoomed by using the mouse wheel.
+          * If passed 'center', it will zoom to the center of the view regardless of
+          * where the mouse was.
           *
           * Default value: true.
           */
         scrollWheelZoom?: boolean;
 
         /**
-          * Whether the map can be zoomed in by double clicking on it.
+          * Whether the map can be zoomed in by double clicking on it and zoomed out
+          * by double clicking while holding shift.
+          * If passed 'center', double-click zoom will zoom to the center of the view
+          * regardless of where the mouse was.
           *
           * Default value: true.
           */
@@ -2529,10 +2687,91 @@ declare module L {
           * in all browsers that support CSS3 Transitions except Android.
           */
         markerZoomAnimation?: boolean;
+
+        /**
+         * Set it to false if you don't want the map to zoom beyond min/max zoom
+         * and then bounce back when pinch-zooming.
+         *
+         * Default value: true.
+         */
+        bounceAtZoomLimits?: boolean;
+    }
+
+    export interface ZoomOptions {
+        /**
+          * If not specified, zoom animation will happen if the zoom origin is inside the current view.
+          * If true, the map will attempt animating zoom disregarding where zoom origin is.
+          * Setting false will make it always reset the view completely without animation.
+          */
+        animate?: boolean;
+    }
+
+    export interface ZoomPanOptions {
+
+        /**
+          * If true, the map view will be completely reset (without any animations).
+          *
+          * Default value: false.
+          */
+        reset?: boolean;
+
+        /**
+          * Sets the options for the panning (without the zoom change) if it occurs.
+          */
+        pan?: PanOptions;
+
+        /**
+          * Sets the options for the zoom change if it occurs.
+          */
+        zoom?: ZoomOptions;
+
+        /**
+          * An equivalent of passing animate to both zoom and pan options (see below).
+          */
+        animate?: boolean;
+
+        /**
+         * If true, it will delay moveend event so that it doesn't happen many times in a row.
+         */
+        debounceMoveend?: boolean;
+    }
+
+    export interface FitBoundsOptions extends ZoomPanOptions {
+
+        /**
+          * Sets the amount of padding in the top left corner of a map container that
+          * shouldn't be accounted for when setting the view to fit bounds. Useful if
+          * you have some control overlays on the map like a sidebar and you don't
+          * want them to obscure objects you're zooming to.
+          *
+          * Default value: [0, 0].
+          */
+        paddingTopLeft?: Point;
+
+        /**
+          * The same for bottom right corner of the map.
+          *
+          * Default value: [0, 0].
+          */
+        paddingBottomRight?: Point;
+
+        /**
+          * Equivalent of setting both top left and bottom right padding to the same value.
+          *
+          * Default value: [0, 0].
+          */
+        padding?: Point;
+
+        /**
+          * The maximum possible zoom to use.
+          *
+          * Default value: null
+          */
+        maxZoom?: number;
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface MapPanes {
 
@@ -2573,22 +2812,23 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Instantiates a Marker object given a geographical point and optionally
       * an options object.
       */
-    function marker(latlng: LatLng, options?: MarkerOptions): Marker;
+    function marker(latlng: LatLngExpression, options?: MarkerOptions): Marker;
 
-    export class Marker extends Class implements ILayer, IEventPowered<Marker> {
-
+    var Marker: {
         /**
           * Instantiates a Marker object given a geographical point and optionally
           * an options object.
           */
-        constructor(latlng: LatLng, options?: MarkerOptions);
+        new(latlng: LatLngExpression, options?: MarkerOptions): Marker;
+    };
 
+    export interface Marker extends ILayer, IEventPowered<Marker> {
         /**
           * Adds the marker to the map.
           */
@@ -2602,7 +2842,7 @@ declare module L {
         /**
           * Changes the marker position to the given point.
           */
-        setLatLng(latlng: LatLng): Marker;
+        setLatLng(latlng: LatLngExpression): Marker;
 
         /**
           * Changes the marker icon.
@@ -2654,6 +2894,11 @@ declare module L {
         openPopup(): Marker;
 
         /**
+         * Returns the popup previously bound by the bindPopup method.
+         */
+        getPopup(): Popup;
+
+        /**
           * Closes the bound popup of the marker if it's opened.
           */
         closePopup(): Marker;
@@ -2676,7 +2921,12 @@ declare module L {
         /**
           * Returns a GeoJSON representation of the marker (GeoJSON Point Feature).
           */
-        toGeoJSON(popup: Popup, options?: PopupOptions): any;
+        toGeoJSON(): any;
+
+        /**
+          * Marker dragging handler (by both mouse and touch).
+          */
+        dragging: IHandler;
 
         ////////////
         ////////////
@@ -2712,7 +2962,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface MarkerOptions {
 
@@ -2754,6 +3004,13 @@ declare module L {
         title?: string;
 
         /**
+          * Text for the alt attribute of the icon image (useful for accessibility).
+          *
+          * Default value: ''.
+          */
+        alt?: string;
+
+        /**
           * By default, marker images zIndex is set automatically based on its latitude.
           * You this option if you want to put the marker on top of all others (or below),
           * specifying a high value like 1000 (or high negative value, respectively).
@@ -2785,7 +3042,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Instantiates a multi-polyline object given an array of latlngs arrays (one
@@ -2794,15 +3051,17 @@ declare module L {
       */
     function multiPolygon(latlngs: LatLng[][], options?: PolylineOptions): MultiPolygon;
 
-    export class MultiPolygon extends FeatureGroup {
-
+    export interface MultiPolygonStatic extends ClassStatic {
         /**
           * Instantiates a multi-polyline object given an array of latlngs arrays (one
           * for each individual polygon) and optionally an options object (the same
           * as for MultiPolyline).
           */
-        constructor(latlngs: LatLng[][], options?: PolylineOptions);
+        new(latlngs: LatLng[][], options?: PolylineOptions): MultiPolygon;
+    }
+    export var MultiPolygon: MultiPolygonStatic;
 
+    export interface MultiPolygon extends FeatureGroup<Polygon> {
         /**
           * Replace all polygons and their paths with the given array of arrays
           * of geographical points.
@@ -2815,13 +3074,18 @@ declare module L {
         getLatLngs(): LatLng[][];
 
         /**
+         * Opens the popup previously bound by bindPopup.
+         */
+        openPopup(): MultiPolygon;
+
+        /**
           * Returns a GeoJSON representation of the multipolygon (GeoJSON MultiPolygon Feature).
           */
         toGeoJSON(): any;
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Instantiates a multi-polyline object given an array of arrays of geographical
@@ -2829,14 +3093,16 @@ declare module L {
       */
     function multiPolyline(latlngs: LatLng[][], options?: PolylineOptions): MultiPolyline;
 
-    export class MultiPolyline extends FeatureGroup {
-
+    export interface MultiPolylineStatic extends ClassStatic {
         /**
           * Instantiates a multi-polyline object given an array of arrays of geographical
           * points (one for each individual polyline) and optionally an options object.
           */
-        constructor(latlngs: LatLng[][], options?: PolylineOptions);
+        new(latlngs: LatLng[][], options?: PolylineOptions): MultiPolyline;
+    }
+    export var MultiPolyline: MultiPolylineStatic;
 
+    export interface MultiPolyline extends FeatureGroup<Polyline> {
         /**
           * Replace all polygons and their paths with the given array of arrays
           * of geographical points.
@@ -2849,27 +3115,32 @@ declare module L {
         getLatLngs(): LatLng[][];
 
         /**
+         * Opens the popup previously bound by bindPopup.
+         */
+        openPopup(): MultiPolyline;
+
+        /**
           * Returns a GeoJSON representation of the multipolyline (GeoJSON MultiLineString Feature).
           */
         toGeoJSON(): any;
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface PanOptions {
 
         /**
           * If true, panning will always be animated if possible. If false, it will not
           * animate panning, either resetting the map view if panning more than a screen
-          * away, or just setting a new offset for the map pane (except for `panBy` 
+          * away, or just setting a new offset for the map pane (except for `panBy`
           * which always does the latter).
           */
         animate?: boolean;
 
         /**
           * Duration of animated panning.
-          * 
+          *
           * Default value: 0.25.
           */
         duration?: number;
@@ -2884,16 +3155,16 @@ declare module L {
 
         /**
           * If true, panning won't fire movestart event on start (used internally for panning inertia).
-          * 
+          *
           * Default value: false.
           */
         noMoveStart?: boolean;
     }
 }
 
-declare module L {
+declare namespace L {
 
-    export class Path extends Class implements ILayer, IEventPowered<Path> {
+    export interface Path extends ILayer, IEventPowered<Path> {
 
         /**
           * Adds the layer to the map.
@@ -2924,7 +3195,7 @@ declare module L {
           * Opens the popup previously bound by the bindPopup method in the given point,
           * or in one of the path's points if not specified.
           */
-        openPopup(latlng?: LatLng): Path;
+        openPopup(latlng?: LatLngExpression): Path;
 
         /**
           * Closes the path's bound popup if it is opened.
@@ -2956,34 +3227,6 @@ declare module L {
           * the path uses.
           */
         redraw(): Path;
-
-        /**
-          * True if SVG is used for vector rendering (true for most modern browsers).
-          */
-        static SVG: boolean;
-
-        /**
-          * True if VML is used for vector rendering (IE 6-8).
-          */
-        static VML: boolean;
-
-        /**
-          * True if Canvas is used for vector rendering (Android 2). You can also force
-          * this by setting global variable L_PREFER_CANVAS to true before the Leaflet
-          * include on your page — sometimes it can increase performance dramatically
-          * when rendering thousands of circle markers, but currently suffers from
-          * a bug that causes removing such layers to be extremely slow.
-          */
-        static CANVAS: boolean;
-
-        /**
-          * How much to extend the clip area around the map view (relative to its size,
-          * e.g. 0.5 is half the screen in each direction). Smaller values mean that you
-          * will see clipped ends of paths while you're dragging the map, and bigger values
-          * decrease drawing performance.
-          */
-        static CLIP_PADDING: number;
-
         ////////////
         ////////////
         /**
@@ -3016,9 +3259,38 @@ declare module L {
         on(eventMap: any, context?: any): Path;
         off(eventMap?: any, context?: any): Path;
     }
+
+    export namespace Path {
+        /**
+          * True if SVG is used for vector rendering (true for most modern browsers).
+          */
+        export var SVG: boolean;
+
+        /**
+          * True if VML is used for vector rendering (IE 6-8).
+          */
+        export var VML: boolean;
+
+        /**
+          * True if Canvas is used for vector rendering (Android 2). You can also force
+          * this by setting global variable L_PREFER_CANVAS to true before the Leaflet
+          * include on your page — sometimes it can increase performance dramatically
+          * when rendering thousands of circle markers, but currently suffers from
+          * a bug that causes removing such layers to be extremely slow.
+          */
+        export var CANVAS: boolean;
+
+        /**
+          * How much to extend the clip area around the map view (relative to its size,
+          * e.g. 0.5 is half the screen in each direction). Smaller values mean that you
+          * will see clipped ends of paths while you're dragging the map, and bigger values
+          * decrease drawing performance.
+          */
+        export var CLIP_PADDING: number;
+    }
 }
 
-declare module L {
+declare namespace L {
 
     export interface PathOptions {
 
@@ -3078,6 +3350,20 @@ declare module L {
         dashArray?: string;
 
         /**
+          * A string that defines shape to be used at the end of the stroke.
+          *
+          * Default: null.
+          */
+        lineCap?: string;
+
+        /**
+          * A string that defines shape to be used at the corners of the stroke.
+          *
+          * Default: null.
+          */
+        lineJoin?: string;
+
+        /**
           * If false, the vector will not emit mouse events and will act as a part of the
           * underlying map.
           *
@@ -3088,12 +3374,24 @@ declare module L {
         /**
           * Sets the pointer-events attribute on the path if SVG backend is used.
           */
-        pointerEvents?: boolean;
+        pointerEvents?: string;
+
+        /**
+          * Custom class name set on an element.
+          *
+          * Default value: ''.
+          */
+        className?: string;
+
+	/**
+	 * Sets the radius of a circle marker. 
+	 */
+	radius?: number;
 
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Creates a Point object with the given x and y coordinates. If optional round
@@ -3101,14 +3399,16 @@ declare module L {
       */
     function point(x: number, y: number, round?: boolean): Point;
 
-    export class Point {
-
+    export interface PointStatic {
         /**
           * Creates a Point object with the given x and y coordinates. If optional round
           * is set to true, rounds the x and y values.
           */
-        constructor(x: number, y: number, round?: boolean);
+        new(x: number, y: number, round?: boolean): Point;
+    }
+    export var Point: PointStatic;
 
+    export interface Point {
         /**
           * Returns the result of addition of the current and the given points.
           */
@@ -3167,7 +3467,7 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Instantiates a polygon object given an array of geographical points and
@@ -3176,10 +3476,10 @@ declare module L {
       * latlngs array representing the exterior ring while the remaining represent
       * the holes inside.
       */
-    function polygon(latlngs: LatLng[], options?: PolylineOptions): Polygon;
+    function polygon(latlngs: LatLngBoundsExpression, options?: PolylineOptions): Polygon;
 
-    export class Polygon extends Polyline {
 
+    export interface PolygonStatic extends ClassStatic {
         /**
           * Instantiates a polygon object given an array of geographical points and
           * optionally an options object (the same as for Polyline). You can also create
@@ -3187,36 +3487,42 @@ declare module L {
           * latlngs array representing the exterior ring while the remaining represent
           * the holes inside.
           */
-        constructor(latlngs: LatLng[], options?: PolylineOptions);
+        new(latlngs: LatLngBoundsExpression, options?: PolylineOptions): Polygon;
+    }
+    export var Polygon: PolygonStatic;
+
+    export interface Polygon extends Polyline {
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Instantiates a polyline object given an array of geographical points and
       * optionally an options object.
       */
-    function polyline(latlngs: LatLng[], options?: PolylineOptions): Polyline;
+    function polyline(latlngs: LatLngBoundsExpression, options?: PolylineOptions): Polyline;
 
-    export class Polyline extends Path {
-
+    export interface PolylineStatic extends ClassStatic {
         /**
           * Instantiates a polyline object given an array of geographical points and
           * optionally an options object.
           */
-        constructor(latlngs: LatLng[], options?: PolylineOptions);
+        new(latlngs: LatLngBoundsExpression, options?: PolylineOptions): Polyline;
+    }
+    export var Polyline: PolylineStatic;
 
+    export interface Polyline extends Path {
         /**
           * Adds a given point to the polyline.
           */
-        addLatLng(latlng: LatLng): Polyline;
+        addLatLng(latlng: LatLngExpression): Polyline;
 
         /**
           * Replaces all the points in the polyline with the given array of geographical
           * points.
           */
-        setLatLngs(latlngs: LatLng[]): Polyline;
+        setLatLngs(latlngs: LatLngBoundsExpression): Polyline;
 
         /**
           * Returns an array of the points in the path.
@@ -3241,9 +3547,9 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
-    export interface PolylineOptions {
+    export interface PolylineOptions extends PathOptions {
 
         /**
           * How much to simplify the polyline on each zoom level. More means better performance
@@ -3262,9 +3568,9 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
-    export class PolyUtil {
+    namespace PolyUtil {
 
         /**
           * Clips the polygon geometry defined by the given points by rectangular bounds.
@@ -3272,11 +3578,11 @@ declare module L {
           * increasing performance. Note that polygon points needs different algorithm
           * for clipping than polyline, so there's a seperate method for it.
           */
-        static clipPolygon(points: Point[], bounds: Bounds): Point[];
+        export function clipPolygon(points: Point[], bounds: Bounds): Point[];
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Instantiates a Popup object given an optional options object that describes
@@ -3285,15 +3591,17 @@ declare module L {
       */
     function popup(options?: PopupOptions, source?: any): Popup;
 
-    export class Popup extends Class implements ILayer {
-
+    export interface PopupStatic extends ClassStatic {
         /**
           * Instantiates a Popup object given an optional options object that describes
           * its appearance and location and an optional object that is used to tag the
           * popup with a reference to the source object to which it refers.
           */
-        constructor(options?: PopupOptions, source?: any);
+        new(options?: PopupOptions, source?: any): Popup;
+    }
+    export var Popup: PopupStatic;
 
+    export interface Popup extends ILayer {
         /**
           * Adds the popup to the map.
           */
@@ -3307,7 +3615,12 @@ declare module L {
         /**
           * Sets the geographical point where the popup will open.
           */
-        setLatLng(latlng: LatLng): Popup;
+        setLatLng(latlng: LatLngExpression): Popup;
+
+        /**
+          * Returns the geographical point of popup.
+          */
+        getLatLng(): LatLng;
 
         /**
           * Sets the HTML content of the popup.
@@ -3318,6 +3631,12 @@ declare module L {
           * Sets the HTML content of the popup.
           */
         setContent(el: HTMLElement): Popup;
+
+        /**
+          * Returns the content of the popup.
+          */
+        getContent(): HTMLElement;
+        //getContent(): string;
 
         ////////////
         ////////////
@@ -3333,10 +3652,16 @@ declare module L {
           * the DOM and removes listeners previously added in onAdd. Called on map.removeLayer(layer).
           */
         onRemove(map: Map): void;
+
+        /**
+          * Updates the popup content, layout and position. Useful for updating the popup after
+          * something inside changed, e.g. image loaded.
+          */
+        update(): Popup;
     }
 }
 
-declare module L {
+declare namespace L {
 
     export interface PopupOptions {
 
@@ -3369,6 +3694,11 @@ declare module L {
         autoPan?: boolean;
 
         /**
+          * Set it to true if you want to prevent users from panning the popup off of the screen while it is open.
+          */
+        keepInView?: boolean;
+
+        /**
           * Controls the presense of a close button in the popup.
           *
           * Default value: true.
@@ -3382,6 +3712,22 @@ declare module L {
           * Default value: new Point(0, 6).
           */
         offset?: Point;
+
+        /**
+          * The margin between the popup and the top left corner of the map view after
+          * autopanning was performed.
+          *
+          * Default value: null.
+          */
+        autoPanPaddingTopLeft?: Point;
+
+        /**
+          * The margin between the popup and the bottom right corner of the map view after
+          * autopanning was performed.
+          *
+          * Default value: null.
+          */
+        autoPanPaddingBottomRight?: Point;
 
         /**
           * The margin between the popup and the edges of the map view after autopanning
@@ -3400,23 +3746,30 @@ declare module L {
         zoomAnimation?: boolean;
 
         /**
-          * Set it to false if you want to override the default behavior of the popup 
+          * Set it to false if you want to override the default behavior of the popup
           * closing when user clicks the map (set globally by the Map closePopupOnClick
           * option).
           */
         closeOnClick?: boolean;
+
+        /**
+          * A custom class name to assign to the popup.
+          */
+        className?: string;
     }
 }
 
-declare module L {
+declare namespace L {
 
-    export class PosAnimation extends Class implements IEventPowered<PosAnimation> {
-
+    export interface PosAnimationStatic extends ClassStatic {
         /**
           * Creates a PosAnimation object.
           */
-        constructor();
+        new(): PosAnimation;
+    }
+    export var PosAnimation: PosAnimationStatic;
 
+    export interface PosAnimation extends IEventPowered<PosAnimation> {
         /**
           * Run an animation of a given element to a new position, optionally setting
           * duration in seconds (0.25 by default) and easing linearity factor (3rd argument
@@ -3443,23 +3796,23 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
-    export class Projection {
+    namespace Projection {
 
         /**
           * Spherical Mercator projection — the most common projection for online maps,
           * used by almost all free and commercial tile providers. Assumes that Earth
           * is a sphere. Used by the EPSG:3857 CRS.
           */
-        static SphericalMercator: IProjection;
+        export var SphericalMercator: IProjection;
 
         /**
           * Elliptical Mercator projection — more complex than Spherical Mercator.
           * Takes into account that Earth is a geoid, not a perfect sphere. Used by the
           * EPSG:3395 CRS.
           */
-        static Mercator: IProjection;
+        export var Mercator: IProjection;
 
         /**
           * Equirectangular, or Plate Carree projection — the most simple projection,
@@ -3467,11 +3820,11 @@ declare module L {
           * Also suitable for flat worlds, e.g. game maps. Used by the EPSG:3395 and Simple
           * CRS.
           */
-        static LonLat: IProjection;
+        export var LonLat: IProjection;
     }
 }
 
-declare module L {
+declare namespace L {
 
     /**
       * Instantiates a rectangle object with the given geographical bounds and
@@ -3479,14 +3832,16 @@ declare module L {
       */
     function rectangle(bounds: LatLngBounds, options?: PathOptions): Rectangle;
 
-    export class Rectangle extends Polygon {
-
+    export interface RectangleStatic extends ClassStatic {
         /**
           * Instantiates a rectangle object with the given geographical bounds and
           * optionally an options object.
           */
-        constructor(bounds: LatLngBounds, options?: PathOptions);
+        new(bounds: LatLngBounds, options?: PathOptions): Rectangle;
+    }
+    export var Rectangle: RectangleStatic;
 
+    export interface Rectangle extends Polygon {
         /**
           * Redraws the rectangle with the passed bounds.
           */
@@ -3495,7 +3850,7 @@ declare module L {
 }
 
 
-declare module L {
+declare namespace L {
 
     export interface ScaleOptions {
 
@@ -3533,16 +3888,33 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
-    export class TileLayer implements ILayer, IEventPowered<TileLayer> {
-
+    export interface TileLayerStatic extends ClassStatic {
         /**
           * Instantiates a tile layer object given a URL template and optionally an options
           * object.
           */
-        constructor(urlTemplate: string, options?: TileLayerOptions);
+        new(urlTemplate: string, options?: TileLayerOptions): TileLayer;
 
+        WMS: {
+            /**
+              * Instantiates a WMS tile layer object given a base URL of the WMS service and
+              * a WMS parameters/options object.
+              */
+            new(baseUrl: string, options: WMSOptions): TileLayer.WMS;
+        };
+
+        Canvas: {
+            /**
+              * Instantiates a Canvas tile layer object given an options object (optionally).
+              */
+            new(options?: TileLayerOptions): TileLayer.Canvas;
+        };
+    }
+    export var TileLayer: TileLayerStatic;
+
+    export interface TileLayer extends ILayer, IEventPowered<TileLayer> {
         /**
           * Adds the layer to the map.
           */
@@ -3616,16 +3988,8 @@ declare module L {
         off(eventMap?: any, context?: any): TileLayer;
     }
 
-    module TileLayer {
-
-        export class WMS {
-
-            /**
-              * Instantiates a WMS tile layer object given a base URL of the WMS service and
-              * a WMS parameters/options object.
-              */
-            constructor(baseUrl: string, options: WMSOptions);
-
+    namespace TileLayer {
+        export interface WMS extends TileLayer {
             /**
               * Merges an object with the new parameters and re-requests tiles on the current
               * screen (unless noRedraw was set to true).
@@ -3633,13 +3997,7 @@ declare module L {
             setParams(params: WMS, noRedraw?: boolean): WMS;
         }
 
-        export class Canvas {
-
-            /**
-              * Instantiates a Canvas tile layer object given an options object (optionally).
-              */
-            constructor(options?: TileLayerOptions);
-
+        export interface Canvas extends TileLayer {
             /**
               * You need to define this method after creating the instance to draw tiles;
               * canvas is the actual canvas tile on which you can draw, tilePoint represents
@@ -3655,28 +4013,30 @@ declare module L {
         }
     }
 
-    export class tileLayer {
+    export interface TileLayerFactory {
 
         /**
           * Instantiates a tile layer object given a URL template and optionally an options
           * object.
           */
-        function(urlTemplate: string, options?: TileLayerOptions): TileLayer;
+        (urlTemplate: string, options?: TileLayerOptions): TileLayer;
 
         /**
           * Instantiates a WMS tile layer object given a base URL of the WMS service and
           * a WMS parameters/options object.
           */
-        static wms(baseUrl: string, options: WMSOptions): L.TileLayer.WMS;
+        wms(baseUrl: string, options: WMSOptions): L.TileLayer.WMS;
 
         /**
           * Instantiates a Canvas tile layer object given an options object (optionally).
           */
-        static canvas(options?: TileLayerOptions): L.TileLayer.Canvas;
+        canvas(options?: TileLayerOptions): L.TileLayer.Canvas;
     }
+
+    export var tileLayer: TileLayerFactory;
 }
 
-declare module L {
+declare namespace L {
 
     export interface TileLayerOptions {
 
@@ -3693,6 +4053,15 @@ declare module L {
           * Default value: 18.
           */
         maxZoom?: number;
+
+        /**
+          * Maximum zoom number the tiles source has available. If it is specified,
+          * the tiles on all zoom levels higher than maxNativeZoom will be loaded from
+          * maxZoom level and auto-scaled.
+          *
+          * Default value: null.
+          */
+        maxNativeZoom?: number;
 
         /**
           * Tile size (width and height in pixels, assuming tiles are square).
@@ -3806,18 +4175,29 @@ declare module L {
           * Default value: false.
           */
         reuseTiles?: boolean;
+
+        /**
+          * When this option is set, the TileLayer only loads tiles that are in the given geographical bounds.
+          */
+        bounds?: LatLngBounds;
+
+        /**
+          * Custom keys may be specified in TileLayerOptions so they can be used in a provided URL template.
+          */
+        [additionalKeys: string]: any;
     }
 }
 
-declare module L {
-
-    export class Transformation {
-
+declare namespace L {
+    export interface TransformationStatic {
         /**
           * Creates a transformation object with the given coefficients.
           */
-        constructor(a: number, b: number, c: number, d: number);
+        new(a: number, b: number, c: number, d: number): Transformation;
+    }
+    export var Transformation: TransformationStatic;
 
+    export interface Transformation {
         /**
           * Returns a transformed point, optionally multiplied by the given scale.
           * Only accepts real L.Point instances, not arrays.
@@ -3832,26 +4212,26 @@ declare module L {
     }
 }
 
-declare module L {
+declare namespace L {
 
-    export class Util {
+    namespace Util {
 
         /**
           * Merges the properties of the src object (or multiple objects) into dest object
           * and returns the latter. Has an L.extend shortcut.
           */
-        static extend(dest: any, ...sources: any[]): any;
+        export function extend(dest: any, ...sources: any[]): any;
 
         /**
           * Returns a function which executes function fn with the given scope obj (so
           * that this keyword refers to obj inside the function code). Has an L.bind shortcut.
           */
-        static bind<T extends Function>(fn: T, obj: any): T;
+        export function bind<T extends Function>(fn: T, obj: any): T;
 
         /**
           * Applies a unique key to the object and returns that key. Has an L.stamp shortcut.
           */
-        static stamp(obj: any): string;
+        export function stamp(obj: any): string;
 
         /**
           * Returns a wrapper around the function fn that makes sure it's called not more
@@ -3860,63 +4240,63 @@ declare module L {
           * the map), optionally passing the scope (context) in which the function will
           * be called.
           */
-        static limitExecByInterval<T extends Function>(fn: T, time: number, context?: any): T;
+        export function limitExecByInterval<T extends Function>(fn: T, time: number, context?: any): T;
 
         /**
           * Returns a function which always returns false.
           */
-        static falseFn(): () => boolean;
+        export function falseFn(): () => boolean;
 
         /**
           * Returns the number num rounded to digits decimals.
           */
-        static formatNum(num: number, digits: number): number;
+        export function formatNum(num: number, digits: number): number;
 
         /**
           * Trims and splits the string on whitespace and returns the array of parts.
           */
-        static splitWords(str: string): string[];
+        export function splitWords(str: string): string[];
 
         /**
           * Merges the given properties to the options of the obj object, returning the
           * resulting options. See Class options. Has an L.setOptions shortcut.
           */
-        static setOptions(obj: any, options: any): any;
+        export function setOptions(obj: any, options: any): any;
 
         /**
           * Converts an object into a parameter URL string, e.g. {a: "foo", b: "bar"}
           * translates to '?a=foo&b=bar'.
           */
-        static getParamString(obj: any): string;
+        export function getParamString(obj: any): string;
 
         /**
           * Simple templating facility, creates a string by applying the values of the
           * data object of a form {a: 'foo', b: 'bar', …} to a template string of the form
           * 'Hello {a}, {b}' — in this example you will get 'Hello foo, bar'.
           */
-        static template(str: string, data: any): string;
+        export function template(str: string, data: any): string;
 
         /**
           * Returns true if the given object is an array.
           */
-        static isArray(obj: any): boolean;
+        export function isArray(obj: any): boolean;
 
         /**
           * Trims the whitespace from both ends of the string and returns the result.
           */
-        static trim(str: string): boolean;
+        export function trim(str: string): string;
 
         /**
           * Data URI string containing a base64-encoded empty GIF image. Used as a hack
           * to free memory from unused images on WebKit-powered mobile devices (by setting
           * image src to this string).
           */
-        static emptyImageUrl: string;
+        export var emptyImageUrl: string;
     }
 }
 
 
-declare module L {
+declare namespace L {
 
     export interface WMSOptions {
 
@@ -3956,51 +4336,9 @@ declare module L {
     }
 }
 
-
-declare module L {
-
-    export interface ZoomOptions {
-
-        /**
-          * The position of the control (one of the map corners). See control positions.
-          *
-          * Default value: 'topright'.
-          */
-        position?: string;
-    }
-}
-
-declare module L {
-
-    export interface ZoomPanOptions {
-
-        /**
-          * If true, the map view will be completely reset (without any animations).
-          *
-          * Default value: false.
-          */
-        reset?: boolean;
-
-        /**
-          * Sets the options for the panning (without the zoom change) if it occurs.
-          */
-        pan?: PanOptions;
-
-        /**
-          * Sets the options for the zoom change if it occurs.
-          */
-        zoom?: ZoomOptions;
-
-        /**
-          * An equivalent of passing animate to both zoom and pan options (see below).
-          */
-        animate?: boolean;
-    }
-}
-
 /**
-  * Forces Leaflet to use the Canvas back-end (if available) for vector layers 
-  * instead of SVG. This can increase performance considerably in some cases 
+  * Forces Leaflet to use the Canvas back-end (if available) for vector layers
+  * instead of SVG. This can increase performance considerably in some cases
   * (e.g. many thousands of circle markers on the map).
   */
 declare var L_PREFER_CANVAS: boolean;
@@ -4011,8 +4349,13 @@ declare var L_PREFER_CANVAS: boolean;
 declare var L_NO_TOUCH: boolean;
 
 /**
-  * Forces Leaflet to not use hardware-accelerated CSS 3D transforms for positioning 
+  * Forces Leaflet to not use hardware-accelerated CSS 3D transforms for positioning
   * (which may cause glitches in some rare environments) even if they're supported.
   */
 declare var L_DISABLE_3D: boolean;
 
+declare module "leaflet" {
+	export = L;
+}
+
+// vim: et ts=4 sw=4

@@ -21,7 +21,7 @@ export class LeafletMap extends Base implements IMapProvider {
     private map: L.Map;
     private markerList: collections.Dictionary<number, any>;
 
-   
+
     /** @constructor */
     constructor(private events: Events) {
         super();
@@ -43,8 +43,8 @@ export class LeafletMap extends Base implements IMapProvider {
         var apiLoaded = true;
         if (typeof L === 'undefined') {
             apiLoaded = false;
-        } 
-        
+        }
+
         if (apiLoaded) {
             if (this.map == null) {
                 var mapCanvas = document.getElementById(mapCanvasID);
@@ -52,24 +52,31 @@ export class LeafletMap extends Base implements IMapProvider {
                 if (mapCanvas != null) {
                     this.map = L.map(mapCanvasID).setView(new L.LatLng(51.505, -0.09), 13);
 
-                    var t = new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                    /*var t = new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    });
-                    this.map.addLayer(t);
-                    
+                    });*/
+
+                    (<any>L.tileLayer).provider('Stamen.Watercolor').addTo(this.map);
+                    //(<any>L.tileLayer).provider('Thunderforest.Transport').addTo(this.map);
+                    //(<any>L.tileLayer).provider('Esri.WorldShadedRelief').addTo(this.map);
+                    //(<any>L.tileLayer).provider('CartoDB.DarkMatter').addTo(this.map);
+                   
+                  
+                    //this.map.addLayer(t);
+
                     mapCanvas.style.width = '100%';
                     mapCanvas.style.height = Utils.getClientHeight().toString();
                     this.log("Defaulted map height to " + Utils.getClientHeight());
 
                     //events for map manipulation to perform search
                     var providerContext = this;
-                     this.map.on('moveend', () => { 
-                         providerContext.events.publish('ocm:mapping:dragend');
+                    this.map.on('moveend', () => {
+                        providerContext.events.publish('ocm:mapping:dragend');
                     });
-                    this.map.on('zoomend', () => { 
-                         providerContext.events.publish('ocm:mapping:zoom');
+                    this.map.on('zoomend', () => {
+                        providerContext.events.publish('ocm:mapping:zoom');
                     });
-                   
+
                     this.mapReady = true;
 
                     this.events.publish('ocm:mapping:ready');
@@ -90,7 +97,7 @@ export class LeafletMap extends Base implements IMapProvider {
     * @param parentContext  parent app context
     */
     showPOIListOnMap(poiList: Array<any>, parentContext: any) {
-        return;
+
         var clearMarkersOnRefresh = false;
         var map = this.map;
         var bounds = new google.maps.LatLngBounds();
@@ -106,11 +113,21 @@ export class LeafletMap extends Base implements IMapProvider {
                     }
                 }
             }
-            this.markerList = new collections.Dictionary<number, google.maps.Marker>();
+            this.markerList = new collections.Dictionary<number, any>();
         }
         var mapzoom = map.getZoom();
+
         if (poiList != null) {
             //render poi markers
+
+            var defaultMarkerIcon = L.icon({
+                iconUrl: 'images/icons/map/set4_level0.png',
+
+                iconSize: [34, 50], // size of the icon
+                iconAnchor: [15, 45] // point of the icon which will correspond to marker's location
+                // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+            });
+
             var poiCount = poiList.length;
             for (var i = 0; i < poiList.length; i++) {
                 if (poiList[i].AddressInfo != null) {
@@ -144,41 +161,39 @@ export class LeafletMap extends Base implements IMapProvider {
 
                             iconURL += ".png";
 
-                            markerImg = new google.maps.MarkerImage(
-                                iconURL,
-                                new google.maps.Size(68, 100.0),
-                                null,
-                                new google.maps.Point(15, 45),
-                                new google.maps.Size(34, 50)
-                                //new google.maps.Size(17, 25)
-                            );
 
                             var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
                             if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
                             if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
                             if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
 
-                            var newMarker = <any>new google.maps.Marker({
-                                position: new google.maps.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude),
-                                map: map,
-                                icon: markerImg != null ? markerImg : iconURL,
-                                title: markerTooltip
-                            });
+                            var marker = <any>new L.Marker(
+                                new L.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude),
+                                <L.MarkerOptions>{
+                                    icon: defaultMarkerIcon, title: markerTooltip, draggable: false, clickable: true
+                                });
 
-                            newMarker.poi = poi;
+                            marker._isClicked = false; //workaround for double click event
+                            marker.poi = poi;
+                            marker.on('click',
+                                function (e) {
+                                    if (this._isClicked == false) {
+                                        this._isClicked = true;
+                                        //appcontext.showDetailsView(anchorElement, this.poi);
+                                        //appcontext.showPage("locationdetails-page");
+                                        if (console) console.log("POI clicked:" + this.poi.ID);
 
-                            var anchorElement = document.getElementById("body");
-                            google.maps.event.addListener(newMarker, 'click', function () {
-                                //broadcast details of selected POI
-                                if (console) console.log("POI clicked:" + this.poi.ID);
-                                
-                                mapProviderContext.events.publish('ocm:poi:selected', { poi: poi, poiId:poi.ID });
+                                        mapProviderContext.events.publish('ocm:poi:selected', { poi: poi, poiId: poi.ID });
 
-                            });
+                                        //workaround double click event by clearing clicked state after short time
+                                        //var mk = this;
+                                        //setTimeout(function () { mk._isClicked = false; }, 300);
+                                    }
+                                });
 
-                            bounds.extend(newMarker.getPosition());
-
-                            this.markerList.setValue(poi.ID, newMarker);
+                            // markerClusterGroup.addLayer(marker);
+                            marker.addTo(this.map);
+                            this.markerList.setValue(poi.ID, marker);
                             markersAdded++;
                         }
                     }
@@ -190,25 +205,25 @@ export class LeafletMap extends Base implements IMapProvider {
 
         var uiContext = this;
         //zoom to bounds of markers
-/*
-        if (poiList != null && poiList.length > 0) {
-            if (parentContext != null && !parentContext.appConfig.enableLiveMapQuerying) {
-                this.log("Fitting to marker bounds:" + bounds);
-                map.setCenter(bounds.getCenter());
-                this.log("zoom before fit bounds:" + map.getZoom());
-
-                map.fitBounds(bounds);
-
-                //fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
-                var zoom = map.getZoom();
-                map.setZoom(zoom < 6 ? 6 : zoom);
-            } else {
-                if (map.getCenter() == undefined) {
-                    map.setCenter(bounds.getCenter());
+        /*
+                if (poiList != null && poiList.length > 0) {
+                    if (parentContext != null && !parentContext.appConfig.enableLiveMapQuerying) {
+                        this.log("Fitting to marker bounds:" + bounds);
+                        map.setCenter(bounds.getCenter());
+                        this.log("zoom before fit bounds:" + map.getZoom());
+        
+                        map.fitBounds(bounds);
+        
+                        //fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
+                        var zoom = map.getZoom();
+                        map.setZoom(zoom < 6 ? 6 : zoom);
+                    } else {
+                        if (map.getCenter() == undefined) {
+                            map.setCenter(bounds.getCenter());
+                        }
+                    }
                 }
-            }
-        }
-*/
+        */
 
         //this.refreshMapLayout();
     }
@@ -216,13 +231,13 @@ export class LeafletMap extends Base implements IMapProvider {
     refreshMapLayout() {
         if (this.map != null) {
 
-            
+
         }
     }
 
     setMapCenter(pos: GeoPosition) {
         if (this.mapReady) {
-           // this.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+            // this.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
         }
     };
 
@@ -231,7 +246,7 @@ export class LeafletMap extends Base implements IMapProvider {
         //wrap getCenter in an observable
         let obs = Observable.create(observer => {
             var pos = this.map.getCenter();
-            observer.next(new GeoPosition(pos.lat,pos.lng));
+            observer.next(new GeoPosition(pos.lat, pos.lng));
             observer.complete();
         });
 

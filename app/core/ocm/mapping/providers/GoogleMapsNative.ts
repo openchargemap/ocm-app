@@ -102,7 +102,7 @@ export class GoogleMapsNative extends Base implements IMapProvider {
     * @param parentContext  parent app context
     */
     showPOIListOnMap(poiList: Array<any>, parentContext: any) {
-
+        return;
      
         var clearMarkersOnRefresh = false;
   
@@ -122,8 +122,8 @@ export class GoogleMapsNative extends Base implements IMapProvider {
 
     renderPOIMarkers(clearMarkersOnRefresh: boolean, poiList: Array<any>) {
         var map = this.map;
-           var _providerContext = this;
-    var bounds = new plugin.google.maps.LatLngBounds();
+        var _providerContext = this;
+        var bounds = new plugin.google.maps.LatLngBounds();
         var markersAdded = 0;
 
         //clear existing markers (if enabled)
