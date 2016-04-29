@@ -1,7 +1,6 @@
 import {App, Platform, Config, Events, NavController} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {Http, ConnectionBackend} from 'angular2/http';
-import {bootstrap} from 'angular2/bootstrap';
 import {OnInit, provide, enableProdMode} from 'angular2/core';
 
 import {APIClient} from './core/ocm/services/APIClient';

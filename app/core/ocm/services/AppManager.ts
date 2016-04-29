@@ -5,7 +5,7 @@
 import {APIClient} from './APIClient';
 import {Http} from 'angular2/http';
 import {Injectable} from 'angular2/core';
-import {Events, NavController, Platform} from 'ionic-angular';
+import {Events, NavController, Platform, Toast} from 'ionic-angular';
 import {Base, LogLevel} from '../Base';
 import {JwtHelper} from 'angular2-jwt';
 import {UserProfile, SubmissionType} from '../model/AppModels'
@@ -53,13 +53,14 @@ export class AppManager extends Base {
 
         if (jwt != null) {
             jwt = JSON.parse(jwt);
-
-            var decodedToken = this.jwtHelper.decodeToken(jwt.Data.access_token);
-            if (this.jwtHelper.isTokenExpired(jwt.Data.access_token)) {
-                localStorage.removeItem("authResponse");
-            } else {
-                this.api.authResponse = jwt;
-                this.log("User has valid auth token in local storage", LogLevel.VERBOSE);
+            if (jwt.Data != null && jwt.Data.access_token != null) {
+                var decodedToken = this.jwtHelper.decodeToken(jwt.Data.access_token);
+                if (this.jwtHelper.isTokenExpired(jwt.Data.access_token)) {
+                    localStorage.removeItem("authResponse");
+                } else {
+                    this.api.authResponse = jwt;
+                    this.log("User has valid auth token in local storage", LogLevel.VERBOSE);
+                }
             }
         }
     }
@@ -113,5 +114,19 @@ export class AppManager extends Base {
         } else {
             this.api.performSubmission(SubmissionType.POI, data);
         }
+    }
+
+    public showToastNotification(nav: NavController, msg: string) {
+        let toast = Toast.create({
+            message: 'User was added successfully',
+            duration: 3000,
+
+        });
+
+        toast.onDismiss(() => {
+            this.log('Dismissed toast');
+        });
+
+        nav.present(toast);
     }
 }

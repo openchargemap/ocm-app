@@ -1,4 +1,4 @@
-import {Page, NavController, NavParams, Alert} from 'ionic-angular';
+import {Page, NavController, NavParams, Alert, Loading} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {UserProfile, AsyncResult} from '../../core/ocm/model/AppModels';
 
@@ -25,38 +25,34 @@ export class SignInPage {
 
     performSignIn() {
 
+        let loading = Loading.create({
+            content: "Signing In..",
+            dismissOnPageChange: true
+        });
+
+        this.nav.present(loading);
+        
+
         //sign in with supplied email address and password
         this.appManager.api.performSignIn(this.email, this.password).then((response) => {
 
 
-           /* let alert = Alert.create({
-                title: 'Open Charge Map',
-                subTitle: 'You are now signed in as ' + this.appManager.api.authResponse.Data.UserProfile.Username,
-                buttons: ['Ok']
-            });
-            this.nav.present(alert);*/
+            /* let alert = Alert.create({
+                 title: 'Open Charge Map',
+                 subTitle: 'You are now signed in as ' + this.appManager.api.authResponse.Data.UserProfile.Username,
+                 buttons: ['Ok']
+             });
+             this.nav.present(alert);*/
             localStorage.setItem("authResponse", JSON.stringify(this.appManager.api.authResponse));
 
             this.nav.popToRoot();
+          
+        }, (reason?: AsyncResult) => {
 
-            //post test comment
-            /*
-                        var comment = {
-                            "ChargePointID": 60624,
-                            "CommentTypeID": 10,
-                            "UserName": "A. Nickname",
-                            "Comment": "This place is awesome, free cake for EV owners!",
-                            "Rating": 5,
-                            "RelatedURL": "http://awesomevplace.com",
-                            "CheckinStatusTypeID": 0
-                        };
-                        this.api.submitUserComment(comment);
-            */
-        }, (reason?:AsyncResult) => {
-
+            loading.dismiss();
             let alert = Alert.create({
                 title: 'Open Charge Map',
-                subTitle: 'Email or Password not recognised:'+JSON.stringify(reason),
+                subTitle: 'Email or Password not recognised:' + JSON.stringify(reason),
                 buttons: ['Ok']
             });
             this.nav.present(alert);
@@ -65,6 +61,7 @@ export class SignInPage {
 
 
         }).catch(err => {
+            loading.dismiss();
             alert(err);
             this.appManager.log("Error logging in:" + err);
         });

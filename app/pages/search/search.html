@@ -1,16 +1,34 @@
-<ion-navbar *navbar dark>
-    <ion-title>{{ 'ocm.search.sectionTitle' | translate }}</ion-title>
+<ion-nav-bar *navbar primary>
+  <ion-toolbar primary>
+    <ion-searchbar [(ngModel)]="searchKeyword" (input)="getPlaces($event)"></ion-searchbar>
     <ion-buttons end>
       <button (click)="locateUser()">
       <ion-icon name="locate"></ion-icon>
     </button>
-    <button (click)="openSearchOptions()">
-      <ion-icon name="search"></ion-icon>
+      <button (click)="openSearchOptions()">
+      <ion-icon name="options"></ion-icon>
     </button>
-  </ion-buttons>
-</ion-navbar>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-nav-bar>
 
 <ion-content class="search-page">
-   
-    <div id="map-canvas"></div>
+<div id="place-search">
+
+  <div id="place-attribution"></div>
+  
+  <ion-list>
+  <a *ngFor="#item of placeList" (click)="placeSelected($event,item)" ion-item >
+    <ion-avatar item-left>
+      <ion-icon name="locate"></ion-icon>
+    </ion-avatar>
+    
+    <h2>{{item.Title}}</h2>
+    <h3>{{item.Type}}</h3>
+    <p>{{item.Address}}</p>
+</a>
+</ion-list>
+
+  </div>
+  <div id="map-canvas"></div>
 </ion-content>

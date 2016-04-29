@@ -2,56 +2,59 @@
 /// <reference path="../../lib/typings/collections/collections.d.ts" />
 import {Component, OnInit} from 'angular2/core';
 import {Http} from 'angular2/http';
-import {IonicApp, Page, NavController, NavParams, Events, Platform} from 'ionic-angular';
+import {IonicApp, Page, NavController, NavParams, Events, Platform, Loading} from 'ionic-angular';
 import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
 import {POIManager, POISearchParams} from '../../core/ocm/services/POIManager';
 import {POIDetailsPage} from '../poi-details/poi-details';
 import {SignInPage} from '../signin/signin';
 import {SearchOptionsPage} from './search-options';
+import {SearchPlace} from '../../components/search-place/search-place';
+import {AppManager} from '../../core/ocm/services/AppManager';
 import {Base, LogLevel} from '../../core/ocm/Base';
 import {Utils} from '../../core/ocm/Utils';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
+import {PlaceSearchResult, GeoLatLng} from '../../core/ocm/model/AppModels';
 
 @Page({
     templateUrl: 'build/pages/search/search.html',
-    pipes: [TranslatePipe] // add in each component to invoke the transform method
+    pipes: [TranslatePipe], // add in each component to invoke the transform method
+    directives: [SearchPlace]
 })
 
 export class SearchPage extends Base implements OnInit {
     mapping: Mapping;
 
-    map: any;
-    nav: any;
-    events: Events;
-    //TODO: appmodel
-    poiManager: POIManager;
     // translate: any;
-    mapDisplayed: boolean = false;
-    translate: TranslateService;
+    private mapDisplayed: boolean = false;
 
-    debouncedRefreshResults: any;
-    constructor(app: IonicApp, nav: NavController, navParams: NavParams, events: Events, http: Http, poiManager: POIManager, translate: TranslateService, platform: Platform) {
+
+    private debouncedRefreshResults: any;
+    private mapCanvasID: string;
+
+    private placeList: Array<PlaceSearchResult>;
+
+    searchKeyword: string;
+    constructor(
+        private appManager: AppManager,
+        private nav: NavController,
+        navParams: NavParams,
+        private events: Events,
+        private poiManager: POIManager,
+        private translate: TranslateService,
+        private platform: Platform
+    ) {
         super();
-        this.nav = nav;
-        this.map = null;
-        this.events = events;
-        this.translate = translate;
-
-        this.poiManager = poiManager;
 
         this.mapping = new Mapping(events);
+
+        this.mapCanvasID = "map-canvas";
 
         //decide whether to use native google maps ssdsdk or google web api        
         if (platform.is("ios") || platform.is("android")) {
             this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
         } else {
-            this.mapping.setMapAPI(MappingAPI.LEAFLET);
+            this.mapping.setMapAPI(MappingAPI.GOOGLE_WEB);
         }
-
-
-
-        //////
-
 
     }
 
@@ -66,11 +69,11 @@ export class SearchPage extends Base implements OnInit {
             this.mapping.updateMapSize();
         }
     }
-    
-     onPageWillLeave() {
+
+    onPageWillLeave() {
         //remove input focus from native map
         this.mapping.unfocusMap();
-  }
+    }
 
     getPreferredMapHeight(clientHeight: number): number {
         if (clientHeight == null) {
@@ -85,8 +88,8 @@ export class SearchPage extends Base implements OnInit {
 
         let preferredContentHeight = this.getPreferredMapHeight(size[0]);
 
-        if (document.getElementById("map-canvas").offsetHeight != preferredContentHeight) {
-            document.getElementById("map-canvas").style.height = preferredContentHeight + "px";
+        if (document.getElementById(this.mapCanvasID).offsetHeight != preferredContentHeight) {
+            document.getElementById(this.mapCanvasID).style.height = preferredContentHeight + "px";
         }
         if (this.mapping) {
             this.mapping.updateMapSize();
@@ -98,9 +101,9 @@ export class SearchPage extends Base implements OnInit {
         this.debouncedRefreshResults = Utils.debounce(this.refreshResultsAfterMapChange, 300, false);
 
         this.events.subscribe('ocm:poi:selected', (args) => {
-        
-                this.viewPOIDetails(args[0]);
-        
+
+            this.viewPOIDetails(args[0]);
+
         });
         this.events.subscribe('ocm:mapping:zoom', () => { this.debouncedRefreshResults(); });
         this.events.subscribe('ocm:mapping:dragend', () => { this.refreshResultsAfterMapChange(); });
@@ -111,7 +114,7 @@ export class SearchPage extends Base implements OnInit {
             this.enforceMapHeight(size[0]);
         });
 
-        this.mapping.initMap("map-canvas");
+        this.mapping.initMap(this.mapCanvasID);
 
         //centre map on users location before starting to fetch other info
         //get user position
@@ -213,7 +216,7 @@ export class SearchPage extends Base implements OnInit {
                 }
                 //close zooms are 1:1 level of detail, zoomed out samples less data
                 this.mapping.getMapZoom().subscribe((zoomLevel: number) => {
-                    this.log("map zoom level to be converted to level of detail:"+zoomLevel);
+                    this.log("map zoom level to be converted to level of detail:" + zoomLevel);
                     if (zoomLevel > 10) {
                         params.levelOfDetail = 1;
                     } else if (zoomLevel > 6) {
@@ -255,8 +258,8 @@ export class SearchPage extends Base implements OnInit {
     }
 
     viewPOIDetails(args: any) {
-       
-        if (args.poi!=null) {
+
+        if (args.poi != null) {
             this.log("Viewing POI Details " + args.poi.ID);
             this.nav.push(POIDetailsPage, {
                 item: args.poi
@@ -273,7 +276,7 @@ export class SearchPage extends Base implements OnInit {
             });
 
         }
- 
+
     }
 
     openSearchOptions() {
@@ -289,9 +292,67 @@ export class SearchPage extends Base implements OnInit {
                 this.mapping.updateMapCentrePos(userLocation.lat(), userLocation.lng(), true);
                 this.mapping.setMapZoom(13); //TODO: provider specific ideal zoom for 'summary'
                 this.mapping.updateMapSize();
-            }, function () {
+            }, () => {
                 ///no geolocation
+                this.appManager.showToastNotification(this.nav, "Your location could not be determined.")
             });
         }
     }
+
+    getPlaces(e: any) {
+
+        document.getElementById("place-search").style.display = 'block';
+        this.mapping.unfocusMap();
+
+        let loading = Loading.create({
+            content: "Searching..",
+            dismissOnPageChange: true
+        });
+
+        this.nav.present(loading);
+        // Specify location, radius and place types for your Places API search.
+        var defaultBounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng(49.00, -13.00),
+            new google.maps.LatLng(60.00, 3.00));
+        var request: any = {
+            keyword: this.searchKeyword,
+            bounds: defaultBounds,
+            location: null,
+            name: null,
+            radius: null,
+            rankBy: null
+        };
+        var attributionDiv = <HTMLDivElement>document.getElementById("place-attribution");
+        // Create the PlaceService and send the request.
+        // Handle the callback with an anonymous function.
+        var service = new google.maps.places.PlacesService(attributionDiv);
+        service.nearbySearch(request, (results, status) => {
+            loading.dismiss();
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                this.placeList = [];
+                for (var i = 0; i < results.length; i++) {
+                    var place = results[i];
+                    var placeResult = new PlaceSearchResult();
+                    placeResult.Title = place.name;
+                    placeResult.ReferenceID = place.id;
+                    placeResult.Address = place.formatted_address;
+                    placeResult.Type = "place";
+                    placeResult.Location = new GeoLatLng(place.geometry.location.lat(), place.geometry.location.lng());
+                    this.placeList.push(placeResult);
+                    this.log(placeResult.Title);
+
+                }
+
+            }
+        });
+    }
+
+    placeSelected(e, item: PlaceSearchResult) {
+        this.searchKeyword=item.Title;
+        document.getElementById("place-search").style.display = 'none';
+        this.mapping.focusMap();
+        this.mapping.updateMapCentrePos(item.Location.latitude, item.Location.longitude, true);
+    }
+
+
 }

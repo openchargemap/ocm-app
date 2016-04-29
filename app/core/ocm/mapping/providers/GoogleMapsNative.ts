@@ -102,7 +102,6 @@ export class GoogleMapsNative extends Base implements IMapProvider {
     * @param parentContext  parent app context
     */
     showPOIListOnMap(poiList: Array<any>, parentContext: any) {
-        return;
      
         var clearMarkersOnRefresh = false;
   
