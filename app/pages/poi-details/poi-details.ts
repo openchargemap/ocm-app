@@ -31,7 +31,8 @@ export class POIDetailsPage {
 
     addComment() {
         this.nav.push(CommentPage, {
-            id: this.poi.ID
+            id: this.poi.ID,
+            poi: this.poi
         });
     }
 

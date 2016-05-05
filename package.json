@@ -1,20 +1,20 @@
 {
   "dependencies": {
     "angular2": "2.0.0-beta.15",
+    "angular2-jwt": "",
     "es6-promise": "",
     "es6-shim": "",
     "ionic-angular": "",
     "ionic-native": "",
     "ionicons": "",
+    "linq-ts": "^1.0.3",
     "ng2-translate": "",
     "reflect-metadata": "",
     "rxjs": "",
     "typescript-collections": "",
-    "zone.js": "",
-    "angular2-jwt": ""
+    "zone.js": ""
   },
   "devDependencies": {
-
     "awesome-typescript-loader": "",
     "del": "",
     "gulp": "",
@@ -30,8 +30,8 @@
     "ionic-gulp-scripts-copy": "",
     "run-sequence": ""
   },
-  "name": "tutorial",
-  "description": "tutorial: An Ionic project",
+  "name": "io.openchargemap.app",
+  "description": "The Open Data registry of EV charging location",
   "cordovaPlugins": [
     "cordova-plugin-device",
     "cordova-plugin-console",
@@ -41,9 +41,6 @@
     "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [
-    {
-      "platform": "android",
-      "locator": "windows"
-    }
+    "android"
   ]
 }

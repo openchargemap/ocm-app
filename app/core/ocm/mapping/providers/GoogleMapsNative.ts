@@ -9,7 +9,8 @@
 import {Observable} from 'rxjs/Observable';
 import {Base, LogLevel} from '../../Base';
 import {Utils} from '../../Utils';
-import {MappingAPI, IMapProvider, MapOptions, Mapping, GeoLatLng, GeoPosition} from '../Mapping';
+import {MappingAPI, IMapProvider, MapOptions, Mapping} from '../Mapping';
+import {GeoLatLng, GeoPosition} from '../../model/GeoPosition';
 import {Events} from 'ionic-angular';
 
 declare var plugin: any;
@@ -26,7 +27,7 @@ export class GoogleMapsNative extends Base implements IMapProvider {
 
     private map: any;
     private markerList: collections.Dictionary<number, google.maps.Marker>;
-    private maxMarkers:number = 500;
+    private maxMarkers: number = 200;
 
     /** @constructor */
     constructor(private events: Events) {
@@ -102,21 +103,21 @@ export class GoogleMapsNative extends Base implements IMapProvider {
     * @param parentContext  parent app context
     */
     showPOIListOnMap(poiList: Array<any>, parentContext: any) {
-     
+
         var clearMarkersOnRefresh = false;
-  
+
         this.map.setVisible(true);
         //map.clear();
 
         if (this.markerList != null && this.markerList.size() > this.maxMarkers) {
             //max markers on map, start new batch again 
-            this.map.clear(() => { 
+            this.map.clear(() => {
                 this.renderPOIMarkers(clearMarkersOnRefresh, poiList);
             });
         } else {
-             this.renderPOIMarkers(clearMarkersOnRefresh, poiList);
-        }   
-       
+            this.renderPOIMarkers(clearMarkersOnRefresh, poiList);
+        }
+
     }
 
     renderPOIMarkers(clearMarkersOnRefresh: boolean, poiList: Array<any>) {
@@ -126,7 +127,8 @@ export class GoogleMapsNative extends Base implements IMapProvider {
         var markersAdded = 0;
 
         //clear existing markers (if enabled)
-        if (clearMarkersOnRefresh == true) {
+        if (clearMarkersOnRefresh == true || (this.markerList != null && this.markerList.values.length > this.maxMarkers)) {
+            this.log("map:clearing markers");
             if (this.markerList != null) {
                 for (var i = 0; i < this.markerList.size(); i++) {
                     if (this.markerList[i]) {
@@ -173,20 +175,21 @@ export class GoogleMapsNative extends Base implements IMapProvider {
                             if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
                             if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
 
-                   
+
                             var markerPos = new plugin.google.maps.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude);
 
                             var newMarker = map.addMarker({
                                 'position': markerPos,
                                 'title': markerTooltip,
-                                'snippet': "View details",
+                                'snippet': "View details"
+                                /*,
                                 'icon': {
                                     'url': 'www/' + iconURL,
                                     'size': {
                                         'width': 30,
                                         'height': 50
                                     }
-                                }
+                                }*/
                             }, function (marker) {
                                 //show full details when info window tapped
                                 marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
@@ -194,7 +197,7 @@ export class GoogleMapsNative extends Base implements IMapProvider {
                                     var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
 
                                     if (console) console.log("POI clicked:" + poiId);
-                                    _providerContext.events.publish('ocm:poi:selected', { poi: null, poiId:poiId });
+                                    _providerContext.events.publish('ocm:poi:selected', { poi: null, poiId: poiId });
 
                                 });
                             });
@@ -208,19 +211,20 @@ export class GoogleMapsNative extends Base implements IMapProvider {
                 }
             }
 
-            this.log(markersAdded + " new map markers added out of a total " + this.markerList.size());
+            this.log(markersAdded + " new map markers added out of a total " + this.markerList.values.length);
         }
 
         var uiContext = this;
         //zoom to bounds of markers
         if (poiList != null && poiList.length > 0) {
-             if (map.getCenter() == undefined) {
-                    map.setCenter(bounds.getCenter());
-            }
-             map.getZoom((zoom) => { 
-                    map.setZoom(zoom < 6 ? 6 : zoom);
-             });
-             
+            /*if (map.getCenter() == undefined) {
+                map.setCenter(bounds.getCenter());
+            }*/
+
+            map.getZoom((zoom) => { //TODO: causing infinite loop?
+                map.setZoom(zoom < 6 ? 6 : zoom);
+            });
+
             /*if (!parentContext.appConfig.enableLiveMapQuerying) {
                 this.log("Fitting to marker bounds:" + bounds);
                 map.setCenter(bounds.getCenter());
@@ -238,7 +242,7 @@ export class GoogleMapsNative extends Base implements IMapProvider {
 
         // this.log("Moving camera to map centre:" + this.mapOptions.mapCentre);
 
-        //move camera insteaad of animating
+        //move camera instead of animating
         /*setTimeout(function () {
             map.moveCamera({
                 'target': gmMapCentre,
@@ -249,7 +253,7 @@ export class GoogleMapsNative extends Base implements IMapProvider {
         }, 500);*/
 
         this.refreshMapLayout();
-}    
+    }
     refreshMapLayout() {
         if (this.map != null) {
             this.map.refreshLayout();
@@ -286,11 +290,11 @@ export class GoogleMapsNative extends Base implements IMapProvider {
         //wrap getzoom in an observable
         let obs = Observable.create(observer => {
 
-            this.map.getZoom((zoom) => { 
+            this.map.getZoom((zoom) => {
                 observer.next(zoom);
-                observer.complete();    
+                observer.complete();
             });
-            
+
         });
         return obs;
     }
@@ -316,7 +320,7 @@ export class GoogleMapsNative extends Base implements IMapProvider {
                         this.log(JSON.stringify(mapBounds));
                         bounds.push(new GeoLatLng(mapBounds.northeast.lat, mapBounds.northeast.lng));
                         bounds.push(new GeoLatLng(mapBounds.southwest.lat, mapBounds.southwest.lng));
-                        
+
                         observer.next(bounds);
                         observer.complete();
                     } else {
@@ -329,16 +333,16 @@ export class GoogleMapsNative extends Base implements IMapProvider {
     }
 
     renderMap(poiList: Array<any>, mapHeight: number, parentContext: any): boolean {
-           
+
         if (!this.mapReady) {
             this.log("renderMap: skipping render, map not ready yet");
         }
 
         if (this.map == null) this.log("Native map not initialised");
         if (this.mapCanvasID == null) this.log("mapcanvasid not set!!");
-       
+
         //document.getElementById(this.mapCanvasID).style.height = mapHeight + "px";
-     
+
         this.showPOIListOnMap(poiList, parentContext);
         /*
         plugin.google.maps.Map.isAvailable((isAvailable, message)=> {
@@ -354,5 +358,12 @@ export class GoogleMapsNative extends Base implements IMapProvider {
         });
 */
         return true;
+    }
+
+    unfocusMap() {
+        this.map.setClickable(false);
+    }
+    focusMap() {
+        this.map.setClickable(true);
     }
 }

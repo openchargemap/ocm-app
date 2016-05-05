@@ -1,46 +1,55 @@
 <ion-navbar *navbar primary>
-    <ion-title>
-       Add Comment
-    </ion-title>
+  <ion-title>
+    Add Comment
+  </ion-title>
 </ion-navbar>
 <ion-content class="comment-page" padding>
 
-<ion-list>
+  <h1>{{poi.AddressInfo.Title}}</h1>
+  <p>{{poi.AddressInfo.AddressLine1}}</p>
+  <ion-list>
 
-  <ion-item>
-    <ion-label stacked>Comment</ion-label>
-    <ion-input type="text" [(ngModel)]="commentModel.Comment"></ion-input>
-  </ion-item>
+   <ion-item>
+      <ion-label stacked>Comment Type</ion-label>
+      <ion-select [(ngModel)]="commentModel.UserCommentTypeID">
+        <ion-option *ngFor="#item of commentTypes" [value]="item.ID" [checked]="false">{{item.Title}}</ion-option>
+      </ion-select>
+
+    </ion-item>
+
+    <ion-item>
+      <ion-label stacked>What Did You Think?</ion-label>
+      <ion-input type="text" [(ngModel)]="commentModel.Comment"></ion-input>
+    </ion-item>
+
+
+    <ion-item>
+      <ion-label stacked>Did You Successfully Charge?</ion-label>
+      <ion-select [(ngModel)]="commentModel.CheckStatusTypeID">
+        <ion-option *ngFor="#item of checkinTypes" [value]="item.ID" [checked]="false">{{item.Title}}</ion-option>
+      </ion-select>
+
+    </ion-item>
 
  
-<ion-list>
-  <ion-item>
-    <ion-label>Status</ion-label>
-    <ion-select [(ngModel)]="commentModel.CheckStatusTypeID">
-      <ion-option *ngFor="#item of refData.CheckinStatusTypes" [value] = "item.ID" [checked]="false">{{item.Title}}</ion-option>
-    </ion-select>
+    <ion-item>
+      <ion-label stacked>Your Rating</ion-label>
+      
+      
+        <ion-select [(ngModel)]="commentModel.Rating">
+          <ion-option value="5">5 - Excellent</ion-option>
+          <ion-option value="4">4 - Good</ion-option>
+          <ion-option value="3">3 - Average</ion-option>
+          <ion-option value="2">2 - Not Good</ion-option>
+          <ion-option value="1">1 - Bad</ion-option>
+        <ion-option value="" [checked]="true">Not Rated</ion-option>
+      </ion-select>
+    </ion-item>
     
-      </ion-item>
-</ion-list>
 
-<ion-list>
-  <ion-item>
-    <ion-label>Comment Type</ion-label>
-    <ion-select [(ngModel)]="commentModel.UserCommentTypeID">
-      <ion-option *ngFor="#item of refData.UserCommentTypes" [value] = "item.ID" [checked]="false">{{item.Title}}</ion-option>
-    </ion-select>
-    
-      </ion-item>
-</ion-list>
+  </ion-list>
 
-
-<ion-item>
-    <ion-label stacked>Rating</ion-label>
-    <ion-input type="number" [(ngModel)]="commentModel.Rating"></ion-input>
-  </ion-item>
-</ion-list>
-     
-<div padding>
+  <div padding>
     <button block (click)="cancel()">Cancel</button>
     <button primary block (click)="addComment()">Add Comment</button>
   </div>

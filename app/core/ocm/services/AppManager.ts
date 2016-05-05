@@ -94,7 +94,7 @@ export class AppManager extends Base {
             this.submissionQueue.add(SubmissionType.Comment, data);
             this.submissionQueue.processNextQueueItem();
         } else {
-            this.api.performSubmission(SubmissionType.Comment, data);
+            return this.api.performSubmission(SubmissionType.Comment, data);
         }
     }
 
@@ -103,7 +103,7 @@ export class AppManager extends Base {
             this.submissionQueue.add(SubmissionType.Media, data);
             this.submissionQueue.processNextQueueItem();
         } else {
-            this.api.performSubmission(SubmissionType.Media, data);
+           return this.api.performSubmission(SubmissionType.Media, data);
         }
     }
 
@@ -112,13 +112,13 @@ export class AppManager extends Base {
             this.submissionQueue.add(SubmissionType.POI, data);
             this.submissionQueue.processNextQueueItem();
         } else {
-            this.api.performSubmission(SubmissionType.POI, data);
+            return this.api.performSubmission(SubmissionType.POI, data);
         }
     }
 
     public showToastNotification(nav: NavController, msg: string) {
         let toast = Toast.create({
-            message: 'User was added successfully',
+            message: msg,
             duration: 3000,
 
         });

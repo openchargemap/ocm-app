@@ -6,7 +6,8 @@
 
 import {Base, LogLevel} from '../../Base';
 import {Utils} from '../../Utils';
-import {MappingAPI, IMapProvider, MapOptions, Mapping, GeoLatLng, GeoPosition} from '../Mapping';
+import {MappingAPI, IMapProvider, MapOptions, Mapping} from '../Mapping';
+import {GeoLatLng, GeoPosition} from '../../model/GeoPosition';
 import {Events} from 'ionic-angular';
 import {Observable} from 'rxjs/Observable';
 
@@ -193,8 +194,8 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                             google.maps.event.addListener(newMarker, 'click', function () {
                                 //broadcast details of selected POI
                                 if (console) console.log("POI clicked:" + this.poi.ID);
-                                
-                                mapProviderContext.events.publish('ocm:poi:selected', { poi: poi, poiId:poi.ID });
+
+                                mapProviderContext.events.publish('ocm:poi:selected', { poi: poi, poiId: poi.ID });
 
                             });
 
@@ -255,7 +256,7 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
         //wrap getCenter in an observable
         let obs = Observable.create(observer => {
             var pos = this.map.getCenter();
-            observer.next(new GeoPosition(pos.lat(),pos.lng()));
+            observer.next(new GeoPosition(pos.lat(), pos.lng()));
             observer.complete();
         });
 
@@ -321,5 +322,12 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
         }
 
         return true;
+    }
+
+    focusMap() {
+        //
+    }
+    unfocusMap() {
+        //
     }
 }

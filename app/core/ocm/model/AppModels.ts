@@ -5,4 +5,4 @@ export {SubmissionType} from './SubmissionType';
 export {UserComment} from './UserComment';
 export {Journey,WayPoint} from './Journey';
 export {PlaceSearchResult} from './PlaceSearchResult';
-export {GeoLatLng} from '../mapping/Mapping';
+export {GeoLatLng, GeoPosition} from './GeoPosition';

@@ -5,7 +5,8 @@
 /// <reference path="../../../../lib/typings/leaflet/leaflet.d.ts" />
 import {Base, LogLevel} from '../../Base';
 import {Utils} from '../../Utils';
-import {MappingAPI, IMapProvider, MapOptions, Mapping, GeoLatLng, GeoPosition} from '../Mapping';
+import {MappingAPI, IMapProvider, MapOptions, Mapping} from '../Mapping';
+import {GeoLatLng, GeoPosition} from '../../model/GeoPosition';
 import {Events} from 'ionic-angular';
 import {Observable} from 'rxjs/Observable';
 
@@ -60,8 +61,8 @@ export class LeafletMap extends Base implements IMapProvider {
                     //(<any>L.tileLayer).provider('Thunderforest.Transport').addTo(this.map);
                     //(<any>L.tileLayer).provider('Esri.WorldShadedRelief').addTo(this.map);
                     //(<any>L.tileLayer).provider('CartoDB.DarkMatter').addTo(this.map);
-                   
-                  
+
+
                     //this.map.addLayer(t);
 
                     mapCanvas.style.width = '100%';
@@ -303,5 +304,12 @@ export class LeafletMap extends Base implements IMapProvider {
         }
 
         return true;
+    }
+
+    focusMap() {
+        //
+    }
+    unfocusMap() {
+        //
     }
 }

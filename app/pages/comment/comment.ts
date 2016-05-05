@@ -1,18 +1,20 @@
-import {Page, NavController, NavParams, Modal, Alert} from 'ionic-angular';
+import {Page, NavController, NavParams, Modal, Alert, Loading} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {UserComment} from '../../core/ocm/model/AppModels';
 
 
 @Page({
     templateUrl: 'build/pages/comment/comment.html',
-
     directives: []
 })
 
 export class CommentPage {
 
-    commentModel;
+    commentModel: UserComment;
+    poi:any;
     refData: any;
+    commentTypes: any;
+    checkinTypes: any;
     constructor(private navParams: NavParams, public appManager: AppManager, public nav: NavController) {
        
         this.commentModel = <UserComment>{ 
@@ -23,7 +25,11 @@ export class CommentPage {
             Rating: null
         };
         
+        this.poi = this.navParams.get('poi'); 
         this.refData = appManager.api.referenceData;
+
+        this.commentTypes = this.refData.UserCommentTypes.filter(c => c.ID != 100 && c.ID != 110);
+        this.checkinTypes = this.refData.CheckinStatusTypes.filter(c => c.IsAutomatedCheckin==false);
     }
 
     onPageWillEnter() {
@@ -36,7 +42,18 @@ export class CommentPage {
     }
 
     addComment() {
-        this.appManager.submitComment(this.commentModel);
-        this.nav.pop();
+          let loading = Loading.create({
+            content: "Sending ..",
+            dismissOnPageChange: true
+        });
+
+        this.nav.present(loading);
+        this.appManager.submitComment(this.commentModel).then((response) => {
+            this.nav.pop();
+        }, (rejection) => { 
+            alert("There was a problem submitting your comment.");
+
+        });
+        
     }
 }

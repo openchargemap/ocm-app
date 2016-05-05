@@ -7,8 +7,14 @@
     <p>Settings and Filters would go here.</p>
 
     <ion-list>
-        <ion-toggle>Tests</ion-toggle>
+        <ion-toggle>Distance in Miles</ion-toggle>
     </ion-list>
-    
-    
+   <ion-list>
+
+        <ion-label stacked>Operators</ion-label>
+        <ion-select [(ngModel)]="commentModel.CheckStatusTypeID">
+            <ion-option *ngFor="#item of refData.Operators" [value]="item.ID" [checked]="false">{{item.Title}}</ion-option>
+        </ion-select>
+
+    </ion-list>
 </ion-content>

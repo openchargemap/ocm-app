@@ -12,43 +12,10 @@ import {Base, LogLevel} from '../Base';
 import {GoogleMapsNative} from './providers/GoogleMapsNative';
 import {GoogleMapsWeb} from './providers/GoogleMapsWeb';
 import {LeafletMap} from './providers/LeafletMap';
-import {Events} from 'ionic-angular'; //TODO remove dependency on ionic here
+import {GeoLatLng, GeoPosition} from '../model/GeoPosition';
+import {Events} from 'ionic-angular'; //TODO remove dependency on ionic here?
 
 declare var plugin: any;
-declare var L: any;
-
-export class GeoLatLng implements Coordinates {
-    //based on HTML Geolocation "Coordinates"
-    public altitudeAccuracy: number;
-    public longitude: number;
-    public latitude: number;
-    public speed: number;
-    public heading: number;
-    public altitude: number;
-    public accuracy: number;
-
-    constructor(lat: number = null, lng: number = null) {
-        this.latitude = lat;
-        this.longitude = lng;
-    }
-}
-
-export class GeoPosition {
-    //based on HTML Geolocation "Position"
-    public coords: GeoLatLng;
-    public timestamp: number;
-    public attribution: string;
-
-    constructor(lat: number = null, lng: number = null) {
-        this.coords = new GeoLatLng();
-        this.coords.latitude = lat;
-        this.coords.longitude = lng;
-    }
-
-    static fromPosition(pos: Position): GeoPosition {
-        return new GeoPosition(pos.coords.latitude, pos.coords.longitude);
-    }
-}
 
 export class MapOptions {
     public enableClustering: boolean;
@@ -106,6 +73,8 @@ export interface IMapProvider {
     setMapCenter(pos: GeoPosition);
     setMapType(mapType: string);
     getMapBounds(): Observable<Array<GeoLatLng>>;
+    focusMap();
+    unfocusMap();
 }
 
 /** Mapping - provides a way to render to various mapping APIs
@@ -325,149 +294,7 @@ export class Mapping extends Base {
             this.debouncedMapPositionUpdate();
         }
     }
-
-    initMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser) {
-        if (this.map == null) {
-            this.map = this.createMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser, 13);
-
-        }
-    }
-
-    showPOIListOnMapViewLeaflet(mapcanvasID, poiList, appcontext, anchorElement, resultBatchID) {
-        var map = this.map;
-
-        //if list has changes to results render new markers etc
-        if (this.mapOptions.resultBatchID != resultBatchID) {
-            this.mapOptions.resultBatchID = resultBatchID;
-
-            this.log("Setting up map markers:" + resultBatchID);
-            // Creates a red marker with the coffee icon
-
-            var unknownPowerMarker = L.AwesomeMarkers.icon({
-                icon: "bolt",
-                color: "darkpurple",
-                prefix: "fa"
-            });
-
-            var lowPowerMarker = L.AwesomeMarkers.icon({
-                icon: "bolt",
-                color: "darkblue",
-                spin: true,
-                prefix: "fa"
-            });
-
-            var mediumPowerMarker = L.AwesomeMarkers.icon({
-                icon: "bolt",
-                color: "green",
-                spin: true,
-                prefix: "fa"
-            });
-
-            var highPowerMarker = L.AwesomeMarkers.icon({
-                icon: "bolt",
-                color: "orange",
-                spin: true,
-                prefix: "fa"
-            });
-
-            if (this.mapOptions.enableClustering) {
-                var markerClusterGroup = new L.MarkerClusterGroup();
-
-                if (poiList != null) {
-                    //render poi markers
-                    var poiCount = poiList.length;
-                    for (var i = 0; i < poiList.length; i++) {
-                        if (poiList[i].AddressInfo != null) {
-                            if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-                                var poi = poiList[i];
-
-                                var markerTitle = poi.AddressInfo.Title;
-                                var powerTitle = "";
-                                var usageTitle = "";
-
-                                var poiLevel = Utils.getMaxLevelOfPOI(poi);
-                                var markerIcon = unknownPowerMarker;
-
-                                if (poiLevel == 0) {
-                                    powerTitle += "Power Level Unknown";
-                                }
-
-                                if (poiLevel == 1) {
-                                    markerIcon = lowPowerMarker;
-                                    powerTitle += "Low Power";
-                                }
-
-                                if (poiLevel == 2) {
-                                    markerIcon = mediumPowerMarker;
-                                    powerTitle += "Medium Power";
-                                }
-
-                                if (poiLevel == 3) {
-                                    markerIcon = highPowerMarker;
-                                    powerTitle += "High Power";
-                                }
-
-                                usageTitle = "Unknown Usage Restrictions";
-
-                                if (poi.UsageType != null && poi.UsageType.ID != 0) {
-                                    usageTitle = poi.UsageType.Title;
-                                }
-
-                                markerTitle += " (" + powerTitle + ", " + usageTitle + ")";
-
-                                var marker = <any>new L.Marker(new L.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude), <L.MarkerOptions>{ icon: markerIcon, title: markerTitle, draggable: false, clickable: true });
-                                marker._isClicked = false; //workaround for double click event
-                                marker.poi = poi;
-                                marker.on('click',
-                                    function (e) {
-                                        if (this._isClicked == false) {
-                                            this._isClicked = true;
-                                            appcontext.showDetailsView(anchorElement, this.poi);
-                                            appcontext.showPage("locationdetails-page");
-
-                                            //workaround double click event by clearing clicked state after short time
-                                            var mk = this;
-                                            setTimeout(function () { mk._isClicked = false; }, 300);
-                                        }
-                                    });
-
-                                markerClusterGroup.addLayer(marker);
-                            }
-                        }
-                    }
-                }
-
-                map.addLayer(markerClusterGroup);
-                map.fitBounds(markerClusterGroup.getBounds());
-
-                //refresh map view
-                setTimeout(function () { map.invalidateSize(false); }, 300);
-            }
-        }
-    }
-
-    createMapLeaflet(mapcanvasID, currentLat, currentLng, locateUser, zoomLevel) {
-        // create a map in the "map" div, set the view to a given place and zoom
-        var map = new L.Map(mapcanvasID);
-        if (currentLat != null && currentLng != null) {
-            map.setView(new L.LatLng(currentLat, currentLng), zoomLevel, true);
-        }
-        map.setZoom(zoomLevel);
-
-        if (locateUser == true) {
-            map.locate({ setView: true, watch: true, enableHighAccuracy: true });
-        } else {
-            //use a default view
-        }
-
-        // add an OpenStreetMap tile layer
-        new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
-
-        return map;
-    };
-
+ 
     isNativeMapsAvailable(): boolean {
         if (plugin && plugin.google && plugin.google.maps) {
             return true;
@@ -504,24 +331,6 @@ export class Mapping extends Base {
             }
         } else {
             this.log("Unsupported Map API: refreshMapView", LogLevel.ERROR);
-            /*
-
-            document.getElementById(mapCanvasID).style.height = mapHeight + "px";
-
-            if (this.mapOptions.mapAPI == MappingAPI.LEAFLET) {
-                //setup map view, tracking user pos, if not already initialised
-                //TODO: use last search pos as lat/lng, or first item in locationList
-                var centreLat = 50;
-                var centreLng = 50;
-                if (poiList != null && poiList.length > 0) {
-                    centreLat = poiList[0].AddressInfo.Latitude;
-                    centreLng = poiList[0].AddressInfo.Longitude;
-                }
-                this.initMapLeaflet(mapCanvasID, centreLat, centreLng, false);
-
-                if (this.mapReady) this.showPOIListOnMapViewLeaflet(mapCanvasID, poiList, this, document.getElementById(mapCanvasID), this.mapOptions.resultBatchID);
-            }
-            */
         }
         return true;
     }
@@ -549,43 +358,12 @@ export class Mapping extends Base {
         }
     }
 
-    /*hideMap() {
-        if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
-            this.log("Debug: Hiding Map");
-            
-            if (this.map != null) {
-                this.map.setVisible(false);
-                this.map.setClickable(false);
-            }
-        }
-    }
-
-    showMap() {
-        if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
-            this.log("Debug: Showing Map");
-
-            if (this.map != null && this.mapReady) {
-                //show/reposition map
-
-                this.map.refreshLayout();
-                this.map.setVisible(true);
-                this.map.setClickable(true);
-            } else {
-                this.log("Map not available - check API?", LogLevel.ERROR);
-            }
-        }
-    }
-*/
     unfocusMap() {
-        if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
-            this.map.setClickable(false);
-        }
+        this.mapProvider.unfocusMap();
     }
 
     focusMap() {
-        if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
-            this.map.setClickable(true);
-        }
+        this.mapProvider.focusMap();
     }
 
     getMapBounds(): Observable<Array<GeoLatLng>> {

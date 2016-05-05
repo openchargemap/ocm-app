@@ -1,7 +1,6 @@
 import {Page} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
-import {GeoLatLng} from '../../core/ocm/mapping/Mapping';
-import {Journey, WayPoint} from '../../core/ocm/model/AppModels';
+import {Journey, WayPoint, GeoLatLng} from '../../core/ocm/model/AppModels';
 
 @Page({
   templateUrl: 'build/pages/journeys/journeys.html',

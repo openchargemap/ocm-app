@@ -37,12 +37,6 @@ export class SignInPage {
         this.appManager.api.performSignIn(this.email, this.password).then((response) => {
 
 
-            /* let alert = Alert.create({
-                 title: 'Open Charge Map',
-                 subTitle: 'You are now signed in as ' + this.appManager.api.authResponse.Data.UserProfile.Username,
-                 buttons: ['Ok']
-             });
-             this.nav.present(alert);*/
             localStorage.setItem("authResponse", JSON.stringify(this.appManager.api.authResponse));
 
             this.nav.popToRoot();

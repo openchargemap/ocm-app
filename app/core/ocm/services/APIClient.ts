@@ -31,7 +31,7 @@ export class APIClient {
 
     constructor(http: Http) {
         this.http = http;
-        this.serviceBaseURL = this.serviceBaseURL_Standard;
+        this.serviceBaseURL = this.serviceBaseURL_LocalDev;
         this.loadCachedRefData();
     }
 

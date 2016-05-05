@@ -1,4 +1,4 @@
-import {GeoLatLng} from '../mapping/Mapping';
+import {GeoLatLng} from './GeoPosition';
 
 export class WayPoint{
     public Title: string;

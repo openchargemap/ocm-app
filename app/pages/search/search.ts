@@ -6,19 +6,19 @@ import {IonicApp, Page, NavController, NavParams, Events, Platform, Loading} fro
 import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
 import {POIManager, POISearchParams} from '../../core/ocm/services/POIManager';
 import {POIDetailsPage} from '../poi-details/poi-details';
+import {SettingsPage} from '../settings/settings';
 import {SignInPage} from '../signin/signin';
-import {SearchOptionsPage} from './search-options';
-import {SearchPlace} from '../../components/search-place/search-place';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {Base, LogLevel} from '../../core/ocm/Base';
 import {Utils} from '../../core/ocm/Utils';
+import {Keyboard} from 'ionic-native';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {PlaceSearchResult, GeoLatLng} from '../../core/ocm/model/AppModels';
 
 @Page({
     templateUrl: 'build/pages/search/search.html',
-    pipes: [TranslatePipe], // add in each component to invoke the transform method
-    directives: [SearchPlace]
+    pipes: [TranslatePipe] // add in each component to invoke the transform method
+
 })
 
 export class SearchPage extends Base implements OnInit {
@@ -56,6 +56,7 @@ export class SearchPage extends Base implements OnInit {
             this.mapping.setMapAPI(MappingAPI.GOOGLE_WEB);
         }
 
+        Keyboard.disableScroll(true);
     }
 
     onPageDidEnter() {
@@ -106,7 +107,7 @@ export class SearchPage extends Base implements OnInit {
 
         });
         this.events.subscribe('ocm:mapping:zoom', () => { this.debouncedRefreshResults(); });
-        this.events.subscribe('ocm:mapping:dragend', () => { this.refreshResultsAfterMapChange(); });
+        this.events.subscribe('ocm:mapping:dragend', () => { this.debouncedRefreshResults();  });
         this.events.subscribe('ocm:poiList:updated', (listType) => { this.showPOIListOnMap(listType); });
 
         this.events.subscribe('ocm:window:resized', (size) => {
@@ -144,6 +145,7 @@ export class SearchPage extends Base implements OnInit {
                 this.poiManager.fetchPOIList(params);
             });
         } else {
+            console.log(JSON.stringify(this.appManager.api.referenceData));
             this.log(" cached ref dat, fetching pois..", LogLevel.VERBOSE);
             var params = new POISearchParams();
             this.poiManager.fetchPOIList(params);
@@ -280,7 +282,7 @@ export class SearchPage extends Base implements OnInit {
     }
 
     openSearchOptions() {
-        this.nav.push(SearchOptionsPage);
+        this.nav.push(SettingsPage);
     }
 
     locateUser() {
@@ -301,19 +303,22 @@ export class SearchPage extends Base implements OnInit {
 
     getPlaces(e: any) {
 
-        document.getElementById("place-search").style.display = 'block';
-        this.mapping.unfocusMap();
 
         let loading = Loading.create({
             content: "Searching..",
-            dismissOnPageChange: true
+            dismissOnPageChange: true,
+            duration:3000
         });
 
         this.nav.present(loading);
+
+
         // Specify location, radius and place types for your Places API search.
         var defaultBounds = new google.maps.LatLngBounds(
             new google.maps.LatLng(49.00, -13.00),
-            new google.maps.LatLng(60.00, 3.00));
+            new google.maps.LatLng(60.00, 3.00)
+        );
+
         var request: any = {
             keyword: this.searchKeyword,
             bounds: defaultBounds,
@@ -322,36 +327,50 @@ export class SearchPage extends Base implements OnInit {
             radius: null,
             rankBy: null
         };
+
         var attributionDiv = <HTMLDivElement>document.getElementById("place-attribution");
-        // Create the PlaceService and send the request.
-        // Handle the callback with an anonymous function.
+        // //TODO: move places request to API/service provider
+        this.placeList = [];
+
         var service = new google.maps.places.PlacesService(attributionDiv);
         service.nearbySearch(request, (results, status) => {
             loading.dismiss();
             if (status == google.maps.places.PlacesServiceStatus.OK) {
-                this.placeList = [];
+                document.getElementById("place-search").style.display = 'block';
+                this.mapping.unfocusMap();
+
                 for (var i = 0; i < results.length; i++) {
                     var place = results[i];
                     var placeResult = new PlaceSearchResult();
                     placeResult.Title = place.name;
-                    placeResult.ReferenceID = place.id;
+                    placeResult.ReferenceID = (<any>place).place_id;
                     placeResult.Address = place.formatted_address;
                     placeResult.Type = "place";
                     placeResult.Location = new GeoLatLng(place.geometry.location.lat(), place.geometry.location.lng());
                     this.placeList.push(placeResult);
                     this.log(placeResult.Title);
-
                 }
+            }
 
+            if (this.placeList.length == 0) {
+                loading.dismiss();
+                document.getElementById("place-search").style.display = 'none';
+                this.mapping.focusMap();
+                this.appManager.showToastNotification(this.nav, "No matching results");
             }
         });
     }
 
     placeSelected(e, item: PlaceSearchResult) {
-        this.searchKeyword=item.Title;
+        this.searchKeyword = item.Title;
         document.getElementById("place-search").style.display = 'none';
+
+        //give map back the input focus (mainly for native map)
         this.mapping.focusMap();
+
+        //move map to selected place
         this.mapping.updateMapCentrePos(item.Location.latitude, item.Location.longitude, true);
+        this.debouncedRefreshResults(); 
     }
 
 
