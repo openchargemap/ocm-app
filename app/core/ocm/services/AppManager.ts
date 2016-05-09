@@ -8,16 +8,22 @@ import {Injectable} from 'angular2/core';
 import {Events, NavController, Platform, Toast} from 'ionic-angular';
 import {Base, LogLevel} from '../Base';
 import {JwtHelper} from 'angular2-jwt';
-import {UserProfile, SubmissionType} from '../model/AppModels'
+import {UserProfile, SubmissionType, SearchSettings} from '../model/AppModels'
 import {SubmissionQueue} from './SubmissionQueue';
+import {ReferenceDataManager} from './ReferenceDataManager';
+import {POIManager} from './POIManager';
 
 @Injectable()
 
 export class AppManager extends Base {
     jwtHelper = new JwtHelper();
     enableSubmissionQueue: boolean;
-    public referenceData: any;
+
+    public referenceDataManager: ReferenceDataManager;
+    public poiManager: POIManager;
+    public searchSettings: SearchSettings;
     public platformMode: string;
+
 
     constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue, private platform: Platform) {
         super();
@@ -30,6 +36,29 @@ export class AppManager extends Base {
         } else {
             this.platformMode = "web";
         }
+
+        this.referenceDataManager = new ReferenceDataManager();
+        this.poiManager = new POIManager(this);
+
+        this.searchSettings = new SearchSettings();
+
+        this.loadSearchSettings();
+    }
+
+    /**
+     * Load search filter settings from local storage
+     */
+    public loadSearchSettings() {
+        if (localStorage.getItem('search-settings') != null) {
+            this.searchSettings = JSON.parse(localStorage.getItem(''));
+        }
+    }
+
+    /**
+     * Save search settings to local storage
+     */
+    public saveSearchSettings() {
+        localStorage.setItem('search-settings', JSON.stringify(this.searchSettings));
     }
 
     public initAppManager() {
@@ -103,7 +132,7 @@ export class AppManager extends Base {
             this.submissionQueue.add(SubmissionType.Media, data);
             this.submissionQueue.processNextQueueItem();
         } else {
-           return this.api.performSubmission(SubmissionType.Media, data);
+            return this.api.performSubmission(SubmissionType.Media, data);
         }
     }
 
@@ -129,4 +158,6 @@ export class AppManager extends Base {
 
         nav.present(toast);
     }
+
+
 }

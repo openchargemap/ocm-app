@@ -195,7 +195,7 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                                 //broadcast details of selected POI
                                 if (console) console.log("POI clicked:" + this.poi.ID);
 
-                                mapProviderContext.events.publish('ocm:poi:selected', { poi: poi, poiId: poi.ID });
+                                mapProviderContext.events.publish('ocm:poi:selected', { poi: this.poi, poiId: this.poi.ID });
 
                             });
 

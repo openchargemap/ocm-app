@@ -4,17 +4,56 @@
     </ion-title>
 </ion-navbar>
 <ion-content class="settings-page" padding>
-    <p>Settings and Filters would go here.</p>
+    <h2>Search Filters</h2>
+    <p>Search filters to apply when search for charging locations:</p>
+  
+<ion-list>
+  <ion-item>
+    <ion-label>Operators</ion-label>
+    <ion-select [(ngModel)]="searchSettings.OperatorList" multiple="true" cancelText="Cancel" okText="OK">
+      <ion-option *ngFor="#item of operators" [value]="item.ID">{{item.Title}}</ion-option>
+    
+    </ion-select>
+  </ion-item>
+</ion-list>
 
-    <ion-list>
-        <ion-toggle>Distance in Miles</ion-toggle>
-    </ion-list>
-   <ion-list>
+<ion-list>
+  <ion-item>
+    <ion-label>Usage Types</ion-label>
+    <ion-select [(ngModel)]="searchSettings.UsageTypeList" multiple="true" cancelText="Cancel" okText="OK">
+      <ion-option *ngFor="#item of usageTypes" [value]="item.ID">{{item.Title}}</ion-option>
+    
+    </ion-select>
+  </ion-item>
+</ion-list>
+ 
+ <ion-list>
+  <ion-item>
+    <ion-label>Status Types</ion-label>
+    <ion-select [(ngModel)]="searchSettings.StatusTypeList" multiple="true" cancelText="Cancel" okText="OK">
+      <ion-option *ngFor="#item of statusTypes" [value]="item.ID">{{item.Title}}</ion-option>
+    
+    </ion-select>
+  </ion-item>
+</ion-list>
 
-        <ion-label stacked>Operators</ion-label>
-        <ion-select [(ngModel)]="commentModel.CheckStatusTypeID">
-            <ion-option *ngFor="#item of refData.Operators" [value]="item.ID" [checked]="false">{{item.Title}}</ion-option>
-        </ion-select>
+ 
+ <ion-list>
+  <ion-item>
+    <ion-label>Connector Types</ion-label>
+    <ion-select [(ngModel)]="searchSettings.ConnectorTypeList" multiple="true" cancelText="Cancel" okText="OK">
+      <ion-option *ngFor="#item of connectionTypes" [value]="item.ID">{{item.Title}}</ion-option>
+    
+    </ion-select>
+  </ion-item>
+</ion-list>
 
-    </ion-list>
+<h2>
+    General Settings
+    </h2>
+      <ion-item>
+  <ion-label> Distances in KM</ion-label>
+  <ion-toggle checked="false"></ion-toggle>
+</ion-item>
+
 </ion-content>

@@ -5,8 +5,9 @@
 
 import {Injectable} from 'angular2/core';
 import {Http, Headers, RequestOptions} from 'angular2/http';
-import {POISearchParams} from './POIManager';
+import {POISearchParams, POIManager} from './POIManager';
 import {AsyncResult, SubmissionType} from '../model/AppModels';
+import {Observable} from 'rxjs'
 
 
 @Injectable()
@@ -19,7 +20,7 @@ export class APIClient {
     public hasAuthorizationError: boolean = false;
 
     public ATTRIBUTION_METADATAFIELDID = 4;
-    public referenceData: any;
+
     public authResponse: any;
     public clientName: string = "ocm.api.default";
 
@@ -31,21 +32,7 @@ export class APIClient {
 
     constructor(http: Http) {
         this.http = http;
-        this.serviceBaseURL = this.serviceBaseURL_LocalDev;
-        this.loadCachedRefData();
-    }
-
-    loadCachedRefData() {
-        let cachedRefData = localStorage.getItem("referenceData");
-        if (cachedRefData != null) {
-            this.referenceData = JSON.parse(cachedRefData);
-        }
-    }
-
-    cacheRefData() {
-        if (this.referenceData != null) {
-            localStorage.setItem("referenceData", JSON.stringify(this.referenceData));
-        }
+        this.serviceBaseURL = this.serviceBaseURL_Standard;
     }
 
     getNumberListString(numberList: Array<number>): string {
@@ -57,7 +44,7 @@ export class APIClient {
         return output;
     }
 
-    fetchPOIListByParam(params: POISearchParams, asObservable: boolean = false): any {
+    fetchPOIListByParam(params: POISearchParams, poiManager:POIManager): Observable<any> {
         var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&output=json";
 
         var serviceParams = "";
@@ -94,32 +81,21 @@ export class APIClient {
             console.log("API Call:" + apiCallURL);
         }
 
-
-        if (!asObservable) {
-
-            //return as Promise
-            return new Promise(resolve => {
-                // We're using Angular Http provider to request the data,
-                // then on the response it'll map the JSON data to a parsed JS object.
-                // Next we process the data and resolve the promise with the new data.
-                this.http.get(apiCallURL).subscribe(res => {
-                    // we've got back the raw data, now generate the core schedule data
-                    // and save the data for later reference
-                    let poiResults = this.hydrateCompactPOIList(res.json());
-                    resolve(poiResults);
-                });
+        return this.http.get(apiCallURL)
+            .map((res) => {
+                let poiResults = poiManager.hydrateCompactPOIList(res.json());
+                return poiResults;
+            })
+            .catch((error) => {
+                let errMsg = error.message || 'Could not fetch POI list from server.';
+                console.error(errMsg); // log to console instead
+                return Observable.throw(errMsg);
             });
-        } else {
-            //return as Observable
-            this.http.get(apiCallURL).map(res => {
-                return this.hydrateCompactPOIList(res.json());
-            }).subscribe(results => {
-                return results;
-            });
-
-        }
     }
 
+    /** 
+     * get request options including authorization headers for use in api requests 
+     * */
     getHttpRequestOptions(): RequestOptions {
 
         //attach auth header if we have auth info for client api        
@@ -137,17 +113,28 @@ export class APIClient {
         }
     }
 
-    fetchCoreReferenceData(authSessionInfo) {
+    /**
+     * fetch core reference data such as Connector Types, Countries, Network Operators etc, optionally filtered by country usage
+     */
+    fetchCoreReferenceData(filters): Observable<any> {
 
         var serviceURL = this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json" + (this.allowMirror ? "&allowmirror=true" : "") + "&verbose=false&";
 
-        return new Promise(resolve => {
-            this.http.get(serviceURL).subscribe(res => {
-                this.referenceData = res.json();
-                this.cacheRefData();
-                resolve(this.referenceData);
+        if (filters != null && filters.countryIdList != null) {
+            serviceURL += "&countryid=" + this.getNumberListString(filters.countryIdList);
+        }
+
+        return this.http.get(serviceURL)
+            .map((res) => {
+                let refData = res.json();
+                return refData;
+            })
+            .catch((error) => {
+                let errMsg = error.message || 'Could not fetch reference data from server.';
+                console.error(errMsg); // log to console instead
+                return Observable.throw(errMsg);
             });
-        });
+
     }
 
     performSignIn(username: string, password: string) {
@@ -255,159 +242,9 @@ export class APIClient {
  
          $.ajax(ajaxSettings);
      }
- 
-     submitUserComment(data, authSessionInfo, completedCallback, failureCallback) {
-         var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
- 
-         var jsonString = JSON.stringify(data);
- 
-         $.ajax({
-             type: "POST",
-             url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=comment_submission&format=json" + authInfoParams,
-             data: jsonString,
-             success: function(result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
-             crossDomain: true,
-             error: failureCallback
-         });
-     }
- 
-     submitMediaItem(data, authSessionInfo, completedCallback, failureCallback, progressCallback) {
-         var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
- 
-         $.ajax({
-             url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=mediaitem_submission" + authInfoParams,
-             type: 'POST',
-             xhr: function() {  // custom xhr
-                 var myXhr = $.ajaxSettings.xhr();
-                 if (myXhr.upload) { // check if upload property exists
-                     myXhr.upload.addEventListener('progress', progressCallback, false); // for handling the progress of the upload
-                 }
-                 return myXhr;
-             },
-             success: function(result, textStatus, jqXHR) { completedCallback(jqXHR, textStatus); },
-             error: (failureCallback == null ? this.handleGeneralAjaxError : failureCallback),
-             data: data,
-             cache: false,
-             contentType: false,
-             processData: false,
-             crossDomain: true
-         });
-     }
+
      */
 
-    getRefDataByID(refDataList, id) {
-        if (id != "") id = parseInt(id);
-
-        if (refDataList != null) {
-            for (var i = 0; i < refDataList.length; i++) {
-                if (refDataList[i].ID == id) {
-                    return refDataList[i];
-                }
-            }
-        }
-        return null;
-    }
-
-    sortCoreReferenceData() {
-        //sort reference data lists
-        this.sortReferenceData(this.referenceData.ConnectionTypes);
-        this.sortReferenceData(this.referenceData.Countries);
-        this.sortReferenceData(this.referenceData.Operators);
-        this.sortReferenceData(this.referenceData.DataProviders);
-        this.sortReferenceData(this.referenceData.UsageTypes);
-        this.sortReferenceData(this.referenceData.StatusTypes);
-        this.sortReferenceData(this.referenceData.CheckinStatusTypes);
-    }
-
-    sortReferenceData(sourceList) {
-        sourceList.sort(this.sortListByTitle);
-    }
-
-    getMetadataValueByMetadataFieldID(metadataValues, id) {
-        if (id != "") id = parseInt(id);
-
-        if (metadataValues != null) {
-            for (var i = 0; i < metadataValues.length; i++) {
-                if (metadataValues[i].ID == id) {
-                    return metadataValues[i];
-                }
-            }
-        }
-        return null;
-    }
-
-    sortListByTitle(a, b) {
-        if (a.Title < b.Title) return -1;
-        if (a.Title > b.Title) return 1;
-        if (a.Title == b.Title) return 0;
-
-        return 0;
-    }
-
-    hydrateCompactPOI(poi: any): Array<any> {
-        if (poi.DataProviderID != null && poi.DataProvider == null) {
-            poi.DataProvider = this.getRefDataByID(this.referenceData.DataProviders, poi.DataProviderID);
-        }
-        if (poi.OperatorID != null && poi.OperatorInfo == null) {
-            poi.OperatorInfo = this.getRefDataByID(this.referenceData.Operators, poi.OperatorID);
-        }
-        if (poi.UsageTypeID != null && poi.UsageType == null) {
-            poi.UsageType = this.getRefDataByID(this.referenceData.UsageTypes, poi.UsageTypeID);
-        }
-        if (poi.AddressInfo.CountryID != null && poi.AddressInfo.Country == null) {
-            poi.AddressInfo.Country = this.getRefDataByID(this.referenceData.Countries, poi.AddressInfo.CountryID);
-        }
-        if (poi.StatusTypeID != null && poi.StatusType == null) {
-            poi.StatusType = this.getRefDataByID(this.referenceData.StatusTypes, poi.StatusTypeID);
-        }
-        if (poi.SubmissionStatusTypeID != null && poi.SubmissionStatusType == null) {
-            poi.SubmissionStatusType = this.getRefDataByID(this.referenceData.SubmissionStatusTypes, poi.SubmissionStatusTypeID);
-        }
-
-        //TODO:  MediaItems,
-        if (poi.Connections != null) {
-            for (var c = 0; c < poi.Connections.length; c++) {
-                var conn = poi.Connections[c];
-                if (conn.ConnectionTypeID != null && conn.ConnectionType == null) {
-                    conn.ConnectionType = this.getRefDataByID(this.referenceData.ConnectionTypes, conn.ConnectionTypeID);
-                }
-                if (conn.LevelID != null && conn.Level == null) {
-                    conn.Level = this.getRefDataByID(this.referenceData.ChargerTypes, conn.LevelID);
-                }
-                if (conn.CurrentTypeID != null && conn.CurrentTypeID == null) {
-                    conn.CurrentType = this.getRefDataByID(this.referenceData.CurrentTypes, conn.CurrentTypeID);
-                }
-                if (conn.StatusTypeID != null && conn.StatusTypeID == null) {
-                    conn.StatusTypeID = this.getRefDataByID(this.referenceData.StatusTypes, conn.StatusTypeID);
-                }
-
-                poi.Connections[c] = conn;
-            }
-        }
-
-        if (poi.UserComments != null) {
-            for (var c = 0; c < poi.UserComments.length; c++) {
-                var comment = poi.UserComments[c];
-                if (comment.CommentType != null && comment.CommentTypeID == null) {
-                    comment.CommentType = this.getRefDataByID(this.referenceData.CommentTypes, conn.CommentTypeID);
-                }
-                if (comment.CheckinStatusType != null && comment.CheckinStatusTypeID == null) {
-                    comment.CheckinStatusTypeID = this.getRefDataByID(this.referenceData.CheckinStatusTypes, conn.CheckinStatusTypeID);
-                }
-                poi.UserComments[c] = comment;
-            }
-        }
-
-        return poi;
-    }
-
-    // for a given list of POIs expand navigation properties (such as AddresssInfo.Country, Connection[0].ConnectionType etc)
-    hydrateCompactPOIList(poiList: Array<any>) {
-        for (var i = 0; i < poiList.length; i++) {
-            poiList[i] = this.hydrateCompactPOI(poiList[i]);
-        }
-        return poiList;
-    }
 
     isLocalStorageAvailable() {
         return typeof window.localStorage != 'undefined';

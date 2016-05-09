@@ -22,7 +22,7 @@ enableProdMode();
     template: '<ion-nav [root]="rootPage"></ion-nav>',
     providers: [
         AppManager,
-        POIManager,
+     
         Events,
         provide(TranslateLoader, {
             useFactory: (http: Http) => new TranslateStaticLoader(http, 'lang', '.json'),

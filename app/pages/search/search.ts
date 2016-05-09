@@ -39,7 +39,6 @@ export class SearchPage extends Base implements OnInit {
         private nav: NavController,
         navParams: NavParams,
         private events: Events,
-        private poiManager: POIManager,
         private translate: TranslateService,
         private platform: Platform
     ) {
@@ -125,33 +124,16 @@ export class SearchPage extends Base implements OnInit {
         var appContext = this;
 
 
-        /*this.poiManager.populateTestData();
-        var testPOI = this.getPOIByID(52224);
-        setTimeout(function() { appContext.viewPOIDetails(testPOI); }, 1000);
-        */
-
-
         //first start up, get fresh core reference data, then we can start getting POI results nearby
-        if (this.poiManager.appManager.api.referenceData == null) {
+        if (!this.appManager.referenceDataManager.referenceDataLoaded()) {
             this.log("No cached ref dat, fetching ..", LogLevel.VERBOSE);
-            this.poiManager.fetchCoreReferenceData().then(() => {
+            this.appManager.api.fetchCoreReferenceData(null).subscribe((res) => {
                 this.log("Got core ref data. Updating local POIs", LogLevel.VERBOSE);
 
 
-            }).catch((reason) => {
-                this.log("Error fetching core ref data:" + reason);
-            }).then(() => {
-                var params = new POISearchParams();
-                this.poiManager.fetchPOIList(params);
+            }, (rejection)=>{
+                this.log("Error fetching core ref data:" + rejection);
             });
-        } else {
-            console.log(JSON.stringify(this.appManager.api.referenceData));
-            this.log(" cached ref dat, fetching pois..", LogLevel.VERBOSE);
-            var params = new POISearchParams();
-            this.poiManager.fetchPOIList(params);
-
-            //fetch ref data async
-            this.poiManager.fetchCoreReferenceData()
         }
 
     }
@@ -160,7 +142,7 @@ export class SearchPage extends Base implements OnInit {
 
         var preferredMapHeight = this.getPreferredMapHeight(null);
         //TODO: vary by list type
-        this.mapping.refreshMapView(preferredMapHeight, this.poiManager.poiList, null);
+        this.mapping.refreshMapView(preferredMapHeight, this.appManager.poiManager.poiList, null);
 
         if (!this.mapDisplayed) {
             //centre map on first load
@@ -175,7 +157,7 @@ export class SearchPage extends Base implements OnInit {
     }
 
     getPOIByID(poiID) {
-        var poiList = this.poiManager.poiList;
+        var poiList = this.appManager.poiManager.poiList;
         for (var i = 0; i < poiList.length; i++) {
             if (poiList[i].ID == poiID) {
                 return poiList[i];
@@ -235,7 +217,10 @@ export class SearchPage extends Base implements OnInit {
                     //    }
                     //}
 
-                    //apply filter settings from UI
+                    //apply filter settings from search settings 
+                    if (this.appManager.searchSettings.ConnectionTypeList!=null){
+                        params.connectionTypeIdList=this.appManager.searchSettings.ConnectionTypeList;
+                    }
                     /*
                     if ($("#filter-submissionstatus").val() != 200) params.submissionStatusTypeID = $("#filter-submissionstatus").val();
                     if ($("#filter-connectiontype").val() != "") params.connectionTypeID = $("#filter-connectiontype").val();
@@ -245,7 +230,7 @@ export class SearchPage extends Base implements OnInit {
                     if ($("#filter-usagetype").val() != "") params.usageTypeID = $("#filter-usagetype").val();
                     if ($("#filter-statustype").val() != "") params.statusTypeID = $("#filter-statustype").val();
                     */
-                    this.poiManager.fetchPOIList(params);
+                    this.appManager.poiManager.fetchPOIList(params);
 
                 });
 
@@ -270,7 +255,7 @@ export class SearchPage extends Base implements OnInit {
         } else {
             //may need to fetch POI details
             this.log("Viewing/fetching POI Details " + args.poiId);
-            this.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
+            this.appManager.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
 
                 this.nav.push(POIDetailsPage, {
                     item: poi

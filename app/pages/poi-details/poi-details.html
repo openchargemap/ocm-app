@@ -50,9 +50,10 @@
                         <br/> {{ 'ocm.details.location.longitude' | translate }}: {{poi.AddressInfo.Longitude | number:'1.1-8'}}
                     </div>
 
-                    <div *ngIf="poi.AddressInfo.AccessComments"> 
+                    <div *ngIf="poi.AddressInfo.AccessComments">
                         <!--<h4>{{ 'ocm.details.accessComments' | translate }}</h4>-->
-                    <p> {{poi.AddressInfo.AccessComments}}</p></div>
+                        <p> {{poi.AddressInfo.AccessComments}}</p>
+                    </div>
                 </div>
             </div>
             <div class="right-col">
@@ -64,7 +65,7 @@
                     <icon call></icon> {{poi.AddressInfo.ContactTelephone2}} </div>
                 <div *ngIf="poi.AddressInfo.ContactEmail">
                     <icon mail></icon> {{poi.AddressInfo.ContactEmail}} </div>
-               
+
                 <div *ngIf="poi.AddressInfo.RelatedURL">
                     <icon globe></icon> <a target="_system" href="{{poi.AddressInfo.RelatedURL}}">{{poi.AddressInfo.RelatedURL}}</a>                    </div>
 
@@ -137,7 +138,7 @@
                         <div *ngIf="!item.User">{{item.Username}}</div>
                     </ion-avatar>
 
-
+                    <p>{{item.DateCreated}}</p>
                     <p>{{item.Comment}}</p>
                     <p *ngIf="item.CommentType">
                         {{item.CommentType?.Title}}

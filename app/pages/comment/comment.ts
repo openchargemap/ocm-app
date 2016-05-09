@@ -12,7 +12,7 @@ export class CommentPage {
 
     commentModel: UserComment;
     poi:any;
-    refData: any;
+
     commentTypes: any;
     checkinTypes: any;
     constructor(private navParams: NavParams, public appManager: AppManager, public nav: NavController) {
@@ -26,10 +26,9 @@ export class CommentPage {
         };
         
         this.poi = this.navParams.get('poi'); 
-        this.refData = appManager.api.referenceData;
-
-        this.commentTypes = this.refData.UserCommentTypes.filter(c => c.ID != 100 && c.ID != 110);
-        this.checkinTypes = this.refData.CheckinStatusTypes.filter(c => c.IsAutomatedCheckin==false);
+      
+        this.commentTypes = appManager.referenceDataManager.getCommentTypes();
+        this.checkinTypes = appManager.referenceDataManager.getCheckinStatusTypes();
     }
 
     onPageWillEnter() {
