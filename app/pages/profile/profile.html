@@ -1,25 +1,22 @@
 <ion-navbar *navbar primary>
     <ion-title>
-       Profile
+        Profile
     </ion-title>
 </ion-navbar>
 <ion-content class="profile-page" padding>
-<h1>Profile</h1>
+    <h1>Profile</h1>
 
-     
-     <div *ngIf="userProfile==null">
-         You are not signed in
-     </div>
-      <div *ngIf="userProfile!=null">
-      {{userProfile.Username}}
- <p>
-     {{userProfile.Profile}}
-     </p>
-     
-     <p>Tests:
-         <button (click)="testComment()">Test Comment</button>
-         <button (click)="testUpload()">Test Upload</button>
-         </p>
-      <button (click)="signOut()">Sign Out</button>
-      </div>
+
+    <div *ngIf="userProfile==null">
+        You are not signed in
+    </div>
+    <div *ngIf="userProfile!=null">
+        {{userProfile.Username}}
+        <p>
+            {{userProfile.Profile}}
+        </p>
+
+
+        <button (click)="signOut()">Sign Out</button>
+    </div>
 </ion-content>

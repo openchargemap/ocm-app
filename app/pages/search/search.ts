@@ -32,6 +32,7 @@ export class SearchPage extends Base implements OnInit {
     private mapCanvasID: string;
 
     private placeList: Array<PlaceSearchResult>;
+private initialResultsShown:boolean=false;
 
     searchKeyword: string;
     constructor(
@@ -51,11 +52,12 @@ export class SearchPage extends Base implements OnInit {
         //decide whether to use native google maps ssdsdk or google web api        
         if (platform.is("ios") || platform.is("android")) {
             this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
+            Keyboard.disableScroll(true);
         } else {
             this.mapping.setMapAPI(MappingAPI.GOOGLE_WEB);
         }
 
-        Keyboard.disableScroll(true);
+
     }
 
     onPageDidEnter() {
@@ -66,7 +68,12 @@ export class SearchPage extends Base implements OnInit {
         //attempt to find user current position
         this.locateUser();
         if (this.mapping) {
-            this.mapping.updateMapSize();
+            //delayed refresh of map view to work around issue with map not showing on first load
+            setTimeout(() => {
+                this.mapping.updateMapSize();
+            }, 1000);
+
+
         }
     }
 
@@ -105,9 +112,22 @@ export class SearchPage extends Base implements OnInit {
             this.viewPOIDetails(args[0]);
 
         });
+        
+        this.events.subscribe('ocm:mapping:ready', () => { 
+            if (!this.initialResultsShown)    {
+                this.log("Search: maps ready, showing first set of results");
+                //show first set of results on load
+                this.refreshResultsAfterMapChange();
+            }
+        });
+        
         this.events.subscribe('ocm:mapping:zoom', () => { this.debouncedRefreshResults(); });
-        this.events.subscribe('ocm:mapping:dragend', () => { this.debouncedRefreshResults();  });
+        this.events.subscribe('ocm:mapping:dragend', () => { this.debouncedRefreshResults(); });
         this.events.subscribe('ocm:poiList:updated', (listType) => { this.showPOIListOnMap(listType); });
+        this.events.subscribe('ocm:poiList:cleared', () => {
+            this.mapping.clearMarkers();
+            this.debouncedRefreshResults();
+        });
 
         this.events.subscribe('ocm:window:resized', (size) => {
             //handle window resized event, updating map layout if required
@@ -131,7 +151,7 @@ export class SearchPage extends Base implements OnInit {
                 this.log("Got core ref data. Updating local POIs", LogLevel.VERBOSE);
 
 
-            }, (rejection)=>{
+            }, (rejection) => {
                 this.log("Error fetching core ref data:" + rejection);
             });
         }
@@ -218,20 +238,35 @@ export class SearchPage extends Base implements OnInit {
                     //}
 
                     //apply filter settings from search settings 
-                    if (this.appManager.searchSettings.ConnectionTypeList!=null){
-                        params.connectionTypeIdList=this.appManager.searchSettings.ConnectionTypeList;
-                    }
-                    /*
-                    if ($("#filter-submissionstatus").val() != 200) params.submissionStatusTypeID = $("#filter-submissionstatus").val();
-                    if ($("#filter-connectiontype").val() != "") params.connectionTypeID = $("#filter-connectiontype").val();
-                    if ($("#filter-minpowerkw").val() != "") params.minPowerKW = $("#filter-minpowerkw").val();
-                    if ($("#filter-operator").val() != "") params.operatorID = $("#filter-operator").val();
-                    if ($("#filter-connectionlevel").val() != "") params.levelID = $("#filter-connectionlevel").val();
-                    if ($("#filter-usagetype").val() != "") params.usageTypeID = $("#filter-usagetype").val();
-                    if ($("#filter-statustype").val() != "") params.statusTypeID = $("#filter-statustype").val();
-                    */
-                    this.appManager.poiManager.fetchPOIList(params);
+                    if (this.appManager.searchSettings != null) {
+                        if (this.appManager.searchSettings.ConnectionTypeList != null) {
+                            params.connectionTypeIdList = this.appManager.searchSettings.ConnectionTypeList;
+                        }
 
+                        if (this.appManager.searchSettings.UsageTypeList != null) {
+                            params.usageTypeIdList = this.appManager.searchSettings.UsageTypeList;
+                        }
+
+                        if (this.appManager.searchSettings.StatusTypeList != null) {
+                            params.statusTypeIdList = this.appManager.searchSettings.StatusTypeList;
+                        }
+
+                        if (this.appManager.searchSettings.OperatorList != null) {
+                            params.operatorIdList = this.appManager.searchSettings.OperatorList;
+                        }
+
+                        /*
+                        if ($("#filter-submissionstatus").val() != 200) params.submissionStatusTypeID = $("#filter-submissionstatus").val();
+                        if ($("#filter-connectiontype").val() != "") params.connectionTypeID = $("#filter-connectiontype").val();
+                        if ($("#filter-minpowerkw").val() != "") params.minPowerKW = $("#filter-minpowerkw").val();
+                        if ($("#filter-operator").val() != "") params.operatorID = $("#filter-operator").val();
+                        if ($("#filter-connectionlevel").val() != "") params.levelID = $("#filter-connectionlevel").val();
+                        if ($("#filter-usagetype").val() != "") params.usageTypeID = $("#filter-usagetype").val();
+                        if ($("#filter-statustype").val() != "") params.statusTypeID = $("#filter-statustype").val();
+                        */
+                       
+                    }
+                     this.appManager.poiManager.fetchPOIList(params);
                 });
 
 
@@ -239,6 +274,9 @@ export class SearchPage extends Base implements OnInit {
             });
 
 
+        }, (error)=>{
+            this.log("No map centre, can't begin refresh."+error);
+            
         });
 
 
@@ -274,9 +312,8 @@ export class SearchPage extends Base implements OnInit {
         if (navigator.geolocation) {
 
             navigator.geolocation.getCurrentPosition((position) => {
-                var userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-                this.mapping.updateMapCentrePos(userLocation.lat(), userLocation.lng(), true);
+                this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true);
                 this.mapping.setMapZoom(13); //TODO: provider specific ideal zoom for 'summary'
                 this.mapping.updateMapSize();
             }, () => {
@@ -292,7 +329,7 @@ export class SearchPage extends Base implements OnInit {
         let loading = Loading.create({
             content: "Searching..",
             dismissOnPageChange: true,
-            duration:3000
+            duration: 3000
         });
 
         this.nav.present(loading);
@@ -355,7 +392,7 @@ export class SearchPage extends Base implements OnInit {
 
         //move map to selected place
         this.mapping.updateMapCentrePos(item.Location.latitude, item.Location.longitude, true);
-        this.debouncedRefreshResults(); 
+        this.debouncedRefreshResults();
     }
 
 

@@ -92,6 +92,18 @@ export class LeafletMap extends Base implements IMapProvider {
         }
     }
 
+    /** Clear current markers */
+    clearMarkers() {
+        if (this.markerList != null) {
+            this.log("Clearing all markers ["+this.markerList.size()+"]");
+            for (var i = 0; i < this.markerList.size(); i++) {
+                if (this.markerList[i]) {
+                    this.markerList[i].setMap(null);
+                }
+            }
+        }
+        this.markerList = new collections.Dictionary<number, any>();
+    }
     /**
     * Renders the given array of POIs as map markers
     * @param poiList  array of POI objects
@@ -107,14 +119,7 @@ export class LeafletMap extends Base implements IMapProvider {
 
         //clear existing markers (if enabled)
         if (clearMarkersOnRefresh == true) {
-            if (this.markerList != null) {
-                for (var i = 0; i < this.markerList.size(); i++) {
-                    if (this.markerList[i]) {
-                        this.markerList[i].setMap(null);
-                    }
-                }
-            }
-            this.markerList = new collections.Dictionary<number, any>();
+            this.clearMarkers();
         }
         var mapzoom = map.getZoom();
 
@@ -255,7 +260,10 @@ export class LeafletMap extends Base implements IMapProvider {
     }
 
     setMapZoom(zoomLevel: number) {
-        this.map.setZoom(zoomLevel);
+        if (this.mapReady){
+        this.map.setZoom(zoomLevel);    
+        }
+        
     }
 
     getMapZoom(): Observable<number> {

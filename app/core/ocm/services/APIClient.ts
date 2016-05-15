@@ -7,11 +7,12 @@ import {Injectable} from 'angular2/core';
 import {Http, Headers, RequestOptions} from 'angular2/http';
 import {POISearchParams, POIManager} from './POIManager';
 import {AsyncResult, SubmissionType} from '../model/AppModels';
+import {Base, LogLevel} from '../Base';
 import {Observable} from 'rxjs'
 
 
 @Injectable()
-export class APIClient {
+export class APIClient  extends Base{
     public serviceBaseURL: string = "https://api.openchargemap.io/v3";
     public serviceBaseURL_Standard: string = "https://api.openchargemap.io/v3";
     public serviceBaseURL_Sandbox: string = "https://sandbox.api.openchargemap.io/v2";
@@ -31,6 +32,7 @@ export class APIClient {
     http: Http;
 
     constructor(http: Http) {
+        super();
         this.http = http;
         this.serviceBaseURL = this.serviceBaseURL_Standard;
     }
@@ -77,9 +79,8 @@ export class APIClient {
         var apiCallURL = serviceURL + serviceParams;
         //+ "&polyline=u`lyH|iW{}D|dHweCboEasA|x@_gAupBs}A{yE}n@ydG}bBi~FybCsnBmeCse@otLm{BshGscAw`E|nDawLykJq``@flAqbRczR";
 
-        if (console) {
-            console.log("API Call:" + apiCallURL);
-        }
+        this.log("API Call:" + apiCallURL, LogLevel.VERBOSE);
+        
 
         return this.http.get(apiCallURL)
             .map((res) => {
@@ -88,7 +89,7 @@ export class APIClient {
             })
             .catch((error) => {
                 let errMsg = error.message || 'Could not fetch POI list from server.';
-                console.error(errMsg); // log to console instead
+                this.log("API Client: "+errMsg, LogLevel.ERROR); 
                 return Observable.throw(errMsg);
             });
     }
@@ -124,6 +125,9 @@ export class APIClient {
             serviceURL += "&countryid=" + this.getNumberListString(filters.countryIdList);
         }
 
+
+        this.log("API Call:" + serviceURL, LogLevel.VERBOSE);
+      
         return this.http.get(serviceURL)
             .map((res) => {
                 let refData = res.json();
@@ -131,7 +135,8 @@ export class APIClient {
             })
             .catch((error) => {
                 let errMsg = error.message || 'Could not fetch reference data from server.';
-                console.error(errMsg); // log to console instead
+                 this.log("API Client: "+errMsg, LogLevel.ERROR); 
+           
                 return Observable.throw(errMsg);
             });
 
@@ -179,14 +184,15 @@ export class APIClient {
 
     }
 
-    submitMediaItem(data) {
+    submitMediaItem(data):Promise<any> {
         var jsonString = JSON.stringify(data);
-
-        return new Promise(resolve => {
+alert(JSON.stringify(data));
+return new Promise(resolve=>{resolve(null);});
+       /* return new Promise(resolve => {
             this.http.post(this.serviceBaseURL + "/comment/?action=mediaitem_submission&format=json", jsonString, this.getHttpRequestOptions()).subscribe(res => {
                 resolve(res.json());
             });
-        });
+        });*/
 
     }
 

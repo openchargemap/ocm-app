@@ -5,7 +5,7 @@
 import {APIClient} from './APIClient';
 import {Http} from 'angular2/http';
 import {Injectable} from 'angular2/core';
-import {Events, NavController, Platform, Toast} from 'ionic-angular';
+import {Events, NavController, Platform, Toast, Loading} from 'ionic-angular';
 import {Base, LogLevel} from '../Base';
 import {JwtHelper} from 'angular2-jwt';
 import {UserProfile, SubmissionType, SearchSettings} from '../model/AppModels'
@@ -24,6 +24,7 @@ export class AppManager extends Base {
     public searchSettings: SearchSettings;
     public platformMode: string;
 
+    private loading: Loading;
 
     constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue, private platform: Platform) {
         super();
@@ -159,5 +160,16 @@ export class AppManager extends Base {
         nav.present(toast);
     }
 
+    public showLoadingProgress(nav: NavController, msg: string) {
+        this.loading = Loading.create({
+            content: msg,
+            dismissOnPageChange: true
+        });
+
+        nav.present(this.loading);
+    }
+    public dismissLoadingProgress(){
+        this.loading.dismiss();
+    }
 
 }

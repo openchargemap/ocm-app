@@ -33,5 +33,6 @@ export class SettingsPage {
     this.appManager.saveSearchSettings();
     
     //TODO: publish event to refresh results based on new criteria
+    this.appManager.poiManager.clearResults();
   }
 }

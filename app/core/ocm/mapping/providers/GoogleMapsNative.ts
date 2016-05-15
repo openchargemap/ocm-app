@@ -120,6 +120,18 @@ export class GoogleMapsNative extends Base implements IMapProvider {
 
     }
 
+    clearMarkers() {
+        this.log("map:clearing markers");
+        if (this.markerList != null) {
+            for (var i = 0; i < this.markerList.size(); i++) {
+                if (this.markerList[i]) {
+                    this.markerList[i].setMap(null);
+                }
+            }
+        }
+        this.markerList = new collections.Dictionary<number, any>();
+    }
+
     renderPOIMarkers(clearMarkersOnRefresh: boolean, poiList: Array<any>) {
         var map = this.map;
         var _providerContext = this;
@@ -128,15 +140,7 @@ export class GoogleMapsNative extends Base implements IMapProvider {
 
         //clear existing markers (if enabled)
         if (clearMarkersOnRefresh == true || (this.markerList != null && this.markerList.values.length > this.maxMarkers)) {
-            this.log("map:clearing markers");
-            if (this.markerList != null) {
-                for (var i = 0; i < this.markerList.size(); i++) {
-                    if (this.markerList[i]) {
-                        this.markerList[i].setMap(null);
-                    }
-                }
-            }
-            this.markerList = new collections.Dictionary<number, any>();
+            this.clearMarkers();
         }
 
         if (poiList != null) {

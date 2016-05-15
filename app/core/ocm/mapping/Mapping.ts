@@ -67,6 +67,7 @@ export interface IMapProvider {
     initMap(mapCanvasID: string, mapConfig: MapOptions, mapManagerContext: Mapping);
     refreshMapLayout();
     renderMap(poiList: Array<any>, mapHeight: number, parentContext: any);
+    clearMarkers();
     getMapZoom(): Observable<number>;
     setMapZoom(zoomLevel: number);
     getMapCenter(): Observable<GeoPosition>;
@@ -234,6 +235,7 @@ export class Mapping extends Base {
                         //marker drag
                         marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function (marker) {
                             marker.getPosition(function (pos) {
+                     
                                 mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
                                 mapManagerContext.mapOptions.requestSearchUpdate = true;
                             });
@@ -402,5 +404,9 @@ export class Mapping extends Base {
 
             mapCanvas.innerHTML = mapHTML;
         }
+    }
+    
+    clearMarkers(){
+        this.mapProvider.clearMarkers();
     }
 }

@@ -5,6 +5,9 @@
        CountryList:Array<number>;
        UsageTypeList:Array<number>;
        StatusTypeList:Array<number>;
+       MinPowerKW:number;
+       MaxPowerKW:number;
+       UseDistanceInKM:boolean;
        
        constructor(){
          this.OperatorList = [];

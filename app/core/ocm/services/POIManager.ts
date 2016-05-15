@@ -5,6 +5,7 @@
 import {AppManager} from './AppManager';
 import {Injectable} from 'angular2/core';
 import {Observable} from 'rxjs/Observable';
+import {Base, LogLevel} from '../Base';
 
 export class POISearchParams {
     constructor() { }
@@ -52,11 +53,11 @@ export interface ConnectionInfo {
 
 @Injectable()
 
-export class POIManager {
+export class POIManager extends Base {
 
     poiList;
     constructor(private appManager: AppManager) {
-
+        super();
     }
 
 
@@ -75,7 +76,12 @@ export class POIManager {
             }
             );
     }
-    
+
+    public clearResults() {
+        this.poiList = [];
+        this.appManager.events.publish('ocm:poiList:cleared');
+        this.log('clearing results after settings change', LogLevel.VERBOSE);
+    }
 
     public getPOIById(poiId: number, fetchInfo: boolean = false, skipCached: boolean = false): Observable<any> {
 

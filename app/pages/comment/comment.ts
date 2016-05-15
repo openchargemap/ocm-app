@@ -27,8 +27,8 @@ export class CommentPage {
         
         this.poi = this.navParams.get('poi'); 
       
-        this.commentTypes = appManager.referenceDataManager.getCommentTypes();
-        this.checkinTypes = appManager.referenceDataManager.getCheckinStatusTypes();
+        this.commentTypes = appManager.referenceDataManager.getCommentTypes(true, true);
+        this.checkinTypes = appManager.referenceDataManager.getCheckinStatusTypes(true, true);
     }
 
     onPageWillEnter() {
@@ -47,6 +47,11 @@ export class CommentPage {
         });
 
         this.nav.present(loading);
+        
+        alert("Would submit "+JSON.stringify(this.commentModel));
+        this.nav.pop();
+        return;
+        
         this.appManager.submitComment(this.commentModel).then((response) => {
             this.nav.pop();
         }, (rejection) => { 

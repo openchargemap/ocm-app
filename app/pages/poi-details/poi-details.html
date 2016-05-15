@@ -108,19 +108,27 @@
                 <h2><ion-icon name="camera"></ion-icon>   {{ 'ocm.details.mediaItems.sectionTitle' | translate }}</h2>
                 <div *ngIf="poi._hasPhotos">
 
-                    <ion-slides pager loop="true" autoplay="true">
+                    <ion-card *ngFor="#item of poi.MediaItems">
 
-                        <ion-slide *ngFor="#item of poi.MediaItems">
-                            <h3>{{item.User.Username}}</h3>
+                        <ion-item>
+                            <ion-avatar item-left>
+                                <img src="http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=80&d=mm">
+                            </ion-avatar>
+                            <h2>{{item.User.Username}}</h2>
+                            <p>{{item.DateCreated}}</p>
+                        </ion-item>
 
-                            <img src="{{item.ItemThumbnailURL}}" />
+                        <img src="{{item.ItemMediumURL}}" />
+
+                        <ion-card-content>
                             <p>{{item.Comment}}</p>
-                        </ion-slide>
+                        </ion-card-content>
 
 
 
-                    </ion-slides>
+                    </ion-card>
                 </div>
+
                 <div *ngIf="!poi._hasPhotos">
                     <p class='subtle'> {{ 'ocm.details.mediaItems.addPrompt' | translate }}</p>
                 </div>

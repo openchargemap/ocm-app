@@ -81,7 +81,7 @@ export class MyApp extends Base implements OnInit {
             if ((<any>window).plugin) {
                 //we can switch over to Native Maps API
             }
-            if (StatusBar) {
+            if (platform.is("cordova") && StatusBar) {
                 StatusBar.overlaysWebView(false);
                 StatusBar.show();//styleDefault();
 

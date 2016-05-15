@@ -93,10 +93,14 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                     google.maps.event.addListener(this.map, 'zoom_changed', function () {
                         mapProviderContext.events.publish('ocm:mapping:zoom');
                     });
+                    
+                     google.maps.event.addListener(this.map, 'tilesloaded', function () {
+                        mapProviderContext.events.publish('ocm:mapping:ready');
+                    });
 
                     this.mapReady = true;
 
-                    this.events.publish('ocm:mapping:ready');
+                    //this.events.publish('ocm:mapping:ready');
                 }
             }
         }
@@ -106,6 +110,18 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
             this.mapReady = false;
             return false;
         }
+    }
+
+    clearMarkers() {
+        if (this.markerList != null) {
+            for (var i = 0; i < this.markerList.size(); i++) {
+                if (this.markerList[i]) {
+                    this.markerList[i].setMap(null);
+                }
+            }
+        }
+        this.markerList = new collections.Dictionary<number, google.maps.Marker>();
+
     }
 
     /**
@@ -122,14 +138,7 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
 
         //clear existing markers (if enabled)
         if (clearMarkersOnRefresh == true) {
-            if (this.markerList != null) {
-                for (var i = 0; i < this.markerList.size(); i++) {
-                    if (this.markerList[i]) {
-                        this.markerList[i].setMap(null);
-                    }
-                }
-            }
-            this.markerList = new collections.Dictionary<number, google.maps.Marker>();
+            this.clearMarkers();
         }
         var mapzoom = map.getZoom();
         if (poiList != null) {

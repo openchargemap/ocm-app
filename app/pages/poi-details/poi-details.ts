@@ -24,12 +24,16 @@ export class POIDetailsPage {
         //create temporary properties for view model
         if (this.poi.MediaItems != null && this.poi.MediaItems.length > 0) {
             this.poi._hasPhotos = true;
+            for (let i of this.poi.MediaItems){
+                i.ItemMediumURL = i.ItemThumbnailURL.replace(".thmb.",".medi.");
+            }
         } else {
             this.poi._hasPhotos = false;
         }
     }
 
     addComment() {
+        alert(this.poi.ID);
         this.nav.push(CommentPage, {
             id: this.poi.ID,
             poi: this.poi
@@ -38,7 +42,8 @@ export class POIDetailsPage {
 
     addMedia() {
         this.nav.push(MediaUploadPage, {
-            id: this.poi.ID
+            id: this.poi.ID,            
+            poi: this.poi
         });
     }
 

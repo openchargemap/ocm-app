@@ -14,7 +14,7 @@ export class ProfilePage {
 
     }
 
-    onPageWillEnter() {
+    onPageDidEnter() {
 
         this.userProfile = this.appManager.getUserProfile();
 
@@ -31,21 +31,9 @@ export class ProfilePage {
 
         let alert = Alert.create({
             title: 'Signed Out',
-            subTitle: 'You are no signed out',
+            subTitle: 'You are now signed out',
             buttons: ['Dismiss']
         });
         this.nav.present(alert);
-    }
-
-    testComment() {
-          this.nav.push(CommentPage, {
-            id: 30798
-        });
-    }
-    testUpload() {
-       
-        this.nav.push(MediaUploadPage, {
-            id: 30798
-        });
     }
 }

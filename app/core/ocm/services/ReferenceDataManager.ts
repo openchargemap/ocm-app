@@ -77,7 +77,7 @@ export class ReferenceDataManager extends Base {
     */
     public getUsageTypes(filtered: boolean = false): Array<any> {
         if (filtered) {
-            return this.referenceData.UsageTypes
+            return this.referenceData.UsageTypes.filter( i => i.ID>0);
         } else {
             return this.filteredReferenceData.UsageTypes;
         }
@@ -93,7 +93,7 @@ export class ReferenceDataManager extends Base {
      */
     public getStatusTypes(filtered: boolean = false): Array<any> {
         if (filtered) {
-            return this.referenceData.StatusTypes
+            return this.referenceData.StatusTypes.filter( i => i.ID>0);
         } else {
             return this.filteredReferenceData.StatusTypes;
         }
