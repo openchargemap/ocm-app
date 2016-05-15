@@ -13,6 +13,7 @@ export class POIDetailsPage {
     poi: any;
     nav: NavController;
     translate: TranslateService;
+selectedTab:string;
 
     constructor(app: IonicApp, nav: NavController, navParams: NavParams, translate: TranslateService) {
         this.nav = nav;
@@ -20,7 +21,7 @@ export class POIDetailsPage {
 
         // If we navigated to this page, we will have an item available as a nav param
         this.poi = navParams.get('item');
-
+this.selectedTab="location";
         //create temporary properties for view model
         if (this.poi.MediaItems != null && this.poi.MediaItems.length > 0) {
             this.poi._hasPhotos = true;
@@ -54,4 +55,6 @@ export class POIDetailsPage {
     edit() {
         //TODO: edit
     }
+    
+  
 }

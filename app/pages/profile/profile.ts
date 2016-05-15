@@ -22,6 +22,9 @@ export class ProfilePage {
             //navigate to sign in page
             let signInModal = Modal.create(SignInPage, { Profile: this.userProfile });
             this.nav.present(signInModal);
+        } else {
+            this.userProfile.GravatarURL = "http://www.gravatar.com/avatar/" + this.userProfile.EmailHash + "?s=80&d=mm";
+
         }
     }
 

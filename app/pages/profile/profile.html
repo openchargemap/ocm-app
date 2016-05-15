@@ -11,10 +11,36 @@
         You are not signed in
     </div>
     <div *ngIf="userProfile!=null">
-        {{userProfile.Username}}
-        <p>
-            {{userProfile.Profile}}
+        
+        <ion-card>
+
+  <ion-item>
+    <ion-avatar item-left>
+      <img src="{{userProfile.GravatarURL}}">
+    </ion-avatar>
+    <h2>{{userProfile.Username}}</h2>
+    <p>
+            {{userProfile.DateCreated}}
         </p>
+  </ion-item>
+
+ 
+  <ion-card-content>
+   <p> {{userProfile.Profile}}</p>
+  </ion-card-content>
+
+  <ion-item>
+    <ion-note  item-left>
+      <ion-icon name="star"></ion-icon>
+      {{userProfile.ReputationPoints}} Contributor Points
+    </ion-note>
+   
+   
+  </ion-item>
+
+</ion-card>
+       
+        
 
 
         <button (click)="signOut()">Sign Out</button>

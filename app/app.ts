@@ -31,7 +31,9 @@ enableProdMode();
         TranslateService,
         APIClient, SubmissionQueue],
 
-    config: {}
+    config: {
+        mode:"md"
+    }
 })
 
 
