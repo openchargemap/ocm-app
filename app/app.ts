@@ -32,12 +32,12 @@ enableProdMode();
         APIClient, SubmissionQueue],
 
     config: {
-        mode:"md"
+        mode:"ios"
     }
 })
 
 
-export class MyApp extends Base implements OnInit {
+export class OpenChargeMapApp extends Base implements OnInit {
     events: Events;
     rootPage: any = TabsPage;
     debouncedPublishResizeEvent: any;

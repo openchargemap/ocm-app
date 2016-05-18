@@ -36,12 +36,10 @@
             <ion-segment-button value="location" selected>
                 Location Details
             </ion-segment-button>
-            <ion-segment-button value="equipment">
-                Equipment
-            </ion-segment-button>
+          
             <ion-segment-button value="comments">
                 Comments (2)
-             
+
             </ion-segment-button>
             <ion-segment-button value="media">
                 Photos (1)
@@ -76,16 +74,7 @@
 
         </div>
 
-        <h3>  {{ 'ocm.details.advancedDetails' | translate }}</h3>
 
-
-        <p>
-            {{ 'ocm.details.dataProvider.sectionTitle' | translate }}: {{poi.DataProvider?.Title}}</p>
-
-        <p>
-            {{poi.DataProvider.WebsiteURL}}
-        </p>
-        <p>{{poi.DataProvider.License}}</p>
 
 
         <div *ngIf="poi.AddressInfo.ContactTelephone1">
@@ -105,11 +94,9 @@
         <div *ngIf="poi.NumberOfPoints"> {{ 'ocm.details.numberOfPoints' | translate }}: {{poi.NumberOfPoints}}</div>
 
 
-        <div *ngIf="poi.OperatorInfo"> {{ 'ocm.details.operator.sectionTitle' | translate }}: {{poi.OperatorInfo.Title}}</div>
+        <div *ngIf="poi.OperatorInfo"> {{ 'ocm.details.operator.sectionTitle' | translate }}: {{poi.OperatorInfo.Title}}
 
-
-    </div>
-    <div *ngIf="selectedTab=='equipment'" padding>
+        </div>
 
         <h3><ion-icon name="battery-charging"></ion-icon>   {{ 'ocm.details.equipment.sectionTitle' | translate }}</h3>
 
@@ -132,7 +119,19 @@
 
         </ion-list>
 
+
+        <h3>  {{ 'ocm.details.advancedDetails' | translate }}</h3>
+
+
+        <p>
+            {{ 'ocm.details.dataProvider.sectionTitle' | translate }}: {{poi.DataProvider?.Title}}</p>
+
+        <p>
+            {{poi.DataProvider.WebsiteURL}}
+        </p>
+        <p>{{poi.DataProvider.License}}</p>
     </div>
+  
     <div *ngIf="selectedTab=='comments'" padding>
 
         <h3><ion-icon name="contacts"></ion-icon>   {{ 'ocm.details.commentsAndRatings.sectionTitle' | translate }}</h3>
