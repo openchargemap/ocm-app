@@ -38,11 +38,11 @@
             </ion-segment-button>
           
             <ion-segment-button value="comments">
-                Comments (2)
+                Comments ({{poi.UserComments?poi.UserComments.length:0}})
 
             </ion-segment-button>
             <ion-segment-button value="media">
-                Photos (1)
+                Photos ({{poi.MediaItem?poi.MediaItems.length:0}})
             </ion-segment-button>
         </ion-segment>
 
