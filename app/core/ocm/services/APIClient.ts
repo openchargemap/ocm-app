@@ -186,13 +186,13 @@ export class APIClient  extends Base{
 
     submitMediaItem(data):Promise<any> {
         var jsonString = JSON.stringify(data);
-alert(JSON.stringify(data));
-return new Promise(resolve=>{resolve(null);});
-       /* return new Promise(resolve => {
+//alert(JSON.stringify(data));
+//return new Promise(resolve=>{resolve(null);});
+        return new Promise(resolve => {
             this.http.post(this.serviceBaseURL + "/comment/?action=mediaitem_submission&format=json", jsonString, this.getHttpRequestOptions()).subscribe(res => {
                 resolve(res.json());
             });
-        });*/
+        });
 
     }
 

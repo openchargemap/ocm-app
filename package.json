@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "angular2": "2.0.0-beta.15",
+    "angular2": "",
     "angular2-jwt": "",
     "es6-promise": "",
     "es6-shim": "",

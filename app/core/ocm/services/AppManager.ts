@@ -25,10 +25,15 @@ export class AppManager extends Base {
     public platformMode: string;
 
     private loading: Loading;
+    public isDebugMode:boolean;
+    
+    public clientWidth:number;
+    public clientHeight:number;
 
     constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue, private platform: Platform) {
         super();
         this.api.clientName = "ocm.app.ionic";// TODO: version
+        this.isDebugMode=true;
         this.enableSubmissionQueue = false;
         this.submissionQueue.setAppManager(this);
 
@@ -59,6 +64,9 @@ export class AppManager extends Base {
      * Save search settings to local storage
      */
     public saveSearchSettings() {
+        this.searchSettings.CheckForActiveFilters();
+        
+        
         localStorage.setItem('search-settings', JSON.stringify(this.searchSettings));
     }
 

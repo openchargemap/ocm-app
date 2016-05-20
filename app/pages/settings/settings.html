@@ -6,7 +6,7 @@
 <ion-content class="settings-page" padding>
   <h2>Search Filters</h2>
   <p>Search filters to apply when search for charging locations:</p>
-
+<p *ngIf="searchSettings.CheckForActiveFilters()" danger><ion-icon name="alert"></ion-icon> One or more filters are currently being applied.</p>
   <ion-list>
     <ion-item>
       <ion-label>Operators</ion-label>

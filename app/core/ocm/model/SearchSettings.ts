@@ -1,28 +1,46 @@
 
-  export class SearchSettings {
-       OperatorList :Array<number>;
-       ConnectionTypeList: Array<number>;
-       CountryList:Array<number>;
-       UsageTypeList:Array<number>;
-       StatusTypeList:Array<number>;
-       MinPowerKW:number;
-       MaxPowerKW:number;
-       UseDistanceInKM:boolean;
-       
-       constructor(){
-         this.OperatorList = [];
-         this.ConnectionTypeList=[];
-         this.CountryList=[];
-         this.UsageTypeList=[];
-         this.StatusTypeList=[];
-         
-         //TODO: reference data filtered by country (most popular for given country ids)
-       }
-       
-       public LoadSettings(){
-         
-       }
-       public SaveSettings(){
-         
-       }
+export class SearchSettings {
+  OperatorList: Array<number>;
+  ConnectionTypeList: Array<number>;
+  CountryList: Array<number>;
+  UsageTypeList: Array<number>;
+  StatusTypeList: Array<number>;
+  MinPowerKW: number;
+  MaxPowerKW: number;
+  UseDistanceInKM: boolean;
+  HasActiveFilters: boolean;
+
+  constructor() {
+    this.OperatorList = [];
+    this.ConnectionTypeList = [];
+    this.CountryList = [];
+    this.UsageTypeList = [];
+    this.StatusTypeList = [];
+    this.HasActiveFilters = false;
+    //TODO: reference data filtered by country (most popular for given country ids)
+  }
+
+  public LoadSettings() {
+
+  }
+  public SaveSettings() {
+
+  }
+
+  public CheckForActiveFilters(): boolean {
+    if (this.OperatorList.length > 0
+      || this.ConnectionTypeList.length > 0
+      || this.CountryList.length > 0
+      || this.UsageTypeList.length > 0
+      || this.StatusTypeList.length > 0
+      || this.MinPowerKW > 0
+      || this.MaxPowerKW > 0
+    ) {
+      this.HasActiveFilters = true;
+    } else {
+      this.HasActiveFilters = false;
     }
+    return this.HasActiveFilters;
+  }
+
+}

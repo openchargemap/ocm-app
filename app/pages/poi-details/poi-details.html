@@ -36,13 +36,13 @@
             <ion-segment-button value="location" selected>
                 Location Details
             </ion-segment-button>
-          
+
             <ion-segment-button value="comments">
                 Comments ({{poi.UserComments?poi.UserComments.length:0}})
 
             </ion-segment-button>
             <ion-segment-button value="media">
-                Photos ({{poi.MediaItem?poi.MediaItems.length:0}})
+                Photos ({{poi.MediaItems?poi.MediaItems.length:0}})
             </ion-segment-button>
         </ion-segment>
 
@@ -50,88 +50,136 @@
 
     <div *ngIf="selectedTab=='location'" padding>
 
-        <h3><ion-icon name="map"></ion-icon> {{ 'ocm.details.location.address' | translate }}</h3>
-        <div padding>
-            <div *ngIf="poi.AddressInfo.AddressLine1"> {{poi.AddressInfo.AddresssLine1}}</div>
-            <div *ngIf="poi.AddressInfo.AddressLine2"> {{poi.AddressInfo.AddresssLine2}}</div>
-            <div *ngIf="poi.AddressInfo.Town"> {{poi.AddressInfo.Town}}</div>
-            <div *ngIf="poi.AddressInfo.StateOrProvince"> {{poi.AddressInfo.StateOrProvince}}</div>
-            <div *ngIf="poi.AddressInfo.Postcode"> {{poi.AddressInfo.Postcode}}</div>
-            <div *ngIf="poi.AddressInfo.Country"> {{poi.AddressInfo.Country.Title}}</div>
+        <ion-card *ngIf="poi.AddressInfo">
+            <img src="{{staticMapURL}}" />
 
-            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{poi.AddressInfo.Latitude}},{{poi.AddressInfo.Longitude}}&amp;zoom=14&amp;size=240x100&amp;maptype=roadmap&amp;markers=color:blue"
-            />
-
-            <div class='subtle'>
-                {{ 'ocm.details.location.latitude' | translate }}: {{poi.AddressInfo.Latitude | number:'1.1-8'}}
-                <br/> {{ 'ocm.details.location.longitude' | translate }}: {{poi.AddressInfo.Longitude | number:'1.1-8'}}
-            </div>
-
-            <div *ngIf="poi.AddressInfo.AccessComments">
-                <!--<h4>{{ 'ocm.details.accessComments' | translate }}</h4>-->
-                <p> {{poi.AddressInfo.AccessComments}}</p>
-            </div>
-
-        </div>
-
-
-
-
-        <div *ngIf="poi.AddressInfo.ContactTelephone1">
-            <ion-icon name="call"></ion-icon> {{poi.AddressInfo.ContactTelephone1}} </div>
-        <div *ngIf="poi.AddressInfo.ContactTelephone2">
-            <icon call></icon> {{poi.AddressInfo.ContactTelephone2}} </div>
-        <div *ngIf="poi.AddressInfo.ContactEmail">
-            <icon mail></icon> {{poi.AddressInfo.ContactEmail}} </div>
-
-        <div *ngIf="poi.AddressInfo.RelatedURL">
-            <icon globe></icon> <a target="_system" href="{{poi.AddressInfo.RelatedURL}}">{{poi.AddressInfo.RelatedURL}}</a> </div>
-
-
-        <div *ngIf="poi.StatusType"> {{ 'ocm.details.operationalStatus' | translate }}: {{poi.StatusType.Title}}</div>
-        <div *ngIf="poi.UsageType"> {{ 'ocm.details.usageType' | translate }}: {{poi.UsageType.Title}}</div>
-        <div *ngIf="poi.UsageCost"> {{ 'ocm.details.usageCost' | translate }}: {{poi.UsageCost}}</div>
-        <div *ngIf="poi.NumberOfPoints"> {{ 'ocm.details.numberOfPoints' | translate }}: {{poi.NumberOfPoints}}</div>
-
-
-        <div *ngIf="poi.OperatorInfo"> {{ 'ocm.details.operator.sectionTitle' | translate }}: {{poi.OperatorInfo.Title}}
-
-        </div>
-
-        <h3><ion-icon name="battery-charging"></ion-icon>   {{ 'ocm.details.equipment.sectionTitle' | translate }}</h3>
-
-        <ion-list>
-            <ion-item *ngFor="#item of poi.Connections">
-                <ion-avatar item-left>
-                    <ion-icon name="flash"></ion-icon>
-                </ion-avatar>
-                <h3>{{item.ConnectionType?.Title}} <span class="details-minor" *ngIf="item.Quantity">x{{item.Quantity}}</span></h3>
-                <p *ngIf="item.PowerKW">{{item.PowerKW}} kW</p>
-
-                <p>
-                    <span *ngIf="item.Amps" class="details-minor">{{item.Amps}}A</span>
-                    <span *ngIf="item.Voltage" class="details-minor">{{item.Voltage}}V</span>
-                    <span *ngIf="item.CurrentType" class="details-minor">{{item.CurrentType?.Title}}</span>
-
+            <ion-card-content>
+                <ion-card-title>
+                    <ion-icon name="map"></ion-icon> {{ 'ocm.details.location.address' | translate }}
+                </ion-card-title>
+                <div padding>
+                    <div *ngIf="poi.AddressInfo.AddressLine1"> {{poi.AddressInfo.AddressLine1}}</div>
+                    <div *ngIf="poi.AddressInfo.AddressLine2"> {{poi.AddressInfo.AddressLine2}}</div>
+                    <div *ngIf="poi.AddressInfo.Town"> {{poi.AddressInfo.Town}}</div>
+                    <div *ngIf="poi.AddressInfo.StateOrProvince"> {{poi.AddressInfo.StateOrProvince}}</div>
+                    <div *ngIf="poi.AddressInfo.Postcode"> {{poi.AddressInfo.Postcode}}</div>
+                    <div *ngIf="poi.AddressInfo.Country"> {{poi.AddressInfo.Country.Title}}</div>
+                </div>
+                <p *ngIf="poi.AddressInfo.AccessComments">
+                    {{poi.AddressInfo.AccessComments}}
                 </p>
 
+                <p *ngIf="poi.AddressInfo.ContactTelephone1">
+                    <ion-icon name="call"></ion-icon> {{poi.AddressInfo.ContactTelephone1}} </p>
+                <p *ngIf="poi.AddressInfo.ContactTelephone2">
+                    <ion-icon name="call"></ion-icon> {{poi.AddressInfo.ContactTelephone2}} </p>
+
+                <p *ngIf="poi.AddressInfo.ContactEmail">
+                    <ion-icon name="mail"></ion-icon> {{poi.AddressInfo.ContactEmail}} </p>
+
+                <p *ngIf="poi.AddressInfo.RelatedURL">
+                    <ion-icon name="globe"></ion-icon> <a target="_system" href="{{poi.AddressInfo.RelatedURL}}">{{poi.AddressInfo.RelatedURL}}</a>
+                </p>
+
+            </ion-card-content>
+            <ion-item>
+                <button primary clear item-left>
+                <ion-icon name="navigate"></ion-icon>
+                Navigate
+                </button>
+
+                <ion-note item-right>
+                    <ion-icon name="map"></ion-icon>
+                    {{ 'ocm.details.location.latitude' | translate }}: {{poi.AddressInfo.Latitude | number:'1.1-8'}} , {{ 'ocm.details.location.longitude'
+                    | translate }}: {{poi.AddressInfo.Longitude | number:'1.1-8'}}
+                </ion-note>
+
             </ion-item>
-
-        </ion-list>
-
-
-        <h3>  {{ 'ocm.details.advancedDetails' | translate }}</h3>
+        </ion-card>
 
 
-        <p>
-            {{ 'ocm.details.dataProvider.sectionTitle' | translate }}: {{poi.DataProvider?.Title}}</p>
 
-        <p>
-            {{poi.DataProvider.WebsiteURL}}
-        </p>
-        <p>{{poi.DataProvider.License}}</p>
+
+
+
+
+
+
+
+        <ion-card>
+            <ion-card-header>
+                <ion-icon name="book"></ion-icon> Usage Restrictions
+            </ion-card-header>
+            <ion-card-content>
+                <p *ngIf="poi.StatusType!=null">{{ 'ocm.details.operationalStatus' | translate }}: {{poi.StatusType.Title}}</p>
+                <p *ngIf="poi.UsageType!=null">{{ 'ocm.details.usageType' | translate }}: {{poi.UsageType.Title}}</p>
+                <p *ngIf="poi.UsageCost!=null">{{ 'ocm.details.usageCost' | translate }}: {{poi.UsageCost}}</p>
+<p *ngIf="poi.GeneralComments!=null"><br>{{ 'ocm.details.generalComments' | translate }}: <br>{{poi.GeneralComments}}</p>
+                <ion-card-title>
+                    {{ 'ocm.details.operator.sectionTitle' | translate }}
+                </ion-card-title>
+                <p padding-left>
+                    {{poi.OperatorInfo.Title}}
+                </p>
+                <p *ngIf="poi.OperatorInfo.WebsiteURL!=null">
+                    <ion-icon name="link"></ion-icon> {{poi.OperatorInfo.WebsiteURL}}
+                </p>
+                <p *ngIf="poi.OperatorInfo.ContactEmail!=null">
+                    <ion-icon name="mail"></ion-icon> {{poi.OperatorInfo.ContactEmail}}
+                </p>
+                <p *ngIf="poi.OperatorInfo.FaultReportEmail!=null && poi.OperatorInfo.FaultReportEmail!=poi.OperatorInfo.ContactEmail">
+                    <ion-icon name="mail"></ion-icon> {{poi.OperatorInfo.FaultReportEmail}}
+                </p>
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+            <ion-card-header>
+                <ion-icon name="battery-charging"></ion-icon> {{ 'ocm.details.equipment.sectionTitle' | translate }}
+            </ion-card-header>
+            <ion-card-content>
+
+
+                <ion-list>
+                    <ion-item *ngFor="#item of poi.Connections">
+                        <ion-avatar item-left>
+                            <ion-icon name="flash"></ion-icon>
+                        </ion-avatar>
+                        <h3>{{item.ConnectionType?.Title}} <span class="details-minor" *ngIf="item.Quantity">x{{item.Quantity}}</span></h3>
+                        <p *ngIf="item.PowerKW">{{item.PowerKW}} kW</p>
+
+                        <p>
+                            <span *ngIf="item.Amps" class="details-minor">{{item.Amps}}A</span>
+                            <span *ngIf="item.Voltage" class="details-minor">{{item.Voltage}}V</span>
+                            <span *ngIf="item.CurrentType" class="details-minor">{{item.CurrentType?.Title}}</span>
+
+                        </p>
+
+                    </ion-item>
+
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
+
+        <ion-card>
+            <ion-card-header>
+                <ion-icon name="info"></ion-icon> {{ 'ocm.details.advancedDetails' | translate }}
+            </ion-card-header>
+            <ion-card-content>
+
+
+                <p *ngIf="poi.NumberOfPoints!=null">{{ 'ocm.details.numberOfPoints' | translate }}: {{poi.NumberOfPoints}}</p>
+                <p>
+                    {{ 'ocm.details.dataProvider.sectionTitle' | translate }}: {{poi.DataProvider?.Title}}</p>
+
+                <p>
+                    {{poi.DataProvider.WebsiteURL}}
+                </p>
+                <p>{{poi.DataProvider.License}}</p>
+            </ion-card-content>
+        </ion-card>
     </div>
-  
+
     <div *ngIf="selectedTab=='comments'" padding>
 
         <h3><ion-icon name="contacts"></ion-icon>   {{ 'ocm.details.commentsAndRatings.sectionTitle' | translate }}</h3>
@@ -188,5 +236,5 @@
             <p class='subtle'> {{ 'ocm.details.mediaItems.addPrompt' | translate }}</p>
         </div>
     </div>
-
+    <p *ngIf="appManager.isDebugMode==true" style="white-space: pre-wrap;"> {{json}}</p>
 </ion-content>

@@ -22,7 +22,7 @@ enableProdMode();
     template: '<ion-nav [root]="rootPage"></ion-nav>',
     providers: [
         AppManager,
-     
+
         Events,
         provide(TranslateLoader, {
             useFactory: (http: Http) => new TranslateStaticLoader(http, 'lang', '.json'),
@@ -32,7 +32,7 @@ enableProdMode();
         APIClient, SubmissionQueue],
 
     config: {
-        mode:"ios"
+        mode: "ios"
     }
 })
 
@@ -166,6 +166,8 @@ export class OpenChargeMapApp extends Base implements OnInit {
             }
         }
 
+        this.appManager.clientWidth = winWidth;
+        this.appManager.clientHeight = winHeight;
         this.events.publish('ocm:window:resized', { width: winWidth, height: winHeight });
     }
 }

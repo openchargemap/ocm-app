@@ -48,9 +48,8 @@ export class CommentPage {
 
         this.nav.present(loading);
         
-        alert("Would submit "+JSON.stringify(this.commentModel));
-        this.nav.pop();
-        return;
+        //alert("Would submit "+JSON.stringify(this.commentModel));
+        
         
         this.appManager.submitComment(this.commentModel).then((response) => {
             this.nav.pop();
