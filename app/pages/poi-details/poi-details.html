@@ -141,7 +141,7 @@
 
 
                 <ion-list>
-                    <ion-item *ngFor="#item of poi.Connections">
+                    <ion-item *ngFor=let item of poi.Connections">
                         <ion-avatar item-left>
                             <ion-icon name="flash"></ion-icon>
                         </ion-avatar>
@@ -189,7 +189,7 @@
             <ion-card-content>
                 <ion-list>
 
-                    <ion-item *ngFor="#item of poi.UserComments">
+                    <ion-item *ngFor="let item of poi.UserComments">
                         <ion-avatar item-left>
                             <ion-icon name="contact"></ion-icon>
                             <div *ngIf="item.User">{{item.User.Username}}</div>
@@ -216,7 +216,7 @@
         <h2><ion-icon name="camera"></ion-icon>   {{ 'ocm.details.mediaItems.sectionTitle' | translate }}</h2>
         <div *ngIf="poi._hasPhotos">
 
-            <ion-card *ngFor="#item of poi.MediaItems">
+            <ion-card *ngFor="let item of poi.MediaItems">
 
                 <ion-item>
                     <ion-avatar item-left>

@@ -21,7 +21,7 @@
     <div id="place-attribution"></div>
 
     <ion-list>
-      <a *ngFor="#item of placeList" (click)="placeSelected($event,item)" ion-item>
+      <a *ngFor="let item of placeList" (click)="placeSelected($event,item)" ion-item>
         <ion-avatar item-left>
           <ion-icon name="locate"></ion-icon>
         </ion-avatar>

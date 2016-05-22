@@ -1,7 +1,7 @@
 /// <reference path="../../lib/typings/googlemaps/google.maps.d.ts" />
 /// <reference path="../../lib/typings/collections/collections.d.ts" />
-import {Component, OnInit} from 'angular2/core';
-import {Http} from 'angular2/http';
+import {Component, OnInit} from '@angular/core';
+import {Http} from '@angular/http';
 import {IonicApp, Page, NavController, NavParams, Events, Platform, Loading} from 'ionic-angular';
 import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
 import {POIManager, POISearchParams} from '../../core/ocm/services/POIManager';

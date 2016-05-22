@@ -3,8 +3,8 @@
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 import {APIClient} from './APIClient';
-import {Http} from 'angular2/http';
-import {Injectable} from 'angular2/core';
+import {Http} from '@angular/http';
+import {Injectable} from '@angular/core';
 import {Events, NavController, Platform, Toast, Loading} from 'ionic-angular';
 import {Base, LogLevel} from '../Base';
 import {JwtHelper} from 'angular2-jwt';

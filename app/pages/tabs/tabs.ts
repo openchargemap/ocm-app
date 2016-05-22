@@ -27,7 +27,7 @@ export class TabsPage {
     get settingsTabBadge(): string {
         if (this.appManager != null && this.appManager.searchSettings != null) {
             if (this.appManager.searchSettings.HasActiveFilters) {
-                return "#";
+                return "!";
             } else {
                 return "";
             }

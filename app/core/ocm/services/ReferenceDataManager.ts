@@ -3,10 +3,10 @@
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 
-import {Injectable} from 'angular2/core';
+import {Injectable} from '@angular/core';
 import {Base, LogLevel} from '../Base';
 import {AppManager} from './AppManager';
-import {Http, Response} from 'angular2/http';
+import {Http, Response} from '@angular/http';
 import {CoreReferenceData} from '../model/CoreReferenceData';
 
 @Injectable()

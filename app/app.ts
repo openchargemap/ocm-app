@@ -1,7 +1,7 @@
 import {App, Platform, Config, Events, NavController} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
-import {Http, ConnectionBackend} from 'angular2/http';
-import {OnInit, provide, enableProdMode} from 'angular2/core';
+import {Http, ConnectionBackend} from '@angular/http';
+import {OnInit, provide, enableProdMode} from '@angular/core';
 
 import {APIClient} from './core/ocm/services/APIClient';
 import {AppManager} from './core/ocm/services/AppManager'
@@ -28,6 +28,7 @@ enableProdMode();
             deps: [Http]
         }),
         TranslateService,
+
         APIClient, SubmissionQueue],
     config: {
         mode: "ios"
@@ -36,20 +37,13 @@ enableProdMode();
 
 
 export class OpenChargeMapApp extends Base implements OnInit {
-    events: Events;
+
     rootPage: any = TabsPage;
     debouncedPublishResizeEvent: any;
-    translate: TranslateService;
-    http: Http;
-    appManager: AppManager;
 
-    constructor(platform: Platform, events: Events, translate: TranslateService, http: Http, appManager: AppManager) {
+    constructor(private platform: Platform, private events: Events, private http: Http, private translate: TranslateService, private appManager: AppManager) {
         super();
-        this.events = events;
 
-        this.translate = translate;
-        this.http = http;
-        this.appManager = appManager;
 
         //trans.setLanguage("zh");
 
@@ -66,8 +60,6 @@ export class OpenChargeMapApp extends Base implements OnInit {
      ///
      */
 
-
-        this.translate = translate;
         this.initTranslation();
 
 

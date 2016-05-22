@@ -12,7 +12,7 @@
    <ion-item>
       <ion-label stacked>Comment Type</ion-label>
       <ion-select [(ngModel)]="commentModel.UserCommentTypeID">
-        <ion-option *ngFor="#item of commentTypes" [value]="item.ID" [checked]="false">{{item.Title}}</ion-option>
+        <ion-option *ngFor="let item of commentTypes" [value]="item.ID" [checked]="false">{{item.Title}}</ion-option>
       </ion-select>
 
     </ion-item>
@@ -26,7 +26,7 @@
     <ion-item>
       <ion-label stacked>Did You Successfully Charge?</ion-label>
       <ion-select [(ngModel)]="commentModel.CheckStatusTypeID">
-        <ion-option *ngFor="#item of checkinTypes" [value]="item.ID" [checked]="false">{{item.Title}}</ion-option>
+        <ion-option *ngFor="let item of checkinTypes" [value]="item.ID" [checked]="false">{{item.Title}}</ion-option>
       </ion-select>
 
     </ion-item>

@@ -3,7 +3,7 @@
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 import {AppManager} from './AppManager';
-import {Injectable} from 'angular2/core';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Base, LogLevel} from '../Base';
 

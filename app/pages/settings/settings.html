@@ -11,7 +11,7 @@
     <ion-item>
       <ion-label>Operators</ion-label>
       <ion-select [(ngModel)]="searchSettings.OperatorList" multiple="true" cancelText="Cancel" okText="OK">
-        <ion-option *ngFor="#item of operators" [value]="item.ID">{{item.Title}}</ion-option>
+        <ion-option *ngFor="let item of operators" [value]="item.ID">{{item.Title}}</ion-option>
 
       </ion-select>
     </ion-item>
@@ -21,7 +21,7 @@
     <ion-item>
       <ion-label>Usage Types</ion-label>
       <ion-select [(ngModel)]="searchSettings.UsageTypeList" multiple="true" cancelText="Cancel" okText="OK">
-        <ion-option *ngFor="#item of usageTypes" [value]="item.ID">{{item.Title}}</ion-option>
+        <ion-option *ngFor="let item of usageTypes" [value]="item.ID">{{item.Title}}</ion-option>
 
       </ion-select>
     </ion-item>
@@ -31,7 +31,7 @@
     <ion-item>
       <ion-label>Status Types</ion-label>
       <ion-select [(ngModel)]="searchSettings.StatusTypeList" multiple="true" cancelText="Cancel" okText="OK">
-        <ion-option *ngFor="#item of statusTypes" [value]="item.ID">{{item.Title}}</ion-option>
+        <ion-option *ngFor="let item of statusTypes" [value]="item.ID">{{item.Title}}</ion-option>
 
       </ion-select>
     </ion-item>
@@ -42,7 +42,7 @@
     <ion-item>
       <ion-label>Connector Types</ion-label>
       <ion-select [(ngModel)]="searchSettings.ConnectionTypeList" multiple="true" cancelText="Cancel" okText="OK">
-        <ion-option *ngFor="#item of connectionTypes" [value]="item.ID">{{item.Title}}</ion-option>
+        <ion-option *ngFor="let item of connectionTypes" [value]="item.ID">{{item.Title}}</ion-option>
 
       </ion-select>
     </ion-item>
