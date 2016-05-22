@@ -8,7 +8,7 @@
 <ion-content class="poi-details" padding>
 
     <div class="poi-heading">
-        <div style="max-height:32px;position:absolute;overflow:hidden;"></div>
+
         <div class="poi-heading-info">
             <h2>{{poi.AddressInfo.Title}} <small>OCM-{{poi.ID}}</small></h2>
 
@@ -48,7 +48,7 @@
 
     </ion-toolbar>
 
-    <div *ngIf="selectedTab=='location'" padding>
+    <div *ngIf="selectedTab=='location'" padding class="address-details">
 
         <ion-card *ngIf="poi.AddressInfo">
             <img src="{{staticMapURL}}" />
@@ -114,7 +114,7 @@
                 <p *ngIf="poi.StatusType!=null">{{ 'ocm.details.operationalStatus' | translate }}: {{poi.StatusType.Title}}</p>
                 <p *ngIf="poi.UsageType!=null">{{ 'ocm.details.usageType' | translate }}: {{poi.UsageType.Title}}</p>
                 <p *ngIf="poi.UsageCost!=null">{{ 'ocm.details.usageCost' | translate }}: {{poi.UsageCost}}</p>
-<p *ngIf="poi.GeneralComments!=null"><br>{{ 'ocm.details.generalComments' | translate }}: <br>{{poi.GeneralComments}}</p>
+                <p *ngIf="poi.GeneralComments!=null"><br>{{ 'ocm.details.generalComments' | translate }}: <br>{{poi.GeneralComments}}</p>
                 <ion-card-title>
                     {{ 'ocm.details.operator.sectionTitle' | translate }}
                 </ion-card-title>
@@ -182,30 +182,35 @@
 
     <div *ngIf="selectedTab=='comments'" padding>
 
-        <h3><ion-icon name="contacts"></ion-icon>   {{ 'ocm.details.commentsAndRatings.sectionTitle' | translate }}</h3>
-        <ion-list>
+        <ion-card>
+            <ion-card-header>
+                <ion-icon name="contacts"></ion-icon> {{ 'ocm.details.commentsAndRatings.sectionTitle' | translate }}
+            </ion-card-header>
+            <ion-card-content>
+                <ion-list>
 
-            <ion-item *ngFor="#item of poi.UserComments">
-                <ion-avatar item-left>
-                    <ion-icon name="contact"></ion-icon>
-                    <div *ngIf="item.User">{{item.User.Username}}</div>
-                    <div *ngIf="!item.User">{{item.Username}}</div>
-                </ion-avatar>
+                    <ion-item *ngFor="#item of poi.UserComments">
+                        <ion-avatar item-left>
+                            <ion-icon name="contact"></ion-icon>
+                            <div *ngIf="item.User">{{item.User.Username}}</div>
+                            <div *ngIf="!item.User">{{item.Username}}</div>
+                        </ion-avatar>
 
-                <p>{{item.DateCreated}}</p>
-                <p>{{item.Comment}}</p>
-                <p *ngIf="item.CommentType">
-                    {{item.CommentType?.Title}}
+                        <p>{{item.DateCreated}}</p>
+                        <p>{{item.Comment}}</p>
+                        <p *ngIf="item.CommentType">
+                            {{item.CommentType?.Title}}
 
-                </p>
-                <p *ngIf="item.Rating">{{item.Rating}} out of 5</p>
-                <p *ngIf="item.CheckinStatusType">
+                        </p>
+                        <p *ngIf="item.Rating">{{item.Rating}} out of 5</p>
+                        <p *ngIf="item.CheckinStatusType">
 
-                    {{item.CheckinStatusType.Title}}</p>
-            </ion-item>
+                            {{item.CheckinStatusType.Title}}</p>
+                    </ion-item>
 
-        </ion-list>
-
+                </ion-list>
+            </ion-card-content>
+        </ion-card>
     </div>
     <div *ngIf="selectedTab=='media'" padding>
         <h2><ion-icon name="camera"></ion-icon>   {{ 'ocm.details.mediaItems.sectionTitle' | translate }}</h2>

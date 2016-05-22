@@ -1,4 +1,5 @@
 export interface CoreReferenceData {
+    CacheDate: Date;
     ConnectionTypes: Array<any>;
     Countries: Array<any>;
     Operators: Array<any>;

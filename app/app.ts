@@ -22,7 +22,6 @@ enableProdMode();
     template: '<ion-nav [root]="rootPage"></ion-nav>',
     providers: [
         AppManager,
-
         Events,
         provide(TranslateLoader, {
             useFactory: (http: Http) => new TranslateStaticLoader(http, 'lang', '.json'),
@@ -30,7 +29,6 @@ enableProdMode();
         }),
         TranslateService,
         APIClient, SubmissionQueue],
-
     config: {
         mode: "ios"
     }

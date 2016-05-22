@@ -142,10 +142,10 @@ export class POIManager extends Base {
                 if (conn.LevelID != null && conn.Level == null) {
                     conn.Level = refData.getChargingLevelTypeByID(conn.LevelID);
                 }
-                if (conn.CurrentTypeID != null && conn.CurrentTypeID == null) {
+                if (conn.CurrentTypeID != null && conn.CurrentType == null) {
                     conn.CurrentType = refData.getOutputCurrentTypeByID(conn.CurrentTypeID);
                 }
-                if (conn.StatusTypeID != null && conn.StatusTypeID == null) {
+                if (conn.StatusTypeID != null && conn.StatusType == null) {
                     conn.StatusTypeID = refData.getStatusTypeByID(conn.StatusTypeID);
                 }
 

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Open Charge Map</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="Content-Security-Policy" content="default-src *; img-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src  'self' 'unsafe-inline' *">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; img-src * data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src  'self' 'unsafe-inline' *">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
 
@@ -18,12 +18,11 @@
 
 <body class="md">
 
-    <!-- this Ionic's root component and where the app will load -->
     <ion-app></ion-app>
 
     <script src="cordova.js"></script>
 
-    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&signed_in=true"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&signed_in=true&key=AIzaSyASE98mCjV1bqG4u2AUHqftB8Vz3zr2sEg"></script>
 
     <!-- Zone.js and Reflect-metadata  -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en"></script>
@@ -32,7 +31,6 @@
     <script src="lib/leaflet/leaflet.js"></script>
     <script src="lib/leaflet/leaflet-providers.js"></script>
     <script src="build/js/app.bundle.js"></script>
-
 
 </body>
 

@@ -32,8 +32,8 @@ export class AppManager extends Base {
 
     constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue, private platform: Platform) {
         super();
-        this.api.clientName = "ocm.app.ionic";// TODO: version
-        this.isDebugMode=true;
+        this.api.clientName = "ocm.app.ionic.v6_0_0";
+        this.isDebugMode=false;
         this.enableSubmissionQueue = false;
         this.submissionQueue.setAppManager(this);
 
@@ -43,7 +43,7 @@ export class AppManager extends Base {
             this.platformMode = "web";
         }
 
-        this.referenceDataManager = new ReferenceDataManager();
+        this.referenceDataManager = new ReferenceDataManager(http);
         this.poiManager = new POIManager(this);
 
         this.searchSettings = new SearchSettings();
@@ -55,8 +55,8 @@ export class AppManager extends Base {
      * Load search filter settings from local storage
      */
     public loadSearchSettings() {
-        if (localStorage.getItem('search-settings') != null) {
-            this.searchSettings = JSON.parse(localStorage.getItem(''));
+        if (localStorage.getItem('searchSettings') != null) {
+            this.searchSettings = JSON.parse(localStorage.getItem('searchSettings'));
         }
     }
 
@@ -65,9 +65,7 @@ export class AppManager extends Base {
      */
     public saveSearchSettings() {
         this.searchSettings.CheckForActiveFilters();
-        
-        
-        localStorage.setItem('search-settings', JSON.stringify(this.searchSettings));
+        localStorage.setItem('searchSettings', JSON.stringify(this.searchSettings));
     }
 
     public initAppManager() {

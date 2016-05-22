@@ -1,12 +1,12 @@
 <ion-nav-bar *navbar primary>
-  <ion-toolbar primary>
+  <ion-toolbar default>
     <ion-buttons start>
 
       <button (click)="locateUser()">
       <ion-icon name="locate"></ion-icon>
     </button>
     </ion-buttons>
-    <ion-searchbar [(ngModel)]="searchKeyword" (input)="getPlaces($event)" [debounce]="500"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="searchKeyword" (input)="getPlacesAutoComplete($event)" [debounce]="500"></ion-searchbar>
     <ion-buttons end>
       <button (click)="openSearchOptions()">
       <ion-icon name="options"></ion-icon>

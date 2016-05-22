@@ -5,8 +5,8 @@
 
 import {Injectable} from 'angular2/core';
 import {Base, LogLevel} from '../Base';
-import {APIClient} from './APIClient';
 import {AppManager} from './AppManager';
+import {Http, Response} from 'angular2/http';
 import {CoreReferenceData} from '../model/CoreReferenceData';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class ReferenceDataManager extends Base {
     private referenceData: CoreReferenceData;
     private filteredReferenceData: CoreReferenceData;
 
-    constructor() {
+    constructor(private http: Http) {
         super();
         this.loadCachedRefData();
     }
@@ -226,13 +226,26 @@ export class ReferenceDataManager extends Base {
 
     private loadCachedRefData() {
         let cachedRefData = localStorage.getItem("referenceData");
-        if (cachedRefData != null) {
-            this.referenceData = JSON.parse(cachedRefData);
+
+        //if no cached data available, use local copy
+        if (cachedRefData == null) {
+
+            this.http.get('./data/CoreReferenceData.json').map((res: Response) => res.json()).subscribe(res => {
+                this.log("Using bundled reference data as cached ref data.");
+                this.referenceData = res;
+                
+            });
+        } else {
+
+            
+                this.referenceData = JSON.parse(cachedRefData);
+            
         }
-    }
+    }    
 
     private cacheRefData(refData) {
         if (this.referenceData != null) {
+            this.referenceData.CacheDate = new Date();
             localStorage.setItem("referenceData", JSON.stringify(this.referenceData));
         }
     }

@@ -47,7 +47,7 @@ export class APIClient  extends Base{
     }
 
     fetchPOIListByParam(params: POISearchParams, poiManager:POIManager): Observable<any> {
-        var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&output=json";
+        var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&compact=true&output=json";
 
         var serviceParams = "";
         if (params.countryCode != null) serviceParams += "&countrycode=" + params.countryCode;
@@ -119,7 +119,7 @@ export class APIClient  extends Base{
      */
     fetchCoreReferenceData(filters): Observable<any> {
 
-        var serviceURL = this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json" + (this.allowMirror ? "&allowmirror=true" : "") + "&verbose=false&";
+        var serviceURL = this.serviceBaseURL + "/referencedata/?client=" + this.clientName + "&output=json" + (this.allowMirror ? "&allowmirror=true" : "") + "&verbose=false&compact=true";
 
         if (filters != null && filters.countryIdList != null) {
             serviceURL += "&countryid=" + this.getNumberListString(filters.countryIdList);

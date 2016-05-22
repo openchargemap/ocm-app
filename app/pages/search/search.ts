@@ -32,7 +32,7 @@ export class SearchPage extends Base implements OnInit {
     private mapCanvasID: string;
 
     private placeList: Array<PlaceSearchResult>;
-private initialResultsShown:boolean=false;
+    private initialResultsShown: boolean = false;
 
     searchKeyword: string;
     constructor(
@@ -65,16 +65,7 @@ private initialResultsShown:boolean=false;
         //give input focus to native map
         this.mapping.focusMap();
 
-        //attempt to find user current position
-        this.locateUser();
-        if (this.mapping) {
-            //delayed refresh of map view to work around issue with map not showing on first load
-            setTimeout(() => {
-                this.mapping.updateMapSize();
-            }, 1000);
 
-
-        }
     }
 
     onPageWillLeave() {
@@ -112,15 +103,28 @@ private initialResultsShown:boolean=false;
             this.viewPOIDetails(args[0]);
 
         });
-        
-        this.events.subscribe('ocm:mapping:ready', () => { 
-            if (!this.initialResultsShown)    {
+
+        this.events.subscribe('ocm:mapping:ready', () => {
+            if (!this.initialResultsShown) {
                 this.log("Search: maps ready, showing first set of results");
-                //show first set of results on load
+                this.initialResultsShown = true;
                 this.refreshResultsAfterMapChange();
+                //centre map on users location before starting to fetch other info
+                //get user position
+                //attempt to find user current position
+                this.log("locating user");
+                this.locateUser().then(() => {
+                    this.log("located user, moving map");
+                    if (this.mapping.mapAPIReady) {
+                        this.mapping.updateMapSize();
+                        //show first set of results on load
+                        //this.refreshResultsAfterMapChange();
+                    }
+                });
+
             }
         });
-        
+
         this.events.subscribe('ocm:mapping:zoom', () => { this.debouncedRefreshResults(); });
         this.events.subscribe('ocm:mapping:dragend', () => { this.debouncedRefreshResults(); });
         this.events.subscribe('ocm:poiList:updated', (listType) => { this.showPOIListOnMap(listType); });
@@ -136,8 +140,7 @@ private initialResultsShown:boolean=false;
 
         this.mapping.initMap(this.mapCanvasID);
 
-        //centre map on users location before starting to fetch other info
-        //get user position
+
 
         //centre map
 
@@ -264,9 +267,9 @@ private initialResultsShown:boolean=false;
                         if ($("#filter-usagetype").val() != "") params.usageTypeID = $("#filter-usagetype").val();
                         if ($("#filter-statustype").val() != "") params.statusTypeID = $("#filter-statustype").val();
                         */
-                       
+
                     }
-                     this.appManager.poiManager.fetchPOIList(params);
+                    this.appManager.poiManager.fetchPOIList(params);
                 });
 
 
@@ -274,9 +277,9 @@ private initialResultsShown:boolean=false;
             });
 
 
-        }, (error)=>{
-            this.log("No map centre, can't begin refresh."+error);
-            
+        }, (error) => {
+            this.log("No map centre, can't begin refresh." + error);
+
         });
 
 
@@ -308,19 +311,63 @@ private initialResultsShown:boolean=false;
         this.nav.push(SettingsPage);
     }
 
-    locateUser() {
-        if (navigator.geolocation) {
+    locateUser(): Promise<any> {
 
-            navigator.geolocation.getCurrentPosition((position) => {
+        var geoPromise = new Promise((resolve, reject) => {
+            this.log("Attempting to locate user:1");
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+        });
 
-                this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true);
-                this.mapping.setMapZoom(13); //TODO: provider specific ideal zoom for 'summary'
-                this.mapping.updateMapSize();
-            }, () => {
-                ///no geolocation
-                this.appManager.showToastNotification(this.nav, "Your location could not be determined.")
-            });
-        }
+        geoPromise.then((position: any) => {
+            this.log("Attempting to locate user:2");
+            this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true);
+            this.mapping.setMapZoom(13); //TODO: provider specific ideal zoom for 'summary'
+            this.mapping.updateMapSize();
+        }).catch((err) => {
+            ///no geolocation
+            this.appManager.showToastNotification(this.nav, "Your location could not be determined.")
+        });
+
+        return geoPromise;
+
+    }
+
+    getPlacesAutoComplete() {
+
+
+        var service = new (<any>google.maps.places).AutocompleteService();
+
+        service.getQueryPredictions({ input: this.searchKeyword }, (predictions, status) => {
+
+            if (status != google.maps.places.PlacesServiceStatus.OK) {
+                alert(status);
+                return;
+            }
+            var results = predictions;
+            document.getElementById("place-search").style.display = 'block';
+            this.mapping.unfocusMap();
+
+            for (var i = 0; i < results.length; i++) {
+                if (i == 0) {
+                    alert(JSON.stringify(results[i]));
+                }
+                /*var place = results[i];
+                var placeResult = new PlaceSearchResult();
+                placeResult.Title = place.name;
+                placeResult.ReferenceID = (<any>place).place_id;
+                placeResult.Address = place.formatted_address;
+                placeResult.Type = "place";
+                placeResult.Location = new GeoLatLng(place.geometry.location.lat(), place.geometry.location.lng());
+                this.placeList.push(placeResult);*/
+               // this.log(placeResult.Title);
+            }
+            /*predictions.forEach(function (prediction) {
+                var li = document.createElement('li');
+                li.appendChild(document.createTextNode(prediction.description));
+                document.getElementById('results').appendChild(li);
+      */
+
+        });
     }
 
     getPlaces(e: any) {
@@ -355,7 +402,7 @@ private initialResultsShown:boolean=false;
         this.placeList = [];
 
         var service = new google.maps.places.PlacesService(attributionDiv);
-        service.nearbySearch(request, (results, status) => {
+        service.textSearch(request, (results, status) => {
             loading.dismiss();
             if (status == google.maps.places.PlacesServiceStatus.OK) {
                 document.getElementById("place-search").style.display = 'block';

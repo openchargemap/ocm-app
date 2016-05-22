@@ -94,7 +94,7 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                         mapProviderContext.events.publish('ocm:mapping:zoom');
                     });
                     
-                     google.maps.event.addListener(this.map, 'tilesloaded', function () {
+                     google.maps.event.addListener(this.map, 'idle', function () {
                         mapProviderContext.events.publish('ocm:mapping:ready');
                     });
 
@@ -265,8 +265,11 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
         //wrap getCenter in an observable
         let obs = Observable.create(observer => {
             var pos = this.map.getCenter();
+            if (pos != null) { 
             observer.next(new GeoPosition(pos.lat(), pos.lng()));
             observer.complete();
+            } 
+            
         });
 
         return obs;
