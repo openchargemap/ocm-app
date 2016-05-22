@@ -6,7 +6,7 @@
       <ion-icon name="locate"></ion-icon>
     </button>
     </ion-buttons>
-    <ion-searchbar [(ngModel)]="searchKeyword" (input)="getPlacesAutoComplete($event)" [debounce]="500"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="searchKeyword" (input)="getPlacesAutoComplete($event)"  (cancel)="onPlaceSearchCancel($event)"> [debounce]="500"></ion-searchbar>
     <ion-buttons end>
       <button (click)="openSearchOptions()">
       <ion-icon name="options"></ion-icon>
@@ -16,7 +16,7 @@
 </ion-nav-bar>
 
 <ion-content class="search-page">
-  <div id="place-search">
+  <div id="place-search" *ngIf="placeSearchActive==true">
 
     <div id="place-attribution"></div>
 

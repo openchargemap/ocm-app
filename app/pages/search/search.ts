@@ -33,6 +33,7 @@ export class SearchPage extends Base implements OnInit {
 
     private placeList: Array<PlaceSearchResult>;
     private initialResultsShown: boolean = false;
+    private placeSearchActive: boolean = false;
 
     searchKeyword: string;
     constructor(
@@ -332,40 +333,53 @@ export class SearchPage extends Base implements OnInit {
 
     }
 
+    onPlaceSearchCancel() {
+        //hide search block
+        this.placeSearchActive = false;
+
+    }
     getPlacesAutoComplete() {
+
+        /*let loading = Loading.create({
+            content: "Searching..",
+            dismissOnPageChange: true,
+            duration: 3000
+        });
+
+        this.nav.present(loading);*/
 
 
         var service = new (<any>google.maps.places).AutocompleteService();
 
         service.getQueryPredictions({ input: this.searchKeyword }, (predictions, status) => {
-
+            this.placeSearchActive = true;
+            //loading.dismiss();
             if (status != google.maps.places.PlacesServiceStatus.OK) {
-                alert(status);
+                // alert(status);
                 return;
             }
             var results = predictions;
-            document.getElementById("place-search").style.display = 'block';
+
             this.mapping.unfocusMap();
 
+            this.placeList = [];
+
             for (var i = 0; i < results.length; i++) {
-                if (i == 0) {
-                    alert(JSON.stringify(results[i]));
+
+                var place = results[i];
+
+                if (place.place_id) {
+                    var placeResult = new PlaceSearchResult();
+                    placeResult.Title = place.description;
+                    placeResult.ReferenceID = (<any>place).place_id;
+                    placeResult.Address = place.description;
+                    placeResult.Type = "place";
+                    // placeResult.Location = new GeoLatLng(place.geometry.location.lat(), place.geometry.location.lng());
+                    this.placeList.push(placeResult);
                 }
-                /*var place = results[i];
-                var placeResult = new PlaceSearchResult();
-                placeResult.Title = place.name;
-                placeResult.ReferenceID = (<any>place).place_id;
-                placeResult.Address = place.formatted_address;
-                placeResult.Type = "place";
-                placeResult.Location = new GeoLatLng(place.geometry.location.lat(), place.geometry.location.lng());
-                this.placeList.push(placeResult);*/
-               // this.log(placeResult.Title);
+                //this.log(JSON.stringify(place));
             }
-            /*predictions.forEach(function (prediction) {
-                var li = document.createElement('li');
-                li.appendChild(document.createTextNode(prediction.description));
-                document.getElementById('results').appendChild(li);
-      */
+
 
         });
     }
@@ -432,14 +446,35 @@ export class SearchPage extends Base implements OnInit {
 
     placeSelected(e, item: PlaceSearchResult) {
         this.searchKeyword = item.Title;
-        document.getElementById("place-search").style.display = 'none';
+        this.placeSearchActive = false;
 
         //give map back the input focus (mainly for native map)
         this.mapping.focusMap();
 
         //move map to selected place
-        this.mapping.updateMapCentrePos(item.Location.latitude, item.Location.longitude, true);
-        this.debouncedRefreshResults();
+        if (item.Location != null) {
+            this.mapping.updateMapCentrePos(item.Location.latitude, item.Location.longitude, true);
+            this.debouncedRefreshResults();
+        } else if (item.ReferenceID != null) {
+            //look up placeid
+
+            this.log("Looking up place details:" + item.ReferenceID);
+            var attributionDiv = <HTMLDivElement>document.getElementById("place-attribution");
+            var service = new google.maps.places.PlacesService(attributionDiv);
+
+            (<any>service).getDetails({ placeId: item.ReferenceID }, (place, status) => {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    this.log("Got place details:" + place.name);
+
+                    this.mapping.updateMapCentrePos(place.geometry.location.lat(), place.geometry.location.lng(), true);
+                    this.mapping.setMapZoom(15);
+                    this.debouncedRefreshResults();
+                } else {
+                    this.log("Failed to fetch place:" + status.toString());
+                }
+            });
+
+        }
     }
 
 
