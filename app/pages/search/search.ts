@@ -2,7 +2,7 @@
 /// <reference path="../../lib/typings/collections/collections.d.ts" />
 import {Component, OnInit} from '@angular/core';
 import {Http} from '@angular/http';
-import {IonicApp, Page, NavController, NavParams, Events, Platform, Loading} from 'ionic-angular';
+import {IonicApp, Page, NavController, NavParams, Events, Platform, Loading, Modal} from 'ionic-angular';
 import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
 import {POIManager, POISearchParams} from '../../core/ocm/services/POIManager';
 import {POIDetailsPage} from '../poi-details/poi-details';
@@ -107,20 +107,22 @@ export class SearchPage extends Base implements OnInit {
 
         this.events.subscribe('ocm:mapping:ready', () => {
             if (!this.initialResultsShown) {
-                this.log("Search: maps ready, showing first set of results");
-                this.initialResultsShown = true;
-                this.refreshResultsAfterMapChange();
+
                 //centre map on users location before starting to fetch other info
                 //get user position
                 //attempt to find user current position
-                this.log("locating user");
+
                 this.locateUser().then(() => {
-                    this.log("located user, moving map");
-                    if (this.mapping.mapAPIReady) {
-                        this.mapping.updateMapSize();
-                        //show first set of results on load
-                        //this.refreshResultsAfterMapChange();
-                    }
+                    this.log("Search: maps ready, showing first set of results");
+
+
+                }, (rejection)=>{
+                    this.log("Could not locate user..");
+                    
+                }).catch(() => {
+                    this.log("Default search..");
+                    this.initialResultsShown = true;
+                    this.refreshResultsAfterMapChange();
                 });
 
             }
@@ -192,9 +194,9 @@ export class SearchPage extends Base implements OnInit {
 
 
     refreshResultsAfterMapChange() {
-        this.log("map moved/zoomed", LogLevel.VERBOSE);
+        this.log("Refreshing Results..", LogLevel.VERBOSE);
 
-
+        this.initialResultsShown = true;
         //this.appState.isSearchInProgress = true;
 
         var params = new POISearchParams();
@@ -290,8 +292,13 @@ export class SearchPage extends Base implements OnInit {
 
         if (args.poi != null) {
             this.log("Viewing POI Details " + args.poi.ID);
-            this.nav.push(POIDetailsPage, {
-                item: args.poi
+            //this.nav.push(POIDetailsPage, {
+            //   item: args.poi
+            //});
+
+            var poiDetailsModal = Modal.create(POIDetailsPage, { item: args.poi });
+            this.nav.present(poiDetailsModal).then(() => {
+                poiDetailsModal.showBackButton(true);
             });
 
         } else {
@@ -299,8 +306,11 @@ export class SearchPage extends Base implements OnInit {
             this.log("Viewing/fetching POI Details " + args.poiId);
             this.appManager.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
 
-                this.nav.push(POIDetailsPage, {
+                /*this.nav.push(POIDetailsPage, {
                     item: poi
+                });*/
+                this.nav.present(poiDetailsModal).then(() => {
+                    poiDetailsModal.showBackButton(true);
                 });
             });
 
@@ -315,17 +325,17 @@ export class SearchPage extends Base implements OnInit {
     locateUser(): Promise<any> {
 
         var geoPromise = new Promise((resolve, reject) => {
-            this.log("Attempting to locate user:1");
+            this.log("Attempting to locate user..");
             navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
+        }).then((position: any) => {
+            this.log("Got user location.");
 
-        geoPromise.then((position: any) => {
-            this.log("Attempting to locate user:2");
             this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true);
-            this.mapping.setMapZoom(13); //TODO: provider specific ideal zoom for 'summary'
+            this.mapping.setMapZoom(15); //TODO: provider specific ideal zoom for 'summary'
             this.mapping.updateMapSize();
         }).catch((err) => {
             ///no geolocation
+            this.log("Failed to get user location.");
             this.appManager.showToastNotification(this.nav, "Your location could not be determined.")
         });
 

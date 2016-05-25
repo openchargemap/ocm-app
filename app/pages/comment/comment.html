@@ -5,11 +5,14 @@
 </ion-navbar>
 <ion-content class="comment-page" padding>
 
+<div class="banner">
   <h1>{{poi.AddressInfo.Title}}</h1>
   <p>{{poi.AddressInfo.AddressLine1}}</p>
+  </div>
+  
   <ion-list>
 
-   <ion-item>
+    <ion-item>
       <ion-label stacked>Comment Type</ion-label>
       <ion-select [(ngModel)]="commentModel.UserCommentTypeID">
         <ion-option *ngFor="let item of commentTypes" [value]="item.ID" [checked]="false">{{item.Title}}</ion-option>
@@ -31,26 +34,38 @@
 
     </ion-item>
 
- 
+
     <ion-item>
       <ion-label stacked>Your Rating</ion-label>
-      
-      
-        <ion-select [(ngModel)]="commentModel.Rating">
-          <ion-option value="5">5 - Excellent</ion-option>
-          <ion-option value="4">4 - Good</ion-option>
-          <ion-option value="3">3 - Average</ion-option>
-          <ion-option value="2">2 - Not Good</ion-option>
-          <ion-option value="1">1 - Bad</ion-option>
+
+
+      <ion-select [(ngModel)]="commentModel.Rating">
+        <ion-option value="5">5 - Excellent</ion-option>
+        <ion-option value="4">4 - Good</ion-option>
+        <ion-option value="3">3 - Average</ion-option>
+        <ion-option value="2">2 - Not Good</ion-option>
+        <ion-option value="1">1 - Bad</ion-option>
         <ion-option value="" [checked]="true">Not Rated</ion-option>
       </ion-select>
     </ion-item>
-    
+
 
   </ion-list>
 
-  <div padding>
-    <button block (click)="cancel()">Cancel</button>
-    <button primary block (click)="addComment()">Add Comment</button>
-  </div>
+
 </ion-content>
+<ion-toolbar position="bottom">
+  <ion-buttons start>
+    <button (click)="cancel()">
+            <ion-icon name="close"></ion-icon>
+      Cancel
+
+    </button>
+  </ion-buttons>
+  <ion-buttons end>
+    <button royal>
+      Add Comment
+      <ion-icon name="send"></ion-icon>
+    </button>
+  </ion-buttons>
+</ion-toolbar>

@@ -19,3 +19,20 @@
     padding:1em;
     background-color: gainsboro;
 }
+
+.banner{
+        background-color: #545454;
+        padding:1em;
+        color:white;
+        h2 small {
+        font-size:0.6em;
+        color:#c0c0c0; 
+        }
+        p{
+            color:#c0c0c0; 
+        }
+    }
+
+ion-card p{
+    margin-bottom:0.3em;
+}

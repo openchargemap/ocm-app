@@ -158,6 +158,7 @@ export class MediaUploadPage {
         this.appManager.submitMediaItem(submission).then((result) => {
             this.appManager.dismissLoadingProgress();
             this.appManager.showToastNotification(this.nav, "Upload completed");
+            this.nav.pop();
             //todo: refresh POI details to show new upload
         }, (rejected) => {
             this.appManager.dismissLoadingProgress();
@@ -165,4 +166,7 @@ export class MediaUploadPage {
         });
     }
 
+    cancel() {
+        this.nav.pop();
+    }
 }
