@@ -1,3 +1,5 @@
+import {GeoLatLng} from './GeoPosition';
+
 
 export class SearchSettings {
   OperatorList: Array<number>;
@@ -9,6 +11,7 @@ export class SearchSettings {
   MaxPowerKW: number;
   UseDistanceInKM: boolean;
   HasActiveFilters: boolean;
+  LastSearchPosition: GeoLatLng;
 
   constructor() {
     this.OperatorList = [];

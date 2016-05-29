@@ -3,17 +3,19 @@
 import {Component, OnInit} from '@angular/core';
 import {Http} from '@angular/http';
 import {IonicApp, Page, NavController, NavParams, Events, Platform, Loading, Modal} from 'ionic-angular';
+import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
+import {Keyboard} from 'ionic-native';
+import {PlaceSearchResult, GeoLatLng, POISearchParams} from '../../core/ocm/model/AppModels';
+import {Base, LogLevel} from '../../core/ocm/Base';
+import {Utils} from '../../core/ocm/Utils';
 import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
-import {POIManager, POISearchParams} from '../../core/ocm/services/POIManager';
+import {AppManager} from '../../core/ocm/services/AppManager';
+import {POIManager} from '../../core/ocm/services/POIManager';
+
 import {POIDetailsPage} from '../poi-details/poi-details';
 import {SettingsPage} from '../settings/settings';
 import {SignInPage} from '../signin/signin';
-import {AppManager} from '../../core/ocm/services/AppManager';
-import {Base, LogLevel} from '../../core/ocm/Base';
-import {Utils} from '../../core/ocm/Utils';
-import {Keyboard} from 'ionic-native';
-import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
-import {PlaceSearchResult, GeoLatLng} from '../../core/ocm/model/AppModels';
+
 
 @Page({
     templateUrl: 'build/pages/search/search.html',
@@ -24,22 +26,19 @@ import {PlaceSearchResult, GeoLatLng} from '../../core/ocm/model/AppModels';
 export class SearchPage extends Base implements OnInit {
     mapping: Mapping;
 
-    // translate: any;
     private mapDisplayed: boolean = false;
-
-
     private debouncedRefreshResults: any;
     private mapCanvasID: string;
 
     private placeList: Array<PlaceSearchResult>;
     private initialResultsShown: boolean = false;
     private placeSearchActive: boolean = false;
-
-    searchKeyword: string;
+    private searchKeyword: string;
+    private placeSearchFocussed: boolean = false;
     constructor(
         private appManager: AppManager,
         private nav: NavController,
-        navParams: NavParams,
+        private navParams: NavParams,
         private events: Events,
         private translate: TranslateService,
         private platform: Platform
@@ -50,9 +49,11 @@ export class SearchPage extends Base implements OnInit {
 
         this.mapCanvasID = "map-canvas";
 
-        //decide whether to use native google maps ssdsdk or google web api        
+        //decide whether to use Native Google Maps SDK or Google Web API        
         if (platform.is("ios") || platform.is("android")) {
             this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
+
+            //if using native maps, don't allow the keyboard to scroll the view as this conflicts with the plugin rendering
             Keyboard.disableScroll(true);
         } else {
             this.mapping.setMapAPI(MappingAPI.GOOGLE_WEB);
@@ -65,12 +66,11 @@ export class SearchPage extends Base implements OnInit {
         this.log("Entered search page.", LogLevel.VERBOSE);
         //give input focus to native map
         this.mapping.focusMap();
-
-
     }
 
     onPageWillLeave() {
         //remove input focus from native map
+        this.log("Leavings search page.", LogLevel.VERBOSE);
         this.mapping.unfocusMap();
     }
 
@@ -97,7 +97,7 @@ export class SearchPage extends Base implements OnInit {
 
     ngOnInit() {
 
-        this.debouncedRefreshResults = Utils.debounce(this.refreshResultsAfterMapChange, 300, false);
+        this.debouncedRefreshResults = Utils.debounce(this.refreshResultsAfterMapChange, 1000, false);
 
         this.events.subscribe('ocm:poi:selected', (args) => {
 
@@ -116,9 +116,9 @@ export class SearchPage extends Base implements OnInit {
                     this.log("Search: maps ready, showing first set of results");
 
 
-                }, (rejection)=>{
+                }, (rejection) => {
                     this.log("Could not locate user..");
-                    
+
                 }).catch(() => {
                     this.log("Default search..");
                     this.initialResultsShown = true;
@@ -202,8 +202,12 @@ export class SearchPage extends Base implements OnInit {
         var params = new POISearchParams();
         this.mapping.getMapCenter().subscribe((mapcentre) => {
             if (mapcentre != null) {
+
                 params.latitude = mapcentre.coords.latitude;
                 params.longitude = mapcentre.coords.longitude;
+
+                //store this as last known map centre
+                this.appManager.searchSettings.LastSearchPosition = new GeoLatLng(mapcentre.coords.latitude, mapcentre.coords.longitude);
             }
 
             /////
@@ -261,6 +265,14 @@ export class SearchPage extends Base implements OnInit {
                             params.operatorIdList = this.appManager.searchSettings.OperatorList;
                         }
 
+                        if (this.appManager.searchSettings.MinPowerKW != null) {
+                            params.minPowerKW = this.appManager.searchSettings.MinPowerKW;
+                        }
+                        if (this.appManager.searchSettings.MaxPowerKW != null) {
+                            params.maxPowerKW = this.appManager.searchSettings.MaxPowerKW;
+                        }
+
+
                         /*
                         if ($("#filter-submissionstatus").val() != 200) params.submissionStatusTypeID = $("#filter-submissionstatus").val();
                         if ($("#filter-connectiontype").val() != "") params.connectionTypeID = $("#filter-connectiontype").val();
@@ -272,13 +284,18 @@ export class SearchPage extends Base implements OnInit {
                         */
 
                     }
+
+                    //TODO: use stack of requests as may be multiple in sync
+                    this.appManager.isRequestInProgress = true;
                     this.appManager.poiManager.fetchPOIList(params);
                 });
 
 
 
-            });
-
+            })
+                , (err) => {
+                    this.appManager.showToastNotification(this.nav, "Arrgh, couldn't get map centre.");
+                }
 
         }, (error) => {
             this.log("No map centre, can't begin refresh." + error);
@@ -290,31 +307,51 @@ export class SearchPage extends Base implements OnInit {
 
     viewPOIDetails(args: any) {
 
-        if (args.poi != null) {
-            this.log("Viewing POI Details " + args.poi.ID);
-            //this.nav.push(POIDetailsPage, {
-            //   item: args.poi
-            //});
 
-            var poiDetailsModal = Modal.create(POIDetailsPage, { item: args.poi });
+        this.log("Viewing/fetching POI Details " + args.poiId);
+
+        this.appManager.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
+
+            var poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
+            
+            poiDetailsModal.onDismiss(()=>{
+                //should focus map again..
+         this.mapping.focusMap();
+            });
+            this.mapping.unfocusMap();
+            this.nav.present(poiDetailsModal).then(() => {
+                poiDetailsModal.showBackButton(true);
+            })
+
+        }, (err) => {
+
+            this.appManager.showToastNotification(this.nav, "POI Details not available");
+        });
+        /*
+    if (args.poi != null) {
+        this.log("Viewing POI Details " + args.poi.ID);
+        //this.nav.push(POIDetailsPage, {
+        //   item: args.poi
+        //});
+
+        var poiDetailsModal = Modal.create(POIDetailsPage, { item: args.poi });
+        this.nav.present(poiDetailsModal).then(() => {
+            poiDetailsModal.showBackButton(true);
+        });
+
+    } else {
+        //may need to fetch POI details
+        this.log("Viewing/fetching POI Details " + args.poiId);
+        this.appManager.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
+
+          
             this.nav.present(poiDetailsModal).then(() => {
                 poiDetailsModal.showBackButton(true);
             });
+        });
 
-        } else {
-            //may need to fetch POI details
-            this.log("Viewing/fetching POI Details " + args.poiId);
-            this.appManager.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
-
-                /*this.nav.push(POIDetailsPage, {
-                    item: poi
-                });*/
-                this.nav.present(poiDetailsModal).then(() => {
-                    poiDetailsModal.showBackButton(true);
-                });
-            });
-
-        }
+    }
+    */
 
     }
 
@@ -337,6 +374,18 @@ export class SearchPage extends Base implements OnInit {
             ///no geolocation
             this.log("Failed to get user location.");
             this.appManager.showToastNotification(this.nav, "Your location could not be determined.")
+
+            //use a default location, or the last known search position if known
+            var searchPos = new GeoLatLng(37.415328, -122.076575);
+            if (this.appManager.searchSettings.LastSearchPosition != null) {
+                searchPos = this.appManager.searchSettings.LastSearchPosition;
+            }
+
+            this.appManager.searchSettings.LastSearchPosition = searchPos;
+            this.mapping.updateMapCentrePos(searchPos.latitude, searchPos.longitude, true);
+            this.mapping.setMapZoom(15);
+            this.mapping.updateMapSize();
+
         });
 
         return geoPromise;
@@ -347,6 +396,7 @@ export class SearchPage extends Base implements OnInit {
         //hide search block
         this.placeSearchActive = false;
 
+        this.appManager.isRequestInProgress = false;
     }
     getPlacesAutoComplete() {
 
@@ -357,41 +407,44 @@ export class SearchPage extends Base implements OnInit {
         });
 
         this.nav.present(loading);*/
+        if (this.searchKeyword.length > 3) {
+            this.appManager.isRequestInProgress = true;
+            var service = new (<any>google.maps.places).AutocompleteService();
 
+            service.getQueryPredictions({ input: this.searchKeyword }, (predictions, status) => {
 
-        var service = new (<any>google.maps.places).AutocompleteService();
-
-        service.getQueryPredictions({ input: this.searchKeyword }, (predictions, status) => {
-            this.placeSearchActive = true;
-            //loading.dismiss();
-            if (status != google.maps.places.PlacesServiceStatus.OK) {
-                // alert(status);
-                return;
-            }
-            var results = predictions;
-
-            this.mapping.unfocusMap();
-
-            this.placeList = [];
-
-            for (var i = 0; i < results.length; i++) {
-
-                var place = results[i];
-
-                if (place.place_id) {
-                    var placeResult = new PlaceSearchResult();
-                    placeResult.Title = place.description;
-                    placeResult.ReferenceID = (<any>place).place_id;
-                    placeResult.Address = place.description;
-                    placeResult.Type = "place";
-                    // placeResult.Location = new GeoLatLng(place.geometry.location.lat(), place.geometry.location.lng());
-                    this.placeList.push(placeResult);
+                this.appManager.isRequestInProgress = false;
+                this.placeSearchActive = true;
+                //loading.dismiss();
+                if (status != google.maps.places.PlacesServiceStatus.OK) {
+                    // alert(status);
+                    return;
                 }
-                //this.log(JSON.stringify(place));
-            }
+                var results = predictions;
+
+                this.mapping.unfocusMap();
+
+                this.placeList = [];
+
+                for (var i = 0; i < results.length; i++) {
+
+                    var place = results[i];
+
+                    if (place.place_id) {
+                        var placeResult = new PlaceSearchResult();
+                        placeResult.Title = place.description;
+                        placeResult.ReferenceID = (<any>place).place_id;
+                        placeResult.Address = place.description;
+                        placeResult.Type = "place";
+                        // placeResult.Location = new GeoLatLng(place.geometry.location.lat(), place.geometry.location.lng());
+                        this.placeList.push(placeResult);
+                    }
+                    //this.log(JSON.stringify(place));
+                }
 
 
-        });
+            });
+        }
     }
 
     getPlaces(e: any) {
@@ -458,6 +511,8 @@ export class SearchPage extends Base implements OnInit {
         this.searchKeyword = item.Title;
         this.placeSearchActive = false;
 
+        this.appManager.isRequestInProgress = false;
+
         //give map back the input focus (mainly for native map)
         this.mapping.focusMap();
 
@@ -477,8 +532,8 @@ export class SearchPage extends Base implements OnInit {
                     this.log("Got place details:" + place.name);
 
                     this.mapping.updateMapCentrePos(place.geometry.location.lat(), place.geometry.location.lng(), true);
-                    this.mapping.setMapZoom(15);
-                    this.debouncedRefreshResults();
+                    ///this.mapping.setMapZoom(15);
+                    //this.debouncedRefreshResults();
                 } else {
                     this.log("Failed to fetch place:" + status.toString());
                 }
@@ -487,5 +542,10 @@ export class SearchPage extends Base implements OnInit {
         }
     }
 
-
+    onSearchFocus() {
+        this.placeSearchFocussed = true;
+    }
+    onSearchBlur() {
+        this.placeSearchFocussed = false;
+    }
 }

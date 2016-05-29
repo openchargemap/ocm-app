@@ -5,13 +5,13 @@
 </ion-navbar>
 
 <ion-toolbar *ngIf="hasNavbar==false">
-  
-  <ion-title>{{ 'ocm.details.sectionTitle' | translate }}</ion-title>
-  <ion-buttons end>
-    <button royal (click)="close()">
+
+    <ion-title>{{ 'ocm.details.sectionTitle' | translate }}</ion-title>
+    <ion-buttons end>
+        <button royal (click)="close()">
       <ion-icon name="close"></ion-icon>
     </button>
-  </ion-buttons>
+    </ion-buttons>
 </ion-toolbar>
 
 
@@ -19,24 +19,24 @@
 
     <div class="banner">
 
-     
-            <h2>{{poi.AddressInfo.Title}} <small>OCM-{{poi.ID}}</small></h2>
 
-            <button small (click)="addComment()">
+        <h2>{{poi.AddressInfo.Title}} <small>OCM-{{poi.ID}}</small></h2>
+
+        <button small (click)="addComment()">
                 <ion-icon name="chatbubbles"></ion-icon> Check-In
             </button>
 
-            <button small (click)="addMedia()">
+        <button small (click)="addMedia()">
                 <ion-icon name="camera"></ion-icon> Add Photos
             </button>
-            <button small (click)="edit()">
+        <button small (click)="edit()">
                 <ion-icon name="create"></ion-icon> Edit
             </button>
 
-            <button small (click)="toggleFavourite()">
+        <button small (click)="addFavourite()">
                 <ion-icon name="star"></ion-icon> Favourite
             </button>
-     
+
     </div>
 
 
@@ -61,7 +61,7 @@
     <div *ngIf="selectedTab=='location'" padding class="address-details">
 
         <ion-card *ngIf="poi.AddressInfo">
-            <img src="{{staticMapURL}}" />
+            <img src="{{staticMapURL}}" (click)="launchNavigation()"/>
 
             <ion-card-content>
                 <ion-card-title>
@@ -93,7 +93,7 @@
 
             </ion-card-content>
             <ion-item>
-                <button primary clear item-left>
+                <button primary clear item-left (click)="launchNavigation()">
                 <ion-icon name="navigate"></ion-icon>
                 Navigate
                 </button>
@@ -111,7 +111,7 @@
 
 
         <ion-grid>
-            <ion-row>
+            <ion-row responsive-md>
                 <ion-col width-50>
                     <ion-card>
                         <ion-card-header>
@@ -122,21 +122,23 @@
                             <p *ngIf="poi.UsageType!=null">{{ 'ocm.details.usageType' | translate }}: {{poi.UsageType.Title}}</p>
                             <p *ngIf="poi.UsageCost!=null">{{ 'ocm.details.usageCost' | translate }}: {{poi.UsageCost}}</p>
                             <p *ngIf="poi.GeneralComments!=null"><br>{{ 'ocm.details.generalComments' | translate }}: <br>{{poi.GeneralComments}}</p>
-                            <ion-card-title>
-                                {{ 'ocm.details.operator.sectionTitle' | translate }}
-                            </ion-card-title>
-                            <p padding-left>
-                                {{poi.OperatorInfo.Title}}
-                            </p>
-                            <p *ngIf="poi.OperatorInfo.WebsiteURL!=null">
-                                <ion-icon name="link"></ion-icon> {{poi.OperatorInfo.WebsiteURL}}
-                            </p>
-                            <p *ngIf="poi.OperatorInfo.ContactEmail!=null">
-                                <ion-icon name="mail"></ion-icon> {{poi.OperatorInfo.ContactEmail}}
-                            </p>
-                            <p *ngIf="poi.OperatorInfo.FaultReportEmail!=null && poi.OperatorInfo.FaultReportEmail!=poi.OperatorInfo.ContactEmail">
-                                <ion-icon name="mail"></ion-icon> {{poi.OperatorInfo.FaultReportEmail}}
-                            </p>
+                            <div *ngIf="poi.OperatorInfo">
+                                <ion-card-title>
+                                    {{ 'ocm.details.operator.sectionTitle' | translate }}
+                                </ion-card-title>
+                                <p padding-left>
+                                    {{poi.OperatorInfo.Title}}
+                                </p>
+                                <p *ngIf="poi.OperatorInfo.WebsiteURL">
+                                    <ion-icon name="link"></ion-icon> {{poi.OperatorInfo.WebsiteURL}}
+                                </p>
+                                <p *ngIf="poi.OperatorInfo.ContactEmail!=null">
+                                    <ion-icon name="mail"></ion-icon> {{poi.OperatorInfo.ContactEmail}}
+                                </p>
+                                <p *ngIf="poi.OperatorInfo.FaultReportEmail!=null && poi.OperatorInfo.FaultReportEmail!=poi.OperatorInfo.ContactEmail">
+                                    <ion-icon name="mail"></ion-icon> {{poi.OperatorInfo.FaultReportEmail}}
+                                </p>
+                            </div>
                         </ion-card-content>
                     </ion-card>
                 </ion-col>
@@ -177,14 +179,17 @@
 
 
                             <p *ngIf="poi.NumberOfPoints!=null">{{ 'ocm.details.numberOfPoints' | translate }}: {{poi.NumberOfPoints}}</p>
+                            <div *ngIf="poi.DataProvider">
                             <ion-card-title>
-                                {{ 'ocm.details.dataProvider.sectionTitle' | translate }} 
+                                {{ 'ocm.details.dataProvider.sectionTitle' | translate }}
 
                             </ion-card-title>
-                            <p>{{poi.DataProvider?.Title}}</p>
-                                <a target="_system" href="{{poi.DataProvider.WebsiteURL}}">{{poi.DataProvider.WebsiteURL}}</a>
                             
-                            <p>{{poi.DataProvider.License}}</p>
+                            <p>{{poi.DataProvider?.Title}}</p>
+                            <a *ngIf="poi.DataProvider.WebsiteURL" (click)="launchURL(poi.DataProvider.WebsiteURL)" href="javascript:void(0)">{{poi.DataProvider.WebsiteURL}}</a>
+
+                            <p>{{poi.DataProvider?.License}}</p>
+                            </div>
                         </ion-card-content>
                     </ion-card>
                 </ion-col>
@@ -227,7 +232,7 @@
 
                 </ion-list>
                 <p *ngIf="poi._hasComments==false">
-                     {{ 'ocm.details.commentsAndRatings.zeroComments' | translate }}
+                    {{ 'ocm.details.commentsAndRatings.zeroComments' | translate }}
                 </p>
             </ion-card-content>
         </ion-card>
@@ -263,3 +268,13 @@
     </div>
     <p *ngIf="appManager.isDebugMode==true" style="white-space: pre-wrap;"> {{json}}</p>
 </ion-content>
+<ion-toolbar position="bottom">
+  <ion-buttons start>
+    <button (click)="close()">
+            <ion-icon name="close"></ion-icon>
+      Close
+
+    </button>
+  </ion-buttons>
+  
+</ion-toolbar>

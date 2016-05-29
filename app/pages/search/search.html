@@ -2,13 +2,17 @@
   <ion-toolbar default>
     <ion-buttons start>
 
-      <button (click)="locateUser()">
+      <button (click)="locateUser()" *ngIf="appManager.isRequestInProgress==false" clear>
       <ion-icon name="locate"></ion-icon>
     </button>
+      <button *ngIf="appManager.isRequestInProgress==true" clear>
+    <ion-spinner></ion-spinner>
+    </button>
     </ion-buttons>
-    <ion-searchbar [(ngModel)]="searchKeyword" (input)="getPlacesAutoComplete($event)"  (cancel)="onPlaceSearchCancel($event)"> [debounce]="500"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="searchKeyword" (input)="getPlacesAutoComplete($event)" (cancel)="onPlaceSearchCancel($event)">
+    [debounce]="500"></ion-searchbar>
     <ion-buttons end>
-      <button (click)="openSearchOptions()">
+      <button (click)="openSearchOptions()" clear>
       <ion-icon name="options"></ion-icon>
     </button>
     </ion-buttons>
@@ -16,6 +20,7 @@
 </ion-nav-bar>
 
 <ion-content class="search-page">
+
   <div id="place-search" *ngIf="placeSearchActive==true">
 
     <div id="place-attribution"></div>

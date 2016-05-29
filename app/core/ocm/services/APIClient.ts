@@ -5,14 +5,13 @@
 
 import {Injectable} from '@angular/core';
 import {Http, Headers, RequestOptions} from '@angular/http';
-import {POISearchParams, POIManager} from './POIManager';
-import {AsyncResult, SubmissionType} from '../model/AppModels';
-import {Base, LogLevel} from '../Base';
 import {Observable} from 'rxjs'
-
+import {Base, LogLevel} from '../Base';
+import {AsyncResult, SubmissionType, POISearchParams, GeoLatLng} from '../model/AppModels';
+import {POIManager} from '../services/POIManager';
 
 @Injectable()
-export class APIClient  extends Base{
+export class APIClient extends Base {
     public serviceBaseURL: string = "https://api.openchargemap.io/v3";
     public serviceBaseURL_Standard: string = "https://api.openchargemap.io/v3";
     public serviceBaseURL_Sandbox: string = "https://sandbox.api.openchargemap.io/v2";
@@ -46,7 +45,7 @@ export class APIClient  extends Base{
         return output;
     }
 
-    fetchPOIListByParam(params: POISearchParams, poiManager:POIManager): Observable<any> {
+    fetchPOIListByParam(params: POISearchParams, poiManager: POIManager): Observable<any> {
         var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&compact=true&output=json";
 
         var serviceParams = "";
@@ -80,7 +79,7 @@ export class APIClient  extends Base{
         //+ "&polyline=u`lyH|iW{}D|dHweCboEasA|x@_gAupBs}A{yE}n@ydG}bBi~FybCsnBmeCse@otLm{BshGscAw`E|nDawLykJq``@flAqbRczR";
 
         this.log("API Call:" + apiCallURL, LogLevel.VERBOSE);
-        
+
 
         return this.http.get(apiCallURL)
             .map((res) => {
@@ -89,7 +88,7 @@ export class APIClient  extends Base{
             })
             .catch((error) => {
                 let errMsg = error.message || 'Could not fetch POI list from server.';
-                this.log("API Client: "+errMsg, LogLevel.ERROR); 
+                this.log("API Client: " + errMsg, LogLevel.ERROR);
                 return Observable.throw(errMsg);
             });
     }
@@ -127,7 +126,7 @@ export class APIClient  extends Base{
 
 
         this.log("API Call:" + serviceURL, LogLevel.VERBOSE);
-      
+
         return this.http.get(serviceURL)
             .map((res) => {
                 let refData = res.json();
@@ -135,8 +134,8 @@ export class APIClient  extends Base{
             })
             .catch((error) => {
                 let errMsg = error.message || 'Could not fetch reference data from server.';
-                 this.log("API Client: "+errMsg, LogLevel.ERROR); 
-           
+                this.log("API Client: " + errMsg, LogLevel.ERROR);
+
                 return Observable.throw(errMsg);
             });
 
@@ -173,21 +172,22 @@ export class APIClient  extends Base{
         }
     }
 
-    submitUserComment(data) {
+    submitUserComment(data): Promise<any> {
         var jsonString = JSON.stringify(data);
 
-        return new Promise(resolve => {
-            this.http.post(this.serviceBaseURL + "/comment/?action=comment_submission&format=json", jsonString, this.getHttpRequestOptions()).subscribe(res => {
-                resolve(res.json());
-            });
-        });
+        this.log("[api] Submitting user comment");
+
+        return this.http.post(this.serviceBaseURL + "/comment/?action=comment_submission&format=json", jsonString, this.getHttpRequestOptions()).map(res => {
+            return res.json();
+        }).toPromise();
+
 
     }
 
-    submitMediaItem(data):Promise<any> {
+    submitMediaItem(data): Promise<any> {
         var jsonString = JSON.stringify(data);
-//alert(JSON.stringify(data));
-//return new Promise(resolve=>{resolve(null);});
+        //alert(JSON.stringify(data));
+        //return new Promise(resolve=>{resolve(null);});
         return new Promise(resolve => {
             this.http.post(this.serviceBaseURL + "/comment/?action=mediaitem_submission&format=json", jsonString, this.getHttpRequestOptions()).subscribe(res => {
                 resolve(res.json());
@@ -196,6 +196,16 @@ export class APIClient  extends Base{
 
     }
 
+    getPanoramioLocationPhotos(pos: GeoLatLng): Promise<any> {
+        //
+        return new Promise(resolve => {
+
+            let padding = 0.001;
+            this.http.get("http://www.panoramio.com/map/get_panoramas.php?set=public&from=0&to=2&minx=" + (pos.longitude - padding) + "&miny=" + (pos.latitude - padding) + "&maxx=" + (pos.longitude + padding) + "maxy=" + (pos.latitude + padding) + "&size=medium&mapfilter=true", this.getHttpRequestOptions()).subscribe(res => {
+                resolve(res.json());
+            });
+        });
+    }
     /* fetchLocationById(id, callbackname, errorcallback, disableCaching) {
          var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&output=json&includecomments.=true&chargepointid=" + id;
          if (disableCaching) serviceURL += "&enablecaching=false";

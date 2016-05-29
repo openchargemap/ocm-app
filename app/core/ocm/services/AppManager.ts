@@ -8,10 +8,11 @@ import {Injectable} from '@angular/core';
 import {Events, NavController, Platform, Toast, Loading} from 'ionic-angular';
 import {Base, LogLevel} from '../Base';
 import {JwtHelper} from 'angular2-jwt';
-import {UserProfile, SubmissionType, SearchSettings} from '../model/AppModels'
+import {UserProfile, SubmissionType, SearchSettings, Journey, WayPoint, GeoLatLng} from '../model/AppModels'
 import {SubmissionQueue} from './SubmissionQueue';
 import {ReferenceDataManager} from './ReferenceDataManager';
 import {POIManager} from './POIManager';
+import {JourneyManager} from './JourneyManager';
 
 @Injectable()
 
@@ -20,20 +21,24 @@ export class AppManager extends Base {
     enableSubmissionQueue: boolean;
 
     public referenceDataManager: ReferenceDataManager;
+    public journeyManager : JourneyManager;
     public poiManager: POIManager;
     public searchSettings: SearchSettings;
     public platformMode: string;
+    public journeys: Array<Journey>;
 
     private loading: Loading;
-    public isDebugMode:boolean;
-    
-    public clientWidth:number;
-    public clientHeight:number;
+    public isDebugMode: boolean;
+
+    public clientWidth: number;
+    public clientHeight: number;
+
+    public isRequestInProgress: boolean = false;
 
     constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue, private platform: Platform) {
         super();
         this.api.clientName = "ocm.app.ionic.v6_0_0";
-        this.isDebugMode=false;
+        this.isDebugMode = false;
         this.enableSubmissionQueue = false;
         this.submissionQueue.setAppManager(this);
 
@@ -44,11 +49,14 @@ export class AppManager extends Base {
         }
 
         this.referenceDataManager = new ReferenceDataManager(http);
+        this.journeyManager = new JourneyManager();
         this.poiManager = new POIManager(this);
 
         this.searchSettings = new SearchSettings();
 
         this.loadSearchSettings();
+
+        this.journeyManager.setupTestJourneys();
     }
 
     /**
@@ -110,6 +118,14 @@ export class AppManager extends Base {
         }
 
         return false;
+    }
+
+    public getCurrentAuthToken(): string {
+        if (this.api.authResponse != null) {
+            return this.api.authResponse.Data.access_token;
+        } else {
+            return null;
+        }
     }
 
     public getUserProfile(): UserProfile {
@@ -174,8 +190,31 @@ export class AppManager extends Base {
 
         nav.present(this.loading);
     }
-    public dismissLoadingProgress(){
+    public dismissLoadingProgress() {
         this.loading.dismiss();
     }
 
+    /**
+     * Launch an OCM resource URL with optional authentication token
+     */
+    public launchOCMWebPage(url: string) {
+        if (this.isUserAuthenticated) {
+            if (url.indexOf("?") == -1) {
+                url += "?";
+            }
+            url += "&auth=" + this.getCurrentAuthToken();
+
+        }
+
+        url = "http://openchargemap.org/site" + url;
+        window.open(url, '_system');
+    }
+
+    public launchWebPage(url: string) {
+        window.open(url, '_system');
+    }
+    
+    public isPlatform(platformName:string){
+        return this.platform.is(platformName);
+    }
 }

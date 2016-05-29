@@ -8,3 +8,5 @@ export {PlaceSearchResult} from './PlaceSearchResult';
 export {GeoLatLng, GeoPosition} from './GeoPosition';
 export {SearchSettings} from './SearchSettings';
 export {CoreReferenceData} from './CoreReferenceData';
+export {ConnectionInfo} from './ConnectionInfo';
+export {POISearchParams} from './POISearchParams';

@@ -74,8 +74,8 @@ export class OpenChargeMapApp extends Base implements OnInit {
                 //we can switch over to Native Maps API
             }
             if (platform.is("cordova") && StatusBar) {
-                StatusBar.overlaysWebView(false);
-                StatusBar.show();//styleDefault();
+               // StatusBar.overlaysWebView(false);
+               // StatusBar.hide();//styleDefault();
 
 
             }

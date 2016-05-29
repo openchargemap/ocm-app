@@ -37,14 +37,14 @@
     "typescript": ""
   },
   "name": "io.openchargemap.app",
-  "description": "The Open Data registry of EV charging location",
+  "description": "The Open Data registry of EV charging locations",
   "cordovaPlugins": [
     "cordova-plugin-device",
-    "cordova-plugin-console",
+    "cordova-plugin-geolocation",
     "cordova-plugin-whitelist",
+    "ionic-plugin-keyboard",
     "cordova-plugin-splashscreen",
-    "cordova-plugin-statusbar",
-    "ionic-plugin-keyboard"
+    "cordova-plugin-inappbrowser"
   ],
   "cordovaPlatforms": [
     "android",

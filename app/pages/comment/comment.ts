@@ -22,7 +22,7 @@ export class CommentPage {
             Comment:"", 
             CheckinStatusTypeID:0,
             UserCommentTypeID:10,
-            Rating: null
+            Rating: 4
         };
         
         this.poi = this.navParams.get('poi'); 
@@ -40,7 +40,7 @@ export class CommentPage {
         this.nav.pop();
     }
 
-    addComment() {
+    add() {
           let loading = Loading.create({
             content: "Sending ..",
             dismissOnPageChange: true
@@ -55,7 +55,7 @@ export class CommentPage {
             this.nav.pop();
         }, (rejection) => { 
             alert("There was a problem submitting your comment.");
-
+            loading.dismiss();
         });
         
     }

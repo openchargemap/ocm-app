@@ -100,6 +100,7 @@ export class Mapping extends Base {
 
     private events: Events;
 
+private isFocused:boolean =false;
     /** @constructor */
     constructor(events: Events) {
         super();
@@ -361,10 +362,14 @@ export class Mapping extends Base {
     }
 
     unfocusMap() {
+        this.log("[mapping] Unfocus Map.");
+        this.isFocused=false;
         this.mapProvider.unfocusMap();
     }
 
     focusMap() {
+        this.log("[mapping] Focus Map.");
+        this.isFocused=true;
         this.mapProvider.focusMap();
     }
 
