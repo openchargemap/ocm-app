@@ -7,8 +7,8 @@ import {Injectable} from '@angular/core';
 import {Events} from 'ionic-angular';
 import {Base, LogLevel} from '../Base';
 import {SubmissionQueueItem, SubmissionType} from '../model/AppModels';
-@Injectable()
 
+@Injectable()
 export class SubmissionQueue extends Base {
 
     public isQueueProcessing: boolean;

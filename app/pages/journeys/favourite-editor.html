@@ -22,6 +22,14 @@
         </ion-select>
 
     </ion-item>
+    <ion-item *ngIf="selectedJourneyID">
+        <ion-label stacked>Journey Stage</ion-label>
+         <ion-select [(ngModel)]="selectedStageIndex">
+               <ion-option value="">Create a Journey Stage</ion-option>
+            <ion-option *ngFor="let stage of getJourneyStages(selectedJourneyID)" [value]="stage.Title" checked>{{stage.Title}}</ion-option>
+        </ion-select>
+
+    </ion-item>
       <ion-item *ngIf="!selectedJourneyID">
         <ion-label stacked>New Journey Name</ion-label>
          <ion-input type="text" [(ngModel)]="newJourneyName"></ion-input>

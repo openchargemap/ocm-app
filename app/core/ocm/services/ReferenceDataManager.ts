@@ -10,7 +10,6 @@ import {Http, Response} from '@angular/http';
 import {CoreReferenceData} from '../model/CoreReferenceData';
 
 @Injectable()
-
 /**
  * Manage access to OCM reference data and filtered reference (country specific etc))
  */

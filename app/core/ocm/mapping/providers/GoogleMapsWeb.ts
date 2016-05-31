@@ -93,8 +93,8 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                     google.maps.event.addListener(this.map, 'zoom_changed', function () {
                         mapProviderContext.events.publish('ocm:mapping:zoom');
                     });
-                    
-                     google.maps.event.addListener(this.map, 'idle', function () {
+
+                    google.maps.event.addListener(this.map, 'idle', function () {
                         mapProviderContext.events.publish('ocm:mapping:ready');
                     });
 
@@ -169,12 +169,18 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                             var shadow = null;
                             var markerImg = null;
 
-                            iconURL = "images/icons/map/set4_level" + poiLevel;
+                            iconURL = "images/icons/map/level" + poiLevel;
+
                             if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
                                 iconURL += "_private";
+                            } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
+                                iconURL += "_nonoperational";
+                            } else {
+                                iconURL += "_operational";
                             }
 
-                            iconURL += ".png";
+                            iconURL += "_icon.png";
+
 
                             markerImg = new google.maps.MarkerImage(
                                 iconURL,
@@ -265,11 +271,11 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
         //wrap getCenter in an observable
         let obs = Observable.create(observer => {
             var pos = this.map.getCenter();
-            if (pos != null) { 
-            observer.next(new GeoPosition(pos.lat(), pos.lng()));
-            observer.complete();
-            } 
-            
+            if (pos != null) {
+                observer.next(new GeoPosition(pos.lat(), pos.lng()));
+                observer.complete();
+            }
+
         });
 
         return obs;

@@ -11,18 +11,13 @@ import {JwtHelper} from 'angular2-jwt';
 import {UserProfile, SubmissionType, SearchSettings, Journey, WayPoint, GeoLatLng} from '../model/AppModels'
 import {SubmissionQueue} from './SubmissionQueue';
 import {ReferenceDataManager} from './ReferenceDataManager';
-import {POIManager} from './POIManager';
 import {JourneyManager} from './JourneyManager';
 
 @Injectable()
-
 export class AppManager extends Base {
     jwtHelper = new JwtHelper();
     enableSubmissionQueue: boolean;
 
-    public referenceDataManager: ReferenceDataManager;
-    public journeyManager : JourneyManager;
-    public poiManager: POIManager;
     public searchSettings: SearchSettings;
     public platformMode: string;
     public journeys: Array<Journey>;
@@ -35,7 +30,7 @@ export class AppManager extends Base {
 
     public isRequestInProgress: boolean = false;
 
-    constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue, private platform: Platform) {
+    constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue, private platform: Platform, public referenceDataManager: ReferenceDataManager, public journeyManager: JourneyManager) {
         super();
         this.api.clientName = "ocm.app.ionic.v6_0_0";
         this.isDebugMode = false;
@@ -48,15 +43,17 @@ export class AppManager extends Base {
             this.platformMode = "web";
         }
 
-        this.referenceDataManager = new ReferenceDataManager(http);
-        this.journeyManager = new JourneyManager();
-        this.poiManager = new POIManager(this);
+       // this.referenceDataManager = new ReferenceDataManager(http);
+     
+       // this.poiManager = new POIManager(this);
 
         this.searchSettings = new SearchSettings();
 
         this.loadSearchSettings();
 
-        this.journeyManager.setupTestJourneys();
+
+        //this.journeyManager.setupTestJourneys();
+        this.journeyManager.loadJourneys();
     }
 
     /**

@@ -1,5 +1,6 @@
 import {Page} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
+import {POIManager} from '../../core/ocm/services/POIManager';
 import {SearchSettings} from '../../core/ocm/model/AppModels';
 
 @Page({
@@ -15,7 +16,7 @@ export class SettingsPage {
 
   searchSettings: SearchSettings;
   filterByCountryPref: boolean = true;
-  constructor(public appManager: AppManager) {
+  constructor(public appManager: AppManager, public poiManager: POIManager) {
 
     this.searchSettings = new SearchSettings();
 
@@ -33,6 +34,6 @@ export class SettingsPage {
     this.appManager.saveSearchSettings();
     
     //TODO: publish event to refresh results based on new criteria
-    this.appManager.poiManager.clearResults();
+    this.poiManager.clearResults();
   }
 }

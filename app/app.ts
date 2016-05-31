@@ -7,6 +7,8 @@ import {APIClient} from './core/ocm/services/APIClient';
 import {AppManager} from './core/ocm/services/AppManager'
 import {POIManager} from './core/ocm/services/POIManager'
 import {SubmissionQueue} from './core/ocm/services/SubmissionQueue'
+import {JourneyManager} from './core/ocm/services/JourneyManager';
+import {ReferenceDataManager} from './core/ocm/services/ReferenceDataManager';
 import {Base} from './core/ocm/Base';
 import {TabsPage} from './pages/tabs/tabs';
 
@@ -22,14 +24,18 @@ enableProdMode();
     template: '<ion-nav [root]="rootPage"></ion-nav>',
     providers: [
         AppManager,
+        POIManager,
         Events,
         provide(TranslateLoader, {
             useFactory: (http: Http) => new TranslateStaticLoader(http, 'lang', '.json'),
             deps: [Http]
         }),
         TranslateService,
-
-        APIClient, SubmissionQueue],
+        APIClient, 
+        SubmissionQueue,
+       JourneyManager,
+        ReferenceDataManager
+        ],
     config: {
         mode: "ios"
     }

@@ -41,7 +41,8 @@ export class SearchPage extends Base implements OnInit {
         private navParams: NavParams,
         private events: Events,
         private translate: TranslateService,
-        private platform: Platform
+        private platform: Platform,
+        private poiManager: POIManager
     ) {
         super();
 
@@ -57,6 +58,7 @@ export class SearchPage extends Base implements OnInit {
             Keyboard.disableScroll(true);
         } else {
             this.mapping.setMapAPI(MappingAPI.GOOGLE_WEB);
+            //this.mapping.setMapAPI(MappingAPI.LEAFLET);
         }
 
 
@@ -168,7 +170,7 @@ export class SearchPage extends Base implements OnInit {
 
         var preferredMapHeight = this.getPreferredMapHeight(null);
         //TODO: vary by list type
-        this.mapping.refreshMapView(preferredMapHeight, this.appManager.poiManager.poiList, null);
+        this.mapping.refreshMapView(preferredMapHeight, this.poiManager.poiList, null);
 
         if (!this.mapDisplayed) {
             //centre map on first load
@@ -183,7 +185,7 @@ export class SearchPage extends Base implements OnInit {
     }
 
     getPOIByID(poiID) {
-        var poiList = this.appManager.poiManager.poiList;
+        var poiList = this.poiManager.poiList;
         for (var i = 0; i < poiList.length; i++) {
             if (poiList[i].ID == poiID) {
                 return poiList[i];
@@ -287,7 +289,7 @@ export class SearchPage extends Base implements OnInit {
 
                     //TODO: use stack of requests as may be multiple in sync
                     this.appManager.isRequestInProgress = true;
-                    this.appManager.poiManager.fetchPOIList(params);
+                    this.poiManager.fetchPOIList(params);
                 });
 
 
@@ -310,7 +312,7 @@ export class SearchPage extends Base implements OnInit {
 
         this.log("Viewing/fetching POI Details " + args.poiId);
 
-        this.appManager.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
+        this.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
 
             var poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
             
@@ -400,6 +402,7 @@ export class SearchPage extends Base implements OnInit {
     }
     getPlacesAutoComplete() {
 
+this.appManager.showToastNotification(this.nav, "Starting lookup for "+this.searchKeyword);
         /*let loading = Loading.create({
             content: "Searching..",
             dismissOnPageChange: true,
@@ -417,7 +420,7 @@ export class SearchPage extends Base implements OnInit {
                 this.placeSearchActive = true;
                 //loading.dismiss();
                 if (status != google.maps.places.PlacesServiceStatus.OK) {
-                    // alert(status);
+                    alert(status);
                     return;
                 }
                 var results = predictions;

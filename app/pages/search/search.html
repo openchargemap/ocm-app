@@ -12,7 +12,7 @@
     <ion-searchbar [(ngModel)]="searchKeyword" (input)="getPlacesAutoComplete($event)" (cancel)="onPlaceSearchCancel($event)">
     [debounce]="500"></ion-searchbar>
     <ion-buttons end>
-      <button (click)="openSearchOptions()" clear>
+      <button (click)="openSearchOptions()" >
       <ion-icon name="options"></ion-icon>
     </button>
     </ion-buttons>

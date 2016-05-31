@@ -3,44 +3,47 @@
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 import {AppManager} from './AppManager';
-import {Injectable} from '@angular/core';
+import {Injectable, Inject} from '@angular/core';
+import {Events} from 'ionic-angular';
 import {Observable} from 'rxjs/Observable';
 import {Base, LogLevel} from '../Base';
 import {POISearchParams} from '../Model/AppModels';
-
+import {APIClient} from './APIClient';
+import {ReferenceDataManager} from './ReferenceDataManager';
 
 @Injectable()
-
 export class POIManager extends Base {
 
     poiList;
-    constructor(private appManager: AppManager) {
+    isRequestInProgress:boolean=false;
+    
+    constructor(private api:APIClient, private events:Events, private referenceDataManager:ReferenceDataManager) {
         super();
     }
 
 
     public fetchPOIList(searchParams: POISearchParams) {
 
-        this.appManager.isRequestInProgress = true;
-        this.appManager.api.fetchPOIListByParam(searchParams, this)
+        this.isRequestInProgress = true;
+        this.api.fetchPOIListByParam(searchParams, this)
             .subscribe(
             (results) => {
                 console.log('fetched POI list:');
                 this.poiList = results;
-                this.appManager.events.publish('ocm:poiList:updated');
-                this.appManager.isRequestInProgress = false;
+                this.events.publish('ocm:poiList:updated');
+                //this.appManager.isRequestInProgress = false;
             },
 
             (reason) => {
                 //alert(JSON.stringify(reason));
-                this.appManager.isRequestInProgress = false;
+                this.isRequestInProgress = false;
             }
             );
     }
 
     public clearResults() {
         this.poiList = [];
-        this.appManager.events.publish('ocm:poiList:cleared');
+        this.events.publish('ocm:poiList:cleared');
         this.log('clearing results after settings change', LogLevel.VERBOSE);
     }
 
@@ -65,14 +68,14 @@ export class POIManager extends Base {
         //still not found it, fetch via api
         var params = new POISearchParams();
         params.poiIdList = [poiId];
-        return this.appManager.api.fetchPOIListByParam(params, this);
+        return this.api.fetchPOIListByParam(params, this);
     }
 
 
 
     hydrateCompactPOI(poi: any): Array<any> {
 
-        let refData = this.appManager.referenceDataManager;
+        let refData = this.referenceDataManager;
 
         if (poi.DataProviderID != null && poi.DataProvider == null) {
             poi.DataProvider = refData.getDataProviderByID(poi.DataProviderID);

@@ -95,7 +95,7 @@ export class LeafletMap extends Base implements IMapProvider {
     /** Clear current markers */
     clearMarkers() {
         if (this.markerList != null) {
-            this.log("Clearing all markers ["+this.markerList.size()+"]");
+            this.log("Clearing all markers [" + this.markerList.size() + "]");
             for (var i = 0; i < this.markerList.size(); i++) {
                 if (this.markerList[i]) {
                     this.markerList[i].setMap(null);
@@ -126,13 +126,7 @@ export class LeafletMap extends Base implements IMapProvider {
         if (poiList != null) {
             //render poi markers
 
-            var defaultMarkerIcon = L.icon({
-                iconUrl: 'images/icons/map/set4_level0.png',
 
-                iconSize: [34, 50], // size of the icon
-                iconAnchor: [15, 45] // point of the icon which will correspond to marker's location
-                // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-            });
 
             var poiCount = poiList.length;
             for (var i = 0; i < poiList.length; i++) {
@@ -160,13 +154,24 @@ export class LeafletMap extends Base implements IMapProvider {
                             var shadow = null;
                             var markerImg = null;
 
-                            iconURL = "images/icons/map/set4_level" + poiLevel;
+                            iconURL = "images/icons/map/level" + poiLevel;
                             if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
                                 iconURL += "_private";
+                            } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
+                                iconURL += "_nonoperational";
+                            } else {
+                                iconURL += "_operational";
                             }
 
-                            iconURL += ".png";
+                            iconURL += "_icon.png";
 
+                            var defaultMarkerIcon = L.icon({
+                                iconUrl: iconURL,
+
+                                iconSize: [34, 50], // size of the icon
+                                iconAnchor: [15, 45] // point of the icon which will correspond to marker's location
+                                // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+                            });
 
                             var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
                             if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
@@ -260,10 +265,10 @@ export class LeafletMap extends Base implements IMapProvider {
     }
 
     setMapZoom(zoomLevel: number) {
-        if (this.mapReady){
-        this.map.setZoom(zoomLevel);    
+        if (this.mapReady) {
+            this.map.setZoom(zoomLevel);
         }
-        
+
     }
 
     getMapZoom(): Observable<number> {

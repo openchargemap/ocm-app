@@ -169,12 +169,18 @@ this.map.setDebuggable(true);
                             var shadow = null;
                             var markerImg = null;
 
-                            iconURL = "images/icons/map/set4_level" + poiLevel;
+                            iconURL = "images/icons/map/level" + poiLevel;
+
                             if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
                                 iconURL += "_private";
+                            } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
+                                iconURL += "_nonoperational";
+                            } else {
+                                iconURL += "_operational";
                             }
 
-                            iconURL += ".png";
+                            iconURL += "_icon.png";
+
 
                             var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
                             if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;

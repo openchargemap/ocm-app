@@ -7,26 +7,39 @@
     <p>
         You can create and plan journeys to group your favourite charging routes together.
     </p>
+    
+    <p *ngIf="appManager.journeyManager.journeys==null || appManager.journeyManager.journeys.length==0">
+        You have no journeys yet. Start by browsing to a charging location, then add it as Favourite to start a new Journey.
+        <button (click)="test()">test</button>
+        </p>
   
         <ion-card *ngFor="let journey of appManager.journeyManager.journeys">
             <ion-card-title>
-                {{journey.Title}}
+                  {{journey.Title}}
             </ion-card-title>
-            <ion-icon name="map" item-left></ion-icon>
+         
             <ion-card-content>
+                 <ion-avatar>
+               <ion-icon name="map" item-left style="font-size:4em;"></ion-icon>
+              </ion-avatar>
                 <p>{{journey.Notes}}</p>
-                <ion-list>
-                    <ion-item *ngFor="let w of journey.WayPoints">
-                        <ul>{{w.Title}}..
+                <button (click)="journeyManager.deleteJourney(journey.ID)">Delete</button>
+                <div *ngFor="let s of journey.Stages">
+                    <p>{{s.Title}}</p>
+                    <div *ngFor="let w of s.WayPoints">
+                       <h2>{{w.Title}}</h2>
+                        <p>{{w.Notes}}</p>
+                        <ul>
 
                             <li *ngFor="let p of w.PoiList">
-                                {{p.AddressInfo.Title}} - [OCM-{{p.ID}}]
+                                {{p.AddressInfo.Title}} - <button (click)="viewPOIDetails(p)"> [OCM-{{p.ID}}]</button>
                                 
                                 <a href="{{'http://www.panoramio.com/map/get_panoramas.php?set=public&from=0&to=2&minx=' + (p.AddressInfo.longitude) + '&miny=' + (p.AddressInfo.Latitue)+'size=medium&mapfilter=true'}}">Images</a>
                             </li>
                         </ul>
-                    </ion-item>
-                </ion-list>
+                        
+                    </div>
+                </div>
             </ion-card-content>
            
   </ion-card>
