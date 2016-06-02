@@ -11,7 +11,7 @@ class JourneyBaseItem implements ISyncItem {
     public Notes: string;
     public _sync: SyncItem;
 
-    constructor(itemType: string, schemaVersion:number) {
+    constructor(itemType: string, schemaVersion: number) {
         this._sync = new SyncItem(itemType, schemaVersion);
     }
 }
@@ -20,7 +20,7 @@ export class BookmarkedPOI extends JourneyBaseItem implements ISyncItem {
     public PoiID: number;
     public Type: string;
     public Poi: any;
-
+    public Photos: any;
     public _sync: SyncItem;
 }
 

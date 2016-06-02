@@ -201,7 +201,9 @@ export class APIClient extends Base {
         return new Promise(resolve => {
 
             let padding = 0.001;
-            this.http.get("http://www.panoramio.com/map/get_panoramas.php?set=public&from=0&to=2&minx=" + (pos.longitude - padding) + "&miny=" + (pos.latitude - padding) + "&maxx=" + (pos.longitude + padding) + "maxy=" + (pos.latitude + padding) + "&size=medium&mapfilter=true", this.getHttpRequestOptions()).subscribe(res => {
+            var url = "http://www.panoramio.com/map/get_panoramas.php?set=public&from=0&to=2&minx=" + (pos.longitude - padding) + "&miny=" + (pos.latitude - padding) + "&maxx=" + (pos.longitude + padding) + "maxy=" + (pos.latitude + padding) + "&size=medium&mapfilter=true&callback=?";
+            console.log(url);
+            this.http.get(url).subscribe(res => {
                 resolve(res.json());
             });
         });

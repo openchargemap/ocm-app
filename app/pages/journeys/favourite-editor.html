@@ -18,7 +18,7 @@
         <ion-label stacked>Add to a Journey</ion-label>
         <ion-select [(ngModel)]="selectedJourneyID">
                <ion-option value="" checked>Create a New Journey</ion-option>
-            <ion-option *ngFor="let journey of appManager.journeyManager.journeys" [value]="journey.ID">{{journey.Title}}</ion-option>
+            <ion-option *ngFor="let journey of journeyManager.journeys" [value]="journey.ID">{{journey.Title}}</ion-option>
         </ion-select>
 
     </ion-item>
@@ -26,7 +26,7 @@
         <ion-label stacked>Journey Stage</ion-label>
          <ion-select [(ngModel)]="selectedStageIndex">
                <ion-option value="">Create a Journey Stage</ion-option>
-            <ion-option *ngFor="let stage of getJourneyStages(selectedJourneyID)" [value]="stage.Title" checked>{{stage.Title}}</ion-option>
+            <ion-option *ngFor="let stage of journeyManager.getJourneyStages(selectedJourneyID); let i=index;" [value]="i" checked>{{stage.Title}}</ion-option>
         </ion-select>
 
     </ion-item>

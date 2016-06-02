@@ -77,26 +77,32 @@ export class JourneyManager extends Base {
     public updateStoredPOI(poi) {
 
         //updated all journeys which use this poi, TODO: this is messy
-        if (this.journeys != null) {
-            for (let j of this.journeys) {
-                if (j.Stages != null) {
-                    for (let s of j.Stages) {
-                        if (s.WayPoints != null) {
-                            for (let w of s.WayPoints) {
-                                if (w.PoiIDs != null) {
-                                    for (let p of w.PoiIDs) {
-                                        if (p == poi.ID) {
-                                            if (w.PoiList == null) w.PoiList = [];
-                                            w.PoiList.push(poi);
-                                        }
+        this.journeys.forEach(j => {
+            j.Stages.forEach(s => {
+                s.WayPoints.forEach(w => {
+                    w.PoiIDs.forEach(p => {
+                        if (p == poi.ID) {
+                            if (w.PoiList == null) {
+                                //start new bookmarks list
+                                w.PoiList = [];
+                                let bookmark = new BookmarkedPOI("charging", 1);
+                                bookmark.Poi = poi;
+                                bookmark.PoiID = poi.ID;
+                                w.PoiList.push(bookmark);
+                            } else {
+                                //update existing bookmark
+                                for (let b of w.PoiList) {
+                                    if (b.PoiID == poi.ID) {
+                                        b.Poi = poi;
                                     }
                                 }
                             }
                         }
-                    }
-                }
-            }
-        }
+                    });
+                });
+            });
+        });
+
 
 
         //update all favourites with latest info
@@ -115,7 +121,10 @@ export class JourneyManager extends Base {
         for (let j of cloneOfJourneys) {
             for (let s of j.Stages) {
                 for (let w of s.WayPoints) {
-                    w.PoiList = null;
+                    for (let p of w.PoiList) {
+                        p.Poi = null;
+                        p.Photos=null;
+                    }
                 }
             }
         }
@@ -140,11 +149,11 @@ export class JourneyManager extends Base {
         journey.Stages.push(newStage);
         this.journeys.push(journey);
 
-        alert(JSON.stringify(journey, null, 4));
+
     }
-    
-    public deleteJourney(journeyId:string){
-        this.journeys = this.journeys.filter(f=>f.ID!=journeyId);
+
+    public deleteJourney(journeyId: string) {
+        this.journeys = this.journeys.filter(f => f.ID != journeyId);
         this.saveJourneys();
     }
 
@@ -161,13 +170,29 @@ export class JourneyManager extends Base {
         }
     }
 
+    public getJourneyStages(journeyId: string) {
+        let j = this.getJourney(journeyId);
+        return j.Stages;
+    }
+
     /**
      * Add a WayPoint to the journey at the given stage index (stage must already exist)
      */
     public addJourneyWaypoint(journeyId: string, stageIndex: number, waypoint: WayPoint) {
         let journey = this.getJourney(journeyId);
-        let stage = journey.Stages[stageIndex];
-        stage.WayPoints.push(waypoint);
+
+        if (stageIndex == null) {
+            //create new journey stage, then add waypoint
+            var newStage: JourneyStage = new JourneyStage();
+            newStage.Title = "Stage " + journey.Stages.length + 1;
+            newStage.WayPoints.push(waypoint);
+            journey.Stages.push(newStage);
+        } else {
+            //add to existing journey stage
+            let stage = journey.Stages[stageIndex];
+            if (stage.WayPoints == null) stage.WayPoints = [];
+            stage.WayPoints.push(waypoint);
+        }
     }
 
     /**
