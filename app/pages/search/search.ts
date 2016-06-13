@@ -2,7 +2,7 @@
 /// <reference path="../../lib/typings/collections/collections.d.ts" />
 import {Component, OnInit} from '@angular/core';
 import {Http} from '@angular/http';
-import {IonicApp, Page, NavController, NavParams, Events, Platform, Loading, Modal} from 'ionic-angular';
+import {NavController, NavParams, Events, Platform, Loading, Modal} from 'ionic-angular';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {Keyboard} from 'ionic-native';
 import {PlaceSearchResult, GeoLatLng, POISearchParams} from '../../core/ocm/model/AppModels';
@@ -17,7 +17,7 @@ import {SettingsPage} from '../settings/settings';
 import {SignInPage} from '../signin/signin';
 
 
-@Page({
+@Component({
     templateUrl: 'build/pages/search/search.html',
     pipes: [TranslatePipe] // add in each component to invoke the transform method
 
@@ -35,6 +35,7 @@ export class SearchPage extends Base implements OnInit {
     private placeSearchActive: boolean = false;
     private searchKeyword: string;
     private placeSearchFocussed: boolean = false;
+    private searchOnDemand: boolean = true;
     constructor(
         private appManager: AppManager,
         private nav: NavController,
@@ -64,13 +65,13 @@ export class SearchPage extends Base implements OnInit {
 
     }
 
-    onPageDidEnter() {
+    ionViewDidEnter() {
         this.log("Entered search page.", LogLevel.VERBOSE);
         //give input focus to native map
         this.mapping.focusMap();
     }
 
-    onPageWillLeave() {
+    ionViewWillLeave() {
         //remove input focus from native map
         this.log("Leavings search page.", LogLevel.VERBOSE);
         this.mapping.unfocusMap();
@@ -196,7 +197,13 @@ export class SearchPage extends Base implements OnInit {
 
 
     refreshResultsAfterMapChange() {
-        this.log("Refreshing Results..", LogLevel.VERBOSE);
+        if (!this.searchOnDemand) {
+            this.log("Skipping refresh, search on demand disabled..", LogLevel.VERBOSE);
+            return;
+        } else {
+            this.log("Refreshing Results..", LogLevel.VERBOSE);
+        }
+
 
         this.initialResultsShown = true;
         //this.appState.isSearchInProgress = true;
@@ -311,19 +318,19 @@ export class SearchPage extends Base implements OnInit {
 
 
         this.log("Viewing/fetching POI Details " + args.poiId);
-
+        this.searchOnDemand = false; //suspend searches
         this.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
 
-            var poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
-            
-            poiDetailsModal.onDismiss(()=>{
+            let poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
+
+            poiDetailsModal.onDismiss(() => {
                 //should focus map again..
-         this.mapping.focusMap();
+                this.log("Dismissing POI Details.");
+                this.mapping.focusMap();
+                this.searchOnDemand = true;
             });
             this.mapping.unfocusMap();
-            this.nav.present(poiDetailsModal).then(() => {
-                poiDetailsModal.showBackButton(true);
-            })
+            this.nav.present(poiDetailsModal);
 
         }, (err) => {
 
@@ -402,7 +409,7 @@ export class SearchPage extends Base implements OnInit {
     }
     getPlacesAutoComplete() {
 
-this.appManager.showToastNotification(this.nav, "Starting lookup for "+this.searchKeyword);
+        this.appManager.showToastNotification(this.nav, "Starting lookup for " + this.searchKeyword);
         /*let loading = Loading.create({
             content: "Searching..",
             dismissOnPageChange: true,

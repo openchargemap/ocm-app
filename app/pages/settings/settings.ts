@@ -1,9 +1,9 @@
-import {Page} from 'ionic-angular';
+import {Component} from '@angular/core';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {POIManager} from '../../core/ocm/services/POIManager';
 import {SearchSettings} from '../../core/ocm/model/AppModels';
 
-@Page({
+@Component({
   templateUrl: 'build/pages/settings/settings.html'
 })
 export class SettingsPage {
@@ -28,7 +28,7 @@ export class SettingsPage {
     //TODO reference data manager with filtered versions of reference type lists
   }
   
-  onPageWillLeave() {
+  ionViewWillLeave() {
     //save search settings
     this.appManager.searchSettings=this.searchSettings;
     this.appManager.saveSearchSettings();

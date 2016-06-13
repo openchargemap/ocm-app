@@ -1,9 +1,10 @@
-import {Page, NavParams, NavController} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavParams, NavController} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {Journey, WayPoint, GeoLatLng, BookmarkedPOI} from '../../core/ocm/model/AppModels';
 import {JourneyManager} from '../../core/ocm/services/JourneyManager';
 
-@Page({
+@Component({
   templateUrl: 'build/pages/journeys/favourite-editor.html',
 })
 

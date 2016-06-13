@@ -1,9 +1,9 @@
-import {Page, NavController, NavParams, Modal, Alert, Loading} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController, NavParams, Modal, Alert, Loading} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {UserComment} from '../../core/ocm/model/AppModels';
 
-
-@Page({
+@Component({
     templateUrl: 'build/pages/comment/comment.html',
     directives: []
 })

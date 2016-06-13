@@ -1,10 +1,11 @@
-import {Page, NavController, Modal, Alert} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController, Modal, Alert} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {SignInPage} from '../signin/signin';
 import {MediaUploadPage} from '../mediaupload/mediaupload';
 import {CommentPage} from '../comment/comment';
 
-@Page({
+@Component({
     templateUrl: 'build/pages/profile/profile.html'
 })
 export class ProfilePage {
@@ -14,7 +15,7 @@ export class ProfilePage {
 
     }
 
-    onPageDidEnter() {
+    ionViewDidEnter() {
 
         this.userProfile = this.appManager.getUserProfile();
 

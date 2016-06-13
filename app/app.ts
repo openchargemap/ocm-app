@@ -1,7 +1,7 @@
-import {App, Platform, Config, Events, NavController} from 'ionic-angular';
+import {Platform, Config, Events, NavController, ionicBootstrap} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {Http, ConnectionBackend} from '@angular/http';
-import {OnInit, provide, enableProdMode} from '@angular/core';
+import {Component, OnInit, provide, enableProdMode} from '@angular/core';
 
 import {APIClient} from './core/ocm/services/APIClient';
 import {AppManager} from './core/ocm/services/AppManager'
@@ -20,25 +20,8 @@ declare var Connection: any;
 
 enableProdMode();
 
-@App({
-    template: '<ion-nav [root]="rootPage"></ion-nav>',
-    providers: [
-        AppManager,
-        POIManager,
-        Events,
-        provide(TranslateLoader, {
-            useFactory: (http: Http) => new TranslateStaticLoader(http, 'lang', '.json'),
-            deps: [Http]
-        }),
-        TranslateService,
-        APIClient, 
-        SubmissionQueue,
-       JourneyManager,
-        ReferenceDataManager
-        ],
-    config: {
-        mode: "ios"
-    }
+@Component({
+    template: '<ion-nav [root]="rootPage"></ion-nav>'
 })
 
 
@@ -80,8 +63,8 @@ export class OpenChargeMapApp extends Base implements OnInit {
                 //we can switch over to Native Maps API
             }
             if (platform.is("cordova") && StatusBar) {
-               // StatusBar.overlaysWebView(false);
-               // StatusBar.hide();//styleDefault();
+                // StatusBar.overlaysWebView(false);
+                // StatusBar.hide();//styleDefault();
 
 
             }
@@ -168,3 +151,21 @@ export class OpenChargeMapApp extends Base implements OnInit {
     }
 }
 
+ionicBootstrap(OpenChargeMapApp, [
+    AppManager,
+    POIManager,
+    Events,
+    provide(TranslateLoader, {
+        useFactory: (http: Http) => new TranslateStaticLoader(http, 'lang', '.json'),
+        deps: [Http]
+    }),
+    TranslateService,
+    APIClient,
+    SubmissionQueue,
+    JourneyManager,
+    ReferenceDataManager
+], {
+        //config
+        prodMode:true,
+        mode:"ios"
+    });

@@ -1,11 +1,11 @@
-import {Page} from 'ionic-angular';
+import {Component} from '@angular/core';
 import {SearchPage} from '../search/search';
 import {JourneysPage} from '../journeys/journeys';
 import {SettingsPage} from '../settings/settings';
 import {ProfilePage} from '../profile/profile';
 import {AppManager} from '../../core/ocm/services/AppManager';
 
-@Page({
+@Component({
     templateUrl: 'build/pages/tabs/tabs.html'
 })
 export class TabsPage {

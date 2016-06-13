@@ -1,11 +1,12 @@
-import {Page, Modal, NavController, Alert} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {Modal, NavController, Alert} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {Journey, WayPoint, GeoLatLng} from '../../core/ocm/model/AppModels';
 import {JourneyManager} from '../../core/ocm/services/JourneyManager';
 import {APIClient} from '../../core/ocm/services/APIClient';
 import {POIDetailsPage} from '../poi-details/poi-details';
 
-@Page({
+@Component({
   templateUrl: 'build/pages/journeys/journeys.html',
 })
 
@@ -16,9 +17,9 @@ export class JourneysPage {
 
   constructor(private appManager: AppManager, private nav: NavController, private journeyManager: JourneyManager, private api: APIClient) {
 
-    this.discoverImages();
+    //this.discoverImages();
 
-    console.log(JSON.stringify(this.journeyManager.journeys, null, 4));
+    //console.log(JSON.stringify(this.journeyManager.journeys, null, 4));
   }
 
   discoverImages() {

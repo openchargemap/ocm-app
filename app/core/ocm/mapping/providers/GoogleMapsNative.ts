@@ -57,7 +57,7 @@ export class GoogleMapsNative extends Base implements IMapProvider {
             if (this.map == null) {
                 var mapCanvas = document.getElementById(mapCanvasID);
                 this.map = plugin.google.maps.Map.getMap();
-this.map.setDebuggable(true);
+//this.map.setDebuggable(true);
                 var mapManagerContext = this;
 
                 //setup map manipulation events
@@ -205,7 +205,8 @@ this.map.setDebuggable(true);
                                 }
                             }, (marker) => {
                                 //show full details when info window tapped
-                                marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
+                                //marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
+                                    marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function () {
                                     var markerTitle = marker.getTitle();
                                     var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
 

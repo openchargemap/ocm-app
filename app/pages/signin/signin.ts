@@ -1,9 +1,10 @@
-import {Page, NavController, NavParams, Alert, Loading} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController, NavParams, Alert, Loading} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {UserProfile, AsyncResult} from '../../core/ocm/model/AppModels';
 
 
-@Page({
+@Component({
     templateUrl: 'build/pages/signin/signin.html'
 })
 export class SignInPage {

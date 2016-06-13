@@ -1,8 +1,9 @@
-import {Page, NavController, NavParams, Modal, Alert} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController, NavParams, Modal, Alert} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {Camera} from 'ionic-native';
 
-@Page({
+@Component({
     templateUrl: 'build/pages/mediaupload/mediaupload.html'
 })
 export class MediaUploadPage {
@@ -30,14 +31,6 @@ export class MediaUploadPage {
         this.poi = this.navParams.get('poi');
         this.comment = "test";
     }
-
-    onPageWillEnter() {
-
-
-
-    }
-
-
 
     loadCameraOrLibraryImage() {
 

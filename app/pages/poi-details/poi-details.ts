@@ -1,11 +1,12 @@
-import {IonicApp, Page, NavController, NavParams, ViewController, Modal, ActionSheet} from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController, NavParams, ViewController, Modal, ActionSheet} from 'ionic-angular';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {MediaUploadPage} from '../mediaupload/mediaupload';
 import {CommentPage} from '../comment/comment';
 import {FavouriteEditorPage} from '../journeys/favourite-editor';
 
-@Page({
+@Component({
     templateUrl: 'build/pages/poi-details/poi-details.html',
     pipes: [TranslatePipe]
 })
@@ -15,10 +16,14 @@ export class POIDetailsPage {
     selectedTab: string;
     json: string;
 
-    constructor(private appManager: AppManager, private nav: NavController, navParams: NavParams, private translate: TranslateService, private view: ViewController) {
+    constructor(private appManager: AppManager, private nav: NavController, private navParams: NavParams, private translate: TranslateService, private view: ViewController) {
 
         // If we navigated to this page, we will have an item available as a nav param
-        this.poi = navParams.get('item');
+
+
+        //this.json = JSON.stringify(this.poi, null, 1);
+
+        this.poi = this.navParams.get('item');
         this.selectedTab = "location";
 
         //create temporary properties for view model
@@ -36,8 +41,10 @@ export class POIDetailsPage {
         } else {
             this.poi._hasComments = false;
         }
+    }
 
-        //this.json = JSON.stringify(this.poi, null, 1);
+    ionViewWillEnter() {
+        
     }
     get staticMapURL(): string {
 
@@ -152,5 +159,9 @@ export class POIDetailsPage {
         this.nav.pop();
     }
 
-
+    dismiss() {
+        if (console && console.log) {
+            console.log("in poi details dismiss");
+        }
+    }
 }
