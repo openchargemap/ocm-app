@@ -143,7 +143,7 @@ export class APIClient extends Base {
 
     performSignIn(username: string, password: string) {
 
-        var serviceURL = this.serviceBaseURL + "/profile/signin/";
+        var serviceURL = this.serviceBaseURL + "/profile/authenticate/";
 
         var data = { "emailaddress": username, "password": password };
 
@@ -177,7 +177,7 @@ export class APIClient extends Base {
 
         this.log("[api] Submitting user comment");
 
-        return this.http.post(this.serviceBaseURL + "/comment/?action=comment_submission&format=json", jsonString, this.getHttpRequestOptions()).map(res => {
+        return this.http.post(this.serviceBaseURL + "/comment/", jsonString, this.getHttpRequestOptions()).map(res => {
             return res.json();
         }).toPromise();
 

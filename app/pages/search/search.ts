@@ -1,6 +1,6 @@
 /// <reference path="../../lib/typings/googlemaps/google.maps.d.ts" />
 /// <reference path="../../lib/typings/collections/collections.d.ts" />
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, NgZone} from '@angular/core';
 import {Http} from '@angular/http';
 import {NavController, NavParams, Events, Platform, Loading, Modal} from 'ionic-angular';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
@@ -43,7 +43,8 @@ export class SearchPage extends Base implements OnInit {
         private events: Events,
         private translate: TranslateService,
         private platform: Platform,
-        private poiManager: POIManager
+        private poiManager: POIManager,
+        private zone: NgZone
     ) {
         super();
 
@@ -319,23 +320,30 @@ export class SearchPage extends Base implements OnInit {
 
         this.log("Viewing/fetching POI Details " + args.poiId);
         this.searchOnDemand = false; //suspend searches
-        this.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
+        //this.zone.run(() => {
+            this.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
 
-            let poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
+                this.log("Got POI Details " + poi.ID);
+                let poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
 
-            poiDetailsModal.onDismiss(() => {
-                //should focus map again..
-                this.log("Dismissing POI Details.");
-                this.mapping.focusMap();
-                this.searchOnDemand = true;
+                poiDetailsModal.onDismiss(() => {
+                    //should focus map again..
+                    this.log("Dismissing POI Details.");
+                    this.mapping.focusMap();
+                    this.searchOnDemand = true;
+                });
+                this.mapping.unfocusMap();
+
+                this.nav.present(poiDetailsModal);
+
+            }, (err) => {
+
+                this.appManager.showToastNotification(this.nav, "POI Details not available");
             });
-            this.mapping.unfocusMap();
-            this.nav.present(poiDetailsModal);
 
-        }, (err) => {
+       // });
 
-            this.appManager.showToastNotification(this.nav, "POI Details not available");
-        });
+
         /*
     if (args.poi != null) {
         this.log("Viewing POI Details " + args.poi.ID);

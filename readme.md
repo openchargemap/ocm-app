@@ -36,6 +36,7 @@ ionic plugin rm cordova-plugin-whitelist
 ionic plugin rm cordova-plugin-wkwebview-engine
 ionic plugin rm ionic-plugin-keyboard
 ionic plugin rm cordova-plugin-splashscreen
+ionic plugin rm cordova-plugin-inappbrowser
 
     -note: not having the correct splashscreen image will cause loading errors
 
@@ -47,3 +48,4 @@ ionic plugin add cordova-plugin-whitelist
 ionic plugin add cordova-plugin-wkwebview-engine
 ionic plugin add ionic-plugin-keyboard
 ionic plugin add cordova-plugin-splashscreen
+ionic plugin add cordova-plugin-inappbrowser

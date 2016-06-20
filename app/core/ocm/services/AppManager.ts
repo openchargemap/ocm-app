@@ -61,7 +61,11 @@ export class AppManager extends Base {
      */
     public loadSearchSettings() {
         if (localStorage.getItem('searchSettings') != null) {
+            try {
             this.searchSettings = JSON.parse(localStorage.getItem('searchSettings'));
+            } catch(ex){
+                this.searchSettings=new SearchSettings();
+            }
         }
     }
 
