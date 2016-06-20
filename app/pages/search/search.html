@@ -5,7 +5,7 @@
       <button (click)="locateUser()" *ngIf="appManager.isRequestInProgress==false" clear>
       <ion-icon name="locate"></ion-icon>
     </button>
-      <button *ngIf="appManager.isRequestInProgress==true" clear>
+      <button *ngIf="appManager.isRequestInProgress" clear>
     <ion-spinner></ion-spinner>
     </button>
     </ion-buttons>

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, NgZone} from '@angular/core';
 import {NavController, NavParams, Modal, Alert, Loading} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {UserComment} from '../../core/ocm/model/AppModels';
@@ -15,7 +15,7 @@ export class CommentPage {
 
     commentTypes: any;
     checkinTypes: any;
-    constructor(private navParams: NavParams, public appManager: AppManager, public nav: NavController) {
+    constructor(private navParams: NavParams, public appManager: AppManager, public nav: NavController, private zone:NgZone) {
 
         this.commentModel = <UserComment>{
             ChargePointID: this.navParams.get('id'),
@@ -52,8 +52,10 @@ export class CommentPage {
 
 
         this.appManager.submitComment(this.commentModel).then((response) => {
-            alert("Comment Published.");
-            this.nav.pop();
+            alert("Your comment has been Published.");
+            this.zone.run(()=>{
+             this.nav.pop();
+            });
         }) /*, (rejection) => {
             /*if (rejection == null  && rejection.ok && rejection.ok == true) {
                 this.nav.pop();

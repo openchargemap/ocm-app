@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, NgZone} from '@angular/core';
 import {NavController, NavParams, Alert, Loading} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {UserProfile, AsyncResult} from '../../core/ocm/model/AppModels';
@@ -11,7 +11,7 @@ export class SignInPage {
     email: string;
     password: string;
 
-    constructor(public appManager: AppManager, public nav: NavController, params: NavParams) {
+    constructor(public appManager: AppManager, public nav: NavController, params: NavParams, private zone:NgZone) {
         this.email = "test@gmail.com";
 
         var currentProfile = <UserProfile>params.get("Profile");
@@ -40,7 +40,10 @@ export class SignInPage {
 
             localStorage.setItem("authResponse", JSON.stringify(this.appManager.api.authResponse));
 
-            this.nav.popToRoot();
+            this.zone.run(()=>{
+             this.nav.popToRoot();
+            });
+            
           
         }, (reason?: AsyncResult) => {
 
