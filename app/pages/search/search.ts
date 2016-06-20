@@ -320,28 +320,32 @@ export class SearchPage extends Base implements OnInit {
 
         this.log("Viewing/fetching POI Details " + args.poiId);
         this.searchOnDemand = false; //suspend searches
-        this.zone.run(() => {
-            this.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
 
-                this.log("Got POI Details " + poi.ID);
-                let poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
 
-                poiDetailsModal.onDismiss(() => {
-                    //should focus map again..
-                    this.log("Dismissing POI Details.");
-                    this.mapping.focusMap();
-                    this.searchOnDemand = true;
-                });
-                this.mapping.unfocusMap();
+        this.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
 
+            this.log("Got POI Details " + poi.ID);
+            let poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
+
+            poiDetailsModal.onDismiss(() => {
+                //should focus map again..
+                this.log("Dismissing POI Details.");
+                this.mapping.focusMap();
+                this.searchOnDemand = true;
+            });
+            this.mapping.unfocusMap();
+
+            this.zone.run(() => {
                 this.nav.present(poiDetailsModal);
-
-            }, (err) => {
-
-                this.appManager.showToastNotification(this.nav, "POI Details not available");
             });
 
+
+        }, (err) => {
+
+            this.appManager.showToastNotification(this.nav, "POI Details not available");
         });
+
+
 
 
         /*
