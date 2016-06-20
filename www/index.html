@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 
 <head>
     <meta charset="UTF-8">
@@ -16,18 +16,21 @@
     <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
 </head>
 
-<body class="md">
+<body>
 
     <ion-app></ion-app>
 
     <script src="cordova.js"></script>
-
+    <script src="build/js/es6-shim.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?libraries=places&signed_in=true&"></script>
     <!--key=AIzaSyASE98mCjV1bqG4u2AUHqftB8Vz3zr2sEg-->
     <!-- Zone.js and Reflect-metadata  -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=Intl.~locale.en"></script>
-    <script src="build/js/zone.js"></script>
+
+    <!-- Zone.js and Reflect-metadata  -->
     <script src="build/js/Reflect.js"></script>
+    <script src="build/js/zone.js"></script>
+
     <script src="lib/collections.js"></script>
     <script src="lib/leaflet/leaflet.js"></script>
     <script src="lib/leaflet/leaflet-providers.js"></script>

@@ -320,7 +320,7 @@ export class SearchPage extends Base implements OnInit {
 
         this.log("Viewing/fetching POI Details " + args.poiId);
         this.searchOnDemand = false; //suspend searches
-        //this.zone.run(() => {
+        this.zone.run(() => {
             this.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
 
                 this.log("Got POI Details " + poi.ID);
@@ -341,7 +341,7 @@ export class SearchPage extends Base implements OnInit {
                 this.appManager.showToastNotification(this.nav, "POI Details not available");
             });
 
-       // });
+        });
 
 
         /*

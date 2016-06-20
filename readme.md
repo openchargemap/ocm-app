@@ -49,3 +49,7 @@ ionic plugin add cordova-plugin-wkwebview-engine
 ionic plugin add ionic-plugin-keyboard
 ionic plugin add cordova-plugin-splashscreen
 ionic plugin add cordova-plugin-inappbrowser
+
+Build:
+
+ionic build browser --release
