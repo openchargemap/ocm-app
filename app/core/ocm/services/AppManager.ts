@@ -191,8 +191,8 @@ export class AppManager extends Base {
 
         nav.present(this.loading);
     }
-    public dismissLoadingProgress() {
-        this.loading.dismiss();
+    public dismissLoadingProgress(): Promise<any>{
+        return this.loading.dismiss();
     }
 
     /**

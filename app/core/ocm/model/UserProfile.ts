@@ -6,4 +6,5 @@
         Location: string;
         WebsiteURL: string;
         ReputationPoints: number;
+        ProfileImageURL:string;
     }

@@ -44,7 +44,7 @@ export class POIDetailsPage {
     }
 
     ionViewWillEnter() {
-        
+
     }
     get staticMapURL(): string {
 
@@ -70,19 +70,29 @@ export class POIDetailsPage {
 
     addComment() {
 
-        let modal = Modal.create(CommentPage, {
-            id: this.poi.ID,
-            poi: this.poi
-        });
-        this.nav.present(modal);
+        if (this.appManager.isUserAuthenticated()) {
+            let modal = Modal.create(CommentPage, {
+                id: this.poi.ID,
+                poi: this.poi
+            });
+            this.nav.present(modal);
+        } else {
+            this.appManager.showToastNotification(this.nav, "Please Sign In (see Profile tab)");
+        }
     }
 
     addMedia() {
-        let modal = Modal.create(MediaUploadPage, {
-            id: this.poi.ID,
-            poi: this.poi
-        });
-        this.nav.present(modal);
+        if (this.appManager.isUserAuthenticated()) {
+
+            let modal = Modal.create(MediaUploadPage, {
+                id: this.poi.ID,
+                poi: this.poi
+            });
+            this.nav.present(modal);
+        } else {
+            this.appManager.showToastNotification(this.nav, "Please Sign In (see Profile tab)");
+        }
+
     }
 
     addFavourite() {
@@ -144,8 +154,6 @@ export class POIDetailsPage {
     }
 
     edit() {
-        //TODO: edit
-        //this.appManager.showToastNotification(this.nav, "Feature currently unavailable");
         this.appManager.launchOCMWebPage("/poi/edit/" + this.poi.ID);
     }
 
@@ -160,8 +168,6 @@ export class POIDetailsPage {
     }
 
     dismiss() {
-        if (console && console.log) {
-            console.log("in poi details dismiss");
-        }
+        this.appManager.log("in poi details dismiss");
     }
 }

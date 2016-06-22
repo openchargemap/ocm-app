@@ -205,7 +205,6 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
 
                             newMarker.poi = poi;
 
-                            var anchorElement = document.getElementById("body");
                             google.maps.event.addListener(newMarker, 'click', function () {
                                 //broadcast details of selected POI
                                 if (console) console.log("POI clicked:" + this.poi.ID);

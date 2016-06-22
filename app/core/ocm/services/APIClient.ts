@@ -141,23 +141,18 @@ export class APIClient extends Base {
 
     }
 
-    performSignIn(username: string, password: string) {
+    performSignIn(username: string, password: string): Promise<any> {
 
         var serviceURL = this.serviceBaseURL + "/profile/authenticate/";
 
         var data = { "emailaddress": username, "password": password };
 
         //observable result is wrapper in a Promise for API consumer to handle result/rejection etc        
-        return new Promise((resolve, reject) => {
-            this.http.post(serviceURL, JSON.stringify(data)).subscribe(res => {
-                if (res.status >= 300) {
-                    reject(new AsyncResult(null, true, "LoginFailed", res));
-                } else {
-                    this.authResponse = res.json();
-                    resolve(this.authResponse);
-                }
-            });
-        });
+
+        return this.http.post(serviceURL, JSON.stringify(data)).map(res => {
+            this.authResponse = res.json();
+            return this.authResponse;
+        }).toPromise();
     }
 
     performSubmission(type: SubmissionType, data: any): Promise<any> {
@@ -168,7 +163,7 @@ export class APIClient extends Base {
             return this.submitUserComment(data);
         }
         if (type == SubmissionType.Media) {
-            this.submitMediaItem(data);
+            return this.submitMediaItem(data);
         }
     }
 
@@ -177,23 +172,19 @@ export class APIClient extends Base {
 
         this.log("[api] Submitting user comment");
 
-        return this.http.post(this.serviceBaseURL + "/comment/", jsonString, this.getHttpRequestOptions()).map(res => {
-            return res.json();
-        }).toPromise();
-
-
+        return this.http.post(this.serviceBaseURL + "/comment/", jsonString, this.getHttpRequestOptions())
+            .map(res => {
+                return res.json();
+            }).toPromise();
     }
 
     submitMediaItem(data): Promise<any> {
         var jsonString = JSON.stringify(data);
-        //alert(JSON.stringify(data));
-        //return new Promise(resolve=>{resolve(null);});
-        return new Promise(resolve => {
-            this.http.post(this.serviceBaseURL + "/comment/?action=mediaitem_submission&format=json", jsonString, this.getHttpRequestOptions()).subscribe(res => {
-                resolve(res.json());
-            });
-        });
 
+        return this.http.post(this.serviceBaseURL + "/mediaitem/", jsonString, this.getHttpRequestOptions())
+            .map(res => {
+                res.json();
+            }).toPromise();
     }
 
     getPanoramioLocationPhotos(pos: GeoLatLng): Promise<any> {
@@ -212,7 +203,7 @@ export class APIClient extends Base {
          var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + "&output=json&includecomments.=true&chargepointid=" + id;
          if (disableCaching) serviceURL += "&enablecaching=false";
          if (!errorcallback) errorcallback = this.handleGeneralAjaxError;
- 
+     
          var ajaxSettings: JQueryAjaxSettings = {
              type: "GET",
              url: serviceURL + "&callback=" + callbackname,
@@ -222,13 +213,13 @@ export class APIClient extends Base {
              crossDomain: true,
              error: errorcallback
          };
- 
+     
          $.ajax(ajaxSettings);
      }
- 
+     
      fetchGeocodeResult(address, successCallback, authSessionInfo, errorCallback) {
          var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
- 
+     
          var ajaxSettings: JQueryAjaxSettings = {
              type: "GET",
              url: this.serviceBaseURL + "/geocode/?client=" + this.clientName + "&address=" + address + "&output=json&verbose=false&camelcase=true&" + authInfoParams,
@@ -238,17 +229,17 @@ export class APIClient extends Base {
              success: successCallback,
              error: (errorCallback != null ? errorCallback : this.handleGeneralAjaxError)
          };
- 
+     
          $.ajax(ajaxSettings);
      }
- 
-    
- 
+     
+     
+     
      submitLocation(data, authSessionInfo, completedCallback, failureCallback) {
          var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
- 
+     
          var jsonString = JSON.stringify(data);
- 
+     
          var ajaxSettings: JQueryAjaxSettings = {
              type: "POST",
              url: this.serviceBaseURL + "/?client=" + this.clientName + "&action=cp_submission&format=json" + authInfoParams,
@@ -257,10 +248,10 @@ export class APIClient extends Base {
              crossDomain: true,
              error: this.handleGeneralAjaxError
          };
- 
+     
          $.ajax(ajaxSettings);
      }
-
+    
      */
 
 

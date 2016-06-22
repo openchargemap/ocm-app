@@ -1,12 +1,18 @@
-<ion-navbar *navbar primary>
+<ion-navbar *navbar default>
     <ion-title>
         Sign In
     </ion-title>
 </ion-navbar>
 <ion-content class="signin-page" padding>
 
-    <ion-list>
 
+    <ion-avatar item-left>
+        <img src="images/icons/branding/AppIcon_128x128.png" />
+    </ion-avatar>
+    <p padding>
+        Sign in using your Open Charge Map account.
+    </p>
+    <ion-list>
         <ion-item>
             <ion-label floating>Email</ion-label>
             <ion-input type="text" [(ngModel)]="email"></ion-input>
@@ -18,9 +24,20 @@
         </ion-item>
 
     </ion-list>
-    
-    <button (click)="cancelSignIn()">Cancel</button>
-    <button (click)="performSignIn()">Sign In</button>
 
-    <p>If you normally use Twitter or Facebook to login, start here</p>
+
+    <p>If you normally use Twitter or Facebook to login, you need to <a (click)="appManager.launchWebPage('http://openchargemap.org/site/loginprovider/passwordreset')"
+            href="javascript:void(0)">set your app password</a></p>
 </ion-content>
+<ion-toolbar position="bottom">
+    <ion-buttons start>
+        <button (click)="cancelSignIn()"> <ion-icon name="close"></ion-icon> Cancel</button>
+
+    </ion-buttons>
+    <ion-buttons end>
+
+        <button (click)="performSignIn()" type="submit" primary><ion-icon name="log-in"></ion-icon> Sign In</button>
+
+    </ion-buttons>
+
+</ion-toolbar>

@@ -14,11 +14,51 @@
     <link wp-href="build/css/app.wp.css" rel="stylesheet">
 
     <link rel="stylesheet" href="lib/leaflet/leaflet.css" />
+
+    <style>
+        .loading {
+            margin-left: 20%;
+            padding-top: 20%;
+        }
+        
+        .loading img {
+            margin-left: 1em;
+            margin-right: 1em;
+            vertical-align: middle;
+        }
+        
+        .loading p {
+            font-size: 24px;
+            color: #c0c0c0;
+            font-family: Arial, Helvetica, sans-serif;
+            vertical-align: top;
+            font-weight: 200;
+            transition: color 3s ease-in;
+        }
+        .loading small {
+            color:#d0d0d0;
+        }
+    </style>
+
 </head>
 
 <body>
 
-    <ion-app></ion-app>
+    <ion-app>
+        <div class="loading">
+            <img src="images/loader.svg" style="position:absolute;width:128px" />
+            <img src="images/icons/branding/AppIcon_128x128.png" />
+
+            <p>
+                Open Charge Map
+                <br>
+                <small>Loading..</small>
+            </p>
+            <p>
+                <small>openchargemap.org</small>
+            </p>
+        </div>
+    </ion-app>
 
     <script src="cordova.js"></script>
     <script src="build/js/es6-shim.min.js"></script>

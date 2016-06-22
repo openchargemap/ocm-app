@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, NavParams, Modal, Alert} from 'ionic-angular';
+import {NavController, NavParams, Modal, Alert, ViewController} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {Camera} from 'ionic-native';
 
@@ -18,7 +18,7 @@ export class MediaUploadPage {
     chargePointId: number;
     poi: any;
 
-    constructor(private navParams: NavParams, public appManager: AppManager, public nav: NavController) {
+    constructor(private navParams: NavParams, private appManager: AppManager, private nav: NavController, private view: ViewController) {
 
 
         this.processingQuality = 0.8;
@@ -29,13 +29,13 @@ export class MediaUploadPage {
 
         this.chargePointId = this.navParams.get('id');
         this.poi = this.navParams.get('poi');
-        this.comment = "test";
+        this.comment = "";
     }
 
     loadCameraOrLibraryImage() {
 
         var _context = this;
-        if (this.mode == "cordova") {
+        if (!this.isBrowserMode()) {
             Camera.getPicture({ targetWidth: this.targetWidth }).then((imageData) => {
                 // imageData is either a base64 encoded string or a file URI
                 // If it's base64:
@@ -47,7 +47,7 @@ export class MediaUploadPage {
             });
         }
 
-        if (this.mode == "web") {
+        if (this.isBrowserMode()) {
             var reader = new FileReader();
 
             reader.onload = function () {
@@ -66,6 +66,11 @@ export class MediaUploadPage {
             reader.readAsDataURL((<any>document.getElementById("img-upload-media")).files[0]);
         }
 
+    }
+
+    isBrowserMode():boolean{
+
+        return  (this.appManager.isPlatform("core") ||this.appManager.isPlatform("mobileweb"));
     }
 
     processImage() {
@@ -149,17 +154,23 @@ export class MediaUploadPage {
 
         this.appManager.showLoadingProgress(this.nav, "Uploading photo..");
         this.appManager.submitMediaItem(submission).then((result) => {
-            this.appManager.dismissLoadingProgress();
-            this.appManager.showToastNotification(this.nav, "Upload completed");
-            this.nav.pop();
+            this.appManager.dismissLoadingProgress().then(() => {
+                this.appManager.showToastNotification(this.nav, "Upload completed");
+                //this.nav.pop();
+                this.view.dismiss();
+            });
+
             //todo: refresh POI details to show new upload
         }, (rejected) => {
-            this.appManager.dismissLoadingProgress();
-            this.appManager.showToastNotification(this.nav, "Upload failed, please try again.");
+            this.appManager.dismissLoadingProgress().then(() => {
+
+                this.appManager.showToastNotification(this.nav, "Upload failed, please try again.");
+            });
+
         });
     }
 
     cancel() {
-        this.nav.pop();
+        this.view.dismiss();
     }
 }

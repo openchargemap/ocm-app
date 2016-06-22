@@ -13,11 +13,11 @@
   </p>
   <div>
    
-    <div *ngIf="mode=='cordova'">
+    <div *ngIf="isBrowserMode()==false">
       <button (click)="loadCameraOrLibraryImage()">Select Photo</button>
     </div>
 
-    <div *ngIf="mode=='web'">
+    <div *ngIf="isBrowserMode()==true">
       <label class="button button-default button-icon-left upload">
         <span class="button-inner">
                 <ion-icon name="camera" role="img" class="ion-md-camera" aria-label="camera"></ion-icon> 
@@ -42,7 +42,7 @@
             <ion-buttons start>
 
               <button (click)="rotateImage()">  <ion-icon name="refresh"></ion-icon> Rotate</button>
-              <button (click)="performUpload()" primary>  <ion-icon name="cloud-upload"></ion-icon> Upload Photo</button>
+              
             </ion-buttons>
 
           </ion-toolbar>
@@ -76,7 +76,7 @@
     </button>
   </ion-buttons>
   <ion-buttons end>
-    <button royal>
+    <button (click)="performUpload()">
       Upload
       <ion-icon name="send"></ion-icon>
     </button>

@@ -20,24 +20,35 @@ export class ProfilePage {
         this.userProfile = this.appManager.getUserProfile();
 
         if (this.userProfile == null || !this.appManager.isUserAuthenticated()) {
-            //navigate to sign in page
-            let signInModal = Modal.create(SignInPage, { Profile: this.userProfile });
-            this.nav.present(signInModal);
+            this.showSignInModal();
         } else {
-            this.userProfile.GravatarURL = "http://www.gravatar.com/avatar/" + this.userProfile.EmailHash + "?s=80&d=mm";
-
+            this.refreshProfileView();
         }
+    }
+
+    refreshProfileView() {
+        this.userProfile = this.appManager.getUserProfile();
+        if (this.userProfile != -null) {
+            this.userProfile.GravatarURL = "http://www.gravatar.com/avatar/" + this.userProfile.EmailHash + "?s=80&d=mm";
+        }
+    }
+
+    showSignInModal() {
+        //navigate to sign in page
+        let signInModal = Modal.create(SignInPage, { Profile: this.userProfile });
+
+        signInModal.onDismiss(() => {
+            //may have an updated user profile
+            this.refreshProfileView();
+        });
+
+        this.nav.present(signInModal);
     }
 
     signOut() {
         this.appManager.signOutCurrentUser();
         this.userProfile = null;
 
-        let alert = Alert.create({
-            title: 'Signed Out',
-            subTitle: 'You are now signed out',
-            buttons: ['Dismiss']
-        });
-        this.nav.present(alert);
+       this.appManager.showToastNotification(this.nav, "You are now signed out.");
     }
 }

@@ -1,5 +1,5 @@
 import {Component, NgZone} from '@angular/core';
-import {NavController, NavParams, Modal, Alert, Loading} from 'ionic-angular';
+import {NavController, NavParams, Modal, Alert, Loading, ViewController    } from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {UserComment} from '../../core/ocm/model/AppModels';
 
@@ -15,14 +15,14 @@ export class CommentPage {
 
     commentTypes: any;
     checkinTypes: any;
-    constructor(private navParams: NavParams, public appManager: AppManager, public nav: NavController, private zone:NgZone) {
+    constructor(private navParams: NavParams, private appManager: AppManager, private nav: NavController, private view: ViewController, private zone: NgZone) {
 
         this.commentModel = <UserComment>{
             ChargePointID: this.navParams.get('id'),
             Comment: "",
-            CheckinStatusTypeID: 0,
+            CheckinStatusTypeID: 10,
             UserCommentTypeID: 10,
-            Rating: 4
+            Rating: null
         };
 
         this.poi = this.navParams.get('poi');
@@ -37,7 +37,8 @@ export class CommentPage {
 
     cancel() {
 
-        this.nav.pop();
+        //this.nav.pop();
+        this.view.dismiss();
     }
 
     add() {
@@ -52,25 +53,20 @@ export class CommentPage {
 
 
         this.appManager.submitComment(this.commentModel).then((response) => {
-            alert("Your comment has been Published.");
-            this.zone.run(()=>{
-             this.nav.pop();
-            });
-        }) /*, (rejection) => {
-            /*if (rejection == null  && rejection.ok && rejection.ok == true) {
-                this.nav.pop();
-            } else {
-                alert("There was a problem submitting your comment.");
+            this.appManager.log("Comment submitted");
+            loading.dismiss().then(() => {
+                this.view.dismiss();
+            }
+            );
 
-                loading.dismiss();
-            }*/
-            .catch((rejected) => {
-               
-                    alert("There was a problem submitting your comment." + JSON.stringify(rejected));
 
-                    loading.dismiss();
-              
-            });
+        }, (rejection) => {
+
+            this.appManager.showToastNotification(this.nav, "There was a problem submitting your comment.");
+
+            loading.dismiss();
+
+        });
 
     }
 }

@@ -202,7 +202,7 @@
 
     </div>
 
-    <div *ngIf="selectedTab=='comments'" padding>
+    <div *ngIf="selectedTab=='comments'" >
 
         <ion-card>
             <ion-card-header>
@@ -213,14 +213,17 @@
 
                     <ion-item *ngFor="let item of poi.UserComments">
                         <ion-avatar item-left>
-                            <ion-icon name="contact"></ion-icon>
-                            <div *ngIf="item.User">{{item.User.Username}}</div>
-                            <div *ngIf="!item.User">{{item.Username}}</div>
+                           
+                        <img src="{{item.User?.ProfileImageURL}}">
+                          
                         </ion-avatar>
 
+                         <div *ngIf="item.User">{{item.User.Username}}</div>
+                         <div *ngIf="!item.User">{{item.Username}}</div>
+                 
                         <p>{{item.DateCreated}}</p>
                         <p>{{item.Comment}}</p>
-                        <p *ngIf="item.CommentType">
+                        <p *ngIf="item.CommentTypeID!=10">
                             {{item.CommentType?.Title}}
 
                         </p>
@@ -245,7 +248,7 @@
 
                 <ion-item>
                     <ion-avatar item-left>
-                        <img src="http://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?s=80&d=mm">
+                        <img src="{{item.User?.ProfileImageURL}}">
                     </ion-avatar>
                     <h2>{{item.User.Username}}</h2>
                     <p>{{item.DateCreated}}</p>

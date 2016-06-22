@@ -1,14 +1,14 @@
-<ion-navbar *navbar primary>
+<ion-navbar *navbar default>
     <ion-title>
-        Profile
+       My Profile
     </ion-title>
 </ion-navbar>
 <ion-content class="profile-page" padding>
-    <h1>Profile</h1>
+    <h1>My Profile</h1>
 
 
     <div *ngIf="userProfile==null">
-        You are not signed in
+        You are not signed in. <button (click)="showSignInModal()">Sign In</button>
     </div>
     <div *ngIf="userProfile!=null">
         
@@ -16,7 +16,7 @@
 
   <ion-item>
     <ion-avatar item-left>
-      <img src="{{userProfile.GravatarURL}}">
+      <img src="{{userProfile.ProfileImageURL}}">
     </ion-avatar>
     <h2>{{userProfile.Username}}</h2>
     <p>

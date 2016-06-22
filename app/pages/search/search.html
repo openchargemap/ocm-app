@@ -5,14 +5,12 @@
       <button (click)="locateUser()" *ngIf="appManager.isRequestInProgress==false" clear>
       <ion-icon name="locate"></ion-icon>
     </button>
-      <button *ngIf="appManager.isRequestInProgress" clear>
-    <ion-spinner></ion-spinner>
-    </button>
+
     </ion-buttons>
     <ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="getPlacesAutoComplete($event)" (ionCancel)="onPlaceSearchCancel($event)">
-    [debounce]="500"></ion-searchbar>
+      [debounce]="500"></ion-searchbar>
     <ion-buttons end>
-      <button (click)="openSearchOptions()" >
+      <button (click)="openSearchOptions()">
       <ion-icon name="options"></ion-icon>
     </button>
     </ion-buttons>

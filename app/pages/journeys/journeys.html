@@ -1,4 +1,4 @@
-<ion-navbar *navbar primary>
+<ion-navbar *navbar default>
     <ion-title>
         Journeys
     </ion-title>
@@ -35,10 +35,12 @@
 
             <ion-list *ngFor="let s of journey.Stages">
                 <ion-list-header style="font-size:1.5rem;">
-                    {{s.Title}} -
-                    <ion-icon name="ios-car"></ion-icon> 35 Miles
-                    <ion-icon name="time"></ion-icon> 32 Minutes
-                    <ion-icon name="flash"></ion-icon> 24kWh
+                    {{s.Title}} 
+                    
+                    <ion-icon name="ios-car"></ion-icon> --
+                    <ion-icon name="time"></ion-icon> --
+                    <ion-icon name="flash"></ion-icon> --
+                    
                 </ion-list-header>
 
                 <ion-item *ngFor="let w of s.WayPoints">
