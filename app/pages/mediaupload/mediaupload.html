@@ -1,8 +1,11 @@
-<ion-navbar *navbar primary>
-  <ion-title>
-    Share Photo
-  </ion-title>
-</ion-navbar>
+<ion-header>
+  <ion-navbar primary>
+    <ion-title>
+      Share Photo
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
 <ion-content class="media-upload" padding>
 
   <div class="banner">
@@ -12,7 +15,7 @@
   <p>You can upload a photo from your device or take a new photo:
   </p>
   <div>
-   
+
     <div *ngIf="isBrowserMode()==false">
       <button (click)="loadCameraOrLibraryImage()">Select Photo</button>
     </div>
@@ -27,58 +30,60 @@
 
 </label>
 
-</div>
-      <canvas id="img-upload-canvas" style="display:none;width:500;height:500;border:1px solid red;"></canvas>
-      <ion-card *ngIf="imgData!=null">
-
-        <ion-card-content>
-          <ion-card-title>
-            Preview
-          </ion-card-title>
-
-
-
-          <ion-toolbar>
-            <ion-buttons start>
-
-              <button (click)="rotateImage()">  <ion-icon name="refresh"></ion-icon> Rotate</button>
-              
-            </ion-buttons>
-
-          </ion-toolbar>
-          <ion-list>
-
-            <ion-item>
-              <ion-label fixed>Comment</ion-label>
-              <ion-input type="text" [(ngModel)]="comment"></ion-input>
-
-            </ion-item>
-
-
-
-          </ion-list>
-
-
-          <img id="preview" style="max-width:500px" />
-        </ion-card-content>
-      </ion-card>
-
-
     </div>
- 
+    <canvas id="img-upload-canvas" style="display:none;width:500;height:500;border:1px solid red;"></canvas>
+    <ion-card *ngIf="imgData!=null">
+
+      <ion-card-content>
+        <ion-card-title>
+          Preview
+        </ion-card-title>
+
+
+
+        <ion-toolbar>
+          <ion-buttons start>
+
+            <button (click)="rotateImage()">  <ion-icon name="refresh"></ion-icon> Rotate</button>
+
+          </ion-buttons>
+
+        </ion-toolbar>
+        <ion-list>
+
+          <ion-item>
+            <ion-label fixed>Comment</ion-label>
+            <ion-input type="text" [(ngModel)]="comment"></ion-input>
+
+          </ion-item>
+
+
+
+        </ion-list>
+
+
+        <img id="preview" style="max-width:500px" />
+      </ion-card-content>
+    </ion-card>
+
+
+  </div>
+
 </ion-content>
-<ion-toolbar position="bottom">
-<ion-buttons start>
-    <button (click)="cancel()">
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons start>
+      <button (click)="cancel()">
             <ion-icon name="close"></ion-icon>
       Cancel
 
     </button>
-  </ion-buttons>
-  <ion-buttons end>
-    <button (click)="performUpload()">
+    </ion-buttons>
+    <ion-buttons end>
+      <button (click)="performUpload()">
       Upload
       <ion-icon name="send"></ion-icon>
     </button>
-  </ion-buttons>
-</ion-toolbar>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

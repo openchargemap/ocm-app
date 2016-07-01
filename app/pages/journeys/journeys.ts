@@ -89,4 +89,8 @@ export class JourneysPage {
     
     this.nav.present(confirm);
   }
+
+  launchNavigation(){
+    this.appManager.showToastNotification(this.nav, "Feature not yet implemented.");
+  }
 }

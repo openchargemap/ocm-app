@@ -1,8 +1,11 @@
-<ion-navbar *navbar default>
-    <ion-title>
-        Journeys
-    </ion-title>
-</ion-navbar>
+<ion-header>
+    <ion-navbar default>
+        <ion-title>
+            Journeys
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
 <ion-content class="journeys-page" padding>
     <p>
         You can create and plan journeys to group your favourite charging routes together.
@@ -10,7 +13,7 @@
 
     <p *ngIf="journeyManager.journeys==null || journeyManager.journeys.length==0">
         You have no journeys yet. Start by browsing to a charging location, then add it as Favourite to start a new Journey.
-       
+
     </p>
 
     <ion-card *ngFor="let journey of journeyManager.journeys">
@@ -35,12 +38,12 @@
 
             <ion-list *ngFor="let s of journey.Stages">
                 <ion-list-header style="font-size:1.5rem;">
-                    {{s.Title}} 
-                    
+                    {{s.Title}}
+
                     <ion-icon name="ios-car"></ion-icon> --
                     <ion-icon name="time"></ion-icon> --
                     <ion-icon name="flash"></ion-icon> --
-                    
+
                 </ion-list-header>
 
                 <ion-item *ngFor="let w of s.WayPoints">

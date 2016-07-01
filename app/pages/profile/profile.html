@@ -1,8 +1,11 @@
-<ion-navbar *navbar default>
-    <ion-title>
-       My Profile
-    </ion-title>
-</ion-navbar>
+<ion-header>
+    <ion-navbar default>
+        <ion-title>
+            My Profile
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
 <ion-content class="profile-page" padding>
     <h1>My Profile</h1>
 
@@ -11,37 +14,34 @@
         You are not signed in. <button (click)="showSignInModal()">Sign In</button>
     </div>
     <div *ngIf="userProfile!=null">
-        
+
         <ion-card>
 
-  <ion-item>
-    <ion-avatar item-left>
-      <img src="{{userProfile.ProfileImageURL}}">
-    </ion-avatar>
-    <h2>{{userProfile.Username}}</h2>
-    <p>
-            {{userProfile.DateCreated}}
-        </p>
-  </ion-item>
+            <ion-item>
+                <ion-avatar item-left>
+                    <img src="{{userProfile.ProfileImageURL}}">
+                </ion-avatar>
+                <h2>{{userProfile.Username}}</h2>
+                <p>
+                    {{userProfile.DateCreated}}
+                </p>
+            </ion-item>
 
- 
-  <ion-card-content>
-   <p> {{userProfile.Profile}}</p>
-  </ion-card-content>
 
-  <ion-item>
-    <ion-note  item-left>
-      <ion-icon name="star"></ion-icon>
-      {{userProfile.ReputationPoints}} Contributor Points
-    </ion-note>
-   
-   
-  </ion-item>
+            <ion-card-content>
+                <p> {{userProfile.Profile}}</p>
+            </ion-card-content>
 
-</ion-card>
-       
-        
+            <ion-item>
+                <ion-note item-left>
+                    <ion-icon name="star"></ion-icon>
+                    {{userProfile.ReputationPoints}} Contributor Points
+                </ion-note>
 
+
+            </ion-item>
+
+        </ion-card>
 
         <button (click)="signOut()">Sign Out</button>
     </div>

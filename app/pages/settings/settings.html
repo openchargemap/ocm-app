@@ -1,8 +1,11 @@
-<ion-navbar *navbar default>
-  <ion-title>
-    Settings
-  </ion-title>
-</ion-navbar>
+<ion-header>
+  <ion-navbar default>
+    <ion-title>
+      Settings
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
 <ion-content class="settings-page" padding>
   <h2>Search Filters</h2>
   <p>Search filters to apply when search for charging locations:</p>
@@ -53,7 +56,7 @@
   </ion-list>
   <h2>
     General Settings
-    </h2>
+  </h2>
   <ion-item>
     <ion-label>Show Distance in Kilometers</ion-label>
     <ion-toggle [(ngModel)]="searchSettings.UseDistanceInKM"></ion-toggle>

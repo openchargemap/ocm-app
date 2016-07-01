@@ -1,8 +1,11 @@
-<ion-navbar *navbar default>
-    <ion-title>
-        Edit Favourite
-    </ion-title>
-</ion-navbar>
+<ion-header>
+    <ion-navbar default>
+        <ion-title>
+            Edit Favourite
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
 <ion-content class="journeys-page" padding>
 
     <div class="banner">
@@ -17,46 +20,48 @@
     <ion-item>
         <ion-label stacked>Add to a Journey</ion-label>
         <ion-select [(ngModel)]="selectedJourneyID">
-               <ion-option value="" checked>Create a New Journey</ion-option>
+            <ion-option value="" checked>Create a New Journey</ion-option>
             <ion-option *ngFor="let journey of journeyManager.journeys" [value]="journey.ID">{{journey.Title}}</ion-option>
         </ion-select>
 
     </ion-item>
     <ion-item *ngIf="selectedJourneyID">
         <ion-label stacked>Journey Stage</ion-label>
-         <ion-select [(ngModel)]="selectedStageIndex">
-               <ion-option value="">Create a Journey Stage</ion-option>
+        <ion-select [(ngModel)]="selectedStageIndex">
+            <ion-option value="">Create a Journey Stage</ion-option>
             <ion-option *ngFor="let stage of journeyManager.getJourneyStages(selectedJourneyID); let i=index;" [value]="i" checked>{{stage.Title}}</ion-option>
         </ion-select>
 
     </ion-item>
-      <ion-item *ngIf="!selectedJourneyID">
+    <ion-item *ngIf="!selectedJourneyID">
         <ion-label stacked>New Journey Name</ion-label>
-         <ion-input type="text" [(ngModel)]="newJourneyName"></ion-input>
+        <ion-input type="text" [(ngModel)]="newJourneyName"></ion-input>
 
     </ion-item>
     <ion-item>
         <ion-label stacked>Name for this step of your journey</ion-label>
         <ion-input type="text" [(ngModel)]="waypoint.Title"></ion-input>
     </ion-item>
-     <ion-item>
+    <ion-item>
         <ion-label stacked>Other Notes</ion-label>
-        <ion-textarea  [(ngModel)]="waypoint.Notes"></ion-textarea>
+        <ion-textarea [(ngModel)]="waypoint.Notes"></ion-textarea>
     </ion-item>
 
 </ion-content>
-<ion-toolbar position="bottom">
-  <ion-buttons start>
-    <button (click)="cancel()">
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons start>
+            <button (click)="cancel()">
             <ion-icon name="close"></ion-icon>
       Cancel
 
     </button>
-  </ion-buttons>
-  <ion-buttons end>
-    <button (click)="add()">
+        </ion-buttons>
+        <ion-buttons end>
+            <button (click)="add()">
       Add
       <ion-icon name="plus"></ion-icon>
     </button>
-  </ion-buttons>
-</ion-toolbar>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

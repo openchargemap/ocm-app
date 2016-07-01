@@ -1,21 +1,23 @@
-<ion-nav-bar *navbar primary>
-  <ion-toolbar default>
-    <ion-buttons start>
+<ion-header>
+  <ion-nav-bar primary>
+    <ion-toolbar default>
+      <ion-buttons start>
 
-      <button (click)="locateUser()" *ngIf="appManager.isRequestInProgress==false" clear>
+        <button (click)="locateUser()" *ngIf="appManager.isRequestInProgress==false" clear>
       <ion-icon name="locate"></ion-icon>
     </button>
 
-    </ion-buttons>
-    <ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="getPlacesAutoComplete($event)" (ionCancel)="onPlaceSearchCancel($event)">
-      [debounce]="500"></ion-searchbar>
-    <ion-buttons end>
-      <button (click)="openSearchOptions()">
+      </ion-buttons>
+      <ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="getPlacesAutoComplete($event)" (ionCancel)="onPlaceSearchCancel($event)">
+        [debounce]="500"></ion-searchbar>
+      <ion-buttons end>
+        <button (click)="openSearchOptions()">
       <ion-icon name="options"></ion-icon>
     </button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-nav-bar>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-nav-bar>
+</ion-header>
 
 <ion-content class="search-page">
 

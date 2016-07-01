@@ -1,8 +1,10 @@
-<ion-navbar *navbar primary>
-    <ion-title>
-        {{ 'ocm.details.sectionTitle' | translate }}
-    </ion-title>
-</ion-navbar>
+<ion-header>
+    <ion-navbar primary>
+        <ion-title>
+            {{ 'ocm.details.sectionTitle' | translate }}
+        </ion-title>
+    </ion-navbar>
+</ion-header>
 
 <ion-toolbar *ngIf="hasNavbar==false">
 
@@ -61,7 +63,7 @@
     <div *ngIf="selectedTab=='location'" padding class="address-details">
 
         <ion-card *ngIf="poi.AddressInfo">
-            <img src="{{staticMapURL}}" (click)="launchNavigation()"/>
+            <img src="{{staticMapURL}}" (click)="launchNavigation()" />
 
             <ion-card-content>
                 <ion-card-title>
@@ -180,15 +182,15 @@
 
                             <p *ngIf="poi.NumberOfPoints!=null">{{ 'ocm.details.numberOfPoints' | translate }}: {{poi.NumberOfPoints}}</p>
                             <div *ngIf="poi.DataProvider">
-                            <ion-card-title>
-                                {{ 'ocm.details.dataProvider.sectionTitle' | translate }}
+                                <ion-card-title>
+                                    {{ 'ocm.details.dataProvider.sectionTitle' | translate }}
 
-                            </ion-card-title>
-                            
-                            <p>{{poi.DataProvider?.Title}}</p>
-                            <a *ngIf="poi.DataProvider.WebsiteURL" (click)="launchURL(poi.DataProvider.WebsiteURL)" href="javascript:void(0)">{{poi.DataProvider.WebsiteURL}}</a>
+                                </ion-card-title>
 
-                            <p>{{poi.DataProvider?.License}}</p>
+                                <p>{{poi.DataProvider?.Title}}</p>
+                                <a *ngIf="poi.DataProvider.WebsiteURL" (click)="launchURL(poi.DataProvider.WebsiteURL)" href="javascript:void(0)">{{poi.DataProvider.WebsiteURL}}</a>
+
+                                <p>{{poi.DataProvider?.License}}</p>
                             </div>
                         </ion-card-content>
                     </ion-card>
@@ -202,7 +204,7 @@
 
     </div>
 
-    <div *ngIf="selectedTab=='comments'" >
+    <div *ngIf="selectedTab=='comments'">
 
         <ion-card>
             <ion-card-header>
@@ -213,14 +215,14 @@
 
                     <ion-item *ngFor="let item of poi.UserComments">
                         <ion-avatar item-left>
-                           
-                        <img src="{{item.User?.ProfileImageURL}}">
-                          
+
+                            <img src="{{item.User?.ProfileImageURL}}">
+
                         </ion-avatar>
 
-                         <div *ngIf="item.User">{{item.User.Username}}</div>
-                         <div *ngIf="!item.User">{{item.Username}}</div>
-                 
+                        <div *ngIf="item.User">{{item.User.Username}}</div>
+                        <div *ngIf="!item.User">{{item.Username}}</div>
+
                         <p>{{item.DateCreated}}</p>
                         <p>{{item.Comment}}</p>
                         <p *ngIf="item.CommentTypeID!=10">
@@ -241,7 +243,8 @@
         </ion-card>
     </div>
     <div *ngIf="selectedTab=='media'" padding>
-        <h2><ion-icon name="camera"></ion-icon>   {{ 'ocm.details.mediaItems.sectionTitle' | translate }}</h2>
+        <h2>
+            <ion-icon name="camera"></ion-icon> {{ 'ocm.details.mediaItems.sectionTitle' | translate }}</h2>
         <div *ngIf="poi._hasPhotos">
 
             <ion-card *ngFor="let item of poi.MediaItems">
@@ -271,13 +274,15 @@
     </div>
     <p *ngIf="appManager.isDebugMode==true" style="white-space: pre-wrap;"> {{json}}</p>
 </ion-content>
-<ion-toolbar position="bottom">
-  <ion-buttons start>
-    <button (click)="close()">
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons start>
+            <button (click)="close()">
             <ion-icon name="close"></ion-icon>
       Close
 
     </button>
-  </ion-buttons>
-  
-</ion-toolbar>
+        </ion-buttons>
+
+    </ion-toolbar>
+</ion-footer>
