@@ -12,6 +12,7 @@ export class SearchSettings {
   UseDistanceInKM: boolean;
   HasActiveFilters: boolean;
   LastSearchPosition: GeoLatLng;
+  Language:string;
 
   constructor() {
     this.OperatorList = [];

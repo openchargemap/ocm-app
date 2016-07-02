@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {DatePipe} from '@angular/common';
 import {NavController, NavParams, ViewController, Modal, ActionSheet} from 'ionic-angular';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {AppManager} from '../../core/ocm/services/AppManager';
@@ -8,7 +9,7 @@ import {FavouriteEditorPage} from '../journeys/favourite-editor';
 
 @Component({
     templateUrl: 'build/pages/poi-details/poi-details.html',
-    pipes: [TranslatePipe]
+    pipes: [TranslatePipe, DatePipe]
 })
 
 export class POIDetailsPage {

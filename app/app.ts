@@ -92,20 +92,24 @@ export class OpenChargeMapApp extends Base implements OnInit {
     initTranslation() {
         //init translation
         //this.translate.useStaticFilesLoader('lang', '.json');
-
+        var defaultLang = "it";
         var userLang = navigator.language.split('-')[0]; // use navigator lang if available
-        userLang = /(it|en)/gi.test(userLang) ? userLang : 'en';
-
+        userLang = /(it|en)/gi.test(userLang) ? userLang : defaultLang;
+userLang="sk";
         // optional, default is "en"
-        this.translate.setDefaultLang('en');
+        this.translate.setDefaultLang(defaultLang);
         // the lang to use, if the lang isn't available, it will use the current loader to get them
-        this.translate.use(userLang);
 
-
-        var test = this.translate.get("ocm.general.shortDescription");
-        test.subscribe(data => {
-            this.log("Translation test:" + data);
+        this.log("[translate] "+ navigator.language+ ":: using language:" + userLang);
+        this.translate.use(userLang).subscribe(() => {
+            var test = this.translate.get("ocm.general.shortDescription");
+            test.subscribe(data => {
+                this.log("Translation test:" + data);
+            });
         });
+
+
+
 
         /*
           var test2 = this.translate.get("ocm.general.shortDescription");
@@ -166,6 +170,6 @@ ionicBootstrap(OpenChargeMapApp, [
     ReferenceDataManager
 ], {
         //config
-        prodMode:true,
-        mode:"ios"
+        prodMode: true,
+        mode: "ios"
     });

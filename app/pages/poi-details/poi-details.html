@@ -223,7 +223,7 @@
                         <div *ngIf="item.User">{{item.User.Username}}</div>
                         <div *ngIf="!item.User">{{item.Username}}</div>
 
-                        <p>{{item.DateCreated}}</p>
+                        <p>{{item.DateCreated | date }}</p>
                         <p>{{item.Comment}}</p>
                         <p *ngIf="item.CommentTypeID!=10">
                             {{item.CommentType?.Title}}
@@ -254,7 +254,7 @@
                         <img src="{{item.User?.ProfileImageURL}}">
                     </ion-avatar>
                     <h2>{{item.User.Username}}</h2>
-                    <p>{{item.DateCreated}}</p>
+                    <p>{{item.DateCreated | date}}</p>
                 </ion-item>
 
                 <img src="{{item.ItemMediumURL}}" />

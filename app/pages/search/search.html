@@ -8,7 +8,7 @@
     </button>
 
       </ion-buttons>
-      <ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="getPlacesAutoComplete($event)" (ionCancel)="onPlaceSearchCancel($event)">
+      <ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="getPlacesAutoComplete($event)" (ionCancel)="onPlaceSearchCancel($event)" [placeholder]="'ocm.search.performSearch' | translate">
         [debounce]="500"></ion-searchbar>
       <ion-buttons end>
         <button (click)="openSearchOptions()">

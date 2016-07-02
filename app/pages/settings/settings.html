@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar default>
     <ion-title>
-      Settings
+      {{'ocm.general.settings' | translate}}
     </ion-title>
   </ion-navbar>
 </ion-header>
@@ -13,15 +13,15 @@
     <ion-icon name="alert"></ion-icon> One or more filters are currently being applied.</p>
   <ion-list>
     <ion-item>
-      <ion-label>Operators</ion-label>
+      <ion-label>{{'ocm.search.networkOperators' | translate}}</ion-label>
       <ion-select [(ngModel)]="searchSettings.OperatorList" multiple="true" cancelText="Cancel" okText="OK">
-        <ion-option *ngFor="let item of operators" [value]="item.ID">{{item.Title}}</ion-option>
+        <ion-option *ngFor="let item of operators" [value]="item.ID">{{'ocm.reference.operatorInfo.value_'+item.ID | nullableTranslate  }}</ion-option>
 
       </ion-select>
     </ion-item>
 
     <ion-item>
-      <ion-label>Usage Types</ion-label>
+      <ion-label>{{'ocm.search.usageTypes' | translate}}</ion-label>
       <ion-select [(ngModel)]="searchSettings.UsageTypeList" multiple="true" cancelText="Cancel" okText="OK">
         <ion-option *ngFor="let item of usageTypes" [value]="item.ID">{{item.Title}}</ion-option>
 
@@ -29,15 +29,15 @@
     </ion-item>
 
     <ion-item>
-      <ion-label>Status Types</ion-label>
+      <ion-label>{{'ocm.search.operationalStatusTypes' | translate}}</ion-label>
       <ion-select [(ngModel)]="searchSettings.StatusTypeList" multiple="true" cancelText="Cancel" okText="OK">
-        <ion-option *ngFor="let item of statusTypes" [value]="item.ID">{{item.Title}}</ion-option>
+        <ion-option *ngFor="let item of statusTypes" [value]="item.ID">{{'ocm.reference.statusType.value_'+item.ID | nullableTranslate }}</ion-option>
 
       </ion-select>
     </ion-item>
 
     <ion-item>
-      <ion-label>Connector Types</ion-label>
+      <ion-label>{{'ocm.search.connectionTypes'| translate }}</ion-label>
       <ion-select [(ngModel)]="searchSettings.ConnectionTypeList" multiple="true" cancelText="Cancel" okText="OK">
         <ion-option *ngFor="let item of connectionTypes" [value]="item.ID">{{item.Title}}</ion-option>
 
@@ -45,7 +45,7 @@
     </ion-item>
 
     <ion-item>
-      <ion-label>Min. Power (kW)</ion-label>
+      <ion-label>{{'ocm.search.minPowerKW' | translate}}</ion-label>
       <ion-input type="number" [(ngModel)]="searchSettings.MinPowerKW"></ion-input>
     </ion-item>
 
@@ -60,6 +60,13 @@
   <ion-item>
     <ion-label>Show Distance in Kilometers</ion-label>
     <ion-toggle [(ngModel)]="searchSettings.UseDistanceInKM"></ion-toggle>
+  </ion-item>
+  <ion-item>
+    <ion-label>Language</ion-label>
+    <ion-select [(ngModel)]="searchSettings.Language" multiple="false">
+      <ion-option *ngFor="let item of languages" [value]="item">{{item}}</ion-option>
+
+    </ion-select>
   </ion-item>
 
 

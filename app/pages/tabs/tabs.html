@@ -1,6 +1,7 @@
 <ion-tabs>
-    <ion-tab [root]="tabSearch" tabTitle="Map" tabIcon="map"></ion-tab>
-    <ion-tab [root]="tabJourneys" tabTitle="Journeys" tabIcon="car"></ion-tab>
-    <ion-tab [root]="tabSettings" tabTitle="Settings" tabIcon="options" [tabBadge]="settingsTabBadge" tabBadgeStyle="danger"></ion-tab>
-    <ion-tab [root]="tabProfile" tabTitle="Profile" tabIcon="person"></ion-tab>
+    <ion-tab [root]="tabSearch" [tabTitle]="'ocm.search.sectionTitle'| translate" tabIcon="map"></ion-tab>
+    <ion-tab [root]="tabJourneys" [tabTitle]="tabJourneysTitle" tabIcon="car"></ion-tab>
+    <ion-tab [root]="tabSettings" [tabTitle]="'ocm.general.settings' | translate" tabIcon="options" [tabBadge]="settingsTabBadge"
+        tabBadgeStyle="danger"></ion-tab>
+    <ion-tab [root]="tabProfile" [tabTitle]="'ocm.navigation.profile.sectionTitle'|translate" tabIcon="person"></ion-tab>
 </ion-tabs>

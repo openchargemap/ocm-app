@@ -1,17 +1,19 @@
 import {Component} from '@angular/core';
 import {NavController, Modal, Alert} from 'ionic-angular';
+import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {SignInPage} from '../signin/signin';
 import {MediaUploadPage} from '../mediaupload/mediaupload';
 import {CommentPage} from '../comment/comment';
 
 @Component({
-    templateUrl: 'build/pages/profile/profile.html'
+    templateUrl: 'build/pages/profile/profile.html',
+    pipes:[TranslatePipe]
 })
 export class ProfilePage {
 
     userProfile: any;
-    constructor(public appManager: AppManager, public nav: NavController) {
+    constructor(public appManager: AppManager, public nav: NavController, private translate:TranslateService) {
 
     }
 

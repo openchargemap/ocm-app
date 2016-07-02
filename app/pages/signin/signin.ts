@@ -1,20 +1,20 @@
 import {Component, NgZone} from '@angular/core';
 import {NavController, NavParams, Alert, Loading, ViewController} from 'ionic-angular';
+import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {UserProfile, AsyncResult} from '../../core/ocm/model/AppModels';
 
 
 @Component({
-    templateUrl: 'build/pages/signin/signin.html'
+    templateUrl: 'build/pages/signin/signin.html',
+    pipes:[TranslatePipe]
 })
 export class SignInPage {
     email: string;
     password: string;
 
-    constructor(private appManager: AppManager, private nav: NavController, private viewController: ViewController, params: NavParams, private zone: NgZone) {
+    constructor(private appManager: AppManager, private nav: NavController, private viewController: ViewController, params: NavParams, private zone: NgZone, public translate:TranslateService) {
         this.email = "";
-
-        //TODO:load/save username?
 
         var currentProfile = <UserProfile>params.get("Profile");
         if (currentProfile != null) {

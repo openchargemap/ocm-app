@@ -6,6 +6,7 @@
     "@angular/http": "^2.0.0-rc.3",
     "@angular/platform-browser": "^2.0.0-rc.3",
     "@angular/platform-browser-dynamic": "^2.0.0-rc.3",
+    "@angular/router": "^2.0.0-rc.2",
     "angular2-jwt": "^0.1.16",
     "awesome-typescript-loader": "^1.1.1",
     "cordova-plugin-camera": "^2.2.0",

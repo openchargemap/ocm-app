@@ -6,6 +6,7 @@ import {APIClient} from './APIClient';
 import {Http} from '@angular/http';
 import {Injectable} from '@angular/core';
 import {Events, NavController, Platform, Toast, Loading} from 'ionic-angular';
+import {TranslateService} from 'ng2-translate/ng2-translate';
 import {Base, LogLevel} from '../Base';
 import {JwtHelper} from 'angular2-jwt';
 import {UserProfile, SubmissionType, SearchSettings, Journey, WayPoint, GeoLatLng} from '../model/AppModels'
@@ -30,7 +31,7 @@ export class AppManager extends Base {
 
     public isRequestInProgress: boolean = false;
 
-    constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue, private platform: Platform, public referenceDataManager: ReferenceDataManager, public journeyManager: JourneyManager) {
+    constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue, private platform: Platform, public referenceDataManager: ReferenceDataManager, public journeyManager: JourneyManager, public translateService: TranslateService) {
         super();
         this.api.clientName = "ocm.app.ionic.v6_0_0";
         this.isDebugMode = false;
@@ -43,9 +44,9 @@ export class AppManager extends Base {
             this.platformMode = "web";
         }
 
-       // this.referenceDataManager = new ReferenceDataManager(http);
-     
-       // this.poiManager = new POIManager(this);
+        // this.referenceDataManager = new ReferenceDataManager(http);
+
+        // this.poiManager = new POIManager(this);
 
         this.searchSettings = new SearchSettings();
 
@@ -62,9 +63,9 @@ export class AppManager extends Base {
     public loadSearchSettings() {
         if (localStorage.getItem('searchSettings') != null) {
             try {
-            this.searchSettings = JSON.parse(localStorage.getItem('searchSettings'));
-            } catch(ex){
-                this.searchSettings=new SearchSettings();
+                this.searchSettings = JSON.parse(localStorage.getItem('searchSettings'));
+            } catch (ex) {
+                this.searchSettings = new SearchSettings();
             }
         }
     }
@@ -76,7 +77,12 @@ export class AppManager extends Base {
         this.searchSettings.CheckForActiveFilters();
         localStorage.setItem('searchSettings', JSON.stringify(this.searchSettings));
     }
-
+    public getLanguages(): Array<string> {
+        return this.translateService.getLangs();
+    }
+    public setLanguage(languageCode: string) {
+        this.translateService.use(languageCode);
+    }
     public initAppManager() {
         this.initAuthFromStorage();
 
@@ -191,7 +197,7 @@ export class AppManager extends Base {
 
         nav.present(this.loading);
     }
-    public dismissLoadingProgress(): Promise<any>{
+    public dismissLoadingProgress(): Promise<any> {
         return this.loading.dismiss();
     }
 
@@ -214,8 +220,8 @@ export class AppManager extends Base {
     public launchWebPage(url: string) {
         window.open(url, '_system');
     }
-    
-    public isPlatform(platformName:string){
+
+    public isPlatform(platformName: string) {
         return this.platform.is(platformName);
     }
 }
