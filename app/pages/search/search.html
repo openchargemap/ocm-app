@@ -8,7 +8,8 @@
     </button>
 
       </ion-buttons>
-      <ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="getPlacesAutoComplete($event)" (ionCancel)="onPlaceSearchCancel($event)" [placeholder]="'ocm.search.performSearch' | translate">
+      <ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="getPlacesAutoComplete($event)" (ionCancel)="onPlaceSearchCancel($event)"
+        [placeholder]="'ocm.search.performSearch' | translate">
         [debounce]="500"></ion-searchbar>
       <ion-buttons end>
         <button (click)="openSearchOptions()">
@@ -38,5 +39,20 @@
     </ion-list>
 
   </div>
-  <div id="map-canvas"></div>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col width-67>
+        <div id="map-canvas"></div>
+      </ion-col>
+      <ion-col width-33>
+        <ion-scroll scrollY="true" style="height:100%">
+          <poi-details *ngIf="selectedPOI!=null" [poi]="selectedPOI"></poi-details>
+          <div *ngIf="selectedPOI==null" >
+            <p padding>Browse the map to find charging locations. Select a location to see the full details.</p>
+          </div>
+        </ion-scroll>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

@@ -15,12 +15,13 @@ import {POIManager} from '../../core/ocm/services/POIManager';
 import {POIDetailsPage} from '../poi-details/poi-details';
 import {SettingsPage} from '../settings/settings';
 import {SignInPage} from '../signin/signin';
+import {PoiDetails} from '../../components/poi-details/poi-details';
 
 
 @Component({
     templateUrl: 'build/pages/search/search.html',
-    pipes: [TranslatePipe] // add in each component to invoke the transform method
-
+    pipes: [TranslatePipe], // add in each component to invoke the transform method
+    directives:[PoiDetails]
 })
 
 export class SearchPage extends Base implements OnInit {
@@ -36,6 +37,8 @@ export class SearchPage extends Base implements OnInit {
     private searchKeyword: string;
     private placeSearchFocussed: boolean = false;
     private searchOnDemand: boolean = true;
+    selectedPOI: any;
+    private poiViewMode: string = "side";
     constructor(
         private appManager: AppManager,
         private nav: NavController,
@@ -318,27 +321,34 @@ export class SearchPage extends Base implements OnInit {
     viewPOIDetails(args: any) {
 
 
-        this.log("Viewing/fetching POI Details " + args.poiId);
+        this.log("Viewing/fetching ["+this.poiViewMode+"] POI Details " + args.poiId);
         this.searchOnDemand = false; //suspend searches
 
 
         this.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
 
             this.log("Got POI Details " + poi.ID);
-            let poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
 
-            poiDetailsModal.onDismiss(() => {
-                //should focus map again..
-                this.log("Dismissing POI Details.");
-                this.mapping.focusMap();
-                this.searchOnDemand = true;
-            });
-            this.mapping.unfocusMap();
+            if (this.poiViewMode == "modal") {
+                let poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
 
-            this.zone.run(() => {
-                this.nav.present(poiDetailsModal);
-            });
+                poiDetailsModal.onDismiss(() => {
+                    //should focus map again..
+                    this.log("Dismissing POI Details.");
+                    this.mapping.focusMap();
+                    this.searchOnDemand = true;
+                });
+                this.mapping.unfocusMap();
 
+                this.zone.run(() => {
+                    this.nav.present(poiDetailsModal);
+                });
+            }
+             if (this.poiViewMode == "side") {
+                 this.zone.run(() => {
+                 this.selectedPOI=poi;
+                 });
+             }
 
         }, (err) => {
 
@@ -390,7 +400,9 @@ export class SearchPage extends Base implements OnInit {
 
             this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true);
             this.mapping.setMapZoom(15); //TODO: provider specific ideal zoom for 'summary'
-            this.mapping.updateMapSize();
+            //this.mapping.updateMapSize();
+
+            this.refreshResultsAfterMapChange();
         }).catch((err) => {
             ///no geolocation
             this.log("Failed to get user location.");
@@ -405,7 +417,9 @@ export class SearchPage extends Base implements OnInit {
             this.appManager.searchSettings.LastSearchPosition = searchPos;
             this.mapping.updateMapCentrePos(searchPos.latitude, searchPos.longitude, true);
             this.mapping.setMapZoom(15);
-            this.mapping.updateMapSize();
+
+            this.refreshResultsAfterMapChange();
+            //this.mapping.updateMapSize();
 
         });
 
@@ -554,6 +568,7 @@ export class SearchPage extends Base implements OnInit {
                     this.log("Got place details:" + place.name);
 
                     this.mapping.updateMapCentrePos(place.geometry.location.lat(), place.geometry.location.lng(), true);
+                    this.refreshResultsAfterMapChange();
                     ///this.mapping.setMapZoom(15);
                     //this.debouncedRefreshResults();
                 } else {

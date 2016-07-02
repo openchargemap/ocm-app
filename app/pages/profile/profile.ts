@@ -30,9 +30,7 @@ export class ProfilePage {
 
     refreshProfileView() {
         this.userProfile = this.appManager.getUserProfile();
-        if (this.userProfile != -null) {
-            this.userProfile.GravatarURL = "http://www.gravatar.com/avatar/" + this.userProfile.EmailHash + "?s=80&d=mm";
-        }
+        
     }
 
     showSignInModal() {

@@ -14,6 +14,9 @@
 @import "../pages/poi-details/poi-details";
 @import "../pages/mediaupload/mediaupload";
 
+.tab-button{
+    max-width: none;
+}
 .poi-summary{
     border:1px solid gainsboro;
     padding:1em;
