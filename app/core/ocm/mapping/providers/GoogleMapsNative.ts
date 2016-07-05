@@ -10,7 +10,7 @@ import {Observable} from 'rxjs/Observable';
 import {Base, LogLevel} from '../../Base';
 import {Utils} from '../../Utils';
 import {MappingAPI, IMapProvider, MapOptions, Mapping} from '../Mapping';
-import {GeoLatLng, GeoPosition} from '../../model/GeoPosition';
+import {GeoLatLng, GeoPosition, GeoBounds} from '../../model/GeoPosition';
 import {Events} from 'ionic-angular';
 
 declare var plugin: any;
@@ -57,7 +57,7 @@ export class GoogleMapsNative extends Base implements IMapProvider {
             if (this.map == null) {
                 var mapCanvas = document.getElementById(mapCanvasID);
                 this.map = plugin.google.maps.Map.getMap();
-//this.map.setDebuggable(true);
+                //this.map.setDebuggable(true);
                 var mapManagerContext = this;
 
                 //setup map manipulation events
@@ -206,7 +206,7 @@ export class GoogleMapsNative extends Base implements IMapProvider {
                             }, (marker) => {
                                 //show full details when info window tapped
                                 //marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
-                                    marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function () {
+                                marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function () {
                                     var markerTitle = marker.getTitle();
                                     var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
 
@@ -313,6 +313,14 @@ export class GoogleMapsNative extends Base implements IMapProvider {
         return obs;
     }
 
+      moveToMapBounds(bounds: GeoBounds) {
+        this.map.fitBounds(
+            new google.maps.LatLngBounds(
+                new google.maps.LatLng(bounds.southWest.latitude, bounds.southWest.longitude),
+                new google.maps.LatLng(bounds.northEast.latitude, bounds.northEast.longitude))
+                );
+    }
+
     renderMap(poiList: Array<any>, mapHeight: number, parentContext: any): boolean {
 
         if (!this.mapReady) {
@@ -340,7 +348,9 @@ export class GoogleMapsNative extends Base implements IMapProvider {
 */
         return true;
     }
-
+    renderPolyline(polyline: string) {
+        //
+    }
     unfocusMap() {
         this.map.setClickable(false);
     }

@@ -12,7 +12,7 @@ import {Base, LogLevel} from '../Base';
 import {GoogleMapsNative} from './providers/GoogleMapsNative';
 import {GoogleMapsWeb} from './providers/GoogleMapsWeb';
 import {LeafletMap} from './providers/LeafletMap';
-import {GeoLatLng, GeoPosition} from '../model/GeoPosition';
+import {GeoLatLng, GeoPosition, GeoBounds} from '../model/GeoPosition';
 import {Events} from 'ionic-angular'; //TODO remove dependency on ionic here?
 
 declare var plugin: any;
@@ -74,6 +74,8 @@ export interface IMapProvider {
     setMapCenter(pos: GeoPosition);
     setMapType(mapType: string);
     getMapBounds(): Observable<Array<GeoLatLng>>;
+    moveToMapBounds(bounds: GeoBounds);
+    renderPolyline(polyline: string);
     focusMap();
     unfocusMap();
 }
@@ -100,7 +102,7 @@ export class Mapping extends Base {
 
     private events: Events;
 
-private isFocused:boolean =false;
+    private isFocused: boolean = false;
     /** @constructor */
     constructor(events: Events) {
         super();
@@ -127,7 +129,7 @@ private isFocused:boolean =false;
                     } else {
                         mapManagerContext.log("Map centre/zoom changed - map not ready to change centre pos:");
                     }
-                });    
+                });
             }
         }, 300, false);
     }
@@ -182,7 +184,7 @@ private isFocused:boolean =false;
                 mapcanvasID,
                 this.mapOptions,
                 this
-                );
+            );
         } else {
             if (this.mapsInitialised) {
                 this.log("initMap: map already initialised");
@@ -236,7 +238,7 @@ private isFocused:boolean =false;
                         //marker drag
                         marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, function (marker) {
                             marker.getPosition(function (pos) {
-                     
+
                                 mapManagerContext.updateMapCentrePos(pos.lat(), pos.lng(), false);
                                 mapManagerContext.mapOptions.requestSearchUpdate = true;
                             });
@@ -297,7 +299,7 @@ private isFocused:boolean =false;
             this.debouncedMapPositionUpdate();
         }
     }
- 
+
     isNativeMapsAvailable(): boolean {
         if (plugin && plugin.google && plugin.google.maps) {
             return true;
@@ -322,6 +324,10 @@ private isFocused:boolean =false;
 
         this.mapOptions.mapCentre = new GeoPosition(lat, lng);
     };
+
+    moveToMapBounds(bounds: GeoBounds) {
+        this.mapProvider.moveToMapBounds(bounds);
+    }
 
     refreshMapView(mapHeight: number, poiList: Array<any>, searchPos: any): boolean {
         if (this.mapProvider != null) {
@@ -363,13 +369,13 @@ private isFocused:boolean =false;
 
     unfocusMap() {
         this.log("[mapping] Unfocus Map.");
-        this.isFocused=false;
+        this.isFocused = false;
         this.mapProvider.unfocusMap();
     }
 
     focusMap() {
         this.log("[mapping] Focus Map.");
-        this.isFocused=true;
+        this.isFocused = true;
         this.mapProvider.focusMap();
     }
 
@@ -410,8 +416,12 @@ private isFocused:boolean =false;
             mapCanvas.innerHTML = mapHTML;
         }
     }
-    
-    clearMarkers(){
+
+    renderPolyline(polyline: string) {
+        this.mapProvider.renderPolyline(polyline);
+    }
+
+    clearMarkers() {
         this.mapProvider.clearMarkers();
     }
 }

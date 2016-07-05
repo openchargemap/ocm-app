@@ -30,3 +30,13 @@ export class GeoPosition {
         return new GeoPosition(pos.coords.latitude, pos.coords.longitude);
     }
 }
+
+export class GeoBounds {
+    public northEast: GeoLatLng;
+    public southWest: GeoLatLng;
+
+    constructor(ne: GeoLatLng, sw: GeoLatLng) {
+        this.northEast = ne;
+        this.southWest = sw;
+    }
+}

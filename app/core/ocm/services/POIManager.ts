@@ -27,8 +27,8 @@ export class POIManager extends Base {
         this.isRequestInProgress = true;
         this.api.fetchPOIListByParam(searchParams, this)
             .subscribe(
-            (results) => {
-                console.log('fetched POI list:');
+            (results:Array<any>) => {
+                console.log('fetched POI list ['+results.length+']');
                 this.poiList = results;
                 this.events.publish('ocm:poiList:updated');
                 //this.appManager.isRequestInProgress = false;

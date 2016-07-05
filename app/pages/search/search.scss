@@ -1,26 +1,39 @@
 .search-page {
 
-}
+    #map-canvas {
+        width:100%;
+        height: 98%;   
+    }
 
-#map-canvas {
-    width:100%;
-    height: 100%;   
-}
-
-#place-search{
-    min-height:300px;
-   
-    background-color: rgba(0,0,0,0.1);
+    #place-search{
+        min-height:300px;
     
-    position:absolute;
-    z-index:100;
-    width:100%;
-   
+        background-color: #f0f0f0;
+        
+        position:absolute;
+        z-index:100;
+        width:100%;
+    
+    }
+    ion-buttons {
+        flex:0.4;
+    }
+
+    ion-grid,ion-row, ion-col{
+        padding:0;
+    }
+
+scroll-content {
+    overflow-y:hidden;
 }
-ion-buttons {
-    flex:0.4;
+.banner{
+    background-color: #446722;
+}
+.route {
+    background-color: #8fb767;
+    .item {
+        background-color: transparent;
+    }
+}
 }
 
-ion-grid,ion-row, ion-col{
-    padding:0;
-}

@@ -6,7 +6,7 @@
 import {Base, LogLevel} from '../../Base';
 import {Utils} from '../../Utils';
 import {MappingAPI, IMapProvider, MapOptions, Mapping} from '../Mapping';
-import {GeoLatLng, GeoPosition} from '../../model/GeoPosition';
+import {GeoLatLng, GeoPosition, GeoBounds} from '../../model/GeoPosition';
 import {Events} from 'ionic-angular';
 import {Observable} from 'rxjs/Observable';
 
@@ -318,7 +318,16 @@ export class LeafletMap extends Base implements IMapProvider {
 
         return true;
     }
+    renderPolyline(polyline: string) {
+        //
+    }
 
+    moveToMapBounds(bounds: GeoBounds) {
+        this.map.fitBounds(new L.LatLngBounds(
+            { lat: bounds.southWest.latitude, lng: bounds.southWest.longitude },
+            { lat: bounds.northEast.latitude, lng: bounds.northEast.longitude }
+        ));
+    }
     focusMap() {
         //
     }

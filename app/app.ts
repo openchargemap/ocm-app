@@ -14,6 +14,7 @@ import {TabsPage} from './pages/tabs/tabs';
 
 import {Utils} from './core/ocm/Utils';
 import {TranslateService, TranslatePipe, TranslateLoader, TranslateStaticLoader, Parser} from 'ng2-translate';
+import {GoogleMapsDirections} from './core/ocm/services/GoogleMapsDirections';
 
 declare var plugin: any;
 declare var Connection: any;
@@ -95,7 +96,7 @@ export class OpenChargeMapApp extends Base implements OnInit {
         var defaultLang = "it";
         var userLang = navigator.language.split('-')[0]; // use navigator lang if available
         userLang = /(it|en)/gi.test(userLang) ? userLang : defaultLang;
-userLang="sk";
+//userLang="sk";
         // optional, default is "en"
         this.translate.setDefaultLang(defaultLang);
         // the lang to use, if the lang isn't available, it will use the current loader to get them
@@ -129,6 +130,7 @@ userLang="sk";
         window.addEventListener("resize", () => { this.debouncedPublishResizeEvent(); });
 
         this.appManager.initAuthFromStorage();
+        this.publishWindowResizeEvent(); //inform app of initial client size
     }
 
     publishWindowResizeEvent() {
@@ -167,7 +169,8 @@ ionicBootstrap(OpenChargeMapApp, [
     APIClient,
     SubmissionQueue,
     JourneyManager,
-    ReferenceDataManager
+    ReferenceDataManager,
+    GoogleMapsDirections
 ], {
         //config
         prodMode: true,

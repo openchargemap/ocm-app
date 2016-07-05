@@ -1,11 +1,11 @@
 /// <reference path="../../lib/typings/googlemaps/google.maps.d.ts" />
 /// <reference path="../../lib/typings/collections/collections.d.ts" />
-import {Component, OnInit, NgZone} from '@angular/core';
+import {Component, OnInit, NgZone, ChangeDetectorRef} from '@angular/core';
 import {Http} from '@angular/http';
 import {NavController, NavParams, Events, Platform, Loading, Modal} from 'ionic-angular';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {Keyboard} from 'ionic-native';
-import {PlaceSearchResult, GeoLatLng, POISearchParams} from '../../core/ocm/model/AppModels';
+import {PlaceSearchResult, GeoLatLng, GeoBounds, POISearchParams} from '../../core/ocm/model/AppModels';
 import {Base, LogLevel} from '../../core/ocm/Base';
 import {Utils} from '../../core/ocm/Utils';
 import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
@@ -17,11 +17,12 @@ import {SettingsPage} from '../settings/settings';
 import {SignInPage} from '../signin/signin';
 import {PoiDetails} from '../../components/poi-details/poi-details';
 
+import {GoogleMapsDirections} from '../../core/ocm/services/GoogleMapsDirections';
 
 @Component({
     templateUrl: 'build/pages/search/search.html',
     pipes: [TranslatePipe], // add in each component to invoke the transform method
-    directives:[PoiDetails]
+    directives: [PoiDetails]
 })
 
 export class SearchPage extends Base implements OnInit {
@@ -34,11 +35,21 @@ export class SearchPage extends Base implements OnInit {
     private placeList: Array<PlaceSearchResult>;
     private initialResultsShown: boolean = false;
     private placeSearchActive: boolean = false;
+    public placeSearchType: string;
     private searchKeyword: string;
+
+    private routeStart: string;
+    private routeDestination: string;
+    private routeStartPlace: any;
+    private routeDestinationPlace: any;
+    private routeSearchDistance: number = 5;
+
     private placeSearchFocussed: boolean = false;
     private searchOnDemand: boolean = true;
     selectedPOI: any;
     private poiViewMode: string = "side";
+    private searchPolyline: string;
+
     constructor(
         private appManager: AppManager,
         private nav: NavController,
@@ -47,14 +58,16 @@ export class SearchPage extends Base implements OnInit {
         private translate: TranslateService,
         private platform: Platform,
         private poiManager: POIManager,
-        private zone: NgZone
+        private zone: NgZone,
+        private directions: GoogleMapsDirections,
+        private changeDetector: ChangeDetectorRef
     ) {
         super();
 
         this.mapping = new Mapping(events);
 
         this.mapCanvasID = "map-canvas";
-
+        this.placeSearchType = "poiSearch";
         //decide whether to use Native Google Maps SDK or Google Web API        
         if (platform.is("ios") || platform.is("android")) {
             this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
@@ -85,12 +98,14 @@ export class SearchPage extends Base implements OnInit {
         if (clientHeight == null) {
             clientHeight = Utils.getClientHeight();
         }
-        var preferredContentHeight = clientHeight - 94;
+        var preferredContentHeight = clientHeight - 100;
         return preferredContentHeight;
     }
 
     enforceMapHeight(size: any) {
         this.log("Would resize map:" + size.width + " " + size.height, LogLevel.VERBOSE);
+
+        this.checkViewportMode();
 
         let preferredContentHeight = this.getPreferredMapHeight(size[0]);
 
@@ -102,6 +117,16 @@ export class SearchPage extends Base implements OnInit {
         }
     }
 
+    checkViewportMode() {
+        this.log("Checking viewport mode:" + this.appManager.clientWidth);
+        if (this.appManager.clientWidth > 1000 && this.poiViewMode != "side") {
+            this.poiViewMode = "side"; //switch to side panel view mode for poi details
+        }
+
+        if (this.appManager.clientWidth <= 1000 && this.poiViewMode == "side") {
+            this.poiViewMode = "modal"; //switch to modal view mode for poi details
+        }
+    }
     ngOnInit() {
 
         this.debouncedRefreshResults = Utils.debounce(this.refreshResultsAfterMapChange, 1000, false);
@@ -132,6 +157,7 @@ export class SearchPage extends Base implements OnInit {
                     this.refreshResultsAfterMapChange();
                 });
 
+
             }
         });
 
@@ -147,6 +173,9 @@ export class SearchPage extends Base implements OnInit {
             //handle window resized event, updating map layout if required
             this.enforceMapHeight(size[0]);
         });
+
+        //switch app to to side view mode if display wide enough
+        this.checkViewportMode();
 
         this.mapping.initMap(this.mapCanvasID);
 
@@ -285,15 +314,17 @@ export class SearchPage extends Base implements OnInit {
                             params.maxPowerKW = this.appManager.searchSettings.MaxPowerKW;
                         }
 
+                        if (this.searchPolyline != null) {
+                            //when searching along a polyline we discard any other bounding box filters etc
+                            params.polyline = this.searchPolyline;
+                            params.boundingbox = null;
+                            params.levelOfDetail = null;
+                            params.distance = this.routeSearchDistance;
+                        }
 
                         /*
                         if ($("#filter-submissionstatus").val() != 200) params.submissionStatusTypeID = $("#filter-submissionstatus").val();
-                        if ($("#filter-connectiontype").val() != "") params.connectionTypeID = $("#filter-connectiontype").val();
-                        if ($("#filter-minpowerkw").val() != "") params.minPowerKW = $("#filter-minpowerkw").val();
-                        if ($("#filter-operator").val() != "") params.operatorID = $("#filter-operator").val();
                         if ($("#filter-connectionlevel").val() != "") params.levelID = $("#filter-connectionlevel").val();
-                        if ($("#filter-usagetype").val() != "") params.usageTypeID = $("#filter-usagetype").val();
-                        if ($("#filter-statustype").val() != "") params.statusTypeID = $("#filter-statustype").val();
                         */
 
                     }
@@ -321,8 +352,7 @@ export class SearchPage extends Base implements OnInit {
     viewPOIDetails(args: any) {
 
 
-        this.log("Viewing/fetching ["+this.poiViewMode+"] POI Details " + args.poiId);
-        this.searchOnDemand = false; //suspend searches
+        this.log("Viewing/fetching [" + this.poiViewMode + "] POI Details " + args.poiId);
 
 
         this.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
@@ -330,6 +360,8 @@ export class SearchPage extends Base implements OnInit {
             this.log("Got POI Details " + poi.ID);
 
             if (this.poiViewMode == "modal") {
+                this.searchOnDemand = false; //suspend interactive searches while modal dialog active
+
                 let poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
 
                 poiDetailsModal.onDismiss(() => {
@@ -344,11 +376,11 @@ export class SearchPage extends Base implements OnInit {
                     this.nav.present(poiDetailsModal);
                 });
             }
-             if (this.poiViewMode == "side") {
-                 this.zone.run(() => {
-                 this.selectedPOI=poi;
-                 });
-             }
+            if (this.poiViewMode == "side") {
+                this.zone.run(() => {
+                    this.selectedPOI = poi;
+                });
+            }
 
         }, (err) => {
 
@@ -384,6 +416,10 @@ export class SearchPage extends Base implements OnInit {
     }
     */
 
+    }
+
+    closePOIDetails() {
+        this.selectedPOI = null;
     }
 
     openSearchOptions() {
@@ -433,31 +469,48 @@ export class SearchPage extends Base implements OnInit {
 
         this.appManager.isRequestInProgress = false;
     }
-    getPlacesAutoComplete() {
 
-        this.appManager.showToastNotification(this.nav, "Starting lookup for " + this.searchKeyword);
-        /*let loading = Loading.create({
-            content: "Searching..",
-            dismissOnPageChange: true,
-            duration: 3000
-        });
+    getPlacesAutoComplete($event, searchType) {
+        var keywordForSearch = this.searchKeyword;
 
-        this.nav.present(loading);*/
-        if (this.searchKeyword.length > 3) {
+        if (searchType == "poiSearch") {
+
+
+            this.placeSearchType = searchType;
+            keywordForSearch = this.searchKeyword;
+        }
+
+        if (searchType == "routeStart") {
+            this.placeSearchType = searchType;
+            keywordForSearch = this.routeStart;
+        }
+
+        if (searchType == "routeDestination") {
+            this.placeSearchType = searchType;
+            keywordForSearch = this.routeDestination;
+        }
+
+
+
+        //this.appManager.showToastNotification(this.nav, "Starting lookup for " + keywordForSearch);
+
+
+        if (keywordForSearch.length > 3) {
+            this.log("Starting place lookup for:" + keywordForSearch);
             this.appManager.isRequestInProgress = true;
             var service = new (<any>google.maps.places).AutocompleteService();
 
-            service.getQueryPredictions({ input: this.searchKeyword }, (predictions, status) => {
+            service.getQueryPredictions({ input: keywordForSearch }, (predictions, status) => {
 
                 this.appManager.isRequestInProgress = false;
                 this.placeSearchActive = true;
                 //loading.dismiss();
                 if (status != google.maps.places.PlacesServiceStatus.OK) {
-                    alert(status);
+                    this.appManager.showToastNotification(this.nav, status);
                     return;
                 }
                 var results = predictions;
-
+                this.log("Got place search results: " + results.length);
                 this.mapping.unfocusMap();
 
                 this.placeList = [];
@@ -478,7 +531,8 @@ export class SearchPage extends Base implements OnInit {
                     //this.log(JSON.stringify(place));
                 }
 
-
+                //force refresh of results list
+                this.changeDetector.detectChanges();
             });
         }
     }
@@ -549,13 +603,18 @@ export class SearchPage extends Base implements OnInit {
 
         this.appManager.isRequestInProgress = false;
 
-        //give map back the input focus (mainly for native map)
-        this.mapping.focusMap();
+
+
 
         //move map to selected place
         if (item.Location != null) {
-            this.mapping.updateMapCentrePos(item.Location.latitude, item.Location.longitude, true);
-            this.debouncedRefreshResults();
+            if (this.placeSearchType == 'poiSearch') {
+                //give map back the input focus (mainly for native map)
+                this.mapping.focusMap();
+
+                this.mapping.updateMapCentrePos(item.Location.latitude, item.Location.longitude, true);
+                this.debouncedRefreshResults();
+            }
         } else if (item.ReferenceID != null) {
             //look up placeid
 
@@ -567,16 +626,66 @@ export class SearchPage extends Base implements OnInit {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
                     this.log("Got place details:" + place.name);
 
-                    this.mapping.updateMapCentrePos(place.geometry.location.lat(), place.geometry.location.lng(), true);
-                    this.refreshResultsAfterMapChange();
-                    ///this.mapping.setMapZoom(15);
-                    //this.debouncedRefreshResults();
+                    if (this.placeSearchType == 'poiSearch') {
+                        //give map back the input focus (mainly for native map)
+                        this.mapping.focusMap();
+
+                        this.mapping.updateMapCentrePos(place.geometry.location.lat(), place.geometry.location.lng(), true);
+                        this.refreshResultsAfterMapChange();
+                        ///this.mapping.setMapZoom(15);
+                        //this.debouncedRefreshResults();
+                    }
+
+                    if (this.placeSearchType == 'routeStart') {
+                        this.log("Changed route start:" + place.name);
+                        this.routeStartPlace = place;
+                    }
+                    if (this.placeSearchType == 'routeDestination') {
+                        this.log("Changed route destination:" + place.name);
+                        this.routeDestinationPlace = place;
+                    }
+
+                    if (this.routeStartPlace != null && this.routeDestinationPlace != null) {
+
+                        this.directions.getDirections(
+                            this.routeStartPlace.geometry.location.lat() + "," + this.routeStartPlace.geometry.location.lng(),
+                            this.routeDestinationPlace.geometry.location.lat() + "," + this.routeDestinationPlace.geometry.location.lng()).then((result: google.maps.DirectionsResult) => {
+                                if (result.routes != null && result.routes.length > 0) {
+                                    this.searchPolyline = (<any>result.routes[0]).overview_polyline;
+
+                                    this.mapping.renderPolyline(this.searchPolyline);
+                                    var resultSw = result.routes[0].bounds.getSouthWest();
+                                    var resultNe = result.routes[0].bounds.getNorthEast();
+                                    var neLL = new GeoLatLng(resultNe.lat(), resultNe.lng());
+                                    var swLL = new GeoLatLng(resultSw.lat(), resultSw.lng())
+                                    let bounds = new GeoBounds(
+                                        neLL, swLL
+                                    );
+                                    //   
+                                    //,
+                                    this.mapping.moveToMapBounds(bounds);
+                                    this.refreshResultsAfterMapChange();
+                                }
+                            });
+                    }
                 } else {
                     this.log("Failed to fetch place:" + status.toString());
                 }
             });
 
         }
+
+
+        /*
+                if (this.placeSearchType == 'routeStart') {
+                    alert(JSON.stringify(item));
+                    this.routeStartPlace = item;
+                }
+        
+                if (this.placeSearchType == 'routeDestination') {
+                    this.routeDestinationPlace = item;
+                }
+                */
     }
 
     onSearchFocus() {

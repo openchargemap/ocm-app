@@ -7,7 +7,7 @@
 import {Base, LogLevel} from '../../Base';
 import {Utils} from '../../Utils';
 import {MappingAPI, IMapProvider, MapOptions, Mapping} from '../Mapping';
-import {GeoLatLng, GeoPosition} from '../../model/GeoPosition';
+import {GeoLatLng, GeoPosition, GeoBounds} from '../../model/GeoPosition';
 import {Events} from 'ionic-angular';
 import {Observable} from 'rxjs/Observable';
 
@@ -322,6 +322,14 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
         return obs;
     }
 
+    moveToMapBounds(bounds: GeoBounds) {
+        this.map.fitBounds(
+            new google.maps.LatLngBounds(
+                new google.maps.LatLng(bounds.southWest.latitude, bounds.southWest.longitude),
+                new google.maps.LatLng(bounds.northEast.latitude, bounds.northEast.longitude))
+                );
+    }
+
     renderMap(poiList: Array<any>, mapHeight: number, parentContext: any): boolean {
         document.getElementById(this.mapCanvasID).style.height = mapHeight + "px";
 
@@ -340,7 +348,18 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
 
         return true;
     }
+    renderPolyline(polyline: string) {
+        var flightPath = new google.maps.Polyline({
+            path: <any>google.maps.geometry.encoding.decodePath(polyline),
+            geodesic: true,
+            strokeColor: '#0000FF',
+            strokeOpacity: 0.8,
+            strokeWeight: 4
+        });
 
+        flightPath.setMap(this.map);
+
+    }
     focusMap() {
         //
     }

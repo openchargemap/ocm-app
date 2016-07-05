@@ -2,15 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "noEmitOnError": false,
-    "rootDir": ".",
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "removeComments": false,
-    "sourceMap": true,
-    "sourceRoot": "",
-    "inlineSourceMap": true,
-    "inlineSources": false
+    "experimentalDecorators": true
   },
   "filesGlob": [
     "**/*.ts",

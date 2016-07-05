@@ -29,7 +29,10 @@ export class PoiDetails implements OnInit {
 
     //this.json = JSON.stringify(this.poi, null, 1);
 
-
+    if (this.poi == null || this.poi.AddressInfo == null) {
+      alert("Got null POI");
+      return;
+    }
     this.selectedTab = "location";
 
     //create temporary properties for view model

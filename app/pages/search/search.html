@@ -8,9 +8,9 @@
     </button>
 
       </ion-buttons>
-      <ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="getPlacesAutoComplete($event)" (ionCancel)="onPlaceSearchCancel($event)"
-        [placeholder]="'ocm.search.performSearch' | translate">
-        [debounce]="500"></ion-searchbar>
+      <ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="getPlacesAutoComplete($event,'poiSearch')" (ionCancel)="onPlaceSearchCancel($event)"
+        [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500">
+        </ion-searchbar>
       <ion-buttons end>
         <button (click)="openSearchOptions()">
       <ion-icon name="options"></ion-icon>
@@ -22,7 +22,7 @@
 
 <ion-content class="search-page">
 
-  <div id="place-search" *ngIf="placeSearchActive==true">
+  <div id="place-search" *ngIf="placeSearchActive==true && placeSearchType=='poiSearch'">
 
     <div id="place-attribution"></div>
 
@@ -42,14 +42,88 @@
 
   <ion-grid>
     <ion-row>
-      <ion-col width-67>
+      <ion-col width-67="{{poiViewMode=='side'}}">
         <div id="map-canvas"></div>
       </ion-col>
-      <ion-col width-33>
+      <ion-col width-33 *ngIf="poiViewMode=='side'">
         <ion-scroll scrollY="true" style="height:100%">
+
+
+          <ion-toolbar *ngIf="selectedPOI!=null">
+            <ion-buttons start>
+              <button (click)="closePOIDetails()">
+             <ion-icon name="close"></ion-icon>
+              Close
+
+            </button>
+            </ion-buttons>
+
+          </ion-toolbar>
           <poi-details *ngIf="selectedPOI!=null" [poi]="selectedPOI"></poi-details>
-          <div *ngIf="selectedPOI==null" >
-            <p padding>Browse the map to find charging locations. Select a location to see the full details.</p>
+          <div *ngIf="selectedPOI==null">
+            <div class="banner">
+
+              <p padding>Browse the map to find charging locations. Select a location to see the full details.</p>
+
+            </div>
+            <div class="route">
+
+              <ion-list>
+                <ion-list-header>
+                  <ion-icon name="map"></ion-icon> Plan Your Journey
+                </ion-list-header>
+                <ion-item>
+
+                  <ion-searchbar [(ngModel)]="routeStart" (ionInput)="getPlacesAutoComplete($event,'routeStart')" (ionCancel)="onPlaceSearchCancel($event)"
+                    placeholder="Starting Point" [debounce]="500"></ion-searchbar>
+                </ion-item>
+
+                <ion-item>
+
+                  <ion-searchbar [(ngModel)]="routeDestination" (ionInput)="getPlacesAutoComplete($event,'routeDestination')" (ionCancel)="onPlaceSearchCancel($event)"
+                    placeholder="Destination" [debounce]="500"></ion-searchbar>
+                </ion-item>
+
+                 <ion-item>
+  <ion-range min="1" max="200" step="5" snaps="true" [(ngModel)]="routeSearchDistance">
+    <ion-icon range-left small name="map"></ion-icon>
+    <ion-icon range-right large name="map"></ion-icon>
+  </ion-range>
+
+</ion-item>
+
+              </ion-list>
+
+              <div id="place-search" *ngIf="placeSearchActive==true && (placeSearchType=='routeStart' || placeSearchType=='routeDestination')">
+
+                <div id="place-attribution"></div>
+
+
+                <ion-list>
+                  <a *ngFor="let item of placeList" (click)="placeSelected($event,item)" ion-item>
+                    <ion-avatar item-left>
+                      <ion-icon name="locate"></ion-icon>
+                    </ion-avatar>
+
+                    <h2>{{item.Title}}</h2>
+                    <h3>{{item.Type}}</h3>
+                    <p>{{item.Address}}</p>
+                  </a>
+                </ion-list>
+
+              </div>
+            </div>
+
+            <ion-list *ngIf="poiManager.poiList!=null">
+              <ion-list-header>
+                {{poiManager.poiList.length}} results    Search Distance: {{routeSearchDistance}}km
+              </ion-list-header>
+              <ion-item *ngFor="let poi of poiManager.poiList" (click)="viewPOIDetails({poiId:poi.ID})">
+                <h2>{{poi.AddressInfo.Title}}</h2>
+                <p>{{poi.AddressInfo.AddressLine1}}</p>
+                <p>{{poi.AddressInfo.Postcode}}</p>
+              </ion-item>
+            </ion-list>
           </div>
         </ion-scroll>
       </ion-col>

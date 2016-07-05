@@ -13,6 +13,12 @@ export class Utils {
         return height;
     }
 
+     static getClientWidth(): number {
+        var body = document.body, html = document.documentElement;
+        var width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
+        return width;
+    }
+
     static getMaxLevelOfPOI(poi) {
         var level = 0;
 

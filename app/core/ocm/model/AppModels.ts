@@ -5,7 +5,7 @@ export {SubmissionType} from './SubmissionType';
 export {UserComment} from './UserComment';
 export {Journey, JourneyStage, WayPoint, BookmarkedPOI} from './Journey';
 export {PlaceSearchResult} from './PlaceSearchResult';
-export {GeoLatLng, GeoPosition} from './GeoPosition';
+export {GeoLatLng, GeoPosition, GeoBounds} from './GeoPosition';
 export {SearchSettings} from './SearchSettings';
 export {CoreReferenceData} from './CoreReferenceData';
 export {ConnectionInfo} from './ConnectionInfo';
