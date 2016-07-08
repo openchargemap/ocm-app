@@ -2,7 +2,7 @@
 * @author Christopher Cook
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
-/// <reference path="../../../../lib/typings/googlemaps/google.maps.d.ts" />
+
 
 import {Base, LogLevel} from '../../Base';
 import {Utils} from '../../Utils';
@@ -162,27 +162,17 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                         }
 
                         if (addMarker) {
-                            var poiLevel = Utils.getMaxLevelOfPOI(poi);
+                            
 
                             var iconURL = null;
                             var animation = null;
                             var shadow = null;
                             var markerImg = null;
 
-                            iconURL = "images/icons/map/level" + poiLevel;
+                           
+                            iconURL =Utils.getIconForPOI(poi);
 
-                            if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
-                                iconURL += "_private";
-                            } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
-                                iconURL += "_nonoperational";
-                            } else {
-                                iconURL += "_operational";
-                            }
-
-                            iconURL += "_icon.png";
-
-
-                            markerImg = new google.maps.MarkerImage(
+                           /* markerImg = new google.maps.MarkerImage(){
                                 iconURL,
                                 new google.maps.Size(68, 100.0),
                                 null,
@@ -190,10 +180,10 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                                 new google.maps.Size(34, 50)
                                 //new google.maps.Size(17, 25)
                             );
-
+*/
                             var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
                             if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
-                            if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
+                           
                             if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
 
                             var newMarker = <any>new google.maps.Marker({
@@ -349,7 +339,7 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
         return true;
     }
     renderPolyline(polyline: string) {
-        var flightPath = new google.maps.Polyline({
+        var polyPath = new google.maps.Polyline({
             path: <any>google.maps.geometry.encoding.decodePath(polyline),
             geodesic: true,
             strokeColor: '#0000FF',
@@ -357,7 +347,7 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
             strokeWeight: 4
         });
 
-        flightPath.setMap(this.map);
+        polyPath.setMap(this.map);
 
     }
     focusMap() {

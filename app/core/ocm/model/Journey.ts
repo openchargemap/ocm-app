@@ -63,3 +63,19 @@ export class Journey extends JourneyBaseItem {
 
     }
 }
+
+export class JourneyRouteLeg{
+    public Title:string;
+    public DistanceKM:number;
+    public DurationMinutes:number;
+    public StartElevation:number;
+    public EndElevation:number;
+    public EnergyConsumptionkWh:number;
+}
+export class JourneyRoute{
+    public Title:string;
+    public JourneyRouteLegs: Array<JourneyRouteLeg>;
+    public TotalDistanceKM:number;
+    public TotalDurationMinutes:number;
+    public TotalEnergykWh:number;
+}

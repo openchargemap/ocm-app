@@ -7,11 +7,13 @@ import {Injectable} from '@angular/core';
 import {Http, Headers, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs'
 import {Base, LogLevel} from '../Base';
+import {JourneyManager} from './JourneyManager';
+import {JourneyRoute, JourneyRouteLeg} from '../model/Journey';
 
 @Injectable()
 
 export class GoogleMapsDirections {
-    constructor(private http: Http) {
+    constructor(private http: Http, private journeyManager: JourneyManager) {
 
     }
     public getDirections(origin: string, destination: string): Promise<any> {
@@ -41,4 +43,38 @@ export class GoogleMapsDirections {
             })
         });
     }
+
+    public analyseRoutes(routeResults: google.maps.DirectionsResult): Array<JourneyRoute> {
+        let journeyRoutes = new Array<JourneyRoute>();
+        //analyse power consumption of the routes and summarise the route
+        routeResults.routes.forEach(route => {
+            let journeyRoute = new JourneyRoute();
+            journeyRoute.Title = "" + journeyRoutes.length + 1;
+            journeyRoute.JourneyRouteLegs = new Array<JourneyRouteLeg>();
+            journeyRoute.TotalDistanceKM = 0;
+            journeyRoute.TotalDurationMinutes = 0;
+            journeyRoute.TotalEnergykWh = 0;
+
+            route.legs.forEach(leg => {
+                let durationsSeconds = leg.duration.value;
+                let distanceKM = leg.distance.value / 1000;
+                let powerConsumption = this.journeyManager.calculateEnergyConsumptionkWh(distanceKM, 0);
+            
+                let journeyLeg = new JourneyRouteLeg();
+                journeyLeg.DistanceKM = distanceKM;
+                journeyLeg.DurationMinutes = durationsSeconds / 60;
+                journeyLeg.EnergyConsumptionkWh = powerConsumption;
+
+                journeyRoute.JourneyRouteLegs.push(journeyLeg);
+
+                journeyRoute.TotalDistanceKM += journeyLeg.DistanceKM;
+                journeyRoute.TotalDurationMinutes += journeyLeg.DurationMinutes;
+                journeyRoute.TotalEnergykWh = journeyLeg.EnergyConsumptionkWh;
+            });
+            journeyRoutes.push(journeyRoute);
+        });
+
+        return journeyRoutes;
+    }
+
 }

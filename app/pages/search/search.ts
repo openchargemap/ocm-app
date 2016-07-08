@@ -1,16 +1,16 @@
-/// <reference path="../../lib/typings/googlemaps/google.maps.d.ts" />
 /// <reference path="../../lib/typings/collections/collections.d.ts" />
 import {Component, OnInit, NgZone, ChangeDetectorRef} from '@angular/core';
 import {Http} from '@angular/http';
 import {NavController, NavParams, Events, Platform, Loading, Modal} from 'ionic-angular';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {Keyboard} from 'ionic-native';
-import {PlaceSearchResult, GeoLatLng, GeoBounds, POISearchParams} from '../../core/ocm/model/AppModels';
+import {PlaceSearchResult, GeoLatLng, GeoBounds, POISearchParams, JourneyRoute, JourneyRouteLeg} from '../../core/ocm/model/AppModels';
 import {Base, LogLevel} from '../../core/ocm/Base';
 import {Utils} from '../../core/ocm/Utils';
 import {Mapping, MappingAPI} from '../../core/ocm/mapping/Mapping';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {POIManager} from '../../core/ocm/services/POIManager';
+
 
 import {POIDetailsPage} from '../poi-details/poi-details';
 import {SettingsPage} from '../settings/settings';
@@ -43,6 +43,8 @@ export class SearchPage extends Base implements OnInit {
     private routeStartPlace: any;
     private routeDestinationPlace: any;
     private routeSearchDistance: number = 5;
+    private journeyRoutes: Array<JourneyRoute>;
+    private selectedJourneyRoute:JourneyRoute;
 
     private placeSearchFocussed: boolean = false;
     private searchOnDemand: boolean = true;
@@ -216,6 +218,13 @@ export class SearchPage extends Base implements OnInit {
         }
 
         this.mapping.updateMapSize();
+
+        //force refresh of results list
+        this.changeDetector.detectChanges();
+    }
+
+    getIconForPOI(poi) {
+        return Utils.getIconForPOI(poi);
     }
 
     getPOIByID(poiID) {
@@ -646,7 +655,7 @@ export class SearchPage extends Base implements OnInit {
                     }
 
                     if (this.routeStartPlace != null && this.routeDestinationPlace != null) {
-
+                        //start a new route discovery
                         this.directions.getDirections(
                             this.routeStartPlace.geometry.location.lat() + "," + this.routeStartPlace.geometry.location.lng(),
                             this.routeDestinationPlace.geometry.location.lat() + "," + this.routeDestinationPlace.geometry.location.lng()).then((result: google.maps.DirectionsResult) => {
@@ -664,6 +673,11 @@ export class SearchPage extends Base implements OnInit {
                                     //   
                                     //,
                                     this.mapping.moveToMapBounds(bounds);
+
+                                    this.journeyRoutes = this.directions.analyseRoutes(result);
+                                    if (this.journeyRoutes.length>0) this.selectedJourneyRoute=this.journeyRoutes[0];
+this.changeDetector.detectChanges();
+                                    //create journey model(s) from routes
                                     this.refreshResultsAfterMapChange();
                                 }
                             });
@@ -694,4 +708,6 @@ export class SearchPage extends Base implements OnInit {
     onSearchBlur() {
         this.placeSearchFocussed = false;
     }
+
+
 }

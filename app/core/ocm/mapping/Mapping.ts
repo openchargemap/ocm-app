@@ -3,8 +3,6 @@
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 
-/// <reference path="../../../lib/typings/googlemaps/google.maps.d.ts" />
-
 
 import {Observable} from 'rxjs/Observable';
 import {Utils} from '../Utils';

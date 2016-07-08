@@ -3,14 +3,14 @@
     <ion-toolbar default>
       <ion-buttons start>
 
-        <button (click)="locateUser()" *ngIf="appManager.isRequestInProgress==false" clear>
+        <button (click)="locateUser()" clear>
       <ion-icon name="locate"></ion-icon>
     </button>
 
       </ion-buttons>
       <ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="getPlacesAutoComplete($event,'poiSearch')" (ionCancel)="onPlaceSearchCancel($event)"
         [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500">
-        </ion-searchbar>
+      </ion-searchbar>
       <ion-buttons end>
         <button (click)="openSearchOptions()">
       <ion-icon name="options"></ion-icon>
@@ -45,6 +45,7 @@
       <ion-col width-67="{{poiViewMode=='side'}}">
         <div id="map-canvas"></div>
       </ion-col>
+
       <ion-col width-33 *ngIf="poiViewMode=='side'">
         <ion-scroll scrollY="true" style="height:100%">
 
@@ -84,13 +85,13 @@
                     placeholder="Destination" [debounce]="500"></ion-searchbar>
                 </ion-item>
 
-                 <ion-item>
-  <ion-range min="1" max="200" step="5" snaps="true" [(ngModel)]="routeSearchDistance">
-    <ion-icon range-left small name="map"></ion-icon>
-    <ion-icon range-right large name="map"></ion-icon>
-  </ion-range>
+                <ion-item>
+                  <ion-range min="1" max="200" step="5" snaps="true" [(ngModel)]="routeSearchDistance" light>
+                    <ion-icon range-left small name="map"></ion-icon>
+                    <ion-icon range-right large name="map"></ion-icon>
+                  </ion-range>
 
-</ion-item>
+                </ion-item>
 
               </ion-list>
 
@@ -114,11 +115,25 @@
               </div>
             </div>
 
+             <ion-list *ngIf="selectedJourneyRoute!=null">
+              <ion-list-header>
+             Journey {{selectedJourneyRoute.TotalDistanceKM | number:'.2'}}km, {{selectedJourneyRoute.TotalDurationMinutes | number:'.0'}} mins, {{selectedJourneyRoute.TotalEnergykWh |number:'.2'}} kWh
+              </ion-list-header>
+              <ion-item *ngFor="let leg of selectedJourneyRoute.JourneyRouteLegs">
+              
+                <h2>{{leg.DistanceKM}} km, {{leg.DurationMinutes}} mins, {{leg.EnergyConsumptionkWh}} kWh</h2>
+               
+              </ion-item>
+            </ion-list>
+
             <ion-list *ngIf="poiManager.poiList!=null">
               <ion-list-header>
-                {{poiManager.poiList.length}} results    Search Distance: {{routeSearchDistance}}km
+                {{poiManager.poiList.length}} results Search Distance: {{routeSearchDistance}}km
               </ion-list-header>
               <ion-item *ngFor="let poi of poiManager.poiList" (click)="viewPOIDetails({poiId:poi.ID})">
+                <ion-avatar item-left>
+                  <img src="{{getIconForPOI(poi)}}"/>
+                </ion-avatar>
                 <h2>{{poi.AddressInfo.Title}}</h2>
                 <p>{{poi.AddressInfo.AddressLine1}}</p>
                 <p>{{poi.AddressInfo.Postcode}}</p>
@@ -127,6 +142,7 @@
           </div>
         </ion-scroll>
       </ion-col>
+
     </ion-row>
   </ion-grid>
 </ion-content>

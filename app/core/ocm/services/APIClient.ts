@@ -64,6 +64,7 @@ export class APIClient extends Base {
         if (params.statusTypeIdList != null) serviceParams += "&statustypeid=" + this.getNumberListString(params.statusTypeIdList);
         if (params.locationTitle != null) serviceParams += "&locationtitle=" + params.locationTitle;
         if (params.minPowerKW != null) serviceParams += "&minpowerkw=" + params.minPowerKW;
+        if (params.maxPowerKW != null) serviceParams += "&maxpowerkw=" + params.maxPowerKW;
         if (params.submissionStatusTypeIdList != null) serviceParams += "&submissionstatustypeid=" + this.getNumberListString(params.submissionStatusTypeIdList);
         if (params.poiIdList != null) serviceParams += "&chargepointid=" + this.getNumberListString(params.poiIdList);
 

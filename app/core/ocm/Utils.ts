@@ -6,14 +6,14 @@
 declare var device: any;
 
 export class Utils {
-   
+
     static getClientHeight(): number {
         var body = document.body, html = document.documentElement;
         var height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
         return height;
     }
 
-     static getClientWidth(): number {
+    static getClientWidth(): number {
         var body = document.body, html = document.documentElement;
         var width = Math.max(body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
         return width;
@@ -33,6 +33,22 @@ export class Utils {
         if (level == 4) level = 2; //lvl 1&2
         if (level > 4) level = 3; //lvl 2&3 etc
         return level;
+    }
+
+    static getIconForPOI(poi) {
+        let poiLevel = Utils.getMaxLevelOfPOI(poi);
+        let iconURL = "images/icons/map/level" + poiLevel;
+
+        if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
+            iconURL += "_private";
+        } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
+            iconURL += "_nonoperational";
+        } else {
+            iconURL += "_operational";
+        }
+
+        iconURL += "_icon.png";
+        return iconURL;
     }
 
     static applyLocalisation(isTestMode: boolean) {
@@ -122,7 +138,7 @@ export class Utils {
         return '<a target="_blank" href="' + url + '">' + (title != null ? title : url) + '</a>';
     }
 
-    static formatPOIAddress = function(poi, includeLineBreaks: boolean = true) {
+    static formatPOIAddress = function (poi, includeLineBreaks: boolean = true) {
         var output = "";
         if (includeLineBreaks) {
             output = "" + this.formatTextField(poi.AddressInfo.AddressLine1) +
@@ -144,7 +160,7 @@ export class Utils {
         return output;
     }
 
-    static formatStringArray = function(list: Array<string>, separator: string = ", ") {
+    static formatStringArray = function (list: Array<string>, separator: string = ", ") {
         if (list == null) return "";
         var output = "";
         for (var i = 0; i < list.length; i++) {
@@ -318,9 +334,9 @@ export class Utils {
     //http://davidwalsh.name/javascript-debounce-function
     static debounce(func, wait, immediate) {
         var timeout;
-        return function() {
+        return function () {
             var context = this, args = arguments;
-            var later = function() {
+            var later = function () {
                 timeout = null;
                 if (!immediate) func.apply(context, args);
             };

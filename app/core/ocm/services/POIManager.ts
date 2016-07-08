@@ -25,7 +25,7 @@ export class POIManager extends Base {
     public fetchPOIList(searchParams: POISearchParams) {
 
         this.isRequestInProgress = true;
-        this.api.fetchPOIListByParam(searchParams, this)
+        return this.api.fetchPOIListByParam(searchParams, this)
             .subscribe(
             (results:Array<any>) => {
                 console.log('fetched POI list ['+results.length+']');

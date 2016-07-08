@@ -123,7 +123,7 @@ export class JourneyManager extends Base {
                 for (let w of s.WayPoints) {
                     for (let p of w.PoiList) {
                         p.Poi = null;
-                        p.Photos=null;
+                        p.Photos = null;
                     }
                 }
             }
@@ -247,5 +247,23 @@ export class JourneyManager extends Base {
         this.journeys.push(journey2);
 
     }
+
+    public calculateEnergyConsumptionkWh(distanceKM: number, speedKPH: number, elevationDelta: number = 0): number {
+        //given an input speed in km/h for a given distance, calculate an estimate of required energy consumption in kwh, optionally account for elevation change.
+        //let totalkWhCapacity = 21;
+
+        //average vehicle energy efficiency in Kilowatt Hours consumed per Kilometer travelled
+        let kWhPerKM = 0.212; //Model S = ~0.24, Leaf = ~0.212
+
+        let totalPowerRequiredkWh = distanceKM * kWhPerKM;
+
+
+        //calculate how many hours we are travelling for given avg speed
+        //let durationInHours = distanceKM/speedKPH;
+
+        return totalPowerRequiredkWh;
+
+    }
+
 
 }
