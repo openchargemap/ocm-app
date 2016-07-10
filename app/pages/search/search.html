@@ -22,23 +22,7 @@
 
 <ion-content class="search-page">
 
-  <div id="place-search" *ngIf="placeSearchActive==true && placeSearchType=='poiSearch'">
-
-    <div id="place-attribution"></div>
-
-    <ion-list>
-      <a *ngFor="let item of placeList" (click)="placeSelected($event,item)" ion-item>
-        <ion-avatar item-left>
-          <ion-icon name="locate"></ion-icon>
-        </ion-avatar>
-
-        <h2>{{item.Title}}</h2>
-        <h3>{{item.Type}}</h3>
-        <p>{{item.Address}}</p>
-      </a>
-    </ion-list>
-
-  </div>
+  <place-search></place-search>
 
   <ion-grid>
     <ion-row>
@@ -50,11 +34,21 @@
         <ion-scroll scrollY="true" style="height:100%">
 
 
-          <ion-toolbar *ngIf="selectedPOI!=null">
+          <ion-toolbar primary>
             <ion-buttons start>
-              <button (click)="closePOIDetails()">
+
+              <button (click)="closePOIDetails()" *ngIf="selectedPOI!=null">
              <ion-icon name="close"></ion-icon>
-              Close
+              Back
+
+            </button>
+
+            </ion-buttons>
+            <ion-buttons end>
+
+              <button (click)="closeSideView()" title="Hide Side Panel">
+             <ion-icon name="arrow-round-forward"></ion-icon>
+              
 
             </button>
             </ion-buttons>
@@ -62,83 +56,33 @@
           </ion-toolbar>
           <poi-details *ngIf="selectedPOI!=null" [poi]="selectedPOI"></poi-details>
           <div *ngIf="selectedPOI==null">
-            <div class="banner">
 
-              <p padding>Browse the map to find charging locations. Select a location to see the full details.</p>
+            <route-planner *ngIf="routePlanningMode"></route-planner>
 
-            </div>
-            <div class="route">
+            <div *ngIf="!routePlanningMode">
+              <div class="banner">
 
-              <ion-list>
-                <ion-list-header>
-                  <ion-icon name="map"></ion-icon> Plan Your Journey
-                </ion-list-header>
-                <ion-item>
-
-                  <ion-searchbar [(ngModel)]="routeStart" (ionInput)="getPlacesAutoComplete($event,'routeStart')" (ionCancel)="onPlaceSearchCancel($event)"
-                    placeholder="Starting Point" [debounce]="500"></ion-searchbar>
-                </ion-item>
-
-                <ion-item>
-
-                  <ion-searchbar [(ngModel)]="routeDestination" (ionInput)="getPlacesAutoComplete($event,'routeDestination')" (ionCancel)="onPlaceSearchCancel($event)"
-                    placeholder="Destination" [debounce]="500"></ion-searchbar>
-                </ion-item>
-
-                <ion-item>
-                  <ion-range min="1" max="200" step="5" snaps="true" [(ngModel)]="routeSearchDistance" light>
-                    <ion-icon range-left small name="map"></ion-icon>
-                    <ion-icon range-right large name="map"></ion-icon>
-                  </ion-range>
-
-                </ion-item>
-
-              </ion-list>
-
-              <div id="place-search" *ngIf="placeSearchActive==true && (placeSearchType=='routeStart' || placeSearchType=='routeDestination')">
-
-                <div id="place-attribution"></div>
-
-
-                <ion-list>
-                  <a *ngFor="let item of placeList" (click)="placeSelected($event,item)" ion-item>
-                    <ion-avatar item-left>
-                      <ion-icon name="locate"></ion-icon>
-                    </ion-avatar>
-
-                    <h2>{{item.Title}}</h2>
-                    <h3>{{item.Type}}</h3>
-                    <p>{{item.Address}}</p>
-                  </a>
-                </ion-list>
-
+                <p padding>Browse the map to find charging locations. Select a location to see the full details.</p>
+                <button (click)="planRoute()"><ion-icon name="map"></ion-icon> Plan Route</button>
               </div>
+
+
+
+
+              <ion-list *ngIf="poiManager.poiList!=null">
+                <ion-list-header>
+                  {{poiManager.poiList.length}} results Search Distance: {{routeSearchDistance}}km
+                </ion-list-header>
+                <ion-item *ngFor="let poi of poiManager.poiList" (click)="viewPOIDetails({poiId:poi.ID})">
+                  <ion-avatar item-left>
+                    <img src="{{getIconForPOI(poi)}}" />
+                  </ion-avatar>
+                  <h2>{{poi.AddressInfo.Title}}</h2>
+                  <p>{{poi.AddressInfo.AddressLine1}}</p>
+                  <p>{{poi.AddressInfo.Postcode}}</p>
+                </ion-item>
+              </ion-list>
             </div>
-
-             <ion-list *ngIf="selectedJourneyRoute!=null">
-              <ion-list-header>
-             Journey {{selectedJourneyRoute.TotalDistanceKM | number:'.2'}}km, {{selectedJourneyRoute.TotalDurationMinutes | number:'.0'}} mins, {{selectedJourneyRoute.TotalEnergykWh |number:'.2'}} kWh
-              </ion-list-header>
-              <ion-item *ngFor="let leg of selectedJourneyRoute.JourneyRouteLegs">
-              
-                <h2>{{leg.DistanceKM}} km, {{leg.DurationMinutes}} mins, {{leg.EnergyConsumptionkWh}} kWh</h2>
-               
-              </ion-item>
-            </ion-list>
-
-            <ion-list *ngIf="poiManager.poiList!=null">
-              <ion-list-header>
-                {{poiManager.poiList.length}} results Search Distance: {{routeSearchDistance}}km
-              </ion-list-header>
-              <ion-item *ngFor="let poi of poiManager.poiList" (click)="viewPOIDetails({poiId:poi.ID})">
-                <ion-avatar item-left>
-                  <img src="{{getIconForPOI(poi)}}"/>
-                </ion-avatar>
-                <h2>{{poi.AddressInfo.Title}}</h2>
-                <p>{{poi.AddressInfo.AddressLine1}}</p>
-                <p>{{poi.AddressInfo.Postcode}}</p>
-              </ion-item>
-            </ion-list>
           </div>
         </ion-scroll>
       </ion-col>

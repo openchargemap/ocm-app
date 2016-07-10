@@ -172,15 +172,15 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
                            
                             iconURL =Utils.getIconForPOI(poi);
 
-                           /* markerImg = new google.maps.MarkerImage(){
-                                iconURL,
-                                new google.maps.Size(68, 100.0),
-                                null,
-                                new google.maps.Point(15, 45),
-                                new google.maps.Size(34, 50)
-                                //new google.maps.Size(17, 25)
-                            );
-*/
+                            markerImg ={
+                                url: iconURL,
+                                size: new google.maps.Size(68, 100.0),
+                                
+                                anchor: new google.maps.Point(15, 45),
+                                scaledSize: new google.maps.Size(34, 50)
+                               
+                            }
+
                             var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
                             if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
                            

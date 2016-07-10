@@ -3,7 +3,7 @@
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 
-
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {Utils} from '../Utils';
 import {Base, LogLevel} from '../Base';
@@ -81,6 +81,7 @@ export interface IMapProvider {
 /** Mapping - provides a way to render to various mapping APIs
  * @module Mapping
  */
+@Injectable()
 export class Mapping extends Base {
     public map: any;
     public mapCentreMarker: any;

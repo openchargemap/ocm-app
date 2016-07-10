@@ -29,6 +29,7 @@ export class APIClient extends Base {
     public allowMirror: boolean = false;
 
     http: Http;
+    private lastPOIApiCallURL = "";
 
     constructor(http: Http) {
         super();
@@ -79,19 +80,28 @@ export class APIClient extends Base {
         var apiCallURL = serviceURL + serviceParams;
         //+ "&polyline=u`lyH|iW{}D|dHweCboEasA|x@_gAupBs}A{yE}n@ydG}bBi~FybCsnBmeCse@otLm{BshGscAw`E|nDawLykJq``@flAqbRczR";
 
-        this.log("API Call:" + apiCallURL, LogLevel.VERBOSE);
+        if (this.lastPOIApiCallURL != apiCallURL) {
 
 
-        return this.http.get(apiCallURL)
-            .map((res) => {
-                let poiResults = poiManager.hydrateCompactPOIList(res.json());
-                return poiResults;
-            })
-            .catch((error) => {
-                let errMsg = error.message || 'Could not fetch POI list from server.';
-                this.log("API Client: " + errMsg, LogLevel.ERROR);
-                return Observable.throw(errMsg);
-            });
+            this.lastPOIApiCallURL = apiCallURL;
+
+            this.log("API Call:" + apiCallURL, LogLevel.VERBOSE);
+
+
+            return this.http.get(apiCallURL)
+                .map((res) => {
+                    let poiResults = poiManager.hydrateCompactPOIList(res.json());
+                    return poiResults;
+                })
+                .catch((error) => {
+                    let errMsg = error.message || 'Could not fetch POI list from server.';
+                    this.log("API Client: " + errMsg, LogLevel.ERROR);
+                    return Observable.throw(errMsg);
+                });
+        } else {
+            this.log("Skipped API call due to same query being repeated.");
+
+        }
     }
 
     /** 

@@ -1,0 +1,17 @@
+ <div class="place-search" *ngIf="placeSearchActive">
+
+    <div id="place-attribution"></div>
+
+    <ion-list>
+      <a *ngFor="let item of placeList" (click)="placeSelected(item)" ion-item>
+        <ion-avatar item-left>
+          <ion-icon name="locate"></ion-icon>
+        </ion-avatar>
+
+        <h2>{{item.Title}}</h2>
+        <h3>{{item.Type}}</h3>
+        <p>{{item.Address}}</p>
+      </a>
+    </ion-list>
+
+  </div>

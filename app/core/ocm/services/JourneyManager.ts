@@ -19,6 +19,8 @@ export class JourneyManager extends Base {
 
     public journeys: Array<Journey>;
     public favourites: Array<BookmarkedPOI>;
+    private routePolyline: string;
+
     constructor(private api: APIClient, private poiManager: POIManager) {
         super();
         this.journeys = [];
@@ -265,5 +267,11 @@ export class JourneyManager extends Base {
 
     }
 
+    public setRoutePolyline(polyline: string) {
+        this.routePolyline = polyline;
+    }
 
+    public getRoutePolyline() {
+        return this.routePolyline;
+    }
 }

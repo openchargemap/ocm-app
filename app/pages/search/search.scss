@@ -29,12 +29,22 @@ scroll-content {
 .banner{
     background-color: #446722;
 }
+
 .route {
-    background-color: #8fb767;
+    /*background-color: #8fb767;*/
     color:white;
     .item {
         background-color: transparent;
+      
+    }
+    .route-places{
+    background-color: #8fb767;
+    ion-icon, ion-list-header, .item{
+        color:white;
     }
 }
+    }
+    
+
 }
 
