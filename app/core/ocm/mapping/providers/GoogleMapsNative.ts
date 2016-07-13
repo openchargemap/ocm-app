@@ -29,6 +29,8 @@ export class GoogleMapsNative extends Base implements IMapProvider {
     private markerList: collections.Dictionary<number, google.maps.Marker>;
     private maxMarkers: number = 200;
     private markerAllocCount: number = 0;
+    private polylinePath:any;
+
     /** @constructor */
     constructor(private events: Events) {
         super();
@@ -349,8 +351,21 @@ export class GoogleMapsNative extends Base implements IMapProvider {
         return true;
     }
     renderPolyline(polyline: string) {
-        //
+        this.clearPolyline();
+        //TODO: add polyline
+        this.map.addPolyline({
+        points: <any>google.maps.geometry.encoding.decodePath(polyline),
+        'color' : '#AA00FF',
+        'width': 10,
+        'geodesic': true
+      });
     }
+    clearPolyline(){
+        if (this.polylinePath!=null){
+            this.polylinePath.setMap(null);
+        }
+    }
+
     unfocusMap() {
         this.map.setClickable(false);
     }

@@ -16,8 +16,7 @@ import {PlaceSearch} from '../../components/place-search/place-search';
 })
 export class RoutePlanner {
 
-    private routeStart: string;
-    private routeDestination: string;
+
     private routeStartPlace: any;
     private routeDestinationPlace: any;
     private routeSearchDistance: number = 5;
@@ -25,12 +24,27 @@ export class RoutePlanner {
     private selectedJourneyRoute: JourneyRoute;
     private routePolyline: string;
     private routeCalcInProgress: boolean = false;
-
+    private advancedSettingsMode: boolean = false;
 
     constructor(private mapping: Mapping, private directions: GoogleMapsDirections, private logging: Logging, private journeyManager: JourneyManager, private changeDetector: ChangeDetectorRef, private numberPipe: DecimalPipe) {
 
     }
 
+    get isRouteSet(): boolean {
+        if (this.routeStartPlace != null && this.routeDestinationPlace != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    showSettings() {
+        this.advancedSettingsMode = true;
+    }
+    hideSettings() {
+        this.advancedSettingsMode = false;
+    }
     routeStartSelected($e) {
         //alert(JSON.stringify($e));
         this.routeStartPlace = $e;
@@ -51,6 +65,13 @@ export class RoutePlanner {
     clearRouteDestination() {
         this.routeDestinationPlace = null;
         this.changeDetector.detectChanges();
+    }
+
+    clearRoute() {
+        this.routeStartPlace = null;
+        this.routeDestinationPlace = null;
+        this.journeyManager.setRoutePolyline(null);
+        this.mapping.clearPolyline();
     }
 
     formatDuration(durationMins: number) {

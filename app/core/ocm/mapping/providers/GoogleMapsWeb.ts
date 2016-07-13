@@ -25,6 +25,8 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
 
     private events: Events;
 
+    private polylinePath : google.maps.Polyline;
+
     /** @constructor */
     constructor(events: Events) {
         super();
@@ -339,7 +341,9 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
         return true;
     }
     renderPolyline(polyline: string) {
-        var polyPath = new google.maps.Polyline({
+        this.clearPolyline();
+
+        this.polylinePath = new google.maps.Polyline({
             path: <any>google.maps.geometry.encoding.decodePath(polyline),
             geodesic: true,
             strokeColor: '#0000FF',
@@ -347,8 +351,14 @@ export class GoogleMapsWeb extends Base implements IMapProvider {
             strokeWeight: 4
         });
 
-        polyPath.setMap(this.map);
+        this.polylinePath.setMap(this.map);
 
+    }
+
+    clearPolyline(){
+        if (this.polylinePath!=null){
+            this.polylinePath.setMap(null);
+        }
     }
     focusMap() {
         //

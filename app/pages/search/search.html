@@ -3,17 +3,21 @@
     <ion-toolbar default>
       <ion-buttons start>
 
-        <button (click)="locateUser()" clear>
+        <button (click)="locateUser()">
       <ion-icon name="locate"></ion-icon>
     </button>
 
       </ion-buttons>
-      <ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="getPlacesAutoComplete($event,'poiSearch')" (ionCancel)="onPlaceSearchCancel($event)"
+      <ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="placeSearchMapPOI.getPlacesAutoComplete($event,'poiSearch')" (ionCancel)="onPlaceSearchCancel($event)"
         [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500">
       </ion-searchbar>
       <ion-buttons end>
         <button (click)="openSearchOptions()">
       <ion-icon name="options"></ion-icon>
+    </button>
+
+      <button (click)="openSideView()" *ngIf="sideViewAvailable==true && poiViewMode=='modal'">
+      <ion-icon name="arrow-dropleft-circle"></ion-icon>
     </button>
       </ion-buttons>
     </ion-toolbar>
@@ -22,7 +26,7 @@
 
 <ion-content class="search-page">
 
-  <place-search></place-search>
+  <place-search #placeSearchMapPOI (placeChanged)="placeSelected($event)" style="position:absolute;z-index:1000;"></place-search>
 
   <ion-grid>
     <ion-row>
@@ -38,7 +42,7 @@
             <ion-buttons start>
 
               <button (click)="closePOIDetails()" *ngIf="selectedPOI!=null">
-             <ion-icon name="close"></ion-icon>
+             <ion-icon name="arrow-dropleft"></ion-icon>
               Back
 
             </button>
@@ -47,7 +51,7 @@
             <ion-buttons end>
 
               <button (click)="closeSideView()" title="Hide Side Panel">
-             <ion-icon name="arrow-round-forward"></ion-icon>
+             <ion-icon name="arrow-dropright-circle"></ion-icon>
               
 
             </button>

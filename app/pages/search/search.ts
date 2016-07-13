@@ -38,6 +38,7 @@ export class SearchPage extends Base implements OnInit {
     private poiViewMode: string = "side";
     private searchPolyline: string;
     private routePlanningMode: boolean = true;
+    private sideViewAvailable = false;
 
     constructor(
         private appManager: AppManager,
@@ -48,7 +49,7 @@ export class SearchPage extends Base implements OnInit {
         private platform: Platform,
         private poiManager: POIManager,
         private mapping: Mapping,
-        private journeyManager:JourneyManager,
+        private journeyManager: JourneyManager,
         private zone: NgZone,
         private changeDetector: ChangeDetectorRef
     ) {
@@ -59,7 +60,9 @@ export class SearchPage extends Base implements OnInit {
         this.mapCanvasID = "map-canvas";
 
         //decide whether to use Native Google Maps SDK or Google Web API        
-        if (platform.is("ios") || platform.is("android")) {
+        if ((platform.is("ios") || platform.is("android"))
+            && !(this.appManager.isPlatform("core") || this.appManager.isPlatform("mobileweb"))
+        ) {
             this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
 
             //if using native maps, don't allow the keyboard to scroll the view as this conflicts with the plugin rendering
@@ -107,11 +110,17 @@ export class SearchPage extends Base implements OnInit {
 
     checkViewportMode() {
         this.log("Checking viewport mode:" + this.appManager.clientWidth);
-        if (this.appManager.clientWidth > 1000 && this.poiViewMode != "side") {
+        if (this.appManager.clientWidth > 1000) {
+            this.sideViewAvailable = true;
+        } else {
+            this.sideViewAvailable = false;
+        }
+
+        if (this.sideViewAvailable && this.poiViewMode != "side") {
             this.poiViewMode = "side"; //switch to side panel view mode for poi details
         }
 
-        if (this.appManager.clientWidth <= 1000 && this.poiViewMode == "side") {
+        if (!this.sideViewAvailable && this.poiViewMode == "side") {
             this.poiViewMode = "modal"; //switch to modal view mode for poi details
         }
     }
@@ -308,8 +317,8 @@ export class SearchPage extends Base implements OnInit {
                             params.polyline = this.journeyManager.getRoutePolyline();
                             params.boundingbox = null;
                             params.levelOfDetail = null;
-                            params.latitude=null;
-                            params.longitude=null;
+                            params.latitude = null;
+                            params.longitude = null;
                             // params.distance = this.routeSearchDistance;
                         }
 
@@ -389,12 +398,17 @@ export class SearchPage extends Base implements OnInit {
         this.nav.push(SettingsPage);
     }
 
+    openSideView() {
+        this.poiViewMode = "side";
+        this.mapping.updateMapSize();
+    }
     closeSideView() {
         this.poiViewMode = "modal";
+        this.mapping.updateMapSize();
     }
 
-    planRoute(){
-        this.routePlanningMode=true;
+    planRoute() {
+        this.routePlanningMode = true;
     }
 
     locateUser(): Promise<any> {
@@ -409,7 +423,9 @@ export class SearchPage extends Base implements OnInit {
             this.mapping.setMapZoom(15); //TODO: provider specific ideal zoom for 'summary'
             //this.mapping.updateMapSize();
 
-            this.refreshResultsAfterMapChange();
+            this.showPOIListOnMap(null);//show initial map view
+
+            // this.refreshResultsAfterMapChange(); //fetch new poi results based on map viewport
         }).catch((err) => {
             ///no geolocation
             this.log("Failed to get user location.");
@@ -434,49 +450,21 @@ export class SearchPage extends Base implements OnInit {
 
     }
 
-    placeSelected(e, item: PlaceSearchResult) {
-        let searchKeyword = item.Title;
-        // this.placeSearchActive = false;
+    placeSelected(place) {
 
-        this.appManager.isRequestInProgress = false;
+        this.log("Got place details:" + place.name);
 
 
-        //move map to selected place
-        if (item.Location != null) {
+        //give map back the input focus (mainly for native map)
+        this.mapping.focusMap();
 
-            //give map back the input focus (mainly for native map)
-            this.mapping.focusMap();
-
-            this.mapping.updateMapCentrePos(item.Location.latitude, item.Location.longitude, true);
-            this.debouncedRefreshResults();
-
-        } else if (item.ReferenceID != null) {
-            //look up placeid
-
-            this.log("Looking up place details:" + item.ReferenceID);
-            var attributionDiv = <HTMLDivElement>document.getElementById("place-attribution");
-            var service = new google.maps.places.PlacesService(attributionDiv);
-
-            (<any>service).getDetails({ placeId: item.ReferenceID }, (place, status) => {
-                if (status == google.maps.places.PlacesServiceStatus.OK) {
-                    this.log("Got place details:" + place.name);
+        this.mapping.updateMapCentrePos(place.geometry.location.lat(), place.geometry.location.lng(), true);
+        this.refreshResultsAfterMapChange();
+        ///this.mapping.setMapZoom(15);
+        //this.debouncedRefreshResults();
 
 
-                    //give map back the input focus (mainly for native map)
-                    this.mapping.focusMap();
 
-                    this.mapping.updateMapCentrePos(place.geometry.location.lat(), place.geometry.location.lng(), true);
-                    this.refreshResultsAfterMapChange();
-                    ///this.mapping.setMapZoom(15);
-                    //this.debouncedRefreshResults();
-
-
-                } else {
-                    this.log("Failed to fetch place:" + status.toString());
-                }
-            });
-
-        }
 
     }
 

@@ -3,7 +3,7 @@
  * API filter parameters 
  * */
 export class POISearchParams {
-    constructor() { }
+   
 
     public poiIdList: Array<number> = null;
     public countryCode: string = null;

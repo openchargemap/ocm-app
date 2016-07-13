@@ -6,54 +6,85 @@
       </ion-list-header>
 
 
-      <ion-item *ngIf="!routeStartPlace">
-
+      <ion-item *ngIf="routeStartPlace==null">
+        <ion-icon name="ionic" item-left></ion-icon>
         <ion-searchbar [(ngModel)]="routeStart" (ionInput)="placeSearchRouteStart.getPlacesAutoComplete($event,'routeStart')" (ionCancel)="onPlaceSearchCancel($event)"
           placeholder="Starting Point" [debounce]="500"></ion-searchbar>
 
       </ion-item>
-      <ion-item *ngIf="routeStartPlace">
-        <button item-left><ion-icon name="create" large clear (click)="clearRouteStart()"></ion-icon></button>
+      <ion-item *ngIf="routeStartPlace!=null" (click)="clearRouteStart()">
+        <ion-icon name="ionic" item-left></ion-icon>
 
         <h2>{{placeSearchRouteStart.selectedPlace?.name}}</h2>
       </ion-item>
 
-      <ion-item *ngIf="!routeDestinationPlace">
-
+      <ion-item *ngIf="routeDestinationPlace==null">
+        <ion-icon name="pin" item-left></ion-icon>
         <ion-searchbar [(ngModel)]="routeDestination" (ionInput)="placeSearchRouteDestination.getPlacesAutoComplete($event,'routeDestination')"
           (ionCancel)="onPlaceSearchCancel($event)" placeholder="Destination" [debounce]="500"></ion-searchbar>
 
 
       </ion-item>
-      <ion-item *ngIf="routeDestinationPlace">
-        <button item-left><ion-icon name="create" large clear (click)="clearRouteDestination()"></ion-icon></button>
-
+      <ion-item *ngIf="routeDestinationPlace!=null" (click)="clearRouteDestination()">
+        <ion-icon name="pin" item-left></ion-icon>
         <h2>{{placeSearchRouteDestination.selectedPlace?.name}}</h2>
       </ion-item>
 
-      <ion-item>
-        <ion-range min="1" max="200" step="5" snaps="true" [(ngModel)]="routeSearchDistance" light>
-          <ion-icon range-left small name="map"></ion-icon>
-          <ion-icon range-right large name="map"></ion-icon>
-        </ion-range>
 
-      </ion-item>
 
     </ion-list>
+
+    <div *ngIf="advancedSettingsMode">
+
+      <ion-list>
+        <ion-list-header>
+          <ion-icon name="cog"></ion-icon> Route Settings
+        </ion-list-header>
+        <ion-item>
+          <ion-label stacked>Search Distance</ion-label>
+          <ion-range min="1" max="200" step="5" snaps="true" [(ngModel)]="routeSearchDistance" light>
+            <ion-icon range-left small name="map"></ion-icon>
+            <ion-icon range-right large name="map"></ion-icon>
+          </ion-range>
+
+        </ion-item>
+      </ion-list>
+    </div>
+
+    <ion-toolbar primary>
+      <ion-buttons start>
+        <button (click)="clearRoute()" *ngIf="isRouteSet">
+            <ion-icon name="close"></ion-icon>
+      Clear Route
+
+    </button>
+      </ion-buttons>
+      <ion-buttons end>
+        <button (click)="showSettings()" *ngIf="!advancedSettingsMode">
+      Settings
+      <ion-icon name="cog" ></ion-icon>
+    </button>
+        <button (click)="hideSettings()" *ngIf="advancedSettingsMode">
+      Hide
+      <ion-icon name="cog" ></ion-icon>
+    </button>
+      </ion-buttons>
+    </ion-toolbar>
   </div>
 
   <place-search #placeSearchRouteStart (placeChanged)="routeStartSelected($event)"></place-search>
 
   <place-search #placeSearchRouteDestination (placeChanged)="routeDestinationSelected($event)"></place-search>
 
-<p padding *ngIf="routeCalcInProgress">
-<ion-spinner  padding></ion-spinner> Calculating Route..
-</p>
+  <p padding *ngIf="routeCalcInProgress">
+    <ion-spinner padding></ion-spinner> Calculating Route..
+  </p>
 
   <ion-list *ngIf="selectedJourneyRoute!=null">
     <ion-list-header>
-      Total Distance {{selectedJourneyRoute.TotalDistanceKM | number:'1.0-2'}} km, {{formatDuration(selectedJourneyRoute.TotalDurationMinutes)}}, {{selectedJourneyRoute.TotalEnergykWh |number:'1.0-2'}} kWh
+      Total Distance {{selectedJourneyRoute.TotalDistanceKM | number:'1.0-2'}} km, {{formatDuration(selectedJourneyRoute.TotalDurationMinutes)}},
+      {{selectedJourneyRoute.TotalEnergykWh |number:'1.0-2'}} kWh
     </ion-list-header>
-    
+
   </ion-list>
 </div>

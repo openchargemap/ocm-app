@@ -319,7 +319,13 @@ export class LeafletMap extends Base implements IMapProvider {
         return true;
     }
     renderPolyline(polyline: string) {
-        //
+
+        this.clearPolyline();
+        //TODO
+    }
+
+    clearPolyline(){
+        //TODO
     }
 
     moveToMapBounds(bounds: GeoBounds) {

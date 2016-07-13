@@ -74,6 +74,7 @@ export interface IMapProvider {
     getMapBounds(): Observable<Array<GeoLatLng>>;
     moveToMapBounds(bounds: GeoBounds);
     renderPolyline(polyline: string);
+    clearPolyline();
     focusMap();
     unfocusMap();
 }
@@ -418,6 +419,9 @@ export class Mapping extends Base {
 
     renderPolyline(polyline: string) {
         this.mapProvider.renderPolyline(polyline);
+    }
+    clearPolyline(){
+        this.mapProvider.clearPolyline();
     }
 
     clearMarkers() {

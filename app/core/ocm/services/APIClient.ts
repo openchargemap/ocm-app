@@ -9,6 +9,7 @@ import {Observable} from 'rxjs'
 import {Base, LogLevel} from '../Base';
 import {AsyncResult, SubmissionType, POISearchParams, GeoLatLng} from '../model/AppModels';
 import {POIManager} from '../services/POIManager';
+import {ReferenceDataManager} from '../services/ReferenceDataManager';
 
 @Injectable()
 export class APIClient extends Base {
@@ -28,13 +29,13 @@ export class APIClient extends Base {
     public generalErrorCallback: any;
     public allowMirror: boolean = false;
 
-    http: Http;
     private lastPOIApiCallURL = "";
 
-    constructor(http: Http) {
+    constructor(private http: Http, private refData:ReferenceDataManager) {
         super();
-        this.http = http;
+   
         this.serviceBaseURL = this.serviceBaseURL_Standard;
+        //this.serviceBaseURL = this.serviceBaseURL_LocalDev;
     }
 
     getNumberListString(numberList: Array<number>): string {
@@ -46,7 +47,7 @@ export class APIClient extends Base {
         return output;
     }
 
-    fetchPOIListByParam(params: POISearchParams, poiManager: POIManager): Observable<any> {
+    fetchPOIListByParam(params: POISearchParams): Observable<any> {
         var serviceURL = this.serviceBaseURL + "/poi/?client=" + this.clientName + (this.allowMirror ? " &allowmirror=true" : "") + "&verbose=false&compact=true&output=json";
 
         var serviceParams = "";
@@ -90,7 +91,7 @@ export class APIClient extends Base {
 
             return this.http.get(apiCallURL)
                 .map((res) => {
-                    let poiResults = poiManager.hydrateCompactPOIList(res.json());
+                    let poiResults = this.refData.hydrateCompactPOIList(res.json());
                     return poiResults;
                 })
                 .catch((error) => {
@@ -100,7 +101,7 @@ export class APIClient extends Base {
                 });
         } else {
             this.log("Skipped API call due to same query being repeated.");
-
+            Observable.throw("Duplicate POI Query.");
         }
     }
 

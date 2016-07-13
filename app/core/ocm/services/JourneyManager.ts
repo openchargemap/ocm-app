@@ -67,7 +67,7 @@ export class JourneyManager extends Base {
             }
         }
 
-        this.api.fetchPOIListByParam(searchParams, this.poiManager).subscribe((results) => {
+        this.api.fetchPOIListByParam(searchParams).subscribe((results) => {
             //populate journeys with POI details
             for (let poi of results) {
                 this.updateStoredPOI(poi);

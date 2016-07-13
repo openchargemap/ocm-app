@@ -1,14 +1,17 @@
 import {Platform, Config, Events, NavController, ionicBootstrap} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {Http, ConnectionBackend} from '@angular/http';
-import {Component, OnInit, provide, enableProdMode} from '@angular/core';
+import {Component, OnInit, provide} from '@angular/core';
+import {DecimalPipe} from '@angular/common';
 
 import {APIClient} from './core/ocm/services/APIClient';
-import {AppManager} from './core/ocm/services/AppManager'
-import {POIManager} from './core/ocm/services/POIManager'
-import {SubmissionQueue} from './core/ocm/services/SubmissionQueue'
+import {AppManager} from './core/ocm/services/AppManager';
+import {POIManager} from './core/ocm/services/POIManager';
+import {Mapping} from './core/ocm/mapping/Mapping';
+import {SubmissionQueue} from './core/ocm/services/SubmissionQueue';
 import {JourneyManager} from './core/ocm/services/JourneyManager';
 import {ReferenceDataManager} from './core/ocm/services/ReferenceDataManager';
+import {Logging} from './core/ocm/services/Logging';
 import {Base} from './core/ocm/Base';
 import {TabsPage} from './pages/tabs/tabs';
 
@@ -18,8 +21,6 @@ import {GoogleMapsDirections} from './core/ocm/services/GoogleMapsDirections';
 
 declare var plugin: any;
 declare var Connection: any;
-
-enableProdMode();
 
 @Component({
     template: '<ion-nav [root]="rootPage"></ion-nav>'
@@ -96,12 +97,12 @@ export class OpenChargeMapApp extends Base implements OnInit {
         var defaultLang = "it";
         var userLang = navigator.language.split('-')[0]; // use navigator lang if available
         userLang = /(it|en)/gi.test(userLang) ? userLang : defaultLang;
-//userLang="sk";
+        //userLang="sk";
         // optional, default is "en"
         this.translate.setDefaultLang(defaultLang);
         // the lang to use, if the lang isn't available, it will use the current loader to get them
 
-        this.log("[translate] "+ navigator.language+ ":: using language:" + userLang);
+        this.log("[translate] " + navigator.language + ":: using language:" + userLang);
         this.translate.use(userLang).subscribe(() => {
             var test = this.translate.get("ocm.general.shortDescription");
             test.subscribe(data => {
@@ -159,7 +160,10 @@ export class OpenChargeMapApp extends Base implements OnInit {
 
 ionicBootstrap(OpenChargeMapApp, [
     AppManager,
+    Logging,
+    DecimalPipe,
     POIManager,
+    Mapping,
     Events,
     provide(TranslateLoader, {
         useFactory: (http: Http) => new TranslateStaticLoader(http, 'lang', '.json'),

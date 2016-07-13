@@ -14,12 +14,12 @@ export class POIDetailsPage {
 
     private poi: any;
 
-    constructor(private nav: NavController, private navParams: NavParams) {
+    constructor(private nav: NavController, private navParams: NavParams,  private view: ViewController) {
         this.poi = this.navParams.get('item');
     }
 
     close() {
-        this.nav.pop();
+        this.view.dismiss();
     }
 
 
