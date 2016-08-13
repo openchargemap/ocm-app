@@ -1,0 +1,10 @@
+- UI:
+    - Sign In loops on cancel
+    - Need way for new users to quickly register (API changes required)
+- Map:
+    - Initial load doesn't show results until you move the Map
+- Android
+    - Native Map
+
+- IOS
+    - Native Map

@@ -96,7 +96,7 @@ export class APIClient extends Base {
                 })
                 .catch((error) => {
                     let errMsg = error.message || 'Could not fetch POI list from server.';
-                    this.log("API Client: " + errMsg, LogLevel.ERROR);
+                    this.log("API Client: " + JSON.stringify(error), LogLevel.ERROR);
                     return Observable.throw(errMsg);
                 });
         } else {

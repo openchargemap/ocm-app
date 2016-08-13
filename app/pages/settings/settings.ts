@@ -40,8 +40,11 @@ export class SettingsPage {
   }
 
   ionViewWillLeave() {
+    if (this.searchSettings.Language != null) {
+      this.appManager.setLanguage(this.searchSettings.Language);
+    }
 
-    this.appManager.setLanguage(this.searchSettings.Language);
+
 
     this.searchSettings.MinPowerKW = this.powerRange.lower;
     this.searchSettings.MaxPowerKW = this.powerRange.upper;

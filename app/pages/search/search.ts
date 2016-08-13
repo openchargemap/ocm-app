@@ -1,7 +1,7 @@
 /// <reference path="../../lib/typings/collections/collections.d.ts" />
 import {Component, OnInit, NgZone, ChangeDetectorRef} from '@angular/core';
 import {Http} from '@angular/http';
-import {NavController, NavParams, Events, Platform, Loading, Modal} from 'ionic-angular';
+import {NavController, NavParams, Events, Platform, ModalController} from 'ionic-angular';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {Keyboard} from 'ionic-native';
 import {PlaceSearchResult, GeoLatLng, GeoBounds, POISearchParams, JourneyRoute, JourneyRouteLeg} from '../../core/ocm/model/AppModels';
@@ -18,6 +18,7 @@ import {SignInPage} from '../signin/signin';
 import {PoiDetails} from '../../components/poi-details/poi-details';
 import {PlaceSearch} from '../../components/place-search/place-search';
 import {RoutePlanner} from '../../components/route-planner/route-planner';
+import {RoutePlannerPage} from '../route-planner/route-planner';
 
 @Component({
     templateUrl: 'build/pages/search/search.html',
@@ -51,7 +52,8 @@ export class SearchPage extends Base implements OnInit {
         private mapping: Mapping,
         private journeyManager: JourneyManager,
         private zone: NgZone,
-        private changeDetector: ChangeDetectorRef
+        private changeDetector: ChangeDetectorRef,
+        private modalController:ModalController
     ) {
         super();
 
@@ -331,14 +333,19 @@ export class SearchPage extends Base implements OnInit {
 
                     //TODO: use stack of requests as may be multiple in sync
                     this.appManager.isRequestInProgress = true;
-                    this.poiManager.fetchPOIList(params);
+
+                    this.poiManager.fetchPOIList(params)
+                        .subscribe(() => { }, (err) => {
+                            this.appManager.showToastNotification(this.nav, "Could not fetch POI list. Check connection.");
+                        });
+
                 });
 
 
 
             })
                 , (err) => {
-                    this.appManager.showToastNotification(this.nav, "Arrgh, couldn't get map centre.");
+                    // this.appManager.showToastNotification(this.nav, "Couldn't get map centre.");
                 }
 
         }, (error) => {
@@ -362,9 +369,9 @@ export class SearchPage extends Base implements OnInit {
             if (this.poiViewMode == "modal") {
                 this.searchOnDemand = false; //suspend interactive searches while modal dialog active
 
-                let poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
+                let poiDetailsModal = this.modalController.create(POIDetailsPage, { item: poi });
 
-                poiDetailsModal.onDismiss((data) => {
+                poiDetailsModal.onDidDismiss((data) => {
                     //should focus map again..
                     this.log("Dismissing POI Details.");
                     this.mapping.focusMap();
@@ -373,7 +380,7 @@ export class SearchPage extends Base implements OnInit {
                 this.mapping.unfocusMap();
 
                 this.zone.run(() => {
-                    this.nav.present(poiDetailsModal);
+                    poiDetailsModal.present();
                 });
             }
             if (this.poiViewMode == "side") {
@@ -394,6 +401,20 @@ export class SearchPage extends Base implements OnInit {
         this.selectedPOI = null;
     }
 
+    openRoutePlannerModal() {
+        this.searchOnDemand = false;
+        let modal = this.modalController.create(RoutePlannerPage, {});
+        this.mapping.unfocusMap();
+        modal.onDidDismiss((data) => {
+            //should focus map again..
+            this.log("Dismissing Route Planner Details.");
+            this.mapping.focusMap();
+            this.searchOnDemand = true;
+        });
+
+        modal.present();
+
+    }
     openSearchOptions() {
         this.nav.push(SettingsPage);
     }

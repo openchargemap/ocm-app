@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, NavParams, ViewController, Modal, ActionSheet} from 'ionic-angular';
+import {NavController, NavParams, ViewController} from 'ionic-angular';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {DatePipe} from '@angular/common';
 import {PoiDetails} from '../../components/poi-details/poi-details';

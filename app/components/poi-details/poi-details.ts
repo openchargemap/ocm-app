@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {DatePipe} from '@angular/common';
-import {NavController, NavParams, ViewController, Modal, ActionSheet} from 'ionic-angular';
+import {NavController, NavParams, ViewController, ModalController, ActionSheetController} from 'ionic-angular';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {MediaUploadPage} from '../../pages/mediaupload/mediaupload';
 import {CommentPage} from '../../pages/comment/comment';
 import {FavouriteEditorPage} from '../../pages/journeys/favourite-editor';
+import {Logging} from '../../core/ocm/services/Logging';
 
 
 @Component({
@@ -20,14 +21,21 @@ export class PoiDetails implements OnInit {
   selectedTab: string;
   json: string;
 
-  constructor(private appManager: AppManager, private nav: NavController, private translate: TranslateService, private view: ViewController) {
+  constructor(
+    private appManager: AppManager, 
+    private nav: NavController, 
+    private translate: TranslateService, 
+    private view: ViewController, 
+    private logging: Logging, 
+    private modalController: ModalController,
+    private actionSheetController: ActionSheetController) {
 
 
   }
 
-  ngOnInit() {
+  ngOnChanges() {
+    this.logging.log("In ngOnChanges of POI Details");
 
-    //this.json = JSON.stringify(this.poi, null, 1);
 
     if (this.poi == null || this.poi.AddressInfo == null) {
       alert("Got null POI");
@@ -51,6 +59,16 @@ export class PoiDetails implements OnInit {
       this.poi._hasComments = false;
     }
   }
+
+  ngOnInit() {
+
+    //this.json = JSON.stringify(this.poi, null, 1);
+    this.logging.log("In ngInit of POI Details");
+
+
+  }
+
+
   get staticMapURL(): string {
 
     //scale=2 for retina
@@ -76,11 +94,11 @@ export class PoiDetails implements OnInit {
   addComment() {
 
     if (this.appManager.isUserAuthenticated()) {
-      let modal = Modal.create(CommentPage, {
+      let modal = this.modalController.create(CommentPage, {
         id: this.poi.ID,
         poi: this.poi
       });
-      this.nav.present(modal);
+      modal.present();
     } else {
       this.appManager.showToastNotification(this.nav, "Please Sign In (see Profile tab)");
     }
@@ -89,11 +107,11 @@ export class PoiDetails implements OnInit {
   addMedia() {
     if (this.appManager.isUserAuthenticated()) {
 
-      let modal = Modal.create(MediaUploadPage, {
+      let modal = this.modalController.create(MediaUploadPage, {
         id: this.poi.ID,
         poi: this.poi
       });
-      this.nav.present(modal);
+      modal.present();
     } else {
       this.appManager.showToastNotification(this.nav, "Please Sign In (see Profile tab)");
     }
@@ -112,7 +130,7 @@ export class PoiDetails implements OnInit {
 
 
     //show action sheet to decide what to do with new favourite
-    let actionSheet = ActionSheet.create({
+    let actionSheet = this.actionSheetController.create({
       title: 'Add Favourite',
       buttons: [
         {
@@ -120,11 +138,11 @@ export class PoiDetails implements OnInit {
 
           handler: () => {
             //show add to journey modal
-            let modal = Modal.create(FavouriteEditorPage, {
+            let modal = this.modalController.create(FavouriteEditorPage, {
 
               poi: this.poi
             });
-            this.nav.present(modal);
+            modal.present();
           }
         }, {
           text: 'Add as Favourite',
@@ -140,7 +158,7 @@ export class PoiDetails implements OnInit {
         }
       ]
     });
-    this.nav.present(actionSheet);
+    actionSheet.present();
   }
 
   launchNavigation() {

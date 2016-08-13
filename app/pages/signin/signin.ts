@@ -1,5 +1,5 @@
 import {Component, NgZone} from '@angular/core';
-import {NavController, NavParams, Alert, Loading, ViewController} from 'ionic-angular';
+import {NavController, NavParams, AlertController, Loading, LoadingController, ViewController} from 'ionic-angular';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {UserProfile, AsyncResult} from '../../core/ocm/model/AppModels';
@@ -7,13 +7,22 @@ import {UserProfile, AsyncResult} from '../../core/ocm/model/AppModels';
 
 @Component({
     templateUrl: 'build/pages/signin/signin.html',
-    pipes:[TranslatePipe]
+    pipes: [TranslatePipe]
 })
 export class SignInPage {
     email: string;
     password: string;
 
-    constructor(private appManager: AppManager, private nav: NavController, private viewController: ViewController, params: NavParams, private zone: NgZone, public translate:TranslateService) {
+    constructor(
+        private appManager: AppManager,
+        private nav: NavController,
+        private viewController: ViewController,
+        params: NavParams,
+        private zone: NgZone,
+        public translate: TranslateService,
+        private alertController:AlertController,
+        private loadingController:LoadingController
+    ) {
         this.email = "";
 
         var currentProfile = <UserProfile>params.get("Profile");
@@ -28,12 +37,12 @@ export class SignInPage {
 
     performSignIn() {
 
-        let loading = Loading.create({
+        let loading = this.loadingController.create({
             content: "Signing In..",
             dismissOnPageChange: true
         });
 
-        this.nav.present(loading);
+        loading.present();
 
 
         //sign in with supplied email address and password
@@ -49,12 +58,12 @@ export class SignInPage {
 
             //sign in rejected
             loading.dismiss().then(() => {
-                let alert = Alert.create({
+                let alert = this.alertController.create({
                     title: 'Open Charge Map',
                     subTitle: 'Email or Password not recognised',
                     buttons: ['Ok']
                 });
-                this.nav.present(alert);
+                alert.present();
 
             });
 

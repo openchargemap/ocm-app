@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, Modal, Alert} from 'ionic-angular';
+import {NavController, ModalController} from 'ionic-angular';
 import {TranslateService, TranslatePipe} from 'ng2-translate/ng2-translate';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {SignInPage} from '../signin/signin';
@@ -13,7 +13,11 @@ import {CommentPage} from '../comment/comment';
 export class ProfilePage {
 
     userProfile: any;
-    constructor(public appManager: AppManager, public nav: NavController, private translate:TranslateService) {
+    constructor(
+        public appManager: AppManager, 
+        public nav: NavController, 
+        private translate:TranslateService,
+        private modalController:ModalController) {
 
     }
 
@@ -35,14 +39,14 @@ export class ProfilePage {
 
     showSignInModal() {
         //navigate to sign in page
-        let signInModal = Modal.create(SignInPage, { Profile: this.userProfile });
+        let signInModal = this.modalController.create(SignInPage, { Profile: this.userProfile });
 
-        signInModal.onDismiss(() => {
+        signInModal.onDidDismiss(() => {
             //may have an updated user profile
             this.refreshProfileView();
         });
 
-        this.nav.present(signInModal);
+        signInModal.present();
     }
 
     signOut() {

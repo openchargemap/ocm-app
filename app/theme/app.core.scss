@@ -39,3 +39,8 @@
 ion-card p{
     margin-bottom:0.3em;
 }
+
+
+ion-page.show-page ~ .nav-decor{
+    background-color:transparent;
+}

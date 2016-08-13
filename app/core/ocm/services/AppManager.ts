@@ -5,7 +5,7 @@
 import {APIClient} from './APIClient';
 import {Http} from '@angular/http';
 import {Injectable} from '@angular/core';
-import {Events, NavController, Platform, Toast, Loading} from 'ionic-angular';
+import {Events, NavController, Platform, ToastController, LoadingController, Loading} from 'ionic-angular';
 import {TranslateService} from 'ng2-translate/ng2-translate';
 import {Base, LogLevel} from '../Base';
 import {JwtHelper} from 'angular2-jwt';
@@ -31,7 +31,18 @@ export class AppManager extends Base {
 
     public isRequestInProgress: boolean = false;
 
-    constructor(public http: Http, public events: Events, public api: APIClient, public submissionQueue: SubmissionQueue, private platform: Platform, public referenceDataManager: ReferenceDataManager, public journeyManager: JourneyManager, public translateService: TranslateService) {
+    constructor(
+        public http: Http, 
+        public events: Events, 
+        public api: APIClient, 
+        public submissionQueue: SubmissionQueue, 
+        private platform: Platform, 
+        public referenceDataManager: ReferenceDataManager, 
+        public journeyManager: JourneyManager, 
+        public translateService: TranslateService,
+        private toastController: ToastController,
+        private loadingController: LoadingController
+        ) {
         super();
         this.api.clientName = "ocm.app.ionic.v6_0_0";
         this.isDebugMode = false;
@@ -176,26 +187,26 @@ export class AppManager extends Base {
     }
 
     public showToastNotification(nav: NavController, msg: string) {
-        let toast = Toast.create({
+        let toast = this.toastController.create({
             message: msg,
             duration: 3000,
 
         });
 
-        toast.onDismiss(() => {
+        toast.onDidDismiss(() => {
             this.log('Dismissed toast');
         });
 
-        nav.present(toast);
+        toast.present();
     }
 
     public showLoadingProgress(nav: NavController, msg: string) {
-        this.loading = Loading.create({
+        this.loading = this.loadingController.create({
             content: msg,
             dismissOnPageChange: true
         });
 
-        nav.present(this.loading);
+        this.loading.present();
     }
     public dismissLoadingProgress(): Promise<any> {
         return this.loading.dismiss();

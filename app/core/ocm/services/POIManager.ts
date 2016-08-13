@@ -10,35 +10,40 @@ import {Base, LogLevel} from '../Base';
 import {POISearchParams} from '../Model/AppModels';
 import {APIClient} from './APIClient';
 import {ReferenceDataManager} from './ReferenceDataManager';
-
+import {Subscription} from 'rxjs/Subscription';
 @Injectable()
 export class POIManager extends Base {
 
     poiList;
-    isRequestInProgress:boolean=false;
-    
-    constructor(private api:APIClient, private events:Events) {
+    isRequestInProgress: boolean = false;
+
+    constructor(private api: APIClient, private events: Events) {
         super();
     }
 
 
-    public fetchPOIList(searchParams: POISearchParams) {
+    public fetchPOIList(searchParams: POISearchParams): Observable<any> {
 
         this.isRequestInProgress = true;
-        return this.api.fetchPOIListByParam(searchParams)
-            .subscribe(
-            (results:Array<any>) => {
-                console.log('fetched POI list ['+results.length+']');
+        let poiFetchObservable = this.api.fetchPOIListByParam(searchParams);
+
+        poiFetchObservable.subscribe(
+            (results: Array<any>) => {
+                console.log('fetched POI list [' + results.length + ']');
                 this.poiList = results;
                 this.events.publish('ocm:poiList:updated');
                 //this.appManager.isRequestInProgress = false;
             },
 
             (reason) => {
-                alert(JSON.stringify(reason));
+
                 this.isRequestInProgress = false;
+                Observable.throw(reason);
+
             }
-            );
+        );
+
+        return poiFetchObservable;
     }
 
     public clearResults() {
@@ -69,9 +74,9 @@ export class POIManager extends Base {
         var params = <POISearchParams>{
             poiIdList: [poiId]
         }
-        
-       
-        return this.api.fetchPOIListByParam(params).map((res)=>{
+
+
+        return this.api.fetchPOIListByParam(params).map((res) => {
             return res[0];
         });
     }

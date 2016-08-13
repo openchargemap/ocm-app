@@ -25,9 +25,10 @@ export class RoutePlanner {
     private routePolyline: string;
     private routeCalcInProgress: boolean = false;
     private advancedSettingsMode: boolean = false;
+    private kWhPerKM: number;
 
     constructor(private mapping: Mapping, private directions: GoogleMapsDirections, private logging: Logging, private journeyManager: JourneyManager, private changeDetector: ChangeDetectorRef, private numberPipe: DecimalPipe) {
-
+        this.kWhPerKM = 0.212; //Model S = ~0.24, Leaf = ~0.212
     }
 
     get isRouteSet(): boolean {
@@ -83,6 +84,7 @@ export class RoutePlanner {
             return hours + " hours " + (mins > 0 ? mins + " mins" : "");
         }
     }
+
     calculateRoute() {
         if (this.routeStartPlace != null && this.routeDestinationPlace != null) {
             //start a new route discovery
@@ -104,7 +106,7 @@ export class RoutePlanner {
                             neLL, swLL
                         );
 
-                        this.journeyRoutes = this.directions.analyseRoutes(result);
+                        this.journeyRoutes = this.directions.analyseRoutes(result, this.kWhPerKM);
                         if (this.journeyRoutes.length > 0) this.selectedJourneyRoute = this.journeyRoutes[0];
 
                         //Require event emmiter for route changes to notify map 
@@ -121,38 +123,6 @@ export class RoutePlanner {
                     this.routeCalcInProgress = false;
                 });
         }
-    }
-
-    public placeSelectedOld(item: PlaceSearchResult) {
-        let placeSearchType = "test";
-        let searchKeyword = item.Title;
-
-        //move map to selected place
-
-        this.logging.log("Looking up place details:" + item.ReferenceID);
-        var attributionDiv = <HTMLDivElement>document.getElementById("place-attribution");
-        var service = new google.maps.places.PlacesService(attributionDiv);
-
-        (<any>service).getDetails({ placeId: item.ReferenceID }, (place, status) => {
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                this.logging.log("Got place details:" + place.name);
-
-                if (placeSearchType == 'routeStart') {
-                    this.logging.log("Changed route start:" + place.name);
-                    this.routeStartPlace = place;
-                }
-                if (placeSearchType == 'routeDestination') {
-                    this.logging.log("Changed route destination:" + place.name);
-                    this.routeDestinationPlace = place;
-                }
-
-
-
-            } else {
-                this.logging.log("Failed to fetch place:" + status.toString());
-            }
-        });
-
     }
 
 }

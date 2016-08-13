@@ -44,7 +44,7 @@ export class GoogleMapsDirections {
         });
     }
 
-    public analyseRoutes(routeResults: google.maps.DirectionsResult): Array<JourneyRoute> {
+    public analyseRoutes(routeResults: google.maps.DirectionsResult,kWhPerKM:number ): Array<JourneyRoute> {
         let journeyRoutes = new Array<JourneyRoute>();
         //analyse power consumption of the routes and summarise the route
         routeResults.routes.forEach(route => {
@@ -58,7 +58,7 @@ export class GoogleMapsDirections {
             route.legs.forEach(leg => {
                 let durationsSeconds = leg.duration.value;
                 let distanceKM = leg.distance.value / 1000;
-                let powerConsumption = this.journeyManager.calculateEnergyConsumptionkWh(distanceKM, 0);
+                let powerConsumption = this.journeyManager.calculateEnergyConsumptionkWh(distanceKM, 0, null, kWhPerKM);
             
                 let journeyLeg = new JourneyRouteLeg();
                 journeyLeg.DistanceKM = distanceKM;

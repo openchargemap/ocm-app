@@ -1,0 +1,34 @@
+<ion-header>
+    <ion-navbar primary>
+        <ion-title>
+           Route Planner
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-toolbar *ngIf="hasNavbar==false">
+
+    <ion-title>Route Planner</ion-title>
+    <ion-buttons end>
+        <button royal (click)="close()">
+      <ion-icon name="close"></ion-icon>
+    </button>
+    </ion-buttons>
+</ion-toolbar>
+
+
+<ion-content class="route-planner" padding>
+<route-planner></route-planner>
+</ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons start>
+            <button (click)="close()">
+            <ion-icon name="close"></ion-icon>
+      Close
+
+    </button>
+        </ion-buttons>
+
+    </ion-toolbar>
+</ion-footer>

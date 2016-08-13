@@ -1,5 +1,5 @@
 import {Component, NgZone} from '@angular/core';
-import {NavController, NavParams, Modal, Alert, Loading, ViewController    } from 'ionic-angular';
+import {NavController, NavParams, LoadingController, ViewController    } from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {UserComment} from '../../core/ocm/model/AppModels';
 
@@ -15,7 +15,14 @@ export class CommentPage {
 
     commentTypes: any;
     checkinTypes: any;
-    constructor(private navParams: NavParams, private appManager: AppManager, private nav: NavController, private view: ViewController, private zone: NgZone) {
+    constructor(
+        private navParams: NavParams,
+        private appManager: AppManager,
+        private nav: NavController,
+        private view: ViewController,
+        private zone: NgZone,
+        private loadingController: LoadingController
+    ) {
 
         this.commentModel = <UserComment>{
             ChargePointID: this.navParams.get('id'),
@@ -42,15 +49,12 @@ export class CommentPage {
     }
 
     add() {
-        let loading = Loading.create({
+        let loading = this.loadingController.create({
             content: "Sending ..",
             dismissOnPageChange: true
         });
 
-        this.nav.present(loading);
-
-        //alert("Would submit "+JSON.stringify(this.commentModel));
-
+        loading.present();
 
         this.appManager.submitComment(this.commentModel).then((response) => {
             this.appManager.log("Comment submitted");
@@ -58,7 +62,6 @@ export class CommentPage {
                 this.view.dismiss();
             }
             );
-
 
         }, (rejection) => {
 

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, NavParams, Modal, Alert, ViewController} from 'ionic-angular';
+import {NavController, NavParams, ViewController} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {Camera} from 'ionic-native';
 

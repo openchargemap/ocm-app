@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Modal, NavController, Alert} from 'ionic-angular';
+import {ModalController, NavController, AlertController} from 'ionic-angular';
 import {AppManager} from '../../core/ocm/services/AppManager';
 import {Journey, WayPoint, GeoLatLng} from '../../core/ocm/model/AppModels';
 import {JourneyManager} from '../../core/ocm/services/JourneyManager';
@@ -15,7 +15,13 @@ import {POIDetailsPage} from '../poi-details/poi-details';
  */
 export class JourneysPage {
 
-  constructor(private appManager: AppManager, private nav: NavController, private journeyManager: JourneyManager, private api: APIClient) {
+  constructor(
+    private appManager: AppManager, 
+    private nav: NavController, 
+    private journeyManager: JourneyManager, 
+    private api: APIClient,
+    private modalController: ModalController,
+    private alertController: AlertController) {
 
     //this.discoverImages();
 
@@ -48,8 +54,8 @@ export class JourneysPage {
   }
 
   viewPOIDetails(poi) {
-    var poiDetailsModal = Modal.create(POIDetailsPage, { item: poi });
-    this.nav.present(poiDetailsModal);
+    var poiDetailsModal = this.modalController.create(POIDetailsPage, { item: poi });
+    poiDetailsModal.present();
   }
 
   get staticMapSize(): string {
@@ -68,7 +74,7 @@ export class JourneysPage {
   }
   
   deleteJourney(journeyId){
-      let confirm = Alert.create({
+      let confirm = this.alertController.create({
       title: 'Delete this Journey?',
       message: 'Are you sure you want to delete this Journey?',
       buttons: [
@@ -87,7 +93,7 @@ export class JourneysPage {
       ]
     });
     
-    this.nav.present(confirm);
+    confirm.present();
   }
 
   launchNavigation(){

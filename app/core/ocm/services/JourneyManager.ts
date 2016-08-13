@@ -250,12 +250,12 @@ export class JourneyManager extends Base {
 
     }
 
-    public calculateEnergyConsumptionkWh(distanceKM: number, speedKPH: number, elevationDelta: number = 0): number {
+    public calculateEnergyConsumptionkWh(distanceKM: number, speedKPH: number, elevationDelta: number = 0, kWhPerKM:number): number {
         //given an input speed in km/h for a given distance, calculate an estimate of required energy consumption in kwh, optionally account for elevation change.
         //let totalkWhCapacity = 21;
 
         //average vehicle energy efficiency in Kilowatt Hours consumed per Kilometer travelled
-        let kWhPerKM = 0.212; //Model S = ~0.24, Leaf = ~0.212
+        //let kWhPerKM = 0.212; //Model S = ~0.24, Leaf = ~0.212
 
         let totalPowerRequiredkWh = distanceKM * kWhPerKM;
 

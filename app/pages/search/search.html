@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-nav-bar primary>
+  <ion-nav-bar>
     <ion-toolbar default>
       <ion-buttons start>
 
@@ -12,11 +12,14 @@
         [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500">
       </ion-searchbar>
       <ion-buttons end>
+        <button (click)="openRoutePlannerModal()" *ngIf="sideViewAvailable==false">
+      <ion-icon name="map"></ion-icon>
+    </button>
         <button (click)="openSearchOptions()">
       <ion-icon name="options"></ion-icon>
     </button>
 
-      <button (click)="openSideView()" *ngIf="sideViewAvailable==true && poiViewMode=='modal'">
+        <button (click)="openSideView()" *ngIf="sideViewAvailable==true && poiViewMode=='modal'">
       <ion-icon name="arrow-dropleft-circle"></ion-icon>
     </button>
       </ion-buttons>
@@ -34,7 +37,7 @@
         <div id="map-canvas"></div>
       </ion-col>
 
-      <ion-col width-33 *ngIf="poiViewMode=='side'">
+      <ion-col width-33 *ngIf="poiViewMode=='side'" class="sideview">
         <ion-scroll scrollY="true" style="height:100%">
 
 
@@ -63,6 +66,12 @@
 
             <route-planner *ngIf="routePlanningMode"></route-planner>
 
+            <ul>
+              <li>Browse the map to find charging locations. Select a location to see the full details.</li>
+              <li>Zoom in to the region you are interested in to see all charging locations.</li>
+              <li>You can use the route planner to start planning a journey. Use the 'Save' option when viewing
+                a charging location to create or add to a Journey. </li>
+            </ul>
             <div *ngIf="!routePlanningMode">
               <div class="banner">
 
