@@ -13,6 +13,8 @@
 */
 
 /// <reference path="../node_modules/@types/googlemaps/index.d.ts" />
+/// <reference path="../node_modules/typescript-collections/dist/lib/index.d.ts" />
+/// <reference path="../node_modules/@types/leaflet/index.d.ts" />
 
 declare module '*';
 

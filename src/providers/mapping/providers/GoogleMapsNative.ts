@@ -5,13 +5,13 @@ import { Logging, LogLevel } from './../../Logging';
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 
-/// <reference path="../../../../lib/typings/collections/collections.d.ts" />
 /// <reference path="../../../../lib/typings/cordova-plugin-googlemaps/cordova-plugin-googlemaps.d.ts" />
 
 import { Observable } from 'rxjs/Observable';
 import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, Mapping } from '../Mapping';
 import { Events } from 'ionic-angular';
+import * as collections from 'typescript-collections';
 
 
 declare var plugin: any;

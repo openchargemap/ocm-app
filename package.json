@@ -25,6 +25,7 @@
     "@ionic/storage": "^1.0.3",
     "@types/google-maps": "^3.1.28",
     "@types/googlemaps": "^3.25.35",
+    "@types/leaflet": "^1.0.35",
     "angular2-jwt": "^0.1.24",
     "cordova-plugin-camera": "^2.2.0",
     "cordova-plugin-file": "^4.2.0",

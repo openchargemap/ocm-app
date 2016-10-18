@@ -9,6 +9,7 @@ import {Utils} from '../../../core/Utils';
 import {MappingAPI, IMapProvider, MapOptions, Mapping} from '../Mapping';
 import {Events} from 'ionic-angular';
 import {Observable} from 'rxjs/Observable';
+import * as collections from 'typescript-collections';
 
 declare var google:any;
 
