@@ -268,7 +268,7 @@ export class LeafletMap implements IMapProvider {
 
     setMapZoom(zoomLevel: number) {
         if (this.mapReady) {
-            this.map.setZoom(zoomLevel);
+            this.map.setZoom(zoomLevel,{});
         }
 
     }
@@ -334,7 +334,7 @@ export class LeafletMap implements IMapProvider {
         this.map.fitBounds(new L.LatLngBounds(
             { lat: bounds.southWest.latitude, lng: bounds.southWest.longitude },
             { lat: bounds.northEast.latitude, lng: bounds.northEast.longitude }
-        ));
+        ),{});
     }
     focusMap() {
         //
