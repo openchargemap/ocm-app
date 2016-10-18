@@ -1,6 +1,7 @@
-import { Pipe, PipeTransform, ChangeDetectorRef } from '@angular/core';
+import { Pipe, PipeTransform, ChangeDetectorRef, Injectable } from '@angular/core';
 import { TranslatePipe, TranslateService} from 'ng2-translate/ng2-translate';
 
+@Injectable()
 @Pipe({ name: 'nullableTranslate' })
 export class NullableTranslatePipe extends TranslatePipe {
     constructor(translate: TranslateService, _ref: ChangeDetectorRef) {

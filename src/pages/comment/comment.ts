@@ -16,6 +16,7 @@ export class CommentPage {
 
     commentTypes: any;
     checkinTypes: any;
+    
     constructor(
         public navParams: NavParams,
         public appManager: AppManager,

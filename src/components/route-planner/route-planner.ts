@@ -17,16 +17,20 @@ import { DecimalPipe } from '@angular/common';
 })
 export class RoutePlanner {
 
-
-    private routeStartPlace: any;
-    private routeDestinationPlace: any;
     private routeSearchDistance: number = 5;
     private journeyRoutes: Array<JourneyRoute>;
-    private selectedJourneyRoute: JourneyRoute;
+     selectedJourneyRoute: JourneyRoute;
     private routePolyline: string;
-    private routeCalcInProgress: boolean = false;
-    private advancedSettingsMode: boolean = false;
     private kWhPerKM: number;
+
+    routeStartPlace: any;
+    routeDestinationPlace: any;
+
+    routeCalcInProgress: boolean = false;
+    advancedSettingsMode: boolean = false;
+      
+    routeStart:string="";
+    routeDestination:string="";
 
     constructor(
         public mapping: Mapping,

@@ -3,7 +3,7 @@ import { MediaUploadPage } from './../../pages/mediaupload/mediaupload';
 import { CommentPage } from './../../pages/comment/comment';
 import { Logging } from './../../providers/Logging';
 import { AppManager } from './../../providers/AppManager';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { NavController, ViewController, ModalController, ActionSheetController } from 'ionic-angular';
 import { TranslateService } from 'ng2-translate/ng2-translate';
 
@@ -19,6 +19,8 @@ export class PoiDetails implements OnInit {
   selectedTab: string;
   json: string;
 
+  hasNavBar: boolean = false;
+
   constructor(
     public appManager: AppManager,
     public nav: NavController,
@@ -30,7 +32,7 @@ export class PoiDetails implements OnInit {
 
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: SimpleChanges) {
     this.logging.log("In ngOnChanges of POI Details");
 
 

@@ -6,7 +6,7 @@ export interface ISyncItem {
     _sync: SyncItem;
 }
 
-class JourneyBaseItem implements ISyncItem {
+export class JourneyBaseItem implements ISyncItem {
     public Title: string;
     public Notes: string;
     public _sync: SyncItem;

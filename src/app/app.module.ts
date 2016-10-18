@@ -16,7 +16,7 @@ import { GoogleMapsDirections } from './../providers/GoogleMapsDirections';
 import { ReferenceDataManager } from './../providers/ReferenceDataManager';
 import { SubmissionQueue } from './../providers/SubmissionQueue';
 import { APIClient } from './../providers/APIClient';
-import { Http } from '@angular/http';
+import { Http, HttpModule } from '@angular/http';
 import { Mapping } from './../providers/mapping/Mapping';
 import { POIManager } from './../providers/POIManager';
 import { DecimalPipe } from '@angular/common';
@@ -27,7 +27,8 @@ import { IonicApp, IonicModule, Events } from 'ionic-angular';
 import { MyApp } from './app.component';
 
 import { TabsPage } from '../pages/tabs/tabs';
-import { TranslateService, TranslateLoader, TranslateStaticLoader, TranslateModule } from 'ng2-translate';
+import {TranslateModule } from 'ng2-translate/ng2-translate';
+import { TranslateService, TranslateLoader, TranslateStaticLoader } from 'ng2-translate/src/translate.service';
 
 import {NullableTranslatePipe} from '../pipes/NullableTranslatePipe';
 export function createTranslateLoader(http: Http) {
@@ -38,6 +39,7 @@ export function createTranslateLoader(http: Http) {
 
 @NgModule({
   declarations: [
+    MyApp,
     //pages
     CommentPage,
     FavouriteEditorPage,
@@ -53,15 +55,17 @@ export function createTranslateLoader(http: Http) {
     //components
     PlaceSearch,
     PoiDetails,
-    RoutePlanner,
+    RoutePlanner
     //pipes
-  NullableTranslatePipe
+
   ],
   imports: [
     IonicModule.forRoot(MyApp),
+    
+    HttpModule,
     TranslateModule.forRoot({
       provide: TranslateLoader,
-      useFactory: (createTranslateLoader),
+      useFactory: createTranslateLoader,
       deps: [Http]
     })
   ],
@@ -88,7 +92,6 @@ export function createTranslateLoader(http: Http) {
     POIManager,
     Mapping,
     Events,
-    TranslateService,
     APIClient,
     SubmissionQueue,
     JourneyManager,

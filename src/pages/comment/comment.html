@@ -33,7 +33,7 @@
 
     <ion-item>
       <ion-label stacked>Did You Successfully Charge?</ion-label>
-      <ion-select [(ngModel)]="commentModel.CheckStatusTypeID">
+      <ion-select [(ngModel)]="commentModel.CheckinStatusTypeID">
         <ion-option *ngFor="let item of checkinTypes" [value]="item.ID" [selected]="false">{{item.Title}}</ion-option>
       </ion-select>
 

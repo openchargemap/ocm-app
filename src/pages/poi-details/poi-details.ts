@@ -7,7 +7,8 @@ import {NavController, NavParams, ViewController} from 'ionic-angular';
 
 export class POIDetailsPage {
 
-    private poi: any;
+    poi: any;
+    hasNavbar:boolean=false;
 
     constructor(
         public nav: NavController, 

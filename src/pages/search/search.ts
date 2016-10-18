@@ -10,10 +10,10 @@ import { Mapping, MappingAPI } from './../../providers/mapping/Mapping';
 import { POIManager } from './../../providers/POIManager';
 import { AppManager } from './../../providers/AppManager';
 
-import {Component, OnInit, NgZone, ChangeDetectorRef} from '@angular/core';
-import {NavController, NavParams, Events, Platform, ModalController} from 'ionic-angular';
-import {TranslateService} from 'ng2-translate/ng2-translate';
-import {Keyboard} from 'ionic-native';
+import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
+import { NavController, NavParams, Events, Platform, ModalController } from 'ionic-angular';
+import { TranslateService } from 'ng2-translate/ng2-translate';
+import { Keyboard } from 'ionic-native';
 
 @Component({
     templateUrl: 'search.html'
@@ -28,11 +28,14 @@ export class SearchPage implements OnInit {
     private initialResultsShown: boolean = false;
 
     private searchOnDemand: boolean = true;
-    selectedPOI: any;
-    private poiViewMode: string = "side";
+
+    poiViewMode: string = "side";
     private searchPolyline: string;
     private routePlanningMode: boolean = true;
-    private sideViewAvailable = false;
+    sideViewAvailable = false;
+    
+    searchKeyword: string = "";
+    selectedPOI: any;
 
     constructor(
         public appManager: AppManager,
@@ -46,10 +49,10 @@ export class SearchPage implements OnInit {
         public journeyManager: JourneyManager,
         public zone: NgZone,
         public changeDetector: ChangeDetectorRef,
-        public modalController:ModalController,
-        public logging:Logging
+        public modalController: ModalController,
+        public logging: Logging
     ) {
-    
+
         //this.mapping = new Mapping(events);
 
         this.mapCanvasID = "map-canvas";

@@ -2,7 +2,7 @@ import { Logging } from './../../providers/Logging';
 import { PlaceSearchResult } from './../../model/PlaceSearchResult';
 import { Component, Input, Output, ChangeDetectorRef, EventEmitter } from '@angular/core';
 
-declare var google:any;
+declare var google: any;
 /*
   Component to provide geographic place search lookup
 */
@@ -12,17 +12,15 @@ declare var google:any;
 })
 export class PlaceSearch {
 
+    private placeSearchType: string;
+    private placeList: Array<PlaceSearchResult>;
+    private searchInProgress: boolean = false;
+
     @Input()
     searchKeyword: string;
 
     placeSearchFocused: boolean;
-
-    private placeSearchType: string;
-
-    private placeList: Array<PlaceSearchResult>;
-    private placeSearchActive: boolean = false;
-
-    private searchInProgress: boolean = false;
+    placeSearchActive: boolean = false;
 
     @Output()
     selectedPlace: any;
@@ -31,7 +29,8 @@ export class PlaceSearch {
     placeChanged = new EventEmitter();
 
     constructor(public logging: Logging, public changeDetector: ChangeDetectorRef) {
-
+        this.searchKeyword = "";
+        this.searchInProgress = false;
     }
 
 

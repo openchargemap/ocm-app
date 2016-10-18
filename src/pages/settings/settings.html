@@ -15,7 +15,7 @@
     <ion-item>
       <ion-label>{{'ocm.search.networkOperators' | translate}}</ion-label>
       <ion-select [(ngModel)]="searchSettings.OperatorList" multiple="true" cancelText="Cancel" okText="OK">
-        <ion-option *ngFor="let item of operators" [value]="item.ID">{{'ocm.reference.operatorInfo.value_'+item.ID | nullableTranslate:{default:item.Title} }}</ion-option>
+        <ion-option *ngFor="let item of operators" [value]="item.ID">{{'ocm.reference.operatorInfo.value_'+item.ID | translate }}</ion-option>
 
       </ion-select>
     </ion-item>
@@ -23,7 +23,7 @@
     <ion-item>
       <ion-label>{{'ocm.search.usageTypes' | translate}}</ion-label>
       <ion-select [(ngModel)]="searchSettings.UsageTypeList" multiple="true" cancelText="Cancel" okText="OK">
-        <ion-option *ngFor="let item of usageTypes" [value]="item.ID">{{'ocm.reference.usageType.value_'+item.ID | nullableTranslate:{default:item.Title} }}</ion-option>
+        <ion-option *ngFor="let item of usageTypes" [value]="item.ID">{{'ocm.reference.usageType.value_'+item.ID | translate}}</ion-option>
 
       </ion-select>
     </ion-item>
@@ -31,7 +31,7 @@
     <ion-item>
       <ion-label>{{'ocm.search.operationalStatusTypes' | translate}}</ion-label>
       <ion-select [(ngModel)]="searchSettings.StatusTypeList" multiple="true" cancelText="Cancel" okText="OK">
-        <ion-option *ngFor="let item of statusTypes" [value]="item.ID">{{'ocm.reference.statusType.value_'+item.ID | nullableTranslate:{default:item.Title} }}</ion-option>
+        <ion-option *ngFor="let item of statusTypes" [value]="item.ID">{{'ocm.reference.statusType.value_'+item.ID | translate }}</ion-option>
 
       </ion-select>
     </ion-item>
@@ -39,7 +39,7 @@
     <ion-item>
       <ion-label>{{'ocm.search.connectionTypes'| translate }}</ion-label>
       <ion-select [(ngModel)]="searchSettings.ConnectionTypeList" multiple="true" cancelText="Cancel" okText="OK">
-        <ion-option *ngFor="let item of connectionTypes" [value]="item.ID">{{'ocm.reference.connectionType.value_'+item.ID | nullableTranslate:{default:item.Title} }}</ion-option>
+        <ion-option *ngFor="let item of connectionTypes" [value]="item.ID">{{'ocm.reference.connectionType.value_'+item.ID | translate }}</ion-option>
 
       </ion-select>
     </ion-item>

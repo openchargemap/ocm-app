@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, ViewController } from 'ionic-angular';
-import { RoutePlanner} from '../../components/route-planner/route-planner';
+import { RoutePlanner } from '../../components/route-planner/route-planner';
 /*
   Generated class for the RoutePlannerPage page.
 
@@ -12,13 +12,14 @@ import { RoutePlanner} from '../../components/route-planner/route-planner';
 })
 export class RoutePlannerPage {
 
+  hasNavbar: boolean=false;
   constructor(public nav: NavController, public view: ViewController) {
 
   }
 
-    close() {
-        this.view.dismiss();
-    }
+  close() {
+    this.view.dismiss();
+  }
 
 
 }
