@@ -143,12 +143,13 @@ export class PoiDetails implements OnInit {
             });
             modal.present();
           }
-        }, {
+        }, /*{
           text: 'Add as Favourite',
           handler: () => {
             alert("TODO: add as favourite");
           }
-        }, {
+        }, */
+        {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
