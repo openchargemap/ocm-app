@@ -34,7 +34,7 @@
     "ng2-translate": "^4.0.0",
     "rxjs": "5.0.0-beta.12",
     "typescript-collections": "",
-    "zone.js": "0.6.12"
+    "zone.js": "0.6.21"
   },
   "devDependencies": {
     "@ionic/app-scripts": "^0.0.39",
