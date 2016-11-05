@@ -5,13 +5,13 @@ import { Logging, LogLevel } from './../../Logging';
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 
-import {Utils} from '../../../core/Utils';
-import {MappingAPI, IMapProvider, MapOptions, Mapping} from '../Mapping';
-import {Events} from 'ionic-angular';
-import {Observable} from 'rxjs/Observable';
+import { Utils } from '../../../core/Utils';
+import { MappingAPI, IMapProvider, MapOptions, Mapping } from '../Mapping';
+import { Events } from 'ionic-angular';
+import { Observable } from 'rxjs/Observable';
 import * as collections from 'typescript-collections';
 
-declare var google:any;
+declare var google: any;
 
 /**Map Provider for Google Maps Web API
 * @module MapProviders
@@ -25,7 +25,7 @@ export class GoogleMapsWeb implements IMapProvider {
     private map: google.maps.Map;
     private markerList: collections.Dictionary<number, google.maps.Marker>;
 
-    private polylinePath : google.maps.Polyline;
+    private polylinePath: google.maps.Polyline;
 
     /** @constructor */
     constructor(private events: Events, private logging: Logging) {
@@ -163,28 +163,28 @@ export class GoogleMapsWeb implements IMapProvider {
                         }
 
                         if (addMarker) {
-                            
+
 
                             var iconURL = null;
                             var animation = null;
                             var shadow = null;
                             var markerImg = null;
 
-                           
-                            iconURL =Utils.getIconForPOI(poi);
 
-                            markerImg ={
+                            iconURL = Utils.getIconForPOI(poi);
+
+                            markerImg = {
                                 url: iconURL,
                                 size: new google.maps.Size(68, 100.0),
-                                
+
                                 anchor: new google.maps.Point(15, 45),
                                 scaledSize: new google.maps.Size(34, 50)
-                               
+
                             }
 
                             var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
                             if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
-                           
+
                             if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
 
                             var newMarker = <any>new google.maps.Marker({
@@ -260,12 +260,13 @@ export class GoogleMapsWeb implements IMapProvider {
 
         //wrap getCenter in an observable
         let obs = Observable.create(observer => {
-            var pos = this.map.getCenter();
-            if (pos != null) {
-                observer.next(new GeoPosition(pos.lat(), pos.lng()));
-                observer.complete();
+            if (this.map != null) {
+                var pos = this.map.getCenter();
+                if (pos != null) {
+                    observer.next(new GeoPosition(pos.lat(), pos.lng()));
+                    observer.complete();
+                }
             }
-
         });
 
         return obs;
@@ -318,7 +319,7 @@ export class GoogleMapsWeb implements IMapProvider {
             new google.maps.LatLngBounds(
                 new google.maps.LatLng(bounds.southWest.latitude, bounds.southWest.longitude),
                 new google.maps.LatLng(bounds.northEast.latitude, bounds.northEast.longitude))
-                );
+        );
     }
 
     renderMap(poiList: Array<any>, mapHeight: number, parentContext: any): boolean {
@@ -354,8 +355,8 @@ export class GoogleMapsWeb implements IMapProvider {
 
     }
 
-    clearPolyline(){
-        if (this.polylinePath!=null){
+    clearPolyline() {
+        if (this.polylinePath != null) {
             this.polylinePath.setMap(null);
         }
     }

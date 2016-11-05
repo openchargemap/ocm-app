@@ -4,24 +4,24 @@
 			<ion-buttons start>
 
 				<button (click)="locateUser()" ion-button icon-left>
-      <ion-icon name="locate"></ion-icon>
-    </button>
+				<ion-icon name="locate"></ion-icon>
+				</button>
 
-			</ion-buttons>
-			<ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="placeSearchMapPOI.getPlacesAutoComplete($event,'poiSearch')" 
-				[placeholder]="'ocm.search.performSearch' | translate" [debounce]="500">
-			</ion-searchbar>
-			<ion-buttons end>
-				<button (click)="openRoutePlannerModal()" *ngIf="sideViewAvailable==false" ion-button icon-left>
-      <ion-icon name="map"></ion-icon>
-    </button>
-				<button (click)="openSearchOptions()" ion-button icon-left>
-      <ion-icon name="options"></ion-icon>
-    </button>
+				</ion-buttons>
+				<ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="placeSearchMapPOI.getPlacesAutoComplete($event,'poiSearch')" [placeholder]="'ocm.search.performSearch' | translate"
+					[debounce]="500">
+				</ion-searchbar>
+				<ion-buttons end>
+					<button (click)="openRoutePlannerModal()" *ngIf="sideViewAvailable==false" ion-button icon-left>
+								<ion-icon name="map"></ion-icon>
+								</button>
+					<button (click)="openSearchOptions()" ion-button icon-left>
+								<ion-icon name="options"></ion-icon>
+								</button>
 
-				<button (click)="openSideView()" *ngIf="sideViewAvailable==true && poiViewMode=='modal'" ion-button icon-left>
-      <ion-icon name="arrow-dropleft-circle"></ion-icon>
-    </button>
+						<button (click)="openSideView()" *ngIf="sideViewAvailable==true && poiViewMode=='modal'" ion-button icon-left>
+				<ion-icon name="arrow-dropleft-circle"></ion-icon>
+				</button>
 			</ion-buttons>
 		</ion-toolbar>
 	</ion-navbar>
@@ -33,7 +33,7 @@
 
 	<ion-grid>
 		<ion-row>
-			<ion-col width-67 test="poiViewMode=='side'">
+			<ion-col>
 				<div id="map-canvas"></div>
 			</ion-col>
 

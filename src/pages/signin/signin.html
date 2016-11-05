@@ -35,12 +35,12 @@
 <ion-footer>
     <ion-toolbar>
         <ion-buttons start>
-            <button (click)="cancelSignIn()"> <ion-icon name="close"></ion-icon> Cancel</button>
+            <button (click)="cancelSignIn()" ion-button icon-left> <ion-icon name="close"></ion-icon> Cancel</button>
 
         </ion-buttons>
         <ion-buttons end>
 
-            <button (click)="performSignIn()" type="submit" primary><ion-icon name="log-in"></ion-icon> {{'ocm.general.signIn' | translate}}</button>
+            <button (click)="performSignIn()" ion-button type="submit" color="primary" icon-left><ion-icon name="log-in"></ion-icon> {{'ocm.general.signIn' | translate}}</button>
 
         </ion-buttons>
 

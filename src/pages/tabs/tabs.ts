@@ -15,7 +15,8 @@ export class TabsPage {
     tabSettings: any;
     tabProfile: any;
 
-    tabJourneysTitle: string = "Journeys";
+tabSearchTitle:String="Erch;"
+    tabJourneysTitle: string = "OUrn";
 
     constructor(public appManager: AppManager, public translate: TranslateService) {
         // this tells the tabs component which Pages
@@ -29,6 +30,13 @@ export class TabsPage {
             if (val == "ocm.journeys.sectionTitle") val = "Journeys";
             this.tabJourneysTitle = val;
         });
+
+         this.translate.get(" ocm.search.sectionTitle").subscribe((val) => {
+         
+            this.tabSearchTitle = val;
+        });
+
+       
 
     }
 

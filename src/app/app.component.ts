@@ -41,7 +41,7 @@ export class MyApp implements OnInit{
     //this.translate.useStaticFilesLoader('lang', '.json');
     var defaultLang = "it";
     var userLang = navigator.language.split('-')[0]; // use navigator lang if available
-    userLang = /(it|en)/gi.test(userLang) ? userLang : defaultLang;
+    userLang = /(it|en|sk)/gi.test(userLang) ? userLang : defaultLang;
     //userLang="sk";
     // optional, default is "en"
     this.translate.setDefaultLang(defaultLang);
@@ -49,8 +49,13 @@ export class MyApp implements OnInit{
 
     this.logger.log("[translate] " + navigator.language + ":: using language:" + userLang);
     this.translate.use(userLang).subscribe(() => {
-      var test = this.translate.get("ocm.general.shortDescription");
-      test.subscribe(data => {
+      this.logger.log("Testing translation");
+
+      this.translate.get('ocm.general.shortDescription', {value: 'world'}).subscribe((res: string) => {
+    console.log(res);
+    //=> 'hello world'
+});
+      var test = this.translate.get("ocm.general.shortDescription").subscribe(data => {
         this.logger.log("Translation test:" + data);
       });
     });

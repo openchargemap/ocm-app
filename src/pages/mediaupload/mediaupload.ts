@@ -38,15 +38,14 @@ export class MediaUploadPage {
 
     loadCameraOrLibraryImage() {
 
-        var _context = this;
+
         if (!this.isBrowserMode()) {
             Camera.getPicture({ targetWidth: this.targetWidth }).then((imageData) => {
                 // imageData is either a base64 encoded string or a file URI
                 // If it's base64:
-                let base64Image = "data:image/jpeg;base64," + imageData;
-                _context.imgData = imageData;
-
-                _context.processImage();
+                //let base64Image = "data:image/jpeg;base64," + imageData;
+                this.imgData = imageData;
+                this.processImage();
             }, (err) => {
             });
         }
@@ -54,26 +53,22 @@ export class MediaUploadPage {
         if (this.isBrowserMode()) {
             var reader = new FileReader();
 
-            reader.onload = function () {
-
-                _context.imgData = reader.result;
-
-                _context.processImage();
-
+            reader.onload = () => {
+                this.imgData = reader.result;
+                this.processImage();
             };
 
-            reader.onerror = function () {
-                alert("reader error");
-
+            reader.onerror = () => {
+                //alert("reader error");
             };
 
+            //read data from file input, this will then fire the onload event
             reader.readAsDataURL((<any>document.getElementById("img-upload-media")).files[0]);
         }
 
     }
 
     isBrowserMode(): boolean {
-
         return (this.appManager.isPlatform("core") || this.appManager.isPlatform("mobileweb"));
     }
 
@@ -86,19 +81,18 @@ export class MediaUploadPage {
 
             // set its dimension to target size
 
-
             // draw source image into the off-screen canvas:
             //ctx.drawImage(this.img, 0, 0, this.targetWidth, this.targetHeight);
 
             var img = new Image();
 
-            img.onload = function () {
+            img.onload =  () =>{
                 canvas.width = img.width;
                 canvas.height = img.height;
                 ctx.fillStyle = "rgb(0,0,0)";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                _appContext.refreshImageFronCanvas();
+                this.refreshImageFromCanvas();
             }
 
             img.src = this.imgData;
@@ -106,7 +100,7 @@ export class MediaUploadPage {
         }
     }
 
-    refreshImageFronCanvas() {
+    refreshImageFromCanvas() {
         var canvas = <HTMLCanvasElement>document.getElementById('img-upload-canvas');
         // encode image to data-uri with base64 version of compressed image
         this.imgData = canvas.toDataURL('image/png');
@@ -144,7 +138,7 @@ export class MediaUploadPage {
 
             rotatedImage = null;
 
-            this.refreshImageFronCanvas();
+            this.refreshImageFromCanvas();
         }
     }
 

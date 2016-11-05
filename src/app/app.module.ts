@@ -27,10 +27,11 @@ import { IonicApp, IonicModule, Events } from 'ionic-angular';
 import { MyApp } from './app.component';
 
 import { TabsPage } from '../pages/tabs/tabs';
-import {TranslateModule } from 'ng2-translate/ng2-translate';
+import { TranslateModule } from 'ng2-translate/ng2-translate';
 import { TranslateService, TranslateLoader, TranslateStaticLoader } from 'ng2-translate/src/translate.service';
 
-import {NullableTranslatePipe} from '../pipes/NullableTranslatePipe';
+import { NullableTranslatePipe } from '../pipes/NullableTranslatePipe';
+
 export function createTranslateLoader(http: Http) {
   return new TranslateStaticLoader(http, './assets/i18n', '.json');
 }
@@ -61,13 +62,14 @@ export function createTranslateLoader(http: Http) {
   ],
   imports: [
     IonicModule.forRoot(MyApp),
-    
+
     HttpModule,
     TranslateModule.forRoot({
       provide: TranslateLoader,
-      useFactory: createTranslateLoader,
+      useFactory: (createTranslateLoader),
       deps: [Http]
     })
+    
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -98,6 +100,6 @@ export function createTranslateLoader(http: Http) {
     ReferenceDataManager,
     GoogleMapsDirections]
 })
-export class AppModule { 
+export class AppModule {
 
 }

@@ -37,7 +37,7 @@ export class Utils {
 
     static getIconForPOI(poi) {
         let poiLevel = Utils.getMaxLevelOfPOI(poi);
-        let iconURL = "images/icons/map/level" + poiLevel;
+        let iconURL = "assets/images/icons/map/level" + poiLevel;
 
         if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
             iconURL += "_private";

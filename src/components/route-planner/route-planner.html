@@ -59,18 +59,18 @@
 
     <ion-toolbar primary>
       <ion-buttons start>
-        <button (click)="clearRoute()" *ngIf="isRouteSet">
+        <button (click)="clearRoute()" *ngIf="isRouteSet" ion-button icon-left>
             <ion-icon name="close"></ion-icon>
       Clear Route
 
     </button>
       </ion-buttons>
       <ion-buttons end>
-        <button (click)="showSettings()" *ngIf="!advancedSettingsMode">
+        <button (click)="showSettings()" *ngIf="!advancedSettingsMode" ion-button icon-left>
       Settings
       <ion-icon name="cog" ></ion-icon>
     </button>
-        <button (click)="hideSettings()" *ngIf="advancedSettingsMode">
+        <button (click)="hideSettings()" *ngIf="advancedSettingsMode" ion-button icon-left>
       Hide
       <ion-icon name="cog" ></ion-icon>
     </button>

@@ -228,7 +228,7 @@ export class ReferenceDataManager {
         //if no cached data available, use local copy
         if (cachedRefData == null) {
 
-            this.http.get('./data/CoreReferenceData.json').map((res: Response) => res.json()).subscribe(res => {
+            this.http.get('./assets/data/CoreReferenceData.json').map((res: Response) => res.json()).subscribe(res => {
                 this.logging.log("Using bundled reference data as cached ref data.");
                 this.referenceData = res;
 

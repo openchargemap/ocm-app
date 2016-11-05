@@ -10,7 +10,7 @@
 
     <ion-title>{{ 'ocm.details.sectionTitle' | translate }}</ion-title>
     <ion-buttons end>
-        <button royal (click)="close()">
+        <button ion-button (click)="close()" icon-left>
       <ion-icon name="close"></ion-icon>
     </button>
     </ion-buttons>
@@ -23,7 +23,7 @@
 <ion-footer>
     <ion-toolbar>
         <ion-buttons start>
-            <button (click)="close()">
+            <button (click)="close()" ion-button icon-left>
             <ion-icon name="close"></ion-icon>
       Close
 
