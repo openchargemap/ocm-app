@@ -331,7 +331,7 @@ export class SearchPage implements OnInit {
                     this.appManager.isRequestInProgress = true;
 
                     this.poiManager.fetchPOIList(params)
-                        .subscribe(() => { }, (err) => {
+                        .then(() => { }, (err) => {
                             this.appManager.showToastNotification(this.nav, "Could not fetch POI list. Check connection.");
                         });
 

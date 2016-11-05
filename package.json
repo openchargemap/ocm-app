@@ -9,10 +9,7 @@
     "build:before": "build",
     "run:before": "build"
   },
-  "config": {
-
-  
-  },
+  "config": {},
   "dependencies": {
     "@angular/common": "2.1.1",
     "@angular/compiler": "2.1.1",
@@ -24,17 +21,17 @@
     "@angular/platform-browser-dynamic": "2.1.1",
     "@angular/platform-server": "2.1.1",
     "@ionic/storage": "1.1.6",
-    "ionic-angular": "2.0.0-rc.2",
     "@types/google-maps": "^3.1.28",
     "@types/googlemaps": "^3.25.35",
     "@types/leaflet": "^1.0.35",
     "angular2-jwt": "^0.1.24",
     "cordova-plugin-camera": "^2.2.0",
     "cordova-plugin-file": "^4.2.0",
+    "ionic-angular": "2.0.0-rc.2",
     "ionic-native": "^2.2.3",
     "ionicons": "^3.0.0",
     "linq-es5": "^1.8.39",
-    "ng2-translate": "^3.1.2",
+    "ng2-translate": "^4.0.0",
     "rxjs": "5.0.0-beta.12",
     "typescript-collections": "",
     "zone.js": "0.6.12"

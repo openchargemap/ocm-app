@@ -54,6 +54,8 @@ export class MyApp implements OnInit{
       this.translate.get('ocm.general.shortDescription', {value: 'world'}).subscribe((res: string) => {
     console.log(res);
     //=> 'hello world'
+}, (err)=>{
+  console.log("Translation error:"+err);
 });
       var test = this.translate.get("ocm.general.shortDescription").subscribe(data => {
         this.logger.log("Translation test:" + data);

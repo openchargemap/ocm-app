@@ -97,7 +97,12 @@ export class JourneysPage {
     confirm.present();
   }
 
-  launchNavigation() {
-    this.appManager.showToastNotification(this.nav, "Feature not yet implemented.");
+  launchNavigation(poi) {
+
+    var url = "https://maps.google.com/?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
+    if (this.appManager.platform.is("ios")) {
+      url = "https://maps.apple.com?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
+    }
+    window.open(url, '_system');
   }
 }

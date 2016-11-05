@@ -15,8 +15,10 @@ export class TabsPage {
     tabSettings: any;
     tabProfile: any;
 
-tabSearchTitle:String="Erch;"
-    tabJourneysTitle: string = "OUrn";
+    tabSearchTitle: string="";
+    tabJourneysTitle: string="";
+    tabSettingsTitle: string="";
+    tabProfileTitle: string="";
 
     constructor(public appManager: AppManager, public translate: TranslateService) {
         // this tells the tabs component which Pages
@@ -26,17 +28,20 @@ tabSearchTitle:String="Erch;"
         this.tabSettings = SettingsPage;
         this.tabProfile = ProfilePage;
 
-        this.translate.get("ocm.journeys.sectionTitle").subscribe((val) => {
-            if (val == "ocm.journeys.sectionTitle") val = "Journeys";
+        this.translate.get("ocm.journeys.sectionTitle").toPromise().then((val) => {
             this.tabJourneysTitle = val;
         });
 
-         this.translate.get(" ocm.search.sectionTitle").subscribe((val) => {
-         
+        this.translate.get("ocm.search.sectionTitle").subscribe((val) => {
             this.tabSearchTitle = val;
         });
+        this.translate.get("ocm.general.settings").subscribe((val) => {
+            this.tabSettingsTitle = val;
+        });
 
-       
+        this.translate.get("ocm.navigation.profile.sectionTitle").subscribe((val) => {
+            this.tabProfileTitle = val;
+        });
 
     }
 

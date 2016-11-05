@@ -22,14 +22,13 @@ export class POIManager {
     }
 
 
-    public fetchPOIList(searchParams: POISearchParams): Observable<any> {
+    public fetchPOIList(searchParams: POISearchParams): Promise<any> {
 
         this.isRequestInProgress = true;
-        let poiFetchObservable = this.api.fetchPOIListByParam(searchParams);
 
-        poiFetchObservable.subscribe(
+        return  this.api.fetchPOIListByParam(searchParams).toPromise().then(
             (results: Array<any>) => {
-                console.log('fetched POI list [' + results.length + ']');
+                this.logging.log('fetched POI list [' + results.length + ']');
                 this.poiList = results;
                 this.events.publish('ocm:poiList:updated');
                 //this.appManager.isRequestInProgress = false;
@@ -38,12 +37,11 @@ export class POIManager {
             (reason) => {
 
                 this.isRequestInProgress = false;
-                Observable.throw(reason);
-
+                
             }
         );
 
-        return poiFetchObservable;
+       
     }
 
     public clearResults() {

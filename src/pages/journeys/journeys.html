@@ -21,14 +21,10 @@
 
         <ion-card-content>
             <ion-toolbar primary>
-                <ion-buttons start>
-                    <button>
-      <ion-icon name="map"></ion-icon>
-    </button>
-                </ion-buttons>
+              
                 <ion-title> {{journey.Title}}</ion-title>
                 <ion-buttons end>
-                    <button (click)="deleteJourney(journey.ID)">
+                    <button ion-button (click)="deleteJourney(journey.ID)" icon-only>
       <ion-icon name="close"></ion-icon>
     </button>
                 </ion-buttons>
@@ -57,16 +53,17 @@
 
 
 
-                    <div (click)="viewPOIDetails(p)" tappable *ngFor="let p of w.PoiList">
+                    <div  *ngFor="let p of w.PoiList">
                         <div *ngIf="p.Poi">
+                            <div (click)="viewPOIDetails(p.Poi)" tappable>
                             <p *ngIf="p.Poi.AddressInfo.AddressLine1"> {{p.Poi.AddressInfo.AddressLine1}}</p>
                             <p *ngIf="p.Poi.AddressInfo.AddressLine2"> {{p.Poi.AddressInfo.AddressLine2}}</p>
                             <p *ngIf="p.Poi.AddressInfo.Town"> {{p.Poi.AddressInfo.Town}}</p>
                             <p *ngIf="p.Poi.AddressInfo.StateOrProvince"> {{p.Poi.AddressInfo.StateOrProvince}}</p>
                             <p *ngIf="p.Poi.AddressInfo.Postcode"> {{p.Poi.AddressInfo.Postcode}}</p>
 
-
-                            <button primary clear item-right (click)="launchNavigation()">
+</div>
+                            <button ion-button clear item-right (click)="launchNavigation(p.Poi)" icon-left>
                 <ion-icon name="navigate"></ion-icon>
                 Navigate
                 </button>

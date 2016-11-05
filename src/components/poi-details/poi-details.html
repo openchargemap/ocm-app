@@ -190,7 +190,7 @@
 					<ion-item *ngFor="let item of poi.UserComments">
 						<ion-avatar item-left>
 
-							<img src="{{item.User?.ProfileImageURL}}">
+							<img *ngIf="item.User && item.User.ProfileImageURL" src="{{item.User?.ProfileImageURL}}">
 
 						</ion-avatar>
 
@@ -225,7 +225,7 @@
 
 				<ion-item>
 					<ion-avatar item-left>
-						<img src="{{item.User?.ProfileImageURL}}">
+						<img *ngIf="item.User && item.User.ProfileImageURL" src="{{item.User?.ProfileImageURL}}">
 					</ion-avatar>
 					<h2>{{item.User.Username}}</h2>
 					<p>{{item.DateCreated | date}}</p>

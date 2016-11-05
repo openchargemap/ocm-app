@@ -7,15 +7,14 @@
 </ion-header>
 
 <ion-content class="profile-page" padding>
-    <h1>{{'ocm.navigation.profile.sectionTitle' | translate}}</h1>
-
-
+   
     <div *ngIf="userProfile==null">
         You are not signed in. <button (click)="showSignInModal()">{{'ocm.general.signIn' | translate}}</button>
     </div>
     <div *ngIf="userProfile!=null">
 
         <ion-card>
+           
 
             <ion-item>
                 <ion-avatar item-left>
