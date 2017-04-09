@@ -1,6 +1,6 @@
 import { AppManager } from './../../providers/AppManager';
 import { Component } from '@angular/core';
-import { TranslateService } from 'ng2-translate/ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 import { SearchPage } from '../search/search';
 import { JourneysPage } from '../journeys/journeys';
 import { SettingsPage } from '../settings/settings';
@@ -15,10 +15,10 @@ export class TabsPage {
     tabSettings: any;
     tabProfile: any;
 
-    tabSearchTitle: string="";
-    tabJourneysTitle: string="";
-    tabSettingsTitle: string="";
-    tabProfileTitle: string="";
+    tabSearchTitle: string="Search";
+    tabJourneysTitle: string="Journeys";
+    tabSettingsTitle: string="Settings";
+    tabProfileTitle: string="Profile";
 
     constructor(public appManager: AppManager, public translate: TranslateService) {
         // this tells the tabs component which Pages
@@ -28,18 +28,18 @@ export class TabsPage {
         this.tabSettings = SettingsPage;
         this.tabProfile = ProfilePage;
 
-        this.translate.get("ocm.journeys.sectionTitle").toPromise().then((val) => {
+        this.translate.get("ocm.journeys.sectionTitle").subscribe(val => {
             this.tabJourneysTitle = val;
         });
 
-        this.translate.get("ocm.search.sectionTitle").subscribe((val) => {
+        this.translate.get("ocm.search.sectionTitle").subscribe(val => {
             this.tabSearchTitle = val;
         });
-        this.translate.get("ocm.general.settings").subscribe((val) => {
+        this.translate.get("ocm.general.settings").subscribe(val => {
             this.tabSettingsTitle = val;
         });
 
-        this.translate.get("ocm.navigation.profile.sectionTitle").subscribe((val) => {
+        this.translate.get("ocm.navigation.profile.sectionTitle").subscribe(val => {
             this.tabProfileTitle = val;
         });
 

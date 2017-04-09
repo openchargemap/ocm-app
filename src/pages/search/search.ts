@@ -12,8 +12,8 @@ import { AppManager } from './../../providers/AppManager';
 
 import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { NavController, NavParams, Events, Platform, ModalController } from 'ionic-angular';
-import { TranslateService } from 'ng2-translate/ng2-translate';
-import { Keyboard } from 'ionic-native';
+import { TranslateService } from '@ngx-translate/core';
+import { Keyboard } from '@ionic-native/keyboard';
 
 @Component({
     templateUrl: 'search.html'
@@ -33,7 +33,7 @@ export class SearchPage implements OnInit {
     private searchPolyline: string;
     private routePlanningMode: boolean = true;
     sideViewAvailable = false;
-    
+
     searchKeyword: string = "";
     selectedPOI: any;
 
@@ -50,6 +50,7 @@ export class SearchPage implements OnInit {
         public zone: NgZone,
         public changeDetector: ChangeDetectorRef,
         public modalController: ModalController,
+        private keyboard: Keyboard,
         public logging: Logging
     ) {
 
@@ -64,7 +65,7 @@ export class SearchPage implements OnInit {
             this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
 
             //if using native maps, don't allow the keyboard to scroll the view as this conflicts with the plugin rendering
-            Keyboard.disableScroll(true);
+            this.keyboard.disableScroll(true);
         } else {
             this.mapping.setMapAPI(MappingAPI.GOOGLE_WEB);
             //this.mapping.setMapAPI(MappingAPI.LEAFLET);
@@ -75,6 +76,7 @@ export class SearchPage implements OnInit {
         this.logging.log("Entered search page.", LogLevel.VERBOSE);
         //give input focus to native map
         this.mapping.focusMap();
+        this.mapping.updateMapSize();
     }
 
     ionViewWillLeave() {
@@ -129,7 +131,9 @@ export class SearchPage implements OnInit {
 
         this.events.subscribe('ocm:poi:selected', (args) => {
 
-            this.viewPOIDetails(args[0]);
+
+//console.log(JSON.stringify(args));
+            this.viewPOIDetails(args);
 
         });
 
@@ -167,13 +171,24 @@ export class SearchPage implements OnInit {
 
         this.events.subscribe('ocm:window:resized', (size) => {
             //handle window resized event, updating map layout if required
-            this.enforceMapHeight(size[0]);
+            if (size!=null && size.length>0) this.enforceMapHeight(size[0]);
         });
 
         //switch app to to side view mode if display wide enough
         this.checkViewportMode();
 
-        this.mapping.initMap(this.mapCanvasID);
+
+        //TODO: if this is cordova, map init can't happen until after platform ready
+        if (this.mapping.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
+            this.platform.ready().then(() => {
+                //alert("platform ready");
+                this.mapping.initMap(this.mapCanvasID);
+            });
+
+        } else {
+            //non-native maps
+            this.mapping.initMap(this.mapCanvasID);
+        }
 
         //TODO:centre map to inital location (last search pos?)
 
@@ -352,13 +367,13 @@ export class SearchPage implements OnInit {
 
     }
 
-    viewPOIDetails(args: any) {
+    viewPOIDetails(data: any) {
 
 
-        this.logging.log("Viewing/fetching [" + this.poiViewMode + "] POI Details " + args.poiId);
+        this.logging.log("Viewing/fetching [" + this.poiViewMode + "] POI Details " + data.poiId);
 
 
-        this.poiManager.getPOIById(args.poiId, true).subscribe(poi => {
+        this.poiManager.getPOIById(data.poiId, true).subscribe(poi => {
 
             this.logging.log("Got POI Details " + poi.ID);
 
@@ -459,7 +474,7 @@ export class SearchPage implements OnInit {
             this.mapping.setMapZoom(15);
 
             this.refreshResultsAfterMapChange();
-            //this.mapping.updateMapSize();
+            this.mapping.updateMapSize();
 
         });
 

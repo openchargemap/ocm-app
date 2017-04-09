@@ -5,7 +5,7 @@
 
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs'
+import { Observable } from 'rxjs/Observable'
 import { JourneyManager } from './JourneyManager';
 import { JourneyRoute, JourneyRouteLeg } from '../model/Journey';
 

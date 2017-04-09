@@ -17,4 +17,3 @@
 /// <reference path="../node_modules/@types/leaflet/index.d.ts" />
 
 declare module '*';
-

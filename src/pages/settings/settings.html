@@ -61,7 +61,7 @@
   </ion-item>
   <ion-item>
     <ion-label>Language</ion-label>
-    <ion-select [(ngModel)]="searchSettings.Language" multiple="false">
+    <ion-select [(ngModel)]="searchSettings.Language" (ionChange)="onLanguageChange()" multiple="false">
       <ion-option *ngFor="let item of languages" [value]="item">{{item}}</ion-option>
 
     </ion-select>

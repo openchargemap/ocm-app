@@ -54,4 +54,9 @@ export class SettingsPage {
     //TODO: publish event to refresh results based on new criteria
     this.poiManager.clearResults();
   }
+
+  onLanguageChange(){
+    //update UI language
+   this.appManager.setLanguage(this.searchSettings.Language);
+  }
 }

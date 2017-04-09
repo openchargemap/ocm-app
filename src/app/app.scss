@@ -17,5 +17,9 @@
 
 /*transparency required for native maps, which appear behind the html content*/
 ion-app,ion-app.md, ion-app.ios,ion-app.wp,.content-md, .content-ios, .content-wp{
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.9);
 }
+ion-app._gmaps_cdv_ .nav-decor{
+  background-color: transparent !important;
+}
+ 

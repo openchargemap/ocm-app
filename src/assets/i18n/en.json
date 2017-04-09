@@ -16,6 +16,9 @@
       "signIn": "Sign In",
       "signOut": "Sign Out"
     },
+    "journeys":{
+      "sectionTitle":"Journeys"
+    },
     "details": {
       "sectionTitle": "Charging Location",
       "location": {

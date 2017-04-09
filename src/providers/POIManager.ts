@@ -21,27 +21,33 @@ export class POIManager {
 
     }
 
-
     public fetchPOIList(searchParams: POISearchParams): Promise<any> {
 
         this.isRequestInProgress = true;
 
-        return  this.api.fetchPOIListByParam(searchParams).toPromise().then(
-            (results: Array<any>) => {
-                this.logging.log('fetched POI list [' + results.length + ']');
-                this.poiList = results;
-                this.events.publish('ocm:poiList:updated');
-                //this.appManager.isRequestInProgress = false;
-            },
+        var poiObservable = this.api.fetchPOIListByParam(searchParams);
 
-            (reason) => {
+        if (poiObservable != null) {
+            return poiObservable.toPromise().then(
+                (results: Array<any>) => {
+                    this.logging.log('fetched POI list [' + results.length + ']');
+                    this.poiList = results;
+                    this.events.publish('ocm:poiList:updated');
+                    //this.appManager.isRequestInProgress = false;
+                },
 
-                this.isRequestInProgress = false;
-                
-            }
-        );
+                (reason) => {
 
-       
+                    this.isRequestInProgress = false;
+
+                }
+            );
+        } else {
+            return new Promise(() => {
+                return null;
+            });
+        }
+
     }
 
     public clearResults() {

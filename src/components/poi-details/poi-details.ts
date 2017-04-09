@@ -5,7 +5,7 @@ import { Logging } from './../../providers/Logging';
 import { AppManager } from './../../providers/AppManager';
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { NavController, ViewController, ModalController, ActionSheetController } from 'ionic-angular';
-import { TranslateService } from 'ng2-translate/ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({

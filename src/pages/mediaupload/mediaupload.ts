@@ -1,7 +1,7 @@
 import { AppManager } from './../../providers/AppManager';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
-import { Camera } from 'ionic-native';
+import { Camera } from '@ionic-native/Camera';
 
 @Component({
     templateUrl: 'mediaupload.html'
@@ -22,7 +22,8 @@ export class MediaUploadPage {
         public navParams: NavParams,
         public appManager: AppManager,
         public nav: NavController,
-        public view: ViewController
+        public view: ViewController,
+        private camera: Camera
     ) {
 
         this.processingQuality = 0.8;
@@ -40,7 +41,7 @@ export class MediaUploadPage {
 
 
         if (!this.isBrowserMode()) {
-            Camera.getPicture({ targetWidth: this.targetWidth }).then((imageData) => {
+            this.camera.getPicture({ targetWidth: this.targetWidth }).then((imageData) => {
                 // imageData is either a base64 encoded string or a file URI
                 // If it's base64:
                 //let base64Image = "data:image/jpeg;base64," + imageData;

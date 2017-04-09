@@ -113,14 +113,14 @@ export class LeafletMap implements IMapProvider {
     */
     showPOIListOnMap(poiList: Array<any>, parentContext: any) {
 
-        var clearMarkersOnRefresh = false;
+        var clearMarkersOnRefresh:boolean = false;
         var map = this.map;
         var bounds = new google.maps.LatLngBounds();
         var markersAdded = 0;
         var mapProviderContext = this;
 
         //clear existing markers (if enabled)
-        if (clearMarkersOnRefresh == true) {
+        if (clearMarkersOnRefresh) {
             this.clearMarkers();
         }
         var mapzoom = map.getZoom();

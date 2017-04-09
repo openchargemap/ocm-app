@@ -53,24 +53,25 @@ export class GoogleMapsNative implements IMapProvider {
         this.mapCanvasID = mapCanvasID;
 
         var apiAvailable = true;
-        if ((<any>window).plugin && plugin.google && plugin.google.maps) {
+        if (plugin && plugin.google && plugin.google.maps) {
             apiAvailable = true;
 
             this.logging.log("Native maps plugin is available.");
 
             if (this.map == null) {
                 var mapCanvas = document.getElementById(mapCanvasID);
-                this.map = plugin.google.maps.Map.getMap();
+                this.map = (<any>window).plugin.google.maps.Map.getMap(mapCanvas);
                 //this.map.setDebuggable(true);
                 let mapManagerContext = this;
 
                 //setup map manipulation events
-                this.map.addEventListener(plugin.google.maps.event.CAMERA_CHANGE, () => {
+                this.map.addEventListener(plugin.google.maps.event.CAMERA_MOVE_END, () => {
                     this.events.publish('ocm:mapping:dragend');
                     this.events.publish('ocm:mapping:zoom');
+                   // alert("Camera Move End");
                 });
 
-                this.map.on(plugin.google.maps.event.MAP_READY, () => {
+                this.map.one(plugin.google.maps.event.MAP_READY, () => {
                     this.logging.log("Native Mapping Ready.", LogLevel.INFO);
 
                     var mapOptions = {
@@ -89,10 +90,11 @@ export class GoogleMapsNative implements IMapProvider {
                     };
 
                     mapManagerContext.map.setOptions(mapOptions);
-                    mapManagerContext.map.setDiv(mapCanvas);
+                   // mapManagerContext.map.setDiv(mapCanvas);
                     mapManagerContext.map.setVisible(true);
                     mapManagerContext.mapReady = true;
                     mapManagerContext.events.publish('ocm:mapping:ready');
+                    mapManagerContext.setMapCenter(new GeoPosition(37.415328, -122.076575)) ;//native maps needs a map centre before anything is displayed
                 });
             }
         } else {
@@ -247,7 +249,8 @@ export class GoogleMapsNative implements IMapProvider {
 
     setMapCenter(pos: GeoPosition) {
         if (this.mapReady) {
-            this.map.setCenter(new plugin.google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+           this.map.setCameraTarget( new plugin.google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+           // this.map.setCenter(new plugin.google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
         }
     }
 

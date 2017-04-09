@@ -24,17 +24,18 @@ import { Logging } from './../providers/Logging';
 import { AppManager } from './../providers/AppManager';
 import { NgModule } from '@angular/core';
 import { IonicApp, IonicModule, Events } from 'ionic-angular';
+import { BrowserModule } from '@angular/platform-browser';
 import { MyApp } from './app.component';
 
 import { TabsPage } from '../pages/tabs/tabs';
-import { TranslateModule } from 'ng2-translate/ng2-translate';
-import { TranslateService, TranslateLoader, TranslateStaticLoader } from 'ng2-translate/src/translate.service';
+import { TranslateModule } from '@ngx-translate/core';
+import { TranslateService, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { NullableTranslatePipe } from '../pipes/NullableTranslatePipe';
+import { Camera } from '@ionic-native/camera';
+import { Keyboard } from '@ionic-native/keyboard';
 
-export function createTranslateLoader(http: Http) {
-  return new TranslateStaticLoader(http, './assets/i18n', '.json');
-}
 
 //export var google:any;
 
@@ -56,20 +57,22 @@ export function createTranslateLoader(http: Http) {
     //components
     PlaceSearch,
     PoiDetails,
-    RoutePlanner
+    RoutePlanner,
     //pipes
-
+    NullableTranslatePipe
   ],
   imports: [
+    BrowserModule,
     IonicModule.forRoot(MyApp),
-
     HttpModule,
     TranslateModule.forRoot({
-      provide: TranslateLoader,
-      useFactory: (createTranslateLoader),
-      deps: [Http]
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (http: Http) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
+        deps: [Http]
+      }
     })
-    
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -98,8 +101,12 @@ export function createTranslateLoader(http: Http) {
     SubmissionQueue,
     JourneyManager,
     ReferenceDataManager,
-    GoogleMapsDirections]
+    GoogleMapsDirections,
+    Camera,
+    Keyboard
+  ]
 })
+
 export class AppModule {
 
 }

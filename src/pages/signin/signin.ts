@@ -1,6 +1,6 @@
 import { Logging } from './../../providers/Logging';
 import { AppManager } from './../../providers/AppManager';
-import { TranslateService } from 'ng2-translate/ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 
 import {Component, NgZone} from '@angular/core';
 import {NavController, NavParams, AlertController, Loading, LoadingController, ViewController} from 'ionic-angular';

@@ -1,5 +1,5 @@
 import { SignInPage } from './../signin/signin';
-import { TranslateService } from 'ng2-translate/ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 import { AppManager } from './../../providers/AppManager';
 import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';

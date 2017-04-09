@@ -1,28 +1,29 @@
+import { Mapping } from './../providers/mapping/Mapping';
 import { Utils } from './../core/Utils';
 import { Logging } from './../providers/Logging';
 import { AppManager } from './../providers/AppManager';
 import { Component, OnInit } from '@angular/core';
 import { Platform, Events } from 'ionic-angular';
-import { StatusBar } from 'ionic-native';
 
 import { TabsPage } from '../pages/tabs/tabs';
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  template: `<ion-nav [root]="rootPage"></ion-nav>`
+  template: '<ion-nav [root]="rootPage"></ion-nav>'
 })
 export class MyApp implements OnInit{
   rootPage = TabsPage;
   debouncedPublishResizeEvent: any;
   
-  constructor(public platform: Platform, public events: Events, public translate: TranslateService, public appManager: AppManager, public logger: Logging) {
+  constructor(public platform: Platform, public events: Events, public translate: TranslateService, public appManager: AppManager,public mapping:Mapping, public logger: Logging) {
 
     this.initTranslation();
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
+
       // Here you can do any higher level native things you might need.
-      StatusBar.styleDefault();
+      //StatusBar.styleDefault();
     });
   }
 

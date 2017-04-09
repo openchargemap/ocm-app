@@ -7,7 +7,7 @@ import { APIClient } from './APIClient';
 import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { Events, NavController, Platform, ToastController, LoadingController, Loading } from 'ionic-angular';
-import { TranslateService } from 'ng2-translate/ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 import { JwtHelper } from 'angular2-jwt';
 import { UserProfile, SubmissionType, SearchSettings, Journey, WayPoint, GeoLatLng } from '../model/AppModels'
 import { SubmissionQueue } from './SubmissionQueue';
@@ -93,6 +93,7 @@ export class AppManager {
         return this.translateService.getLangs();
     }
     public setLanguage(languageCode: string) {
+        this.logging.log("Changing language: " + languageCode);
         this.translateService.use(languageCode);
     }
     public initAppManager() {
