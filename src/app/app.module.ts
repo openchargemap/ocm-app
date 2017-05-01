@@ -37,7 +37,10 @@ import { Camera } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
 
 
-//export var google:any;
+export function createTranslateLoader(http: Http) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
 
 @NgModule({
   declarations: [
@@ -68,7 +71,7 @@ import { Keyboard } from '@ionic-native/keyboard';
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (http: Http) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
+        useFactory: (createTranslateLoader),
         deps: [Http]
       }
     })
