@@ -9,7 +9,7 @@ import {Injectable} from '@angular/core';
 import {Http, Headers, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs'
 import {AsyncResult, SubmissionType, POISearchParams, GeoLatLng} from '../model/AppModels';
-import {POIManager} from '../services/POIManager';
+import {POIManager} from './POIManager';
 
 @Injectable()
 export class APIClient {

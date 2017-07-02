@@ -11,7 +11,7 @@ import { Events } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import * as collections from 'typescript-collections';
 
-declare var google: any;
+
 
 /**Map Provider for Google Maps Web API
 * @module MapProviders

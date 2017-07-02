@@ -41,6 +41,19 @@ export function createTranslateLoader(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
+import { MissingTranslationHandler, MissingTranslationHandlerParams } from '@ngx-translate/core';
+
+export class AppMissingTranslationHandler implements MissingTranslationHandler {
+  handle(params: MissingTranslationHandlerParams) {
+    if (params.interpolateParams && (<any>params.interpolateParams).Title) {
+      //for lookup lists our standard reference data has a .Title member we can use if we're not translating a term
+      return (<any>params.interpolateParams).Title
+    } else {
+      //translation not handled
+      return params.key;
+    }
+  }
+}
 
 @NgModule({
   declarations: [
@@ -68,7 +81,9 @@ export function createTranslateLoader(http: Http) {
     BrowserModule,
     IonicModule.forRoot(MyApp),
     HttpModule,
+
     TranslateModule.forRoot({
+      missingTranslationHandler: { provide: MissingTranslationHandler, useClass: AppMissingTranslationHandler },
       loader: {
         provide: TranslateLoader,
         useFactory: (createTranslateLoader),

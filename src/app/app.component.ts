@@ -40,7 +40,7 @@ export class MyApp implements OnInit{
   initTranslation() {
     //init translation
     //this.translate.useStaticFilesLoader('lang', '.json');
-    var defaultLang = "it";
+    var defaultLang = "en";
     var userLang = navigator.language.split('-')[0]; // use navigator lang if available
     userLang = /(it|en|sk)/gi.test(userLang) ? userLang : defaultLang;
     //userLang="sk";

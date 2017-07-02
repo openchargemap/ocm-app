@@ -9,9 +9,7 @@ import { MappingAPI, IMapProvider, MapOptions, Mapping } from '../Mapping';
 import { Events } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import * as collections from 'typescript-collections';
-
-declare var L: any;
-declare var google:any;
+import L from 'leaflet';
 
 /**Map Provider for Leaflet API
 * @module MapProviders
@@ -115,7 +113,6 @@ export class LeafletMap implements IMapProvider {
 
         var clearMarkersOnRefresh:boolean = false;
         var map = this.map;
-        var bounds = new google.maps.LatLngBounds();
         var markersAdded = 0;
         var mapProviderContext = this;
 

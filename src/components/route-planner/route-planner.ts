@@ -7,6 +7,7 @@ import { JourneyRoute } from './../../model/Journey';
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 
+declare var google:any;
 //
 /*
   Route Planning Component providing Start/Destination selection UI and summary of required energy for journey

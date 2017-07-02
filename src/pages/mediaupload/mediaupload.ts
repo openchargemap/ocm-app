@@ -1,7 +1,7 @@
 import { AppManager } from './../../providers/AppManager';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ViewController } from 'ionic-angular';
-import { Camera } from '@ionic-native/Camera';
+import { Camera } from '@ionic-native/camera';
 
 @Component({
     templateUrl: 'mediaupload.html'
