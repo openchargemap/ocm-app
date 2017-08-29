@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, Mapping } from '../Mapping';
 import { Events } from 'ionic-angular';
-import * as collections from 'typescript-collections';
+import { Dictionary} from 'typescript-collections';
 
 
 declare var plugin: any;
@@ -28,7 +28,7 @@ export class GoogleMapsNative implements IMapProvider {
     mapCanvasID: string;
 
     private map: any;
-    private markerList: collections.Dictionary<number, google.maps.Marker>;
+    private markerList: Dictionary<number, google.maps.Marker>;
     private maxMarkers: number = 200;
     private markerAllocCount: number = 0;
     private polylinePath: any;
@@ -39,7 +39,7 @@ export class GoogleMapsNative implements IMapProvider {
         this.mapAPIType = MappingAPI.GOOGLE_NATIVE;
         this.mapReady = false;
         this.mapCanvasID = "map-view";
-        this.markerList = new collections.Dictionary<number, any>();
+        this.markerList = new Dictionary<number, any>();
     }
 
     /**
@@ -136,7 +136,7 @@ export class GoogleMapsNative implements IMapProvider {
                 }
             }
         }
-        this.markerList = new collections.Dictionary<number, any>();
+        this.markerList = new Dictionary<number, any>();
     }
 
     renderPOIMarkers(clearMarkersOnRefresh: boolean, poiList: Array<any>) {

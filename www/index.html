@@ -2,9 +2,6 @@
 <html lang="en" dir="ltr">
 
 <head>
-  <script data-ionic="inject">
-    (function(w){var i=w.Ionic=w.Ionic||{};i.version='3.5.0';i.angular='4.1.3';i.staticDir='build/';})(window);
-  </script>
   <meta charset="UTF-8">
   <title>Open Charge Map</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -82,8 +79,11 @@
   <!-- The polyfills js is generated during the build process -->
   <script src="build/polyfills.js"></script>
 
+    <!-- The vendor js is generated during the build process
+       and includes all files in the node_modules directory -->
+  <script src="build/vendor.js"></script>
+
   <script src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyASE98mCjV1bqG4u2AUHqftB8Vz3zr2sEg"></script>
-  <!--<script src="assets/lib/collections.js"></script>-->
 
   <!-- The bundle js is generated during the build process -->
   <script src="build/main.js"></script>

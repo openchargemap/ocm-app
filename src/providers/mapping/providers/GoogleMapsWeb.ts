@@ -9,7 +9,7 @@ import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, Mapping } from '../Mapping';
 import { Events } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
-import * as collections from 'typescript-collections';
+import { Dictionary } from 'typescript-collections';
 
 
 
@@ -23,7 +23,7 @@ export class GoogleMapsWeb implements IMapProvider {
     mapCanvasID: string;
 
     private map: google.maps.Map;
-    private markerList: collections.Dictionary<number, google.maps.Marker>;
+    private markerList: Dictionary<number, google.maps.Marker>;
 
     private polylinePath: google.maps.Polyline;
 
@@ -32,7 +32,7 @@ export class GoogleMapsWeb implements IMapProvider {
         this.events = events;
         this.mapAPIType = MappingAPI.GOOGLE_WEB;
         this.mapReady = false;
-        this.markerList = new collections.Dictionary<number, google.maps.Marker>();
+        this.markerList = new Dictionary<number, google.maps.Marker>();
     }
 
     /**
@@ -121,7 +121,7 @@ export class GoogleMapsWeb implements IMapProvider {
                 }
             }
         }
-        this.markerList = new collections.Dictionary<number, google.maps.Marker>();
+        this.markerList = new Dictionary<number, google.maps.Marker>();
 
     }
 

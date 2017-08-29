@@ -8,7 +8,7 @@ import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, Mapping } from '../Mapping';
 import { Events } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
-import * as collections from 'typescript-collections';
+import { Dictionary}  from 'typescript-collections';
 import L from 'leaflet';
 
 /**Map Provider for Leaflet API
@@ -21,7 +21,7 @@ export class LeafletMap implements IMapProvider {
     mapCanvasID: string;
 
     private map: L.Map;
-    private markerList: collections.Dictionary<number, any>;
+    private markerList: Dictionary<number, any>;
 
 
     /** @constructor */
@@ -29,7 +29,7 @@ export class LeafletMap implements IMapProvider {
         this.events = events;
         this.mapAPIType = MappingAPI.LEAFLET;
         this.mapReady = false;
-        this.markerList = new collections.Dictionary<number, google.maps.Marker>();
+        this.markerList = new Dictionary<number, google.maps.Marker>();
     }
 
     /**
@@ -102,7 +102,7 @@ export class LeafletMap implements IMapProvider {
                 }
             }
         }
-        this.markerList = new collections.Dictionary<number, any>();
+        this.markerList = new Dictionary<number, any>();
     }
     /**
     * Renders the given array of POIs as map markers
