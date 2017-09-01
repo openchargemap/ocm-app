@@ -180,8 +180,7 @@ export class Mapping  {
             }
 
             this.logging.log("Mapping Manager: Init " + MappingAPI[this.mapProvider.mapAPIType]);
-
-            //TODO: proxy 'this'?
+            
             this.mapProvider.initMap(
                 mapcanvasID,
                 this.mapOptions,
@@ -207,7 +206,7 @@ export class Mapping  {
         } else {
             if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
                 var map = this.map;
-                this.logging.log("would add/update search pos marker");
+            
                 if (this.mapCentreMarker != null) {
                     this.logging.log("Updating search marker position");
                     this.mapCentreMarker.setPosition(searchPos);

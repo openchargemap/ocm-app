@@ -89,7 +89,7 @@ export class SearchPage implements OnInit {
         if (clientHeight == null) {
             clientHeight = Utils.getClientHeight();
         }
-        var preferredContentHeight = clientHeight - 100;
+        var preferredContentHeight = clientHeight - 160;
         return preferredContentHeight;
     }
 
@@ -104,6 +104,7 @@ export class SearchPage implements OnInit {
             document.getElementById(this.mapCanvasID).style.height = preferredContentHeight + "px";
         }
         if (this.mapping) {
+            this.logging.log("Map height:" + preferredContentHeight, LogLevel.VERBOSE);
             this.mapping.updateMapSize();
         }
     }
@@ -132,7 +133,7 @@ export class SearchPage implements OnInit {
         this.events.subscribe('ocm:poi:selected', (args) => {
 
 
-//console.log(JSON.stringify(args));
+            //console.log(JSON.stringify(args));
             this.viewPOIDetails(args);
 
         });
@@ -171,7 +172,7 @@ export class SearchPage implements OnInit {
 
         this.events.subscribe('ocm:window:resized', (size) => {
             //handle window resized event, updating map layout if required
-            if (size!=null && size.length>0) this.enforceMapHeight(size[0]);
+            if (size != null && size.length > 0) this.enforceMapHeight(size[0]);
         });
 
         //switch app to to side view mode if display wide enough

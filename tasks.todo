@@ -8,3 +8,11 @@
 
 - IOS
     - Native Map
+
+    Map tips:
+        - check cordova plugin installed and keys setup
+            - check keytool c:\...\.android\debug.keystore for sha1
+        - check transparency on html div/elements
+        - check android debug monitor for errors
+        - use chrome remote device debugging to inspect running app
+        - check div/element height for mapas map won't initialise if not visible
