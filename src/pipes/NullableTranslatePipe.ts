@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, ChangeDetectorRef, Injectable } from '@angular/core';
-import { TranslatePipe, TranslateService} from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Injectable()
 @Pipe({ name: 'nullableTranslate' })

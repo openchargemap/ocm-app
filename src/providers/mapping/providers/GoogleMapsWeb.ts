@@ -131,7 +131,7 @@ export class GoogleMapsWeb implements IMapProvider {
     * @param parentContext  parent app context
     */
     showPOIListOnMap(poiList: Array<any>, parentContext: any) {
-        var clearMarkersOnRefresh:boolean = false;
+        var clearMarkersOnRefresh: boolean = false;
         var map = this.map;
         var bounds = new google.maps.LatLngBounds();
         var markersAdded = 0;

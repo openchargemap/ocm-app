@@ -5,11 +5,11 @@ import { ReferenceDataManager } from './ReferenceDataManager';
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 
-import {Injectable} from '@angular/core';
-import {Http, Headers, RequestOptions} from '@angular/http';
-import {Observable} from 'rxjs'
-import {AsyncResult, SubmissionType, POISearchParams, GeoLatLng} from '../model/AppModels';
-import {POIManager} from './POIManager';
+import { Injectable } from '@angular/core';
+import { Http, Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs'
+import { AsyncResult, SubmissionType, POISearchParams, GeoLatLng } from '../model/AppModels';
+import { POIManager } from './POIManager';
 
 @Injectable()
 export class APIClient {
@@ -31,7 +31,7 @@ export class APIClient {
 
     private lastPOIApiCallURL = "";
 
-    constructor(public http: Http, public refData:ReferenceDataManager, public logging:Logging) {
+    constructor(public http: Http, public refData: ReferenceDataManager, public logging: Logging) {
 
         this.serviceBaseURL = this.serviceBaseURL_Standard;
         //this.serviceBaseURL = this.serviceBaseURL_LocalDev;

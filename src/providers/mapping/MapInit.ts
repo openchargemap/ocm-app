@@ -3,7 +3,7 @@
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 
-import {MappingAPI} from './Mapping';
+import { MappingAPI } from './Mapping';
 
 declare var ocm_app: any;
 declare var plugin: any;

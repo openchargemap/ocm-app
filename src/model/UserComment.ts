@@ -6,5 +6,5 @@ export interface UserComment {
     UserCommentTypeID: number;
     Comment: string;
     Rating: number;
-   
+
 }

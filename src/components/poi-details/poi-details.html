@@ -128,7 +128,7 @@
 			</ion-card-header>
 			<ion-card-content>
 
-<p *ngIf="poi.NumberOfPoints!=null">{{ 'ocm.details.numberOfPoints' | translate }}: {{poi.NumberOfPoints}}</p>
+				<p *ngIf="poi.NumberOfPoints!=null">{{ 'ocm.details.numberOfPoints' | translate }}: {{poi.NumberOfPoints}}</p>
 				<ion-list>
 					<ion-item *ngFor="let item of poi.Connections">
 						<ion-avatar item-left>
@@ -157,7 +157,7 @@
 			<ion-card-content>
 
 
-				
+
 				<div *ngIf="poi.DataProvider">
 					<ion-card-title>
 						{{ 'ocm.details.dataProvider.sectionTitle' | translate }}

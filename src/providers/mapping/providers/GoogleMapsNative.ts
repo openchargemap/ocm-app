@@ -174,7 +174,7 @@ export class GoogleMapsNative implements IMapProvider {
                             var shadow = null;
                             var markerImg = null;
 
-                            iconURL = window.location.href.replace(/\/([^\/]+)$/, "") +"assets/images/icons/map/level" + poiLevel;
+                            iconURL = window.location.href.replace(/\/([^\/]+)$/, "") + "assets/images/icons/map/level" + poiLevel;
 
                             if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
                                 iconURL += "_private";
@@ -202,7 +202,7 @@ export class GoogleMapsNative implements IMapProvider {
                                 'title': markerTooltip,
                                 'snippet': "View details",
                                 'iconData': {
-                                    'url':  iconURL,
+                                    'url': iconURL,
                                     'size': {
                                         'width': 30,
                                         'height': 50

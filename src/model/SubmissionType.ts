@@ -1,4 +1,4 @@
-export enum SubmissionType{
+export enum SubmissionType {
     POI,
     Comment,
     Media

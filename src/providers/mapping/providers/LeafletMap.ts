@@ -8,7 +8,7 @@ import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, Mapping } from '../Mapping';
 import { Events } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
-import { Dictionary}  from 'typescript-collections';
+import { Dictionary } from 'typescript-collections';
 import L from 'leaflet';
 
 /**Map Provider for Leaflet API
@@ -111,7 +111,7 @@ export class LeafletMap implements IMapProvider {
     */
     showPOIListOnMap(poiList: Array<any>, parentContext: any) {
 
-        var clearMarkersOnRefresh:boolean = false;
+        var clearMarkersOnRefresh: boolean = false;
         var map = this.map;
         var markersAdded = 0;
         var mapProviderContext = this;
@@ -265,7 +265,7 @@ export class LeafletMap implements IMapProvider {
 
     setMapZoom(zoomLevel: number) {
         if (this.mapReady) {
-            this.map.setZoom(zoomLevel,{});
+            this.map.setZoom(zoomLevel, {});
         }
 
     }
@@ -331,7 +331,7 @@ export class LeafletMap implements IMapProvider {
         this.map.fitBounds(new L.LatLngBounds(
             { lat: bounds.southWest.latitude, lng: bounds.southWest.longitude },
             { lat: bounds.northEast.latitude, lng: bounds.northEast.longitude }
-        ),{});
+        ), {});
     }
     focusMap() {
         //

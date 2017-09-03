@@ -6,16 +6,16 @@ import { Logging, LogLevel } from './../Logging';
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {GoogleMapsNative} from './providers/GoogleMapsNative';
-import {GoogleMapsWeb} from './providers/GoogleMapsWeb';
-import {LeafletMap} from './providers/LeafletMap';
-import {GeoLatLng, GeoPosition, GeoBounds} from '../../model/GeoPosition';
-import {Events} from 'ionic-angular'; //TODO remove dependency on ionic here?
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { GoogleMapsNative } from './providers/GoogleMapsNative';
+import { GoogleMapsWeb } from './providers/GoogleMapsWeb';
+import { LeafletMap } from './providers/LeafletMap';
+import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
+import { Events } from 'ionic-angular'; //TODO remove dependency on ionic here?
 
 declare var plugin: any;
-declare var google:any;
+declare var google: any;
 
 export class MapOptions {
 
@@ -86,7 +86,7 @@ export interface IMapProvider {
  * @module Mapping
  */
 @Injectable()
-export class Mapping  {
+export class Mapping {
     public map: any;
     public mapCentreMarker: any;
     public mapsInitialised: boolean; //initial map setup initiated
@@ -107,7 +107,7 @@ export class Mapping  {
 
     private isFocused: boolean = false;
     /** @constructor */
-    constructor(events: Events, private logging:Logging) {
+    constructor(events: Events, private logging: Logging) {
 
         this.events = events;
         this.mapOptions = new MapOptions();
@@ -118,7 +118,7 @@ export class Mapping  {
         this.setMapAPI(this.mapOptions.mapAPI);
 
         var mapManagerContext = this;
-        this.debouncedMapPositionUpdate = Utils.debounce(()=> {
+        this.debouncedMapPositionUpdate = Utils.debounce(() => {
             this.logging.log("signaling map position change:");
             if (mapManagerContext.mapProvider.mapReady) {
 
@@ -180,7 +180,7 @@ export class Mapping  {
             }
 
             this.logging.log("Mapping Manager: Init " + MappingAPI[this.mapProvider.mapAPIType]);
-            
+
             this.mapProvider.initMap(
                 mapcanvasID,
                 this.mapOptions,
@@ -206,7 +206,7 @@ export class Mapping  {
         } else {
             if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
                 var map = this.map;
-            
+
                 if (this.mapCentreMarker != null) {
                     this.logging.log("Updating search marker position");
                     this.mapCentreMarker.setPosition(searchPos);
@@ -222,12 +222,12 @@ export class Mapping  {
                         title: "Tap to Searching from here, Drag to change position.",
                         content: 'Your search position'
                         // icon: "images/icons/compass.png"
-                    }, (marker) =>{
+                    }, (marker) => {
                         this.mapCentreMarker = marker;
 
                         //marker click
-                        marker.addEventListener(plugin.google.maps.event.MARKER_CLICK,  (marker)=> {
-                            marker.getPosition( (pos) =>{
+                        marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, (marker) => {
+                            marker.getPosition((pos) => {
                                 this.logging.log("Search marker tapped, requesting search from current position.");
 
                                 this.updateMapCentrePos(pos.lat(), pos.lng(), false);
@@ -236,8 +236,8 @@ export class Mapping  {
                         });
 
                         //marker drag
-                        marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, (marker) =>{
-                            marker.getPosition( (pos) => {
+                        marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, (marker) => {
+                            marker.getPosition((pos) => {
 
                                 this.updateMapCentrePos(pos.lat(), pos.lng(), false);
                                 this.mapOptions.requestSearchUpdate = true;
@@ -269,14 +269,14 @@ export class Mapping  {
                     });
                     infowindow.open(map, this.mapCentreMarker);
 
-                    google.maps.event.addListener(this.mapCentreMarker, 'click',  ()=> {
+                    google.maps.event.addListener(this.mapCentreMarker, 'click', () => {
                         this.logging.log("Search markers tapped, requesting search.");
                         var pos = this.mapCentreMarker.getPosition();
                         this.updateMapCentrePos(pos.lat(), pos.lng(), false);
                         this.mapOptions.requestSearchUpdate = true;
                     });
 
-                    google.maps.event.addListener(this.mapCentreMarker, 'dragend',  () =>{
+                    google.maps.event.addListener(this.mapCentreMarker, 'dragend', () => {
                         this.logging.log("Search marker moved, requesting search.");
                         var pos = this.mapCentreMarker.getPosition();
                         this.updateMapCentrePos(pos.lat(), pos.lng(), false);
@@ -420,7 +420,7 @@ export class Mapping  {
     renderPolyline(polyline: string) {
         this.mapProvider.renderPolyline(polyline);
     }
-    clearPolyline(){
+    clearPolyline() {
         this.mapProvider.clearPolyline();
     }
 

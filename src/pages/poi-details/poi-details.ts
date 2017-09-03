@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {NavController, NavParams, ViewController} from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController, NavParams, ViewController } from 'ionic-angular';
 
 @Component({
     templateUrl: 'poi-details.html'
@@ -8,13 +8,13 @@ import {NavController, NavParams, ViewController} from 'ionic-angular';
 export class POIDetailsPage {
 
     poi: any;
-    hasNavbar:boolean=false;
+    hasNavbar: boolean = false;
 
     constructor(
-        public nav: NavController, 
-        public navParams: NavParams,  
+        public nav: NavController,
+        public navParams: NavParams,
         public view: ViewController
-        ) {
+    ) {
         this.poi = this.navParams.get('item');
     }
 

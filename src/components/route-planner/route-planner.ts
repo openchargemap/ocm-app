@@ -7,7 +7,7 @@ import { JourneyRoute } from './../../model/Journey';
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 
-declare var google:any;
+declare var google: any;
 //
 /*
   Route Planning Component providing Start/Destination selection UI and summary of required energy for journey
@@ -20,7 +20,7 @@ export class RoutePlanner {
 
     private routeSearchDistance: number = 5;
     private journeyRoutes: Array<JourneyRoute>;
-     selectedJourneyRoute: JourneyRoute;
+    selectedJourneyRoute: JourneyRoute;
     private routePolyline: string;
     private kWhPerKM: number;
 
@@ -29,9 +29,9 @@ export class RoutePlanner {
 
     routeCalcInProgress: boolean = false;
     advancedSettingsMode: boolean = false;
-      
-    routeStart:string="";
-    routeDestination:string="";
+
+    routeStart: string = "";
+    routeDestination: string = "";
 
     constructor(
         public mapping: Mapping,
