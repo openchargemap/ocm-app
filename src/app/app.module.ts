@@ -16,7 +16,6 @@ import { GoogleMapsDirections } from './../providers/GoogleMapsDirections';
 import { ReferenceDataManager } from './../providers/ReferenceDataManager';
 import { SubmissionQueue } from './../providers/SubmissionQueue';
 import { APIClient } from './../providers/APIClient';
-import { Http, HttpModule } from '@angular/http';
 import { Mapping } from './../providers/mapping/Mapping';
 import { POIManager } from './../providers/POIManager';
 import { DecimalPipe } from '@angular/common';
@@ -28,21 +27,23 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MyApp } from './app.component';
 
 import { TabsPage } from '../pages/tabs/tabs';
-import { TranslateModule } from '@ngx-translate/core';
-import { TranslateService, TranslateLoader } from '@ngx-translate/core';
+
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { NullableTranslatePipe } from '../pipes/NullableTranslatePipe';
 import { Camera } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
 
+import { MissingTranslationHandler, MissingTranslationHandlerParams } from '@ngx-translate/core';
+import {HttpClientModule, HttpClient } from '@angular/common/http';
+import { Http, HttpModule } from '@angular/http';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-import { MissingTranslationHandler, MissingTranslationHandlerParams } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
+
 
 export class AppMissingTranslationHandler implements MissingTranslationHandler {
   handle(params: MissingTranslationHandlerParams) {
@@ -81,14 +82,14 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    HttpModule,
-
+    HttpModule, // TODO: migrate to HttpCLient
+    HttpClientModule,
     TranslateModule.forRoot({
       missingTranslationHandler: { provide: MissingTranslationHandler, useClass: AppMissingTranslationHandler },
       loader: {
         provide: TranslateLoader,
         useFactory: (createTranslateLoader),
-        deps: [Http]
+        deps: [HttpClient]
       }
     })
 
