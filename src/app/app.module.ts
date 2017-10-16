@@ -37,11 +37,12 @@ import { Camera } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
 
 
-export function createTranslateLoader(http: Http) {
+export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 import { MissingTranslationHandler, MissingTranslationHandlerParams } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
 
 export class AppMissingTranslationHandler implements MissingTranslationHandler {
   handle(params: MissingTranslationHandlerParams) {

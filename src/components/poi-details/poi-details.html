@@ -98,9 +98,9 @@
 				<ion-icon name="book"></ion-icon> Usage Restrictions
 			</ion-card-header>
 			<ion-card-content>
-				<p *ngIf="poi.StatusType!=null">{{ 'ocm.details.operationalStatus' | translate }}: {{poi.StatusType.Title}}</p>
-				<p *ngIf="poi.UsageType!=null">{{ 'ocm.details.usageType' | translate }}: {{poi.UsageType.Title}}</p>
-				<p *ngIf="poi.UsageCost!=null">{{ 'ocm.details.usageCost' | translate }}: {{poi.UsageCost}}</p>
+				<p *ngIf="poi.StatusType!=null"><span class="label">{{ 'ocm.details.operationalStatus' | translate }}:</span> {{poi.StatusType.Title}}</p>
+				<p *ngIf="poi.UsageType!=null"><span class="label">{{ 'ocm.details.usageType' | translate }}:</span> {{poi.UsageType.Title}}</p>
+				<p *ngIf="poi.UsageCost!=null"><span class="label">{{ 'ocm.details.usageCost' | translate }}:</span> {{poi.UsageCost}}</p>
 				<p *ngIf="poi.GeneralComments!=null"><br>{{ 'ocm.details.generalComments' | translate }}: <br>{{poi.GeneralComments}}</p>
 				<div *ngIf="poi.OperatorInfo">
 					<ion-card-title>
