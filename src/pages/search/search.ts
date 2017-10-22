@@ -29,7 +29,7 @@ export class SearchPage implements OnInit {
 
     private searchOnDemand: boolean = true;
 
-    poiViewMode: string = "side"; //side or modal
+    poiViewMode: string = "modal"; //side or modal
     private searchPolyline: string;
     private routePlanningMode: boolean = true;
     sideViewAvailable = false;
