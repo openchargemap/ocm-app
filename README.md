@@ -8,4 +8,5 @@ Install Ionic CLI & Cordova:
 
 Build and test:
 > npm install
+
 > ionic serve
