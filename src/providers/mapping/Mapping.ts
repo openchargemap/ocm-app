@@ -205,7 +205,7 @@ export class Mapping {
             //TODO:?
         } else {
             if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
-                var map = this.map;
+                let map = this.map;
 
                 if (this.mapCentreMarker != null) {
                     this.logging.log("Updating search marker position");
@@ -249,7 +249,7 @@ export class Mapping {
             }
 
             if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
-                var map = this.map;
+                let map = this.map;
                 if (this.mapCentreMarker != null) {
                     this.logging.log("Updating search marker position");
                     this.mapCentreMarker.setPosition(searchPos);

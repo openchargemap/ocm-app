@@ -324,7 +324,7 @@ export class ReferenceDataManager {
 
         //TODO:  MediaItems,
         if (poi.Connections != null) {
-            for (var c = 0; c < poi.Connections.length; c++) {
+            for (let c = 0; c < poi.Connections.length; c++) {
                 var conn = poi.Connections[c];
                 if (conn.ConnectionTypeID != null && conn.ConnectionType == null) {
                     conn.ConnectionType = refData.getConnectionTypeByID(conn.ConnectionTypeID);
@@ -344,7 +344,7 @@ export class ReferenceDataManager {
         }
 
         if (poi.UserComments != null) {
-            for (var c = 0; c < poi.UserComments.length; c++) {
+            for (let c = 0; c < poi.UserComments.length; c++) {
                 var comment = poi.UserComments[c];
                 if (comment.CommentType != null && comment.CommentTypeID == null) {
                     comment.CommentType = refData.getCommentTypeByID(conn.CommentTypeID);
