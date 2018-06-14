@@ -59,7 +59,8 @@ export class SearchPage implements OnInit {
         this.mapCanvasID = "map-canvas";
 
         //decide whether to use Native Google Maps SDK or Google Web API        
-        if ((platform.is("ios") || platform.is("android"))
+        if (
+            ((platform.is("ios") || platform.is("android")))
             && !(this.appManager.isPlatform("core") || this.appManager.isPlatform("mobileweb"))
         ) {
             this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
@@ -110,7 +111,7 @@ export class SearchPage implements OnInit {
     }
 
     checkViewportMode() {
-        this.logging.log("Checking viewport mode:" + this.appManager.clientWidth);
+        /*this.logging.log("Checking viewport mode:" + this.appManager.clientWidth);
         if (this.appManager.clientWidth > 1000) {
             this.sideViewAvailable = true;
         } else {
@@ -123,7 +124,7 @@ export class SearchPage implements OnInit {
 
         if (!this.sideViewAvailable && this.poiViewMode == "side") {
             this.poiViewMode = "modal"; //switch to modal view mode for poi details
-        }
+        }*/
     }
 
     ngOnInit() {
@@ -131,11 +132,8 @@ export class SearchPage implements OnInit {
         this.debouncedRefreshResults = Utils.debounce(this.refreshResultsAfterMapChange, 1000, false);
 
         this.events.subscribe('ocm:poi:selected', (args) => {
-
-
             //console.log(JSON.stringify(args));
             this.viewPOIDetails(args);
-
         });
 
         this.events.subscribe('ocm:mapping:ready', () => {
@@ -157,8 +155,6 @@ export class SearchPage implements OnInit {
                     this.initialResultsShown = true;
                     this.refreshResultsAfterMapChange();
                 });
-
-
             }
         });
 

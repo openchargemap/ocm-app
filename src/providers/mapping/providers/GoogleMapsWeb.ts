@@ -11,8 +11,6 @@ import { Events } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import { Dictionary } from 'typescript-collections';
 
-
-
 /**Map Provider for Google Maps Web API
 * @module MapProviders
 */
@@ -69,17 +67,18 @@ export class GoogleMapsWeb implements IMapProvider {
                         mapTypeControl: true,
                         mapTypeControlOptions: {
                             style: google.maps.MapTypeControlStyle.DEFAULT,
-                            position: google.maps.ControlPosition.BOTTOM_RIGHT
+                            position: google.maps.ControlPosition.BOTTOM_LEFT,
+                            mapTypeIds: ['roadmap', 'terrain','satellite']
                         },
                         zoomControl: true,
                         zoomControlOptions: {
                             style: google.maps.ZoomControlStyle.DEFAULT,
-                            position: google.maps.ControlPosition.BOTTOM_RIGHT
+                            position: google.maps.ControlPosition.BOTTOM_LEFT
                         },
 
                         streetViewControl: true,
                         streetViewControlOptions: {
-                            position: google.maps.ControlPosition.BOTTOM_RIGHT
+                            position: google.maps.ControlPosition.BOTTOM_LEFT
                         }
                     };
 

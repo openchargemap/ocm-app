@@ -15,4 +15,7 @@
         - check transparency on html div/elements
         - check android debug monitor for errors
         - use chrome remote device debugging to inspect running app
-        - check div/element height for mapas map won't initialise if not visible
+        - check div/element height for map as map won't initialise if not visible
+
+Plugin notes:
+- geolocation requires setting on ios: https://ionicframework.com/docs/native/geolocation/
