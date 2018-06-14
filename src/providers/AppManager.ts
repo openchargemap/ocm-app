@@ -226,7 +226,7 @@ export class AppManager {
 
         }
 
-        url = "http://openchargemap.org/site" + url;
+        url = "https://openchargemap.org/site" + url;
         window.open(url, '_system');
     }
 

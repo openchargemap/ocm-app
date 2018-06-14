@@ -9,8 +9,8 @@ export class AppConfig {
     public loginProviderRedirectURL: string;
     public enableLiveMapQuerying: boolean;
     constructor() {
-        this.baseURL = "http://openchargemap.org/app/";
-        this.loginProviderRedirectBaseURL = "http://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
+        this.baseURL = "https://openchargemap.org/app/";
+        this.loginProviderRedirectBaseURL = "https://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
         this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
         this.enableLiveMapQuerying = true;
     }

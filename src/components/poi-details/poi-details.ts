@@ -164,10 +164,10 @@ export class PoiDetails implements OnInit {
   launchNavigation() {
 
     if (this.appManager.isPlatform("ios")) {
-      let appleMapsURL = "http://maps.apple.com/?ll=" + this.poi.AddressInfo.Latitude + "," + this.poi.AddressInfo.Longitude;
+      let appleMapsURL = "https://maps.apple.com/?ll=" + this.poi.AddressInfo.Latitude + "," + this.poi.AddressInfo.Longitude;
       this.appManager.launchWebPage(appleMapsURL);
     } else {
-      let googleMapsURL = "http://maps.google.com/?q=" + this.poi.AddressInfo.Latitude + "," + this.poi.AddressInfo.Longitude;
+      let googleMapsURL = "https://maps.google.com/?q=" + this.poi.AddressInfo.Latitude + "," + this.poi.AddressInfo.Longitude;
       this.appManager.launchWebPage(googleMapsURL);
     }
 

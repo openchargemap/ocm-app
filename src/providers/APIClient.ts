@@ -2,7 +2,7 @@
 import { ReferenceDataManager } from './ReferenceDataManager';
 /**
 * @author Christopher Cook
-* @copyright Webprofusion Ltd http://webprofusion.com
+* @copyright Webprofusion Ltd https://webprofusion.com
 */
 
 import { Injectable } from '@angular/core';
@@ -203,7 +203,7 @@ export class APIClient {
         return new Promise(resolve => {
 
             let padding = 0.001;
-            var url = "http://www.panoramio.com/map/get_panoramas.php?set=public&from=0&to=2&minx=" + (pos.longitude - padding) + "&miny=" + (pos.latitude - padding) + "&maxx=" + (pos.longitude + padding) + "maxy=" + (pos.latitude + padding) + "&size=medium&mapfilter=true&callback=?";
+            var url = "https://www.panoramio.com/map/get_panoramas.php?set=public&from=0&to=2&minx=" + (pos.longitude - padding) + "&miny=" + (pos.latitude - padding) + "&maxx=" + (pos.longitude + padding) + "maxy=" + (pos.latitude + padding) + "&size=medium&mapfilter=true&callback=?";
             console.log(url);
             this.http.get(url).subscribe(res => {
                 resolve(res.json());

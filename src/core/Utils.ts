@@ -122,19 +122,19 @@ export class Utils {
                 return this.formatSystemWebLink("maps:" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
                 //return "<a target=\"_system\" data-role=\"button\" data-icon=\"grid\" href=\"maps:" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
             } else if (device && device.platform == "iOS") {
-                return this.formatSystemWebLink("http://maps.apple.com/?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
+                return this.formatSystemWebLink("https://maps.apple.com/?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
                 //return "<a target=\"_system\" data-role=\"button\" data-icon=\"grid\" href=\"http://maps.apple.com/?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
             } else {
-                return this.formatSystemWebLink("http://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
+                return this.formatSystemWebLink("https://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude, linkContent);
             }
         }
         //default to google maps online link
-        return "<a target=\"_blank\"  href=\"http://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
+        return "<a target=\"_blank\"  href=\"https://maps.google.com/maps?q=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude + "\">" + linkContent + "</a>";
     }
 
     static formatURL(url, title: string = null) {
         if (url == null || url == "") return "";
-        if (url.indexOf("http") == -1) url = "http://" + url;
+        if (url.indexOf("http") == -1) url = "https://" + url;
         return '<a target="_blank" href="' + url + '">' + (title != null ? title : url) + '</a>';
     }
 
@@ -226,7 +226,7 @@ export class Utils {
         var drivingInfo = "";
 
         if (poi.AddressInfo.Distance != null) {
-            var directionsUrl = "http://maps.google.com/maps?saddr=&daddr=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
+            var directionsUrl = "https://maps.google.com/maps?saddr=&daddr=" + poi.AddressInfo.Latitude + "," + poi.AddressInfo.Longitude;
             drivingInfo += "<strong id='addr_distance'><span data-localize='details.approxDistance'>Distance</span>: " + poi.AddressInfo.Distance.toFixed(1) + " " + (poi.AddressInfo.DistanceUnit == 2 ? "Miles" : "KM") + "</strong>";
         }
         drivingInfo += "<p>" + this.formatSystemWebLink(directionsUrl, "Get Directions") + "</p>";
@@ -307,7 +307,7 @@ export class Utils {
         }
 
         var advancedInfo = "";
-        advancedInfo += this.formatTextField("<a target='_blank' href='http://openchargemap.org/site/poi/details/" + poi.ID + "'>OCM-" + poi.ID + "</a>", "OpenChargeMap Ref", false, true, "details.refNumber");
+        advancedInfo += this.formatTextField("<a target='_blank' href='https://openchargemap.org/site/poi/details/" + poi.ID + "'>OCM-" + poi.ID + "</a>", "OpenChargeMap Ref", false, true, "details.refNumber");
         if (poi.DataProvider != null) {
             advancedInfo += this.formatTextField(poi.DataProvider.Title, "Data Provider", false, true, "details.dataProviderTitle");
             if (poi.DataProvider.WebsiteURL != null) {
