@@ -65,9 +65,9 @@ export class MyApp implements OnInit {
 
     /*
       var test2 = this.translate.get("ocm.general.shortDescription");
-                test2.subscribe(data => { 
-                    this.log("Translation test2:" + data);    
-                });   
+                test2.subscribe(data => {
+                    this.log("Translation test2:" + data);
+                });
     */
 
     //translate.getTranslation(userLang);

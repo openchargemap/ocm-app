@@ -2,7 +2,7 @@
 <widget id="com.webprofusion.openchargemap" version="6.0.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Open Charge Map</name>
     <description>EV Charging Locations</description>
-    <author email="apps@webprofusion.com" href="http://webprofusion.com/">Webprofusion</author>
+    <author email="apps@webprofusion.com" href="https://webprofusion.com/">Webprofusion</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
