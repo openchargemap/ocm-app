@@ -6,6 +6,7 @@ import { AppManager } from './../../providers/AppManager';
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { NavController, ViewController, ModalController, ActionSheetController } from 'ionic-angular';
 import { TranslateService } from '@ngx-translate/core';
+import { AppConfig } from '../../core/AppConfig';
 
 
 @Component({
@@ -71,11 +72,12 @@ export class PoiDetails implements OnInit {
   get staticMapURL(): string {
 
     //scale=2 for retina
-    return "https://maps.googleapis.com/maps/api/staticmap?center="
+    return "https://maps.googleapis.com/maps/api/staticmap?key=" + new AppConfig().mapsAPIKey + "&center="
       + this.poi.AddressInfo.Latitude + "," + this.poi.AddressInfo.Longitude + "&zoom=13&scale=2&size="
       + this.staticMapSize + "&maptype=roadmap&format=jpg&visual_refresh=true&markers=size:small%7Ccolor:0xff0000%7Clabel:%7C"
       + this.poi.AddressInfo.Latitude + "," + this.poi.AddressInfo.Longitude;
   }
+
   get staticMapSize(): string {
     if (this.appManager.clientWidth == 0) {
       return "240x100";
@@ -122,7 +124,7 @@ export class PoiDetails implements OnInit {
 
     /*
      let modal= Modal.create(FavouriteEditorPage,{
-   
+
         poi: this.poi
     });
     this.nav.present(modal);*/

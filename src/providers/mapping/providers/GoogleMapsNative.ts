@@ -5,13 +5,22 @@ import { Logging, LogLevel } from './../../Logging';
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
 
-/// <reference path="../../../../lib/typings/cordova-plugin-googlemaps/cordova-plugin-googlemaps.d.ts" />
 
 import { Observable } from 'rxjs/Observable';
 import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, Mapping } from '../Mapping';
 import { Events } from 'ionic-angular';
 import { Dictionary } from 'typescript-collections';
+import {
+    GoogleMaps,
+    GoogleMap,
+    GoogleMapsEvent,
+    GoogleMapOptions,
+    CameraPosition,
+    MarkerOptions,
+    Marker,
+    BaseArrayClass
+  } from '@ionic-native/google-maps';
 
 
 declare var plugin: any;
@@ -139,10 +148,10 @@ export class GoogleMapsNative implements IMapProvider {
     }
 
     renderPOIMarkers(clearMarkersOnRefresh: boolean, poiList: Array<any>) {
-        var map = this.map;
-        var _providerContext = this;
-        var bounds = new plugin.google.maps.LatLngBounds();
-        var markersAdded = 0;
+        let map = this.map;
+        let _providerContext = this;
+        let bounds = new plugin.google.maps.LatLngBounds();
+        let markersAdded = 0;
 
         //clear existing markers (if enabled)
         if (clearMarkersOnRefresh == true || (this.markerList != null && this.markerList.values.length > this.maxMarkers)) {
@@ -152,13 +161,13 @@ export class GoogleMapsNative implements IMapProvider {
 
         if (poiList != null) {
             //render poi markers
-            var poiCount = poiList.length;
-            for (var i = 0; i < poiList.length; i++) {
+            let poiCount = poiList.length;
+            for (let i = 0; i < poiList.length; i++) {
                 if (poiList[i].AddressInfo != null) {
-                    if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-                        var poi = poiList[i];
+                  /*  if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
+                        let poi = poiList[i];
 
-                        var addMarker = true;
+                        let addMarker = true;
                         if (this.markerList != null) {
                             //find if this poi already exists in the marker list
                             if (this.markerList.containsKey(poi.ID)) {
@@ -186,17 +195,15 @@ export class GoogleMapsNative implements IMapProvider {
 
                             iconURL += "_icon.png";
 
-
                             var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
                             if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
                             if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
                             if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
 
-
-
                             //cache marker details
                             this.markerList.setValue(poi.ID, poi.ID);
                             this.markerAllocCount++;
+                            markersAdded++;
                             var newMarker = map.addMarker({
                                 'position': { lat: poi.AddressInfo.Latitude, lng: poi.AddressInfo.Longitude },
                                 'title': markerTooltip,
@@ -227,9 +234,57 @@ export class GoogleMapsNative implements IMapProvider {
 
                         }
                     }
+                    */
                 }
             }
 
+            
+            let baseArray: BaseArrayClass<any> = new BaseArrayClass<any>(poiList);
+
+            baseArray.mapAsync((poi: any, callback: (marker: Marker) => void) => {
+
+                var poiLevel = Utils.getMaxLevelOfPOI(poi);
+
+                var iconURL = null;
+                var animation = null;
+                var shadow = null;
+                var markerImg = null;
+
+                iconURL = window.location.href.replace(/\/([^\/]+)$/, "") + "assets/images/icons/map/level" + poiLevel;
+
+                if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
+                    iconURL += "_private";
+                } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
+                    iconURL += "_nonoperational";
+                } else {
+                    iconURL += "_operational";
+                }
+
+                iconURL += "_icon.png";
+
+                var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
+                if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
+                if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
+                if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
+
+                let opt = {
+                    'position': { lat: poi.AddressInfo.Latitude, lng: poi.AddressInfo.Longitude },
+                    'title': poi.Title,
+                    'snippet': "View details",
+                    'iconData': {
+                        'url': iconURL,
+                        'size': {
+                            'width': 30,
+                            'height': 50
+                        }
+                    }
+                };
+
+                map.addMarker(opt).then(callback);
+
+                }).then((markers: Marker[]) => {
+                 console.log(markers);
+            });
             this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.values.length + " [alloc:" + this.markerAllocCount + "]");
         }
 

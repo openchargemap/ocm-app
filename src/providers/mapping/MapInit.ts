@@ -1,4 +1,5 @@
-﻿/**
+﻿import { AppConfig } from './../../core/AppConfig';
+/**
 * @author Christopher Cook
 * @copyright Webprofusion Ltd http://webprofusion.com
 */
@@ -47,7 +48,8 @@ function loadGoogleMaps() {
 
     var script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = 'https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyASE98mCjV1bqG4u2AUHqftB8Vz3zr2sEg&signed_in=true&callback=initGoogleMapsCompleted'; //key=AIzaSyASE98mCjV1bqG4u2AUHqftB8Vz3zr2sEg&
+
+    script.src = 'https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key='+new AppConfig().mapsAPIKey+'&signed_in=true&callback=initGoogleMapsCompleted';
     document.body.appendChild(script);
 }
 
