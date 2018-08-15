@@ -21,7 +21,7 @@ export class SettingsPage {
 
   constructor(public appManager: AppManager, public poiManager: POIManager) {
 
-    this.searchSettings = new SearchSettings();
+    this.searchSettings = appManager.searchSettings;
 
     this.operators = this.appManager.referenceDataManager.getNetworkOperators(this.filterByCountryPref);
     this.usageTypes = this.appManager.referenceDataManager.getUsageTypes(this.filterByCountryPref);
@@ -30,7 +30,7 @@ export class SettingsPage {
 
     this.languages = this.appManager.getLanguages();
     //TODO reference data manager with filtered versions of reference type lists
-    // 
+    //
     if (this.searchSettings.MinPowerKW != null) this.powerRange.lower = this.searchSettings.MinPowerKW;
     if (this.searchSettings.MaxPowerKW != null) this.powerRange.upper = this.searchSettings.MaxPowerKW;
     if (this.powerRange.upper == 0) this.powerRange.upper = 500;
