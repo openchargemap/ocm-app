@@ -1,0 +1,47 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>
+            {{'ocm.navigation.profile.sectionTitle' | translate}}
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="profile-page" padding>
+
+    <div *ngIf="userProfile==null">
+        You are not signed in. <button ion-button (click)="showSignInModal()">{{'ocm.general.signIn' | translate}}</button>
+    </div>
+    <div *ngIf="userProfile!=null">
+
+        <ion-card>
+
+
+            <ion-item>
+                <ion-avatar item-left>
+                    <img src="{{userProfile.ProfileImageURL}}">
+                </ion-avatar>
+                <h2>{{userProfile.Username}}</h2>
+                <p>
+                    {{userProfile.DateCreated}}
+                </p>
+            </ion-item>
+
+
+            <ion-card-content>
+                <p> {{userProfile.Profile}}</p>
+            </ion-card-content>
+
+            <ion-item>
+                <ion-note item-left>
+                    <ion-icon name="star"></ion-icon>
+                    {{userProfile.ReputationPoints}} Contributor Points
+                </ion-note>
+
+
+            </ion-item>
+
+        </ion-card>
+
+        <button (click)="signOut()" ion-button>Sign Out</button>
+    </div>
+</ion-content>
