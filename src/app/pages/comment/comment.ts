@@ -50,29 +50,27 @@ export class CommentPage {
         // TODO:
     }
 
-    add() {
-        const loading = this.loadingController.create({
+    async add() {
+        const loading = await this.loadingController.create({
             message: 'Sending ..',
             // dismissOnPageChange: true
-        }).then(l => {
-            l.present();
         });
 
-        this.appManager.submitComment(this.commentModel).then((response) => {
-            this.logging.log('Comment submitted');
+        await loading.present();
 
-            this.loadingController.dismiss().then(() => {
-                this.modalController.dismiss();
-            }
-            );
+        let submission = await this.appManager.submitComment(this.commentModel).catch(
+            (rejection) => {
 
-        }, (rejection) => {
+                this.appManager.showToastNotification(this.nav, 'There was a problem submitting your comment.');
 
-            this.appManager.showToastNotification(this.nav, 'There was a problem submitting your comment.');
+                this.loadingController.dismiss();
 
-            this.loadingController.dismiss();
+            });
 
-        });
+        this.logging.log('Comment submitted');
+
+        await loading.dismiss();
+        await this.modalController.dismiss();
 
     }
 }

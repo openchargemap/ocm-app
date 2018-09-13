@@ -2,22 +2,22 @@
 	<div class="banner">
 
 
-		<h2>{{poi.AddressInfo.Title}} <small>OCM-{{poi.ID}}</small></h2>
+		<!--<h2>{{poi.AddressInfo.Title}} <small>OCM-{{poi.ID}}</small></h2>-->
 
-		<button ion-button small (click)="addComment()" icon-left>
-                <ion-icon name="chatbubbles"></ion-icon> Check-In
-            </button>
+		<ion-button size="small" (click)="addComment()">
+                <ion-icon name="chatbubbles" slot="start"></ion-icon> Check-In
+            </ion-button>
 
-		<button ion-button small (click)="addMedia()" icon-left>
-                <ion-icon name="camera"></ion-icon> Add Photos
-            </button>
-		<button ion-button small (click)="edit()" icon-left>
-                <ion-icon name="create"></ion-icon> Edit
-            </button>
+		<ion-button size="small" (click)="addMedia()">
+                <ion-icon name="camera" slot="start"></ion-icon> Add Photos
+            </ion-button>
+		<ion-button size="small" (click)="edit()">
+                <ion-icon name="create" slot="start"></ion-icon> Edit
+            </ion-button>
 
-		<button ion-button small (click)="addFavourite()" icon-left>
+		<ion-button size="small" (click)="addFavourite()" icon-left>
                 <ion-icon name="star"></ion-icon> Save
-            </button>
+            </ion-button>
 
 	</div>
 
@@ -43,12 +43,14 @@
 	<div *ngIf="selectedTab=='location'" padding class="address-details">
 
 		<ion-card *ngIf="poi.AddressInfo">
+				<ion-card-header>
+						<ion-card-subtitle><ion-icon name="map"></ion-icon> {{ 'ocm.details.location.address' | translate }}</ion-card-subtitle>
+
+					  </ion-card-header>
 			<img src="{{staticMapURL}}" (click)="launchNavigation()" />
 
 			<ion-card-content>
-				<ion-card-title>
-					<ion-icon name="map"></ion-icon> {{ 'ocm.details.location.address' | translate }}
-				</ion-card-title>
+
 				<div padding>
 					<div *ngIf="poi.AddressInfo.AddressLine1"> {{poi.AddressInfo.AddressLine1}}</div>
 					<div *ngIf="poi.AddressInfo.AddressLine2"> {{poi.AddressInfo.AddressLine2}}</div>
@@ -75,10 +77,10 @@
 
 			</ion-card-content>
 			<ion-item>
-				<button ion-button color="primary" clear item-left (click)="launchNavigation()" icon-left>
+				<ion-button color="primary" clear item-left (click)="launchNavigation()">
                 <ion-icon name="navigate"></ion-icon>
                 Navigate
-                </button>
+                </ion-button>
 
 				<ion-note item-right>
 					<ion-icon name="map"></ion-icon>
@@ -88,10 +90,6 @@
 
 			</ion-item>
 		</ion-card>
-
-
-
-
 
 		<ion-card>
 			<ion-card-header>
@@ -156,8 +154,6 @@
 			</ion-card-header>
 			<ion-card-content>
 
-
-
 				<div *ngIf="poi.DataProvider">
 					<ion-card-title>
 						{{ 'ocm.details.dataProvider.sectionTitle' | translate }}
@@ -171,10 +167,6 @@
 				</div>
 			</ion-card-content>
 		</ion-card>
-
-
-
-
 
 	</div>
 
@@ -236,8 +228,6 @@
 				<ion-card-content>
 					<p>{{item.Comment}}</p>
 				</ion-card-content>
-
-
 
 			</ion-card>
 		</div>

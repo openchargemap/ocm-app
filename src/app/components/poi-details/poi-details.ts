@@ -90,32 +90,33 @@ export class PoiDetails implements OnInit {
     return '240x100';
   }
 
-  addComment() {
+  async addComment() {
 
     if (this.appManager.isUserAuthenticated()) {
-      this.modalController.create({
+      const modal = await this.modalController.create({
         component: CommentPage, componentProps: {
           id: this.poi.ID,
           poi: this.poi
         }
-      }).then(modal => modal.present());
+      });
+      await modal.present();
 
     } else {
       this.appManager.showToastNotification(this.nav, 'Please Sign In (see Profile tab)');
     }
   }
 
-  addMedia() {
+  async addMedia() {
     if (this.appManager.isUserAuthenticated()) {
 
-      this.modalController.create({
+      const modal = await this.modalController.create({
         component: MediaUploadPage, componentProps: {
           id: this.poi.ID,
           poi: this.poi
         }
-      }).then(modal => {
-        modal.present();
       });
+
+      await modal.present();
 
     } else {
       this.appManager.showToastNotification(this.nav, 'Please Sign In (see Profile tab)');
@@ -123,7 +124,7 @@ export class PoiDetails implements OnInit {
 
   }
 
-  addFavourite() {
+  async addFavourite() {
     // TODO: add/remove favourite from journeys/favourites
 
     /*
@@ -135,7 +136,7 @@ export class PoiDetails implements OnInit {
 
 
     // show action sheet to decide what to do with new favourite
-    this.actionSheetController.create({
+    const actionSheet = await this.actionSheetController.create({
       header: 'Add Favourite',
       buttons: [
         {
@@ -147,7 +148,7 @@ export class PoiDetails implements OnInit {
               component: FavouriteEditorPage, componentProps: {
                 poi: this.poi
               }
-            }).then(m => m.present());
+            }).then(modal => modal.present());
 
           }
         },
@@ -159,7 +160,9 @@ export class PoiDetails implements OnInit {
           }
         }
       ]
-    }).then(a => a.present());
+    });
+
+    await actionSheet.present();
 
   }
 
@@ -174,6 +177,7 @@ export class PoiDetails implements OnInit {
     }
 
   }
+
   launchURL(url) {
     this.appManager.launchWebPage(url);
   }

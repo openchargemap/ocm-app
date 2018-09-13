@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from '@ionic/angular';
+import { ModalController, NavParams } from '@ionic/angular';
 
 @Component({
     templateUrl: 'poi-details.html'
@@ -11,13 +11,13 @@ export class POIDetailsPage {
     hasNavbar: boolean = false;
 
     constructor(
-        public nav: NavController,
+        public modalController: ModalController,
         public navParams: NavParams
     ) {
         this.poi = this.navParams.get('item');
     }
 
     close() {
-        // FIXME: this.nav.goBack();
+        this.modalController.dismiss();
     }
 }

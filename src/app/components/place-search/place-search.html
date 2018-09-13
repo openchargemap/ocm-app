@@ -3,7 +3,8 @@
   <div id="place-attribution"></div>
 
   <ion-list>
-    <a *ngFor="let item of placeList" (click)="placeSelected(item)" ion-item>
+    <ion-item *ngFor="let item of placeList" (click)="placeSelected(item)">
+
       <ion-avatar item-left>
         <ion-icon name="locate"></ion-icon>
       </ion-avatar>
@@ -11,7 +12,8 @@
       <h2>{{item.Title}}</h2>
 
       <p>{{item.Address}}</p>
-    </a>
+
+    </ion-item>
   </ion-list>
 
 </div>

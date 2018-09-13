@@ -1,6 +1,6 @@
 .poi-details {
 
-    
+
     .left-col{
         float:left;
         width:50%;
@@ -17,12 +17,12 @@
     display: table;
     clear: both;
     overflow: auto;
-    
+
     }
     .row {
-    
+
         margin-bottom:1em;
-        
+
     }
 
     .subtle {
@@ -31,7 +31,7 @@
 
     @media screen and (max-width: 768px) {
         .left-col{
-        
+
         float:none;
     width:100%;
         }
@@ -39,7 +39,7 @@
             margin-top:1em;
         float:none;
             width:100%;
-            
+
         }
     }
      .address-details ion-card img {
@@ -51,5 +51,9 @@
          overflow: inherit;
         /*  white-space: pre-line;*/
      }
-    
+
+}
+
+ion-title > small {
+    color:red;
 }

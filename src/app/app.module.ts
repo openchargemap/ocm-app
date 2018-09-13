@@ -42,7 +42,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
       return (<any>params.interpolateParams).Title;
     } else {
       //translation not handled
-      return params.key;
+      return '??' + params.key;
     }
   }
 }
@@ -56,7 +56,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: createTranslateLoader,
+        useFactory: (createTranslateLoader),
         deps: [HttpClient]
       }
     }),
