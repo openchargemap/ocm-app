@@ -4,7 +4,8 @@ import { NavController, NavParams } from '@ionic/angular';
 import { Camera } from '@ionic-native/camera/ngx';
 
 @Component({
-    templateUrl: 'mediaupload.html'
+    templateUrl: 'mediaupload.html',
+    styleUrls: ['./mediaupload.scss']
 })
 export class MediaUploadPage {
 

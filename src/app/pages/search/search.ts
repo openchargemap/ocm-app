@@ -18,7 +18,8 @@ import { MappingAPI } from '../../services/mapping/interfaces/mapping';
 
 
 @Component({
-  templateUrl: 'search.html'
+  templateUrl: 'search.html',
+  styleUrls: ['./search.scss']
 })
 
 export class SearchPage implements OnInit {

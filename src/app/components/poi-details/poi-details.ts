@@ -11,7 +11,8 @@ import { AppConfig } from '../../core/AppConfig';
 
 @Component({
   selector: 'poi-details',
-  templateUrl: 'poi-details.html'
+  templateUrl: 'poi-details.html',
+  styleUrls: ['./poi-details.scss']
 })
 
 export class PoiDetails implements OnInit {

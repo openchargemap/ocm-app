@@ -1,5 +1,19 @@
-.label{
+.label {
     color: rgb(136, 136, 136);
     width: 10em;
-    display:inline-block;
+    display: inline-block;
+}
+
+h3 {
+    font-weight: bold;
+}
+
+.details-minor {
+    color: rgba(0, 0, 0, 0.75);
+    margin-left:1em;
+}
+
+p {
+    display: block;
+    margin: 1em;
 }

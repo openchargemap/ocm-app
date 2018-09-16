@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { ModalController, NavParams } from '@ionic/angular';
 
 @Component({
-    templateUrl: 'poi-details.html'
+    templateUrl: 'poi-details.html',
+    styleUrls: ['./poi-details.scss']
 })
 
 export class POIDetailsPage {
