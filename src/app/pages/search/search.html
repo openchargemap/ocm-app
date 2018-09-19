@@ -1,29 +1,29 @@
 <ion-header>
 
-		<ion-toolbar>
-			<ion-buttons slot="start">
 
-				<ion-button (click)="locateUser()">
+	<ion-toolbar>
+		<ion-buttons slot="start">
+			<ion-menu-button></ion-menu-button>
+		</ion-buttons>
+		<ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="placeSearchMapPOI.getPlacesAutoComplete($event,'poiSearch')"
+		 [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500">
+		</ion-searchbar>
+		<ion-buttons slot="end">
+			<ion-button (click)="locateUser()">
 				<ion-icon name="locate" slot="start"></ion-icon>
-				</ion-button>
+			</ion-button>
+			<ion-button (click)="openRoutePlannerModal()" *ngIf="sideViewAvailable==false">
+				<ion-icon name="map" slot="start"></ion-icon>
+			</ion-button>
+			<ion-button (click)="openSearchOptions()">
+				<ion-icon name="options" slot="end"></ion-icon>
+			</ion-button>
 
-			</ion-buttons>
-			<ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="placeSearchMapPOI.getPlacesAutoComplete($event,'poiSearch')" [placeholder]="'ocm.search.performSearch' | translate"
-			 [debounce]="500">
-			</ion-searchbar>
-			<ion-buttons slot="end">
-				<ion-button (click)="openRoutePlannerModal()" *ngIf="sideViewAvailable==false" >
-								<ion-icon name="map" slot="start"></ion-icon>
-								</ion-button>
-				<ion-button (click)="openSearchOptions()">
-								<ion-icon name="options" slot="end"></ion-icon>
-								</ion-button>
-
-				<ion-button (click)="openSideView()" *ngIf="sideViewAvailable==true && poiViewMode=='modal'">
+			<ion-button (click)="openSideView()" *ngIf="sideViewAvailable==true && poiViewMode=='modal'">
 				<ion-icon name="car" title="Route" slot="end"></ion-icon>
-				</ion-button>
-			</ion-buttons>
-		</ion-toolbar>
+			</ion-button>
+		</ion-buttons>
+	</ion-toolbar>
 
 </ion-header>
 
@@ -41,62 +41,65 @@
 				<!--<ion-scroll scrollY="true" style="height:100%">-->
 
 
-					<ion-toolbar color="primary">
-						<ion-buttons slot="secondary">
+				<ion-toolbar color="primary">
+					<ion-buttons slot="secondary">
 
-							<ion-button (click)="closePOIDetails()" *ngIf="selectedPOI!=null">
-             <ion-icon name="arrow-dropleft"></ion-icon>
-              Back
+						<ion-button (click)="closePOIDetails()" *ngIf="selectedPOI!=null">
+							<ion-icon name="arrow-dropleft"></ion-icon>
+							Back
 
-            </ion-button>
+						</ion-button>
 
-						</ion-buttons>
-						<ion-buttons slot="primary">
+					</ion-buttons>
+					<ion-buttons slot="primary">
 
-							<ion-button (click)="closeSideView()" title="Hide Side Panel" ion-button icon-only>
-             <ion-icon name="arrow-dropright-circle"></ion-icon>
-
-
-            </ion-button>
-						</ion-buttons>
-
-					</ion-toolbar>
-					<poi-details *ngIf="selectedPOI!=null" [poi]="selectedPOI"></poi-details>
-					<div *ngIf="selectedPOI==null">
-
-						<route-planner *ngIf="routePlanningMode"></route-planner>
-
-						<ul>
-							<li>Browse the map to find charging locations. Select a location to see the full details.</li>
-							<li>Zoom in to the region you are interested in to see all charging locations.</li>
-							<li>You can use the route planner to start planning a journey. Use the 'Save' option when viewing a charging location
-								to create or add to a Journey. </li>
-						</ul>
-						<div *ngIf="!routePlanningMode">
-							<div class="banner">
-
-								<p padding>Browse the map to find charging locations. Select a location to see the full details.</p>
-								<ion-button (click)="planRoute()"><ion-icon name="map"></ion-icon> Plan Route</ion-button>
-							</div>
+						<ion-button (click)="closeSideView()" title="Hide Side Panel" ion-button icon-only>
+							<ion-icon name="arrow-dropright-circle"></ion-icon>
 
 
+						</ion-button>
+					</ion-buttons>
 
+				</ion-toolbar>
+				<poi-details *ngIf="selectedPOI!=null" [poi]="selectedPOI"></poi-details>
+				<div *ngIf="selectedPOI==null">
 
-							<ion-list *ngIf="poiManager.poiList!=null">
-								<ion-list-header>
-									{{poiManager.poiList.length}} results Search Distance: {{routeSearchDistance}}km
-								</ion-list-header>
-								<ion-item *ngFor="let poi of poiManager.poiList" (click)="viewPOIDetails({poiId:poi.ID})">
-									<ion-avatar item-left>
-										<img src="{{getIconForPOI(poi)}}" />
-									</ion-avatar>
-									<h2>{{poi.AddressInfo.Title}}</h2>
-									<p>{{poi.AddressInfo.AddressLine1}}</p>
-									<p>{{poi.AddressInfo.Postcode}}</p>
-								</ion-item>
-							</ion-list>
+					<route-planner *ngIf="routePlanningMode"></route-planner>
+
+					<ul>
+						<li>Browse the map to find charging locations. Select a location to see the full details.</li>
+						<li>Zoom in to the region you are interested in to see all charging locations.</li>
+						<li>You can use the route planner to start planning a journey. Use the 'Save' option when viewing a charging
+							location
+							to create or add to a Journey. </li>
+					</ul>
+					<div *ngIf="!routePlanningMode">
+						<div class="banner">
+
+							<p padding>Browse the map to find charging locations. Select a location to see the full details.</p>
+							<ion-button (click)="planRoute()">
+								<ion-icon name="map"></ion-icon> Plan Route
+							</ion-button>
 						</div>
+
+
+
+
+						<ion-list *ngIf="poiManager.poiList!=null">
+							<ion-list-header>
+								{{poiManager.poiList.length}} results Search Distance: {{routeSearchDistance}}km
+							</ion-list-header>
+							<ion-item *ngFor="let poi of poiManager.poiList" (click)="viewPOIDetails({poiId:poi.ID})">
+								<ion-avatar item-left>
+									<img src="{{getIconForPOI(poi)}}" />
+								</ion-avatar>
+								<h2>{{poi.AddressInfo.Title}}</h2>
+								<p>{{poi.AddressInfo.AddressLine1}}</p>
+								<p>{{poi.AddressInfo.Postcode}}</p>
+							</ion-item>
+						</ion-list>
 					</div>
+				</div>
 				<!--</ion-scroll>-->
 			</ion-col>
 

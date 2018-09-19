@@ -1,7 +1,16 @@
-<ion-tabs color="primary">
-    <ion-tab [root]="tabSearch" [tabTitle]="tabSearchTitle" icon="map"></ion-tab>
-    <ion-tab [root]="tabJourneys" [tabTitle]="tabJourneysTitle" icon="car"></ion-tab>
-    <ion-tab [root]="tabSettings" [tabTitle]="tabSettingsTitle" icon="options" [tabBadge]="settingsTabBadge"
-        badgeStyle="danger"></ion-tab>
-    <ion-tab [root]="tabProfile" [tabTitle]="tabProfileTitle" icon="person"></ion-tab>
-</ion-tabs>
+
+<ion-tabs>
+    <ion-tab [label]="tabSearchTitle" icon="map" href="/tabs/(search:search)">
+      <ion-router-outlet name="search"></ion-router-outlet>
+    </ion-tab>
+    <ion-tab [label]="tabJourneys" icon="car" href="/tabs/(journeys:journeys)">
+      <ion-router-outlet name="journeys"></ion-router-outlet>
+    </ion-tab>
+    <ion-tab [label]="tabSettingsTitle" icon="options" href="/tabs/(settings:settings)">
+      <ion-router-outlet name="settings"></ion-router-outlet>
+    </ion-tab>
+    <ion-tab [label]="tabProfileTitle" icon="person" href="/tabs/(profile:profile)">
+        <ion-router-outlet name="profile"></ion-router-outlet>
+      </ion-tab>
+  </ion-tabs>
+  

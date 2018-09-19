@@ -1,9 +1,6 @@
 import { POIDetailsModule } from './pages/poi-details/poit-details.module';
 import { CommentModule } from './pages/comment/comment.module';
 import { SearchPageModule } from './pages/search/search.module';
-import { SettingsPage } from './pages/settings/settings';
-import { ProfilePage } from './pages/profile/profile';
-import { JourneysPage } from './pages/journeys/journeys';
 import { CommentPage } from './pages/comment/comment';
 import { SearchPage } from './pages/search/search';
 import { RoutePlannerPage } from './pages/route-planner/route-planner';
@@ -22,10 +19,10 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { MediaUploadPage } from './pages/mediaupload/mediaupload';
 import { POIDetailsPage } from './pages/poi-details/poi-details';
-import { SignInPage } from './pages/signin/signin';
+
 import { RoutePlannerPageModule } from './pages/route-planner/route-planner.module';
+import { SignInModule } from './pages/signin/signin.module';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -69,6 +66,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     }),
     SearchPageModule,
     RoutePlannerPageModule,
+    SignInModule,
     CommentModule,
     POIDetailsModule
   ],

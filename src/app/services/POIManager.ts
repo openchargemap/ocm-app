@@ -7,7 +7,7 @@ import { AppManager } from './AppManager';
 import { Injectable, Inject } from '@angular/core';
 import { Events } from '@ionic/angular';
 import { Observable } from 'rxjs/Observable';
-import { POISearchParams } from '../Model/AppModels';
+import { POISearchParams } from '../model/AppModels';
 import { APIClient } from './APIClient';
 import { ReferenceDataManager } from './ReferenceDataManager';
 import { Subscription } from 'rxjs/Subscription';
@@ -30,7 +30,7 @@ export class POIManager {
 
         return this.api.fetchPOIListByParam(searchParams).then((results) => {
             this.isRequestInProgress = false;
-            this.logging.log('fetched POI list [' + results.length + ']');
+            if (results && results.length) this.logging.log('fetched POI list [' + results.length + ']');
             this.poiList = results;
             this.events.publish('ocm:poiList:updated');
         }, (rejected) => {

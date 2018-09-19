@@ -10,6 +10,27 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+
+  public appPages = [
+    {
+      title: 'Search',
+      url: '/search',
+      icon: 'home'
+    },
+    {
+      title: 'Journeys',
+      url: '/journeys',
+      icon: 'map'
+    },
+    
+    {
+      title: 'Sign In',
+      url: '/signin',
+      icon: 'person'
+    }
+  ];
+
+  
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,

@@ -91,7 +91,7 @@ export class SearchPage implements OnInit {
     if (clientHeight == null) {
       clientHeight = Utils.getClientHeight();
     }
-    const preferredContentHeight = clientHeight - 160;
+    const preferredContentHeight = clientHeight-56;
     return preferredContentHeight;
   }
 
