@@ -61,8 +61,9 @@ export class SearchPage implements OnInit {
 
     // decide whether to use Native Google Maps SDK or Google Web API
     if (
-      ((platform.is('ios') || platform.is('android')))
-      && !(this.appManager.isPlatform('desktop') || this.appManager.isPlatform('pwa'))
+
+        (platform.is('hybrid') && (platform.is('ios') || platform.is('android')))
+        && !(platform.is('desktop') || platform.is('pwa'))
     ) {
       this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
 
