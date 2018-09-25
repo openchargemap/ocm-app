@@ -95,7 +95,7 @@ export class GoogleMapsWeb implements IMapProvider {
                         mapProviderContext.events.publish('ocm:mapping:zoom');
                     });
 
-                    google.maps.event.addListener(this.map, 'idle', function () {
+                    google.maps.event.addListenerOnce(this.map, 'idle', function () {
                         mapProviderContext.events.publish('ocm:mapping:ready');
                     });
 
