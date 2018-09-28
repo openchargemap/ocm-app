@@ -68,7 +68,7 @@ export class SearchPage implements OnInit {
       this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
 
       // if using native maps, don't allow the keyboard to scroll the view as this conflicts with the plugin rendering
-      this.keyboard.disableScroll(true);
+      // this.keyboard.(true);
     } else {
       this.mapping.setMapAPI(MappingAPI.GOOGLE_WEB);
       // this.mapping.setMapAPI(MappingAPI.LEAFLET);
