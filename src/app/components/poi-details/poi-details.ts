@@ -103,7 +103,7 @@ export class PoiDetails implements OnInit {
       await modal.present();
 
     } else {
-      this.appManager.showToastNotification(this.nav, 'Please Sign In (see Profile tab)');
+      this.appManager.showToastNotification('Please Sign In (see Profile tab)');
     }
   }
 
@@ -120,7 +120,7 @@ export class PoiDetails implements OnInit {
       await modal.present();
 
     } else {
-      this.appManager.showToastNotification(this.nav, 'Please Sign In (see Profile tab)');
+      this.appManager.showToastNotification( 'Please Sign In (see Profile tab)');
     }
 
   }

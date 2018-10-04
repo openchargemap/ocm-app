@@ -1,3 +1,4 @@
+import { MediaUploadModule } from './pages/mediaupload/mediaupload.module';
 import { POIDetailsModule } from './pages/poi-details/poit-details.module';
 import { CommentModule } from './pages/comment/comment.module';
 import { SearchPageModule } from './pages/search/search.module';
@@ -23,6 +24,7 @@ import { POIDetailsPage } from './pages/poi-details/poi-details';
 
 import { RoutePlannerPageModule } from './pages/route-planner/route-planner.module';
 import { SignInModule } from './pages/signin/signin.module';
+import { MediaUploadPage } from './pages/mediaupload/mediaupload';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -46,7 +48,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage], // , JourneysPage, MediaUploadPage, POIDetailsPage, ProfilePage, SettingsPage, SignInPage
+  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage, MediaUploadPage], // , JourneysPage, MediaUploadPage, POIDetailsPage, ProfilePage, SettingsPage, SignInPage
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -68,6 +70,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     RoutePlannerPageModule,
     SignInModule,
     CommentModule,
+    MediaUploadModule,
     POIDetailsModule
   ],
   providers: [

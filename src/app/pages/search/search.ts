@@ -389,7 +389,7 @@ export class SearchPage implements OnInit {
 
     }, (err) => {
 
-      this.appManager.showToastNotification(this.nav, 'POI Details not available');
+      this.appManager.showToastNotification('POI Details not available');
     });
   }
 
@@ -451,7 +451,7 @@ export class SearchPage implements OnInit {
     }).catch((err) => {
       /// no geolocation
       this.logging.log('Failed to get user location.');
-      this.appManager.showToastNotification(this.nav, 'Your location could not be determined.');
+      this.appManager.showToastNotification('Your location could not be determined.');
 
       // use a default location, or the last known search position if known
       let searchPos = new GeoLatLng(37.415328, -122.076575);

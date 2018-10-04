@@ -52,6 +52,6 @@ export class ProfilePage {
         this.appManager.signOutCurrentUser();
         this.userProfile = null;
 
-        this.appManager.showToastNotification(this.nav, 'You are now signed out.');
+        this.appManager.showToastNotification('You are now signed out.');
     }
 }

@@ -61,7 +61,7 @@ export class CommentPage {
         let submission = await this.appManager.submitComment(this.commentModel).catch(
             (rejection) => {
 
-                this.appManager.showToastNotification(this.nav, 'There was a problem submitting your comment.');
+                this.appManager.showToastNotification('There was a problem submitting your comment.');
 
                 this.loadingController.dismiss();
 

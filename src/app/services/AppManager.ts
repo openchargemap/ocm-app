@@ -222,26 +222,26 @@ export class AppManager {
     }
   }
 
-  public showToastNotification(nav: NavController, msg: string) {
-    const toast = this.toastController.create({
+  public async showToastNotification( msg: string) {
+    const toast = await this.toastController.create({
       message: msg,
       duration: 3000,
-
-    }).then(t => {
-      t.present();
     });
 
+    await toast.present();
+
   }
 
-  public showLoadingProgress(msg: string) {
+  public async showLoadingProgress(msg: string) {
 
-    this.loadingController.create({
+    let p = await this.loadingController.create({
       message: msg
-    }).then(l => l.present());
+    });
 
+    await p.present();
   }
 
-  public dismissLoadingProgress(): Promise<any> {
+  public async dismissLoadingProgress(): Promise<any> {
     return this.loadingController.dismiss();
   }
 

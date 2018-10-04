@@ -1,6 +1,6 @@
 import { AppManager } from './../../services/AppManager';
 import { Component } from '@angular/core';
-import { NavController, NavParams } from '@ionic/angular';
+import { NavController, NavParams, ModalController } from '@ionic/angular';
 import { Camera } from '@ionic-native/camera/ngx';
 
 @Component({
@@ -23,6 +23,7 @@ export class MediaUploadPage {
         public navParams: NavParams,
         public appManager: AppManager,
         public nav: NavController,
+        private modalController: ModalController,
         private camera: Camera
     ) {
 
@@ -41,7 +42,7 @@ export class MediaUploadPage {
 
 
         if (!this.isBrowserMode()) {
-            this.camera.getPicture( { targetWidth: this.targetWidth }).then((imageData) => {
+            this.camera.getPicture({ targetWidth: this.targetWidth }).then((imageData) => {
                 // imageData is either a base64 encoded string or a file URI
                 // If it's base64:
                 // let base64Image = 'data:image/jpeg;base64,' + imageData;
@@ -143,7 +144,7 @@ export class MediaUploadPage {
         };
     }
 
-    performUpload() {
+    async performUpload() {
 
         const submission = {
             chargePointID: this.chargePointId,
@@ -151,25 +152,28 @@ export class MediaUploadPage {
             imageDataBase64: this.imgData
         };
 
-        this.appManager.showLoadingProgress('Uploading photo..');
-        this.appManager.submitMediaItem(submission).then((result) => {
+        await this.appManager.showLoadingProgress('Uploading photo..');
+
+        try {
+            let uploadResult = await this.appManager.submitMediaItem(submission);
+
+
             this.appManager.dismissLoadingProgress().then(() => {
-                this.appManager.showToastNotification(this.nav, 'Upload completed');
-                // this.nav.pop();
-                // FIXME: this.view.dismiss();
+                this.appManager.showToastNotification('Upload completed');
+
+                this.modalController.dismiss();
             });
 
-            // todo: refresh POI details to show new upload
-        }, (rejected) => {
-            this.appManager.dismissLoadingProgress().then(() => {
+            // TODO: refresh this POI in background to see results with upload
+        } catch (rejected) {
+            await this.appManager.dismissLoadingProgress();
+            await this.appManager.showToastNotification('Upload failed, please try again.');
 
-                this.appManager.showToastNotification(this.nav, 'Upload failed, please try again.');
-            });
+        }
 
-        });
     }
 
-    cancel() {
-        // FIXME: this.view.dismiss();
+    async cancel() {
+        await this.modalController.dismiss();
     }
 }
