@@ -23,12 +23,12 @@
     <div *ngIf="isBrowserMode()==true">
       <label class="button button-default button-icon-left upload">
         <span class="button-inner" icon-left>
-                <ion-icon name="camera" role="img" class="ion-md-camera" aria-label="camera"></ion-icon> 
-                Choose Image..
-            </span>
-    <input type="file" required id="img-upload-media" (change)="loadCameraOrLibraryImage()"/>
+          <ion-icon name="camera" role="img" class="ion-md-camera" aria-label="camera"></ion-icon>
+          Choose Image..
+        </span>
+        <input type="file" required id="img-upload-media" (change)="loadCameraOrLibraryImage()" />
 
-</label>
+      </label>
 
     </div>
     <canvas id="img-upload-canvas" style="display:none;width:500;height:500;border:1px solid red;"></canvas>
@@ -44,7 +44,9 @@
         <ion-toolbar>
           <ion-buttons slot="secondary">
 
-            <button ion-button (click)="rotateImage()" icon-left> <ion-icon name="refresh"></ion-icon> Rotate</button>
+            <ion-button (click)="rotateImage()">
+              <ion-icon name="refresh" slot="start"></ion-icon> Rotate
+            </ion-button>
 
           </ion-buttons>
 
@@ -57,11 +59,7 @@
 
           </ion-item>
 
-
-
         </ion-list>
-
-
         <img id="preview" style="max-width:500px" />
       </ion-card-content>
     </ion-card>
@@ -73,17 +71,17 @@
 <ion-footer>
   <ion-toolbar>
     <ion-buttons slot="secondary">
-      <button ion-button (click)="cancel()" icon-left>
-            <ion-icon name="close"></ion-icon>
-      Cancel
+      <ion-button (click)="cancel()">
+        <ion-icon name="close" slot="start"></ion-icon>
+        Cancel
 
-    </button>
+        </button>
     </ion-buttons>
     <ion-buttons slot="primary">
-      <button ion-button (click)="performUpload()" icon-right>
-      Upload
-      <ion-icon name="send"></ion-icon>
-    </button>
+      <ion-button (click)="performUpload()">
+        Upload
+        <ion-icon name="send" slot="end"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>

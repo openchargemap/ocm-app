@@ -29,7 +29,8 @@
         <ion-label position="stacked">Journey Stage</ion-label>
         <ion-select [(ngModel)]="selectedStageIndex">
             <ion-select-option value="">Create a Journey Stage</ion-select-option>
-            <ion-select-option *ngFor="let stage of journeyManager.getJourneyStages(selectedJourneyID); let i=index;" [value]="i" checked>{{stage.Title}}</ion-select-option>
+            <ion-select-option *ngFor="let stage of journeyManager.getJourneyStages(selectedJourneyID); let i=index;"
+                [value]="i" checked>{{stage.Title}}</ion-select-option>
         </ion-select>
 
     </ion-item>
@@ -51,17 +52,17 @@
 <ion-footer>
     <ion-toolbar>
         <ion-buttons slot="secondary">
-            <button ion-button (click)="cancel()" icon-left>
-            <ion-icon name="close"></ion-icon>
-      Cancel
+            <ion-button (click)="cancel()">
+                <ion-icon name="close" slot="start"></ion-icon>
+                Cancel
 
-    </button>
+            </ion-button>
         </ion-buttons>
         <ion-buttons slot="primary">
-            <button ion-button (click)="add()" icon-right>
-      Add
-      <ion-icon name="plus"></ion-icon>
-    </button>
+            <ion-button (click)="add()">
+                Add
+                <ion-icon name="plus" slot="end"></ion-icon>
+                </button>
         </ion-buttons>
     </ion-toolbar>
 </ion-footer>

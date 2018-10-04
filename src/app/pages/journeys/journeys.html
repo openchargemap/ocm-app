@@ -1,8 +1,8 @@
 <ion-header>
     <ion-toolbar>
-            <ion-buttons slot="start">
-                    <ion-menu-button></ion-menu-button>
-                </ion-buttons>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
         <ion-title>
             Journeys
         </ion-title>
@@ -15,7 +15,8 @@
     </p>
 
     <p *ngIf="journeyManager.journeys==null || journeyManager.journeys.length==0">
-        You have no journeys yet. Start by browsing to a charging location, then add it as Favourite to start a new Journey.
+        You have no journeys yet. Start by browsing to a charging location, then add it as Favourite to start a new
+        Journey.
 
     </p>
 
@@ -28,8 +29,8 @@
                 <ion-title> {{journey.Title}}</ion-title>
                 <ion-buttons slot="primary">
                     <button ion-button (click)="deleteJourney(journey.ID)" icon-only>
-      <ion-icon name="close"></ion-icon>
-    </button>
+                        <ion-icon name="close"></ion-icon>
+                    </button>
                 </ion-buttons>
             </ion-toolbar>
 
@@ -54,8 +55,6 @@
 
                     <p>{{w.Note}}</p>
 
-
-
                     <div *ngFor="let p of w.PoiList">
                         <div *ngIf="p.Poi">
                             <div (click)="viewPOIDetails(p.Poi)" tappable>
@@ -66,11 +65,10 @@
                                 <p *ngIf="p.Poi.AddressInfo.Postcode"> {{p.Poi.AddressInfo.Postcode}}</p>
 
                             </div>
-                            <button ion-button clear item-right (click)="launchNavigation(p.Poi)" icon-left>
-                <ion-icon name="navigate"></ion-icon>
-                Navigate
-                </button>
-
+                            <ion-button clear item-right (click)="launchNavigation(p.Poi)">
+                                <ion-icon name="navigate" slot="start"></ion-icon>
+                                Navigate
+                            </ion-button>
 
                         </div>
                     </div>
@@ -78,8 +76,6 @@
                 </ion-item>
 
             </ion-list>
-
-
 
         </ion-card-content>
 

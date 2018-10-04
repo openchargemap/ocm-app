@@ -12,7 +12,8 @@
     <h1>{{poi.AddressInfo.Title}}</h1>
     <p>{{poi.AddressInfo.AddressLine1}}</p>
   </div>
-  <p padding>Recent Check-ins are a big help to other drivers when planning their journey. Tell everyone what you thought about this
+  <p padding>Recent Check-ins are a big help to other drivers when planning their journey. Tell everyone what you
+    thought about this
     charging location. </p>
 
   <ion-list>
@@ -53,26 +54,22 @@
         <ion-select-option value="" [selected]="true">Not Rated</ion-select-option>
       </ion-select>
     </ion-item>
-
-
   </ion-list>
-
-
 </ion-content>
 <ion-footer>
   <ion-toolbar>
     <ion-buttons slot="secondary">
-      <button ion-button (click)="cancel()" icon-left>
-            <ion-icon name="close"></ion-icon>
-      Cancel
+      <ion-button (click)="cancel()">
+        <ion-icon name="close" slot="start"></ion-icon>
+        Cancel
 
-    </button>
+      </ion-button>
     </ion-buttons>
     <ion-buttons slot="primary">
-      <button ion-button (click)="add()" icon-right>
-      Submit
-      <ion-icon name="send" ></ion-icon>
-    </button>
+      <ion-button (click)="add()">
+        Submit
+        <ion-icon name="send" slot="end"></ion-icon>
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>

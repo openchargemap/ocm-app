@@ -3,6 +3,13 @@
         <ion-title>
             {{poi.AddressInfo.Title}} <small>OCM-{{poi.ID}}</small>
         </ion-title>
+        <ion-buttons slot="secondary">
+                <ion-button (click)="close()">
+                    <ion-icon name="close" slot="end"></ion-icon>
+                    Close
+    
+                </ion-button>
+            </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
@@ -21,15 +28,3 @@
 <ion-content class="poi-details" padding>
     <poi-details [poi]="poi"></poi-details>
 </ion-content>
-<ion-footer>
-    <ion-toolbar>
-        <ion-buttons slot="secondary">
-            <ion-button (click)="close()">
-                <ion-icon name="close" slot="end"></ion-icon>
-                Close
-
-            </ion-button>
-        </ion-buttons>
-
-    </ion-toolbar>
-</ion-footer>
