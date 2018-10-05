@@ -2,7 +2,8 @@
   <div class="route-places">
     <ion-list>
       <ion-list-header>
-        <ion-icon name="map"></ion-icon> <ion-label>Plan Your Journey</ion-label>
+        <ion-icon name="map" slot="start"></ion-icon>
+        <ion-label>Plan Your Journey</ion-label>
       </ion-list-header>
 
 
@@ -30,50 +31,25 @@
         <h2>{{placeSearchRouteDestination.selectedPlace?.name}}</h2>
       </ion-item>
 
-
-
     </ion-list>
-
-    <div *ngIf="advancedSettingsMode">
-
-      <ion-list>
-        <ion-list-header>
-          <ion-icon name="cog"></ion-icon> Route Settings
-        </ion-list-header>
-        <ion-item>
-          <ion-label position="stacked">Search Distance ({{routeSearchDistance}})</ion-label>
-          <ion-range min="1" max="200" step="5" snaps="true" pin="true" [(ngModel)]="routeSearchDistance" light>
-            <ion-icon slot="start" small name="map"></ion-icon>
-            <ion-icon slot="end" large name="map"></ion-icon>
-          </ion-range>
-
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">Energy Efficiency (kWh Per km)</ion-label>
-          <ion-input type="number" min="0.1" max="1" [(ngModel)]="kWhPerKM"></ion-input>
-
-
-        </ion-item>
-      </ion-list>
-    </div>
 
     <ion-toolbar primary>
       <ion-buttons slot="secondary">
-        <button (click)="clearRoute()" *ngIf="isRouteSet" ion-button icon-left>
-            <ion-icon name="close"></ion-icon>
-      Clear Route
+        <ion-button (click)="clearRoute()" *ngIf="isRouteSet">
+          <ion-icon name="close" slot="start"></ion-icon>
+          Clear Route
 
-    </button>
+        </ion-button>
       </ion-buttons>
       <ion-buttons slot="primary">
-        <button (click)="showSettings()" *ngIf="!advancedSettingsMode" ion-button icon-right>
-      Settings
-      <ion-icon name="cog" ></ion-icon>
-    </button>
-        <button (click)="hideSettings()" *ngIf="advancedSettingsMode" ion-button icon-right>
-      Hide
-      <ion-icon name="cog" ></ion-icon>
-    </button>
+        <ion-button (click)="showSettings()" *ngIf="!advancedSettingsMode">
+          Show Settings
+          <ion-icon name="cog" slot="end"></ion-icon>
+        </ion-button>
+        <ion-button (click)="hideSettings()" *ngIf="advancedSettingsMode">
+          Hide Settings
+          <ion-icon name="cog" slot="end"></ion-icon>
+        </ion-button>
       </ion-buttons>
     </ion-toolbar>
   </div>
@@ -93,4 +69,27 @@
     </ion-list-header>
 
   </ion-list>
+
+  <div *ngIf="advancedSettingsMode">
+
+    <ion-list>
+      <ion-list-header>
+        <ion-icon name="cog"></ion-icon> Route Settings
+      </ion-list-header>
+      <ion-item>
+        <ion-label position="stacked">Search Distance ({{routeSearchDistance}})</ion-label>
+        <ion-range min="1" max="200" step="5" snaps="true" pin="true" [(ngModel)]="routeSearchDistance" light>
+          <ion-icon slot="start" small name="map"></ion-icon>
+          <ion-icon slot="end" large name="map"></ion-icon>
+        </ion-range>
+
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Energy Efficiency (kWh Per km)</ion-label>
+        <ion-input type="number" min="0.1" max="1" [(ngModel)]="kWhPerKM"></ion-input>
+
+
+      </ion-item>
+    </ion-list>
+  </div>
 </div>

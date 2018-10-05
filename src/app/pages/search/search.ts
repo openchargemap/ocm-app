@@ -62,8 +62,8 @@ export class SearchPage implements OnInit {
     // decide whether to use Native Google Maps SDK or Google Web API
     if (
 
-        (platform.is('hybrid') && (platform.is('ios') || platform.is('android')))
-        && !(platform.is('desktop') || platform.is('pwa'))
+      (platform.is('hybrid') && (platform.is('ios') || platform.is('android')))
+      && !(platform.is('desktop') || platform.is('pwa'))
     ) {
       this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
 
@@ -92,7 +92,7 @@ export class SearchPage implements OnInit {
     if (clientHeight == null) {
       clientHeight = Utils.getClientHeight();
     }
-    const preferredContentHeight = clientHeight-56;
+    const preferredContentHeight = clientHeight - 56;
     return preferredContentHeight;
   }
 
