@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 import { RoutePlanner } from '../../components/route-planner/route-planner';
 
 @Component({
@@ -8,11 +8,11 @@ import { RoutePlanner } from '../../components/route-planner/route-planner';
 export class RoutePlannerPage {
 
   hasNavbar: boolean = false;
-  constructor(public nav: NavController) {
+  constructor(public modalController: ModalController) {
 
   }
 
   close() {
-    // FIXME: this.view.dismiss();
+    this.modalController.dismiss();
   }
 }

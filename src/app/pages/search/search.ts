@@ -51,7 +51,7 @@ export class SearchPage implements OnInit {
     public mapping: Mapping,
     public journeyManager: JourneyManager,
     public zone: NgZone,
-    public changeDetector: ChangeDetectorRef,
+
     public modalController: ModalController,
     private keyboard: Keyboard,
     public logging: Logging
@@ -217,9 +217,6 @@ export class SearchPage implements OnInit {
     }
 
     this.mapping.updateMapSize();
-
-    // force refresh of results list
-    this.changeDetector.detectChanges();
   }
 
   getIconForPOI(poi) {
