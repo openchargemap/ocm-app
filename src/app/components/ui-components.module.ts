@@ -6,11 +6,12 @@ import { PoiDetails } from './poi-details/poi-details';
 import { RoutePlanner } from './route-planner/route-planner';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { NullableTranslatePipe } from '../pipes/NullableTranslatePipe';
 
 @NgModule({
     imports: [CommonModule, IonicModule, FormsModule, TranslateModule],
     exports: [PlaceSearch, PoiDetails, RoutePlanner],
-    declarations: [PlaceSearch, PoiDetails, RoutePlanner],
+    declarations: [PlaceSearch, PoiDetails, RoutePlanner, NullableTranslatePipe],
     providers: [DecimalPipe],
 })
 

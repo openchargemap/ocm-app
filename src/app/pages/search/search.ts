@@ -1,3 +1,5 @@
+import { SettingsPage } from './../settings/settings';
+import { TranslateService } from '@ngx-translate/core';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { RoutePlannerPage } from './../route-planner/route-planner';
 import { POIDetailsPage } from './../poi-details/poi-details';
@@ -11,11 +13,8 @@ import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
 
 import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
-import { NavController, NavParams, Events, Platform, ModalController } from '@ionic/angular';
-import { TranslateService } from '@ngx-translate/core';
+import { NavController, Events, Platform, ModalController } from '@ionic/angular';
 import { MappingAPI } from '../../services/mapping/interfaces/mapping';
-
-
 
 @Component({
   templateUrl: 'search.html',
@@ -413,7 +412,20 @@ export class SearchPage implements OnInit {
   }
 
   openSearchOptions() {
-    // FIXME: this.nav.push(SettingsPage);
+
+    this.searchOnDemand = false;
+    this.mapping.unfocusMap();
+
+    this.modalController.create({ component: SettingsPage })
+      .then(m => {
+        m.onDidDismiss().then((data) => {
+
+          this.mapping.focusMap();
+          this.searchOnDemand = true;
+        });
+
+        m.present();
+      });
   }
 
   openSideView() {

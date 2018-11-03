@@ -25,6 +25,10 @@ import { POIDetailsPage } from './pages/poi-details/poi-details';
 import { RoutePlannerPageModule } from './pages/route-planner/route-planner.module';
 import { SignInModule } from './pages/signin/signin.module';
 import { MediaUploadPage } from './pages/mediaupload/mediaupload';
+import { ProfilePage } from './pages/profile/profile';
+import { SettingsPage } from './pages/settings/settings';
+import { ProfileModule } from './pages/profile/profile.module';
+import { SettingsModule } from './pages/settings/settings.module';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -71,7 +75,9 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     SignInModule,
     CommentModule,
     MediaUploadModule,
-    POIDetailsModule
+    POIDetailsModule,
+    ProfileModule,
+    SettingsModule
   ],
   providers: [
     StatusBar,

@@ -40,14 +40,12 @@
 			<ion-col size="3" *ngIf="poiViewMode=='side'" class="sideview">
 				<!--<ion-scroll scrollY="true" style="height:100%">-->
 
-
 				<ion-toolbar color="primary">
 					<ion-buttons slot="secondary">
 
 						<ion-button (click)="closePOIDetails()" *ngIf="selectedPOI!=null">
 							<ion-icon name="arrow-dropleft"></ion-icon>
 							Back
-
 						</ion-button>
 
 					</ion-buttons>
@@ -55,7 +53,6 @@
 
 						<ion-button (click)="closeSideView()" title="Hide Side Panel" ion-button icon-only>
 							<ion-icon name="arrow-dropright-circle"></ion-icon>
-
 
 						</ion-button>
 					</ion-buttons>
@@ -81,9 +78,6 @@
 								<ion-icon name="map"></ion-icon> Plan Route
 							</ion-button>
 						</div>
-
-
-
 
 						<ion-list *ngIf="poiManager.poiList!=null">
 							<ion-list-header>
