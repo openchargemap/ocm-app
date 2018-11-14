@@ -1,3 +1,5 @@
+import { environment } from './../../../environments/environment.prod';
+import { AppConfig } from './../../core/AppConfig';
 import { SettingsPage } from './../settings/settings';
 import { TranslateService } from '@ngx-translate/core';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
@@ -39,6 +41,8 @@ export class SearchPage implements OnInit {
   searchKeyword: string = '';
   selectedPOI: any;
 
+  appConfig = new AppConfig();
+
   constructor(
     public appManager: AppManager,
     public nav: NavController,
@@ -69,7 +73,7 @@ export class SearchPage implements OnInit {
       // if using native maps, don't allow the keyboard to scroll the view as this conflicts with the plugin rendering
       // this.keyboard.(true);
     } else {
-      this.mapping.setMapAPI(MappingAPI.GOOGLE_WEB);
+      this.mapping.setMapAPI(environment.defaultMapProvider);
       // this.mapping.setMapAPI(MappingAPI.LEAFLET);
     }
   }

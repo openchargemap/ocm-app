@@ -1,3 +1,5 @@
+import { environment } from "../../environments/environment";
+
 /**
 * @author Christopher Cook
 * @copyright Webprofusion Pty Ltd https://webprofusion.com
@@ -8,13 +10,16 @@ export class AppConfig {
   public loginProviderRedirectBaseURL: string;
   public loginProviderRedirectURL: string;
   public enableLiveMapQuerying: boolean;
-  public mapsAPIKey: string;
+  public googleMapsAPIKey: string;
+  public enableStaticMaps: boolean;
 
   constructor() {
     this.baseURL = "https://openchargemap.org/app/";
     this.loginProviderRedirectBaseURL = "https://openchargemap.org/site/loginprovider/?_mode=silent&_forceLogin=true&_redirectURL=";
     this.loginProviderRedirectURL = this.loginProviderRedirectBaseURL + this.baseURL;
     this.enableLiveMapQuerying = true;
-    this.mapsAPIKey = "AIzaSyASE98mCjV1bqG4u2AUHqftB8Vz3zr2sEg";
+    this.googleMapsAPIKey = environment.googleMapsKey;
+
+    this.enableStaticMaps = environment.enableStaticMaps;
   }
 }

@@ -71,7 +71,7 @@ export class PoiDetails implements OnInit {
   get staticMapURL(): string {
 
     // scale=2 for retina
-    return 'https://maps.googleapis.com/maps/api/staticmap?key=' + new AppConfig().mapsAPIKey + '&center='
+    return 'https://maps.googleapis.com/maps/api/staticmap?key=' + new AppConfig().googleMapsAPIKey + '&center='
       + this.poi.AddressInfo.Latitude + ',' + this.poi.AddressInfo.Longitude + '&zoom=13&scale=2&size='
       + this.staticMapSize + '&maptype=roadmap&format=jpg&visual_refresh=true&markers=size:small%7Ccolor:0xff0000%7Clabel:%7C'
       + this.poi.AddressInfo.Latitude + ',' + this.poi.AddressInfo.Longitude;

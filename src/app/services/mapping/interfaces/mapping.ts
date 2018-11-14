@@ -1,10 +1,12 @@
+import { environment } from './../../../../environments/environment';
 import { Observable } from "rxjs-compat/Observable";
 import { GeoPosition, GeoLatLng, GeoBounds } from "../../../model/AppModels";
 
 export enum MappingAPI {
     GOOGLE_WEB,
     GOOGLE_NATIVE,
-    LEAFLET
+    LEAFLET,
+    MAPBOX
 }
 
 export interface IMapProvider {
@@ -58,7 +60,7 @@ export class MapOptions {
         this.enableTrackingMapCentre = false;
         this.enableSearchByWatchingLocation = false;
         this.mapCentre = null;
-        this.mapAPI = MappingAPI.GOOGLE_WEB;
+        this.mapAPI = environment.defaultMapProvider;
         this.mapType = "ROADMAP";
         this.searchDistanceKM = 1000 * 100;
         this.mapMoveQueryRefreshMS = 300;

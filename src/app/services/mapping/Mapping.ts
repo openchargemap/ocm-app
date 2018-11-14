@@ -1,3 +1,4 @@
+import { MapBoxMapProvider } from './providers/MapBox';
 import { IMapManager, MapOptions, IMapProvider, MappingAPI } from './interfaces/mapping';
 import { Utils } from './../../core/Utils';
 import { Logging, LogLevel } from './../Logging';
@@ -95,6 +96,10 @@ export class Mapping implements IMapManager {
         if (this.mapOptions.mapAPI == MappingAPI.LEAFLET) {
             this.mapProvider = new LeafletMap(this.events, this.logging);
         }
+
+        if (this.mapOptions.mapAPI == MappingAPI.MAPBOX) {
+          this.mapProvider = new MapBoxMapProvider(this.events, this.logging);
+      }
     }
 
     isMapReady() {

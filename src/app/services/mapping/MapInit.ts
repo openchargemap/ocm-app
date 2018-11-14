@@ -53,7 +53,7 @@ function loadGoogleMaps() {
     var script = document.createElement('script');
     script.type = 'text/javascript';
 
-    script.src = 'https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=' + new AppConfig().mapsAPIKey
+    script.src = 'https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=' + new AppConfig().googleMapsAPIKey
         + '&signed_in=true&callback=initGoogleMapsCompleted';
     document.body.appendChild(script);
 }
