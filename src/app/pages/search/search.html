@@ -5,7 +5,7 @@
 		<ion-buttons slot="start">
 			<ion-menu-button></ion-menu-button>
 		</ion-buttons>
-		<ion-searchbar [(ngModel)]="searchKeyword" (ionInput)="placeSearchMapPOI.getPlacesAutoComplete($event,'poiSearch')"
+		<ion-searchbar autocomplete="on" [(ngModel)]="searchKeyword" (ionInput)="search($event)"
 		 [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500">
 		</ion-searchbar>
 		<ion-buttons slot="end">

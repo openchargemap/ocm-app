@@ -6,8 +6,9 @@ import { Mapping } from './../../services/mapping/Mapping';
 import { JourneyRoute } from './../../model/Journey';
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { PlaceSearchResult } from '../../model/AppModels';
 
-declare var google: any;
+declare var google;
 //
 /*
   Route Planning Component providing Start/Destination selection UI and summary of required energy for journey
@@ -24,8 +25,8 @@ export class RoutePlanner {
     private routePolyline: string;
     private kWhPerKM: number;
 
-    routeStartPlace: any;
-    routeDestinationPlace: any;
+    routeStartPlace: PlaceSearchResult;
+    routeDestinationPlace: PlaceSearchResult;
 
     routeCalcInProgress: boolean = false;
     advancedSettingsMode: boolean = false;
@@ -35,8 +36,8 @@ export class RoutePlanner {
 
     constructor(
         public mapping: Mapping,
-        public directions: GoogleMapsDirections,
         public logging: Logging,
+        public directions: GoogleMapsDirections,
         public journeyManager: JourneyManager,
         public changeDetector: ChangeDetectorRef,
         public numberPipe: DecimalPipe
@@ -104,9 +105,9 @@ export class RoutePlanner {
             this.routeCalcInProgress = true;
 
             this.directions.getDirections(
-                this.routeStartPlace.geometry.location.lat() + ',' + this.routeStartPlace.geometry.location.lng(),
-                this.routeDestinationPlace.geometry.location.lat() + ',' +
-                this.routeDestinationPlace.geometry.location.lng())
+                this.routeStartPlace.Location.latitude + ',' + this.routeStartPlace.Location.longitude,
+                this.routeDestinationPlace.Location.latitude + ',' +
+                this.routeDestinationPlace.Location.longitude)
                 .then((result: google.maps.DirectionsResult) => {
                     if (result.routes != null && result.routes.length > 0) {
                         this.logging.log('Got route directions, analysing..');

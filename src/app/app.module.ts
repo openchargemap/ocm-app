@@ -1,5 +1,5 @@
 import { MediaUploadModule } from './pages/mediaupload/mediaupload.module';
-import { POIDetailsModule } from './pages/poi-details/poit-details.module';
+import { POIDetailsModule } from './pages/poi-details/poi-details.module';
 import { CommentModule } from './pages/comment/comment.module';
 import { SearchPageModule } from './pages/search/search.module';
 import { CommentPage } from './pages/comment/comment';

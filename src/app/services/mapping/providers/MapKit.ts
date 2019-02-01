@@ -1,0 +1,353 @@
+
+/**
+* @author Christopher Cook
+* @copyright Webprofusion Pty Ltd https://webprofusion.com
+*/
+
+import { Utils } from '../../../core/Utils';
+import { MappingAPI, IMapProvider, MapOptions, IMapManager } from '../interfaces/mapping';
+import { Events } from '@ionic/angular';
+import { Observable } from 'rxjs/Observable';
+import { Dictionary } from 'typescript-collections';
+import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
+import { Logging, LogLevel } from './../../Logging';
+import { environment } from '../../../../environments/environment.prod';
+
+
+declare var mapkit: any;
+
+/**Map Provider for Apple MapKit JS API
+* @module MapProviders
+*/
+export class MapKitMapProvider implements IMapProvider {
+  mapAPIType: MappingAPI;
+  mapReady: boolean;
+  providerError: string;
+  mapCanvasID: string;
+
+  private map: any;
+  private markerList: Dictionary<number, any>;
+  private polylinePath: any;
+
+  /** @constructor */
+  constructor(private events: Events, private logging: Logging) {
+    this.events = events;
+    this.mapAPIType = MappingAPI.MAPKIT_JS;
+    this.mapReady = false;
+    this.markerList = new Dictionary<number, any>();
+  }
+
+  /**
+  * Performs one-time init of map object for this map provider
+  * @param mapcanvasID  dom element for map canvas
+  * @param mapConfig  general map config/options
+
+  */
+  initMap(mapCanvasID, mapConfig: MapOptions, parentMapManager: IMapManager) {
+    this.mapCanvasID = mapCanvasID;
+
+    var apiLoaded = true;
+    if (typeof mapkit === 'undefined') {
+      apiLoaded = false;
+    } else {
+      apiLoaded = true;
+    }
+
+    if (apiLoaded) {
+      if (this.map == null) {
+        var mapCanvas = document.getElementById(mapCanvasID);
+
+        mapkit.init({
+          authorizationCallback: function (done) {
+            done(environment.mapKitToken);
+          }
+        });
+
+        this.map = new mapkit.Map(mapCanvasID);
+
+      /*  var startRegion = new mapkit.CoordinateRegion(
+          new mapkit.Coordinate(37.3316850890998, -122.030067374026),
+          new mapkit.CoordinateSpan(0.167647972, 0.354985255)
+        );
+
+        this.map.region = startRegion;*/
+
+        this.mapReady = true;
+
+        mapkit.addEventListener("configuration-change", (event) => {
+          this.events.publish('ocm:mapping:ready');
+        });
+
+        this.map.addEventListener("scroll-end", (event) => {
+          this.events.publish('ocm:mapping:dragend');
+        });
+
+        this.map.addEventListener("zoom-end", (event) => {
+          this.events.publish('ocm:mapping:zoom');
+        });
+
+      }
+    } else {
+      this.logging.log("Call to initMap before API is ready:" + MappingAPI[this.mapAPIType], LogLevel.ERROR);
+
+      this.mapReady = false;
+      return false;
+    }
+  }
+
+  clearMarkers() {
+    if (this.markerList != null) {
+      for (var i = 0; i < this.markerList.size(); i++) {
+        if (this.markerList[i]) {
+          this.markerList[i].setMap(null);
+        }
+      }
+    }
+    this.markerList = new Dictionary<number, google.maps.Marker>();
+
+  }
+
+  /**
+  * Renders the given array of POIs as map markers
+  * @param poiList  array of POI objects
+  * @param parentContext  parent app context
+  */
+  showPOIListOnMap(poiList: Array<any>, parentContext: any) {
+    var clearMarkersOnRefresh: boolean = false;
+    var map = this.map;
+    var bounds = {};
+    var markersAdded = 0;
+    var mapProviderContext = this;
+
+    //clear existing markers (if enabled)
+    if (clearMarkersOnRefresh) {
+      this.clearMarkers();
+    }
+
+    if (poiList != null) {
+      //render poi markers
+      var poiCount = poiList.length;
+      let newMarkers = [];
+
+      for (var i = 0; i < poiList.length; i++) {
+        if (poiList[i].AddressInfo != null) {
+          if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
+            var poi = poiList[i];
+
+            let addMarker = true;
+            if (!clearMarkersOnRefresh && this.markerList != null) {
+              // find if this poi already exists in the marker list
+              if (this.markerList.containsKey(poi.ID)) {
+                addMarker = false;
+
+                // set marker scale based on zoom?
+                // var m = this.markerList.getValue(poi.ID);
+                // if (m.set())
+              }
+            }
+
+            if (addMarker) {
+
+              var iconURL = null;
+              var animation = null;
+              var shadow = null;
+              var markerImg = null;
+
+              iconURL = Utils.getIconForPOI(poi);
+
+              /* markerImg = {
+                 url: iconURL,
+                 size: new google.maps.Size(68, 100.0),
+ 
+                 anchor: new google.maps.Point(15, 45),
+                 scaledSize: new google.maps.Size(34, 50)
+ 
+               };*/
+
+              var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
+              if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
+
+              if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
+
+              const coordinates = new mapkit.Coordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude);
+
+              let marker = new mapkit.ImageAnnotation(coordinates, {
+                title: markerTooltip,
+                size: { width: 34, height: 50 },
+                url: { 1: iconURL }
+              });
+
+
+              marker.poi = poi;
+
+              marker.addEventListener('select', (el) => {
+                const clickedPOI = el.target.poi;
+                this.events.publish('ocm:poi:selected', { poi: clickedPOI, poiId: clickedPOI.ID });
+              });
+
+              this.markerList.setValue(poi.ID, marker);
+
+              newMarkers.push(marker);
+
+              markersAdded++;
+            }
+          }
+        }
+      }
+
+      if (newMarkers.length > 0) this.map.addAnnotations(newMarkers);
+
+
+      this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.size());
+    }
+
+    // zoom to bounds of markers
+    /* if (poiList != null && poiList.length > 0) {
+       if (parentContext != null && !parentContext.appConfig.enableLiveMapQuerying) {
+         this.logging.log("Fitting to marker bounds:" + bounds);
+         map.setCenter(bounds.getCenter());
+         this.logging.log("zoom before fit bounds:" + map.getZoom());
+ 
+         map.fitBounds(bounds);
+ 
+         // fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
+         var zoom = map.getZoom();
+         map.setZoom(zoom < 6 ? 6 : zoom);
+       } else {
+         if (map.getCenter() == undefined) {
+           map.setCenter(bounds.getCenter());
+         }
+       }
+     }*/
+
+    // this.refreshMapLayout();
+  }
+
+  refreshMapLayout() {
+    if (this.map != null) {
+
+      setTimeout(() => {
+        this.logging.log("MapKit: refreshMapLayout", LogLevel.VERBOSE);
+        //this.map.resize();
+
+      }, 200);
+
+    }
+  }
+
+  setMapCenter(pos: GeoPosition) {
+    if (this.mapReady) {
+      this.map.setCenterAnimated(new mapkit.Coordinate(pos.coords.latitude, pos.coords.longitude));
+    }
+  }
+
+  getMapCenter(): Observable<GeoPosition> {
+
+    // wrap getCenter in an observable
+    let obs = Observable.create(observer => {
+      if (this.map != null) {
+        var pos = this.map.center;
+        if (pos != null) {
+          observer.next(new GeoPosition(pos.latitude, pos.longitude));
+          observer.complete();
+        }
+      }
+    });
+
+    return obs;
+  }
+
+  setMapZoom(zoomLevel: number) {
+    this.logging.log("MapKit: setMapZoom not supported", LogLevel.VERBOSE);
+    // this.map.setZoom(zoomLevel);
+  }
+
+  getMapZoom(): Observable<number> {
+
+    // wrap getzoom in an observable
+    let obs = Observable.create(observer => {
+
+      this.logging.log("MapKit: getMapZoom not supported", LogLevel.VERBOSE);
+      let zoom = 5; //this.map.getZoom();
+      observer.next(zoom);
+      observer.complete();
+
+    });
+    return obs;
+  }
+
+  setMapType(mapType: string) {
+    /* try {
+       this.map.set("google.maps.MapTypeId." + mapType);
+     } catch (exception) {
+       this.logging.log("Failed to set map type:" + mapType + " : " + exception.toString());
+     }*/
+    this.logging.log("MapKit: skipped setting Map Type :" + mapType);
+  }
+
+  getMapBounds(): Observable<Array<GeoLatLng>> {
+    // wrap getzoom in an observable
+    let obs = Observable.create(observer => {
+
+      var bounds = new Array<GeoLatLng>();
+
+      var mapBounds = this.map.region.toBoundingRegion();
+      bounds.push(new GeoLatLng(mapBounds.northLatitude, mapBounds.eastLongitude));
+      bounds.push(new GeoLatLng(mapBounds.southLatitude, mapBounds.westLongitude));
+
+      observer.next(bounds);
+      observer.complete();
+    });
+    return obs;
+  }
+
+  moveToMapBounds(bounds: GeoBounds) {
+    this.logging.log("MapKit: map bounds not implemented");
+    /*this.map.fitBounds(
+      new mapboxgl.LngLatBounds(
+        new mapboxgl.LngLat(bounds.southWest.longitude, bounds.southWest.latitude),
+        new mapboxgl.LngLat(bounds.northEast.longitude, bounds.northEast.latitude))
+    );*/
+  }
+
+  renderMap(poiList: Array<any>, mapHeight: number, parentContext: any): boolean {
+    document.getElementById(this.mapCanvasID).style.height = mapHeight + "px";
+
+    // finish init of map view if not already initialised (could previously be called before api ready)
+    // this.initMap(this.mapCanvasID, parentContext.mappingManager.mapOptions, this.mapManipulationCallback);
+
+    if (this.mapReady) {
+      this.showPOIListOnMap(poiList, parentContext);
+    }
+
+    return true;
+  }
+
+  renderPolyline(polyline: string) {
+    this.clearPolyline();
+
+    this.polylinePath = new google.maps.Polyline({
+      path: <any>google.maps.geometry.encoding.decodePath(polyline),
+      geodesic: true,
+      strokeColor: '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 4
+    });
+
+    this.polylinePath.setMap(this.map);
+
+  }
+
+  clearPolyline() {
+    if (this.polylinePath != null) {
+      this.polylinePath.setMap(null);
+    }
+  }
+
+  focusMap() {
+    //
+  }
+  unfocusMap() {
+    //
+  }
+}

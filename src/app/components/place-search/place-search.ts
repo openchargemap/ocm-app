@@ -1,8 +1,13 @@
 import { Logging } from './../../services/Logging';
 import { PlaceSearchResult } from './../../model/PlaceSearchResult';
 import { Component, Input, Output, ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { MapKitMapProvider } from '../../services/mapping/providers/MapKit';
+import { GeoLatLng } from '../../model/AppModels';
 
-declare var google: any;
+//declare var google: any;
+
+declare var mapkit: any;
+
 /*
   Component to provide geographic place search lookup
 */
@@ -33,14 +38,12 @@ export class PlaceSearch {
         this.searchInProgress = false;
     }
 
-
     onSearchFocus() {
         this.placeSearchFocused = true;
     }
     onSearchBlur() {
         this.placeSearchFocused = false;
     }
-
 
     onSearchCancel() {
         //hide search block
@@ -49,14 +52,10 @@ export class PlaceSearch {
         //this.appManager.isRequestInProgress = false;
     }
 
-
-
     public getPlacesAutoComplete($event, searchType) {
 
         this.placeSearchType = searchType;
         let keywordForSearch = $event.target.value;
-
-
 
         /* if (searchType == "poiSearch") {
 
@@ -74,81 +73,51 @@ export class PlaceSearch {
              this.placeSearchType = searchType;
             // keywordForSearch = this.routeDestination;
          }
- */
-
-
-        // this.appManager.showToastNotification(this.nav, "Starting lookup for " + keywordForSearch);
-
+        */
 
         if (keywordForSearch && keywordForSearch.length > 3) {
             this.logging.log("Starting place lookup for:" + keywordForSearch);
             this.searchInProgress = true;
-            var service = new (<any>google.maps.places).AutocompleteService();
 
-            service.getQueryPredictions({ input: keywordForSearch }, (predictions, status) => {
+            let searchService = new mapkit.Search({ getUsersLocation: true });
 
+            searchService.search(keywordForSearch, (error, data) => {
                 this.searchInProgress = false;
                 this.placeSearchActive = true;
 
-                //loading.dismiss();
-                if (status != google.maps.places.PlacesServiceStatus.OK) {
-                    //this.appManager.showToastNotification(this.nav, status);
+                if (error) {
+                    // Handle search error
                     return;
                 }
-                var results = predictions;
-                this.logging.log("Got place search results: " + results.length);
-                //                this.mapping.unfocusMap();
 
                 this.placeList = [];
+                data.places.map((place) => {
 
-                for (var i = 0; i < results.length; i++) {
+                    let placeResult = new PlaceSearchResult();
 
-                    var place = results[i];
+                    placeResult.Title = place.name;
+                    //placeResult.ReferenceID = (<any>place).place_id;
+                    placeResult.Address = place.formattedAddress;
+                    placeResult.Type = "place";
+                    placeResult.Location = new GeoLatLng(place.coordinate.latitude, place.coordinate.longitude);
 
-                    if (place.place_id) {
-                        var placeResult = new PlaceSearchResult();
-                        placeResult.Title = place.description;
-                        placeResult.ReferenceID = (<any>place).place_id;
-                        placeResult.Address = place.description;
-                        placeResult.Type = "place";
-                        // placeResult.Location = new GeoLatLng(place.geometry.location.lat(), place.geometry.location.lng());
-                        this.placeList.push(placeResult);
-                    }
-                    //this.log(JSON.stringify(place));
-                }
-
-                //force refresh of results list
-                this.changeDetector.detectChanges();
+                    this.placeList.push(placeResult);
+                });
             });
-
         }
     }
 
-
-
     public placeSelected(item: PlaceSearchResult) {
-        let placeSearchType = "test";
-        let searchKeyword = item.Title;
 
+        let searchKeyword = item.Title;
 
         //move map to selected place
 
         this.logging.log("Looking up place details:" + searchKeyword + "::" + item.ReferenceID);
-        let attributionDiv = <HTMLDivElement>document.getElementById("place-attribution");
-        let service = new google.maps.places.PlacesService(attributionDiv);
 
-        (<any>service).getDetails({ placeId: item.ReferenceID }, (place, status) => {
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                this.logging.log('Got place details:' + place.name);
+        this.selectedPlace = item;
+        this.placeChanged.emit(item);
 
-
-                this.selectedPlace = place;
-                this.placeChanged.emit(place);
-
-            } else {
-                this.logging.log('Failed to fetch place:' + status.toString());
-            }
-        });
         this.placeSearchActive = false;
     }
 

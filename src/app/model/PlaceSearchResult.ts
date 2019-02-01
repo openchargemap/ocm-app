@@ -6,6 +6,7 @@ export class PlaceSearchResult {
     Address: string;
     Type: string;
     ReferenceID: string;
+
 }
 
 

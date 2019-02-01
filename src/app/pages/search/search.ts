@@ -14,9 +14,11 @@ import { Mapping } from './../../services/mapping/Mapping';
 import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
 
-import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, NgZone, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { NavController, Events, Platform, ModalController } from '@ionic/angular';
 import { MappingAPI } from '../../services/mapping/interfaces/mapping';
+import { PlaceSearch } from '../../components/place-search/place-search';
+import { PlaceSearchResult } from '../../model/AppModels';
 
 @Component({
   templateUrl: 'search.html',
@@ -43,6 +45,9 @@ export class SearchPage implements OnInit {
 
   appConfig = new AppConfig();
 
+  @ViewChild(PlaceSearch)
+  placeSearchMapPOI: PlaceSearch;
+
   constructor(
     public appManager: AppManager,
     public nav: NavController,
@@ -62,20 +67,9 @@ export class SearchPage implements OnInit {
 
     this.mapCanvasID = 'map-canvas';
 
-    // decide whether to use Native Google Maps SDK or Google Web API
-    if (
 
-      (platform.is('hybrid') && (platform.is('ios') || platform.is('android')))
-      && !(platform.is('desktop') || platform.is('pwa'))
-    ) {
-      this.mapping.setMapAPI(MappingAPI.GOOGLE_NATIVE);
+    this.mapping.setMapAPI(environment.defaultMapProvider);
 
-      // if using native maps, don't allow the keyboard to scroll the view as this conflicts with the plugin rendering
-      // this.keyboard.(true);
-    } else {
-      this.mapping.setMapAPI(environment.defaultMapProvider);
-      // this.mapping.setMapAPI(MappingAPI.LEAFLET);
-    }
   }
 
   ionViewDidEnter() {
@@ -150,14 +144,16 @@ export class SearchPage implements OnInit {
 
         this.locateUser().then(() => {
           this.logging.log('Search: maps ready, showing first set of results');
-
+          this.debouncedRefreshResults();
+          this.logging.log('Default search..');
+          this.initialResultsShown = true;
         }, (rejection) => {
           this.logging.log('Could not locate user..');
 
         }).catch(() => {
           this.logging.log('Default search..');
           this.initialResultsShown = true;
-          this.refreshResultsAfterMapChange();
+          this.debouncedRefreshResults();
         });
       }
     });
@@ -245,13 +241,19 @@ export class SearchPage implements OnInit {
       this.logging.log('Refreshing Results..', LogLevel.VERBOSE);
     }
 
-    this.initialResultsShown = true;
+   
     // this.appState.isSearchInProgress = true;
 
     const params = new POISearchParams();
     this.mapping.getMapCenter().subscribe((mapcentre) => {
+      if (mapcentre.coords.latitude==0 && mapcentre.coords.longitude==0){
+        this.logging.log('Zero map coords', LogLevel.VERBOSE);
+        return;
+      }
+
       if (mapcentre != null) {
 
+        this.initialResultsShown = true;
         params.latitude = mapcentre.coords.latitude;
         params.longitude = mapcentre.coords.longitude;
 
@@ -446,6 +448,11 @@ export class SearchPage implements OnInit {
     this.routePlanningMode = true;
   }
 
+  search(ev) {
+    //alert(ev);
+    this.placeSearchMapPOI.getPlacesAutoComplete(ev, 'poiSearch')
+  }
+
   locateUser(): Promise<any> {
 
     const geoPromise = new Promise((resolve, reject) => {
@@ -458,9 +465,9 @@ export class SearchPage implements OnInit {
       this.mapping.setMapZoom(15); // TODO: provider specific ideal zoom for 'summary'
       // this.mapping.updateMapSize();
 
-      this.showPOIListOnMap(null); // show initial map view
+     // this.showPOIListOnMap(null); // show initial map view
 
-      // this.refreshResultsAfterMapChange(); //fetch new poi results based on map viewport
+      /// this.refreshResultsAfterMapChange(); //fetch new poi results based on map viewport
     }).catch((err) => {
       /// no geolocation
       this.logging.log('Failed to get user location.');
@@ -484,14 +491,15 @@ export class SearchPage implements OnInit {
     return geoPromise;
   }
 
-  placeSelected(place) {
+  placeSelected(place: PlaceSearchResult) {
 
-    this.logging.log('Got place details:' + place.name);
+    this.logging.log('Got place details:' + place.Title);
 
     // give map back the input focus (mainly for native map)
     this.mapping.focusMap();
 
-    this.mapping.updateMapCentrePos(place.geometry.location.lat(), place.geometry.location.lng(), true);
+    this.mapping.updateMapCentrePos(place.Location.latitude, place.Location.longitude, true);
+
     this.refreshResultsAfterMapChange();
     /// this.mapping.setMapZoom(15);
     // this.debouncedRefreshResults();

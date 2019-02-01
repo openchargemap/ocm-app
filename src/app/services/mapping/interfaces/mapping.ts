@@ -6,7 +6,8 @@ export enum MappingAPI {
     GOOGLE_WEB,
     GOOGLE_NATIVE,
     LEAFLET,
-    MAPBOX
+    MAPBOX,
+    MAPKIT_JS
 }
 
 export interface IMapProvider {

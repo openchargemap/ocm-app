@@ -15,6 +15,7 @@ import { GoogleMapsWeb } from './providers/GoogleMapsWeb';
 import { LeafletMap } from './providers/LeafletMap';
 import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
 import { Events } from '@ionic/angular'; //TODO remove dependency on ionic here?
+import { MapKitMapProvider } from './providers/MapKit';
 
 declare var plugin: any;
 declare var google: any;
@@ -98,8 +99,12 @@ export class Mapping implements IMapManager {
         }
 
         if (this.mapOptions.mapAPI == MappingAPI.MAPBOX) {
-          this.mapProvider = new MapBoxMapProvider(this.events, this.logging);
-      }
+            this.mapProvider = new MapBoxMapProvider(this.events, this.logging);
+        }
+
+        if (this.mapOptions.mapAPI == MappingAPI.MAPKIT_JS) {
+            this.mapProvider = new MapKitMapProvider(this.events, this.logging);
+        }
     }
 
     isMapReady() {
@@ -120,6 +125,8 @@ export class Mapping implements IMapManager {
      * @param mapcanvasID  dom element for map canvas
      */
     initMap(mapcanvasID: string) {
+        if (this.isMapReady()) return;
+        
         if (this.mapProvider != null) {
             if (this.mapsInitialised) {
                 this.logging.log("initMap: Map provider already initialised");
