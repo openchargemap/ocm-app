@@ -351,6 +351,7 @@ export class SearchPage implements OnInit {
 
           this.poiManager.fetchPOIList(params).then(() => {
 
+            this.appManager.isRequestInProgress = false;
             this.initialResultsShown = true;
           });
           /*

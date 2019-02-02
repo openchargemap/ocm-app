@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../../core/AppConfig';
 import { POIManager } from '../../services/POIManager';
 import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
+import { SignInPage } from '../../pages/signin/signin';
 
 
 @Component({
@@ -95,64 +96,87 @@ export class PoiDetails implements OnInit {
     return '240x100';
   }
 
-  async addComment() {
+  async continueAddComment() {
 
+    const modal = await this.modalController.create({
+      component: CommentPage, componentProps: {
+        id: this.poi.ID,
+        poi: this.poi
+      }
+    });
+
+    // refresh poi after dismiss
+    setTimeout(() => {
+      this.refresh();
+    }, 1000);
+
+    await modal.present();
+  }
+
+  async addComment() {
     if (this.appManager.isUserAuthenticated()) {
+
+      await this.continueAddComment();
+
+    } else {
+      // user needs to sign in first
       const modal = await this.modalController.create({
-        component: CommentPage, componentProps: {
-          id: this.poi.ID,
-          poi: this.poi
-        }
+        component: SignInPage
       });
 
+      modal.onDidDismiss().then(async () => {
+        if (this.appManager.isUserAuthenticated()) {
+          await this.continueAddComment();
+        }
+
+      });
+
+      await modal.present();
+    }
+  }
+
+
+  async continueAddMedia() {
+    const modal = await this.modalController.create({
+      component: MediaUploadPage, componentProps: {
+        id: this.poi.ID,
+        poi: this.poi
+      }
+    });
+
+    modal.onDidDismiss().then(() => {
       // refresh poi after dismiss
       setTimeout(() => {
         this.refresh();
       }, 1000);
 
-      await modal.present();
-
-    } else {
-      this.appManager.showToastNotification('Please Sign In (see Profile tab)');
-    }
+    });
+    await modal.present();
   }
 
   async addMedia() {
     if (this.appManager.isUserAuthenticated()) {
 
+      await this.continueAddMedia();
+
+    } else {
+      // user needs to sign in first
       const modal = await this.modalController.create({
-        component: MediaUploadPage, componentProps: {
-          id: this.poi.ID,
-          poi: this.poi
-        }
+        component: SignInPage
       });
 
-      modal.onDidDismiss().then(() => {
-        // refresh poi after dismiss
-        setTimeout(() => {
-          this.refresh();
-        }, 1000);
+      modal.onDidDismiss().then(async () => {
+        if (this.appManager.isUserAuthenticated()) {
+          await this.continueAddMedia();
+        }
 
       });
 
       await modal.present();
-
-    } else {
-      this.appManager.showToastNotification('Please Sign In (see Profile tab)');
     }
-
   }
 
   async addFavourite() {
-    // TODO: add/remove favourite from journeys/favourites
-
-    /*
-     let modal= Modal.create(FavouriteEditorPage,{
-
-        poi: this.poi
-    });
-    this.nav.present(modal);*/
-
 
     // show action sheet to decide what to do with new favourite
     const actionSheet = await this.actionSheetController.create({

@@ -10,7 +10,8 @@
 		</ion-searchbar>
 		<ion-buttons slot="end">
 			<ion-button (click)="locateUser()">
-				<ion-icon name="locate" slot="start"></ion-icon>
+				<ion-icon *ngIf="!appManager.isRequestInProgress" name="locate"  slot="start"></ion-icon>
+				<ion-spinner *ngIf="appManager.isRequestInProgress"></ion-spinner>
 			</ion-button>
 			<!--<ion-button (click)="openRoutePlannerModal()" *ngIf="sideViewAvailable==false">
 				<ion-icon name="map" slot="start"></ion-icon>
