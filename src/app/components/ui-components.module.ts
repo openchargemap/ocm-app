@@ -8,9 +8,10 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { NullableTranslatePipe } from '../pipes/NullableTranslatePipe';
 
+
 @NgModule({
     imports: [CommonModule, IonicModule, FormsModule, TranslateModule],
-    exports: [PlaceSearch, PoiDetails, RoutePlanner],
+    exports: [PlaceSearch, PoiDetails, RoutePlanner, NullableTranslatePipe],
     declarations: [PlaceSearch, PoiDetails, RoutePlanner, NullableTranslatePipe],
     providers: [DecimalPipe],
 })

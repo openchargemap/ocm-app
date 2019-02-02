@@ -3,22 +3,30 @@
 
 
     <!--<h2>{{poi.AddressInfo.Title}} <small>OCM-{{poi.ID}}</small></h2>-->
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button size="small" (click)="addComment()" title="Add a comment or charging check-in">
+          <ion-icon name="chatbubbles" slot="start"></ion-icon> Check-In
+        </ion-button>
 
-    <ion-button size="small" (click)="addComment()">
-      <ion-icon name="chatbubbles" slot="start"></ion-icon> Check-In
-    </ion-button>
+        <ion-button size="small" (click)="addMedia()" title="Add a Photo">
+          <ion-icon name="camera" slot="start"></ion-icon> Add Photos
+        </ion-button>
+        <ion-button size="small" (click)="edit()" title="Submit an Edit">
+          <ion-icon name="create" slot="start"></ion-icon> Edit
+        </ion-button>
 
-    <ion-button size="small" (click)="addMedia()">
-      <ion-icon name="camera" slot="start"></ion-icon> Add Photos
-    </ion-button>
-    <ion-button size="small" (click)="edit()">
-      <ion-icon name="create" slot="start"></ion-icon> Edit
-    </ion-button>
+        <ion-button size="small" (click)="addFavourite()" title="Add to Favourites">
+          <ion-icon name="star" slot="start"></ion-icon> Save
+        </ion-button>
+      </ion-buttons>
 
-    <ion-button size="small" (click)="addFavourite()" icon-left>
-      <ion-icon name="star" slot="start"></ion-icon> Save
-    </ion-button>
-
+      <ion-buttons slot="end">
+        <ion-button size="small" (click)="refresh()" title="Refresh Details">
+          <ion-icon name="refresh" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
   </div>
 
 
@@ -79,50 +87,53 @@
           <ion-icon name="globe"></ion-icon> <a target="_system" href="{{poi.AddressInfo.RelatedURL}}">{{poi.AddressInfo.RelatedURL}}</a>
         </p>
 
+        <p>
+            <ion-icon name="map"></ion-icon>
+            <ion-label>
+              {{ 'ocm.details.location.latitude' | translate }}: {{poi.AddressInfo.Latitude | number:'1.1-8'}} , {{
+              'ocm.details.location.longitude'
+              | translate }}: {{poi.AddressInfo.Longitude | number:'1.1-8'}}
+            </ion-label>
+          </p>
+
+          <ion-item>
+              <ion-button color="primary" clear item-left (click)="launchNavigation()">
+                <ion-icon name="navigate"></ion-icon>
+                Navigate
+              </ion-button>
+      
+            </ion-item>
       </ion-card-content>
-      <ion-item>
-        <ion-button color="primary" clear item-left (click)="launchNavigation()">
-          <ion-icon name="navigate"></ion-icon>
-          Navigate
-        </ion-button>
-
-        <ion-note>
-          <ion-icon name="map"></ion-icon>
-          {{ 'ocm.details.location.latitude' | translate }}: {{poi.AddressInfo.Latitude | number:'1.1-8'}} , {{
-          'ocm.details.location.longitude'
-          | translate }}: {{poi.AddressInfo.Longitude | number:'1.1-8'}}
-        </ion-note>
-
-      </ion-item>
+      
     </ion-card>
 
     <ion-card>
-        <ion-card-header>
-          <ion-icon name="battery-charging"></ion-icon> {{ 'ocm.details.equipment.sectionTitle' | translate }}
-        </ion-card-header>
-        <ion-card-content>
+      <ion-card-header>
+        <ion-icon name="battery-charging"></ion-icon> {{ 'ocm.details.equipment.sectionTitle' | translate }}
+      </ion-card-header>
+      <ion-card-content>
 
-          <p *ngIf="poi.NumberOfPoints!=null">{{ 'ocm.details.numberOfPoints' | translate }}: {{poi.NumberOfPoints}}</p>
-          <ion-list>
-            <ion-item *ngFor="let item of poi.Connections">
-              <ion-avatar item-left>
-                <ion-icon name="flash"></ion-icon>
-              </ion-avatar>
-              <h3>{{item.ConnectionType?.Title}} <span class="details-minor" *ngIf="item.Quantity">x{{item.Quantity}}</span></h3>
-              <p *ngIf="item.PowerKW">{{item.PowerKW}} kW</p>
+        <p *ngIf="poi.NumberOfPoints!=null">{{ 'ocm.details.numberOfPoints' | translate }}: {{poi.NumberOfPoints}}</p>
+        <ion-list>
+          <ion-item *ngFor="let item of poi.Connections">
+            <ion-avatar item-left>
+              <ion-icon name="flash"></ion-icon>
+            </ion-avatar>
+            <h3>{{item.ConnectionType?.Title}} <span class="details-minor" *ngIf="item.Quantity">x{{item.Quantity}}</span></h3>
+            <p *ngIf="item.PowerKW">{{item.PowerKW}} kW</p>
 
-              <p>
-                <span *ngIf="item.Amps" class="details-minor">{{item.Amps}}A</span>
-                <span *ngIf="item.Voltage" class="details-minor">{{item.Voltage}}V</span>
-                <span *ngIf="item.CurrentType" class="details-minor">{{item.CurrentType?.Title}}</span>
+            <p>
+              <span *ngIf="item.Amps" class="details-minor">{{item.Amps}}A</span>
+              <span *ngIf="item.Voltage" class="details-minor">{{item.Voltage}}V</span>
+              <span *ngIf="item.CurrentType" class="details-minor">{{item.CurrentType?.Title}}</span>
 
-              </p>
+            </p>
 
-            </ion-item>
+          </ion-item>
 
-          </ion-list>
-        </ion-card-content>
-      </ion-card>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
 
     <ion-card>
       <ion-card-header>
@@ -142,7 +153,7 @@
 
     <ion-card *ngIf="poi.OperatorInfo">
       <ion-card-header>
-          <ion-icon name="help-circle"></ion-icon>   {{ 'ocm.details.operator.sectionTitle' | translate }}
+        <ion-icon name="help-circle"></ion-icon> {{ 'ocm.details.operator.sectionTitle' | translate }}
         <ion-card-title>
 
         </ion-card-title>
@@ -172,7 +183,7 @@
       <ion-card-content>
 
         <div *ngIf="poi.DataProvider">
-         <h3>
+          <h3>
             {{ 'ocm.details.dataProvider.sectionTitle' | translate }}
           </h3>
 

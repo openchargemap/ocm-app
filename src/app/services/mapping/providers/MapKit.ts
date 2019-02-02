@@ -28,6 +28,7 @@ export class MapKitMapProvider implements IMapProvider {
   private map: any;
   private markerList: Dictionary<number, any>;
   private polylinePath: any;
+  private mapkitUtils: MapKitUtils;
 
   /** @constructor */
   constructor(private events: Events, private logging: Logging) {
@@ -35,6 +36,7 @@ export class MapKitMapProvider implements IMapProvider {
     this.mapAPIType = MappingAPI.MAPKIT_JS;
     this.mapReady = false;
     this.markerList = new Dictionary<number, any>();
+    this.mapkitUtils = new MapKitUtils();
   }
 
   /**
@@ -65,12 +67,12 @@ export class MapKitMapProvider implements IMapProvider {
 
         this.map = new mapkit.Map(mapCanvasID);
 
-      /*  var startRegion = new mapkit.CoordinateRegion(
-          new mapkit.Coordinate(37.3316850890998, -122.030067374026),
-          new mapkit.CoordinateSpan(0.167647972, 0.354985255)
-        );
-
-        this.map.region = startRegion;*/
+        /*  var startRegion = new mapkit.CoordinateRegion(
+            new mapkit.Coordinate(37.3316850890998, -122.030067374026),
+            new mapkit.CoordinateSpan(0.167647972, 0.354985255)
+          );
+  
+          this.map.region = startRegion;*/
 
         this.mapReady = true;
 
@@ -118,6 +120,8 @@ export class MapKitMapProvider implements IMapProvider {
     var bounds = {};
     var markersAdded = 0;
     var mapProviderContext = this;
+
+    let isFirstResultSet = this.markerList.size() == 0;
 
     //clear existing markers (if enabled)
     if (clearMarkersOnRefresh) {
@@ -195,7 +199,19 @@ export class MapKitMapProvider implements IMapProvider {
         }
       }
 
-      if (newMarkers.length > 0) this.map.addAnnotations(newMarkers);
+      if (newMarkers.length > 0) {
+        this.map.addAnnotations(newMarkers);
+
+
+        if (isFirstResultSet) {
+          // zoom into results for first result set
+          this.map.showItems(newMarkers,
+            {
+              animate: true,
+              padding: new mapkit.Padding(60, 25, 60, 25)
+            });
+        }
+      }
 
 
       this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.size());
@@ -257,9 +273,23 @@ export class MapKitMapProvider implements IMapProvider {
     return obs;
   }
 
-  setMapZoom(zoomLevel: number) {
+  setMapZoom(zoom: number) {
     this.logging.log("MapKit: setMapZoom not supported", LogLevel.VERBOSE);
     // this.map.setZoom(zoomLevel);
+
+
+    // use the zoom level to compute the region
+
+    //const currentZoomLevel = this.map._impl.zoomLevel;
+
+    const zoomLevel = Math.min(zoom, 28);
+
+    const delta = this.mapkitUtils.deltaFromZoomLevel(this.map, this.map.center, Math.round(zoomLevel));
+    // Create the CoordinateRegion from the delta latitude and 
+    // the delta longitude multiplied by 111 (1deg = 111km)
+    const span = new mapkit.CoordinateSpan(delta.latitudeDelta * 111, delta.longitudeDelta * 111);
+    const region = new mapkit.CoordinateRegion(this.map.center, span);
+    this.map.setRegionAnimated(region)
   }
 
   getMapZoom(): Observable<number> {
@@ -268,7 +298,7 @@ export class MapKitMapProvider implements IMapProvider {
     let obs = Observable.create(observer => {
 
       this.logging.log("MapKit: getMapZoom not supported", LogLevel.VERBOSE);
-      let zoom = 5; //this.map.getZoom();
+      let zoom = this.map._impl.zoomLevel; // TODO: should not use internal property
       observer.next(zoom);
       observer.complete();
 
@@ -349,5 +379,71 @@ export class MapKitMapProvider implements IMapProvider {
   }
   unfocusMap() {
     //
+  }
+}
+
+class MapKitUtils {
+
+  // adapted from https://medium.com/@xavierletohic/how-to-migrate-from-google-maps-api-javascript-to-apple-mapkit-js-dc862f1f0a89
+  // which is based on http://troybrant.net/blog/2010/01/set-the-zoom-level-of-an-mkmapview/
+
+  mercatorRadius = 85445659.44705395;
+  mercatorOffset = 268435456;
+
+  longitudeToPixelSpaceX(longitude) {
+    return Math.round(this.mercatorOffset + this.mercatorRadius * longitude * Math.PI / 180.0);
+  }
+
+  latitudeToPixelSpaceY(latitude) {
+    return Math.round(this.mercatorOffset - this.mercatorRadius * Math.log((1 + Math.sin(latitude * Math.PI / 180.0)) / (1 - Math.sin(latitude * Math.PI / 180.0))) / 2.0);
+  }
+
+  pixelSpaceXToLongitude(pixelX) {
+    return ((Math.round(pixelX) - this.mercatorOffset) / this.mercatorRadius) * 180.0 / Math.PI;
+  }
+
+  pixelSpaceYToLatitude(pixelY) {
+    return (Math.PI / 2.0 - 2.0 * Math.atan(Math.exp((Math.round(pixelY) - this.mercatorOffset) / this.mercatorRadius))) * 180.0 / Math.PI;
+  }
+
+  /**
+  *
+  * @param {object} map
+  * @param {object} centerCoordinates
+  * @param {number} zoomLevel
+  */
+  deltaFromZoomLevel(map, centerCoordinates, zoomLevel) {
+    // convert center coordinate to pixel space
+    let centerPixelX = this.longitudeToPixelSpaceX(centerCoordinates.longitude);
+    let centerPixelY = this.latitudeToPixelSpaceY(centerCoordinates.latitude);
+
+    // determine the scale value from the zoom level
+    let zoomExponent = 20 - zoomLevel;
+    let zoomScale = Math.pow(2, zoomExponent);
+
+    // scale the map’s size in pixel space
+    let mapSizeInPixels = map.visibleMapRect.size;
+    let scaledMapWidth = mapSizeInPixels.width * zoomScale;
+    let scaledMapHeight = mapSizeInPixels.height * zoomScale;
+
+    // figure out the position of the top-left pixel
+    let topLeftPixelX = centerPixelX - (scaledMapWidth / 2);
+    let topLeftPixelY = centerPixelY - (scaledMapHeight / 2);
+
+    // find delta between left and right longitudes
+    let minLng = this.pixelSpaceXToLongitude(topLeftPixelX);
+    let maxLng = this.pixelSpaceXToLongitude(topLeftPixelX + scaledMapWidth);
+    let longitudeDelta = maxLng - minLng;
+
+    // find delta between top and bottom latitudes
+    let minLat = this.pixelSpaceYToLatitude(topLeftPixelY);
+    let maxLat = this.pixelSpaceYToLatitude(topLeftPixelY + scaledMapHeight);
+    let latitudeDelta = -1 * (maxLat - minLat);
+
+    // create and return the lat/lng span
+    return {
+      latitudeDelta,
+      longitudeDelta
+    }
   }
 }

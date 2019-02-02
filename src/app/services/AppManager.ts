@@ -60,9 +60,7 @@ export class AppManager {
       this.platformMode = 'web';
     }
 
-    // this.referenceDataManager = new ReferenceDataManager(http);
-
-    // this.poiManager = new POIManager(this);
+    this.initAppManager();
 
     this.searchSettings = new SearchSettings();
 

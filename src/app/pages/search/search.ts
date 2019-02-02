@@ -146,7 +146,7 @@ export class SearchPage implements OnInit {
           this.logging.log('Search: maps ready, showing first set of results');
           this.debouncedRefreshResults();
           this.logging.log('Default search..');
-          this.initialResultsShown = true;
+
         }, (rejection) => {
           this.logging.log('Could not locate user..');
 
@@ -241,19 +241,19 @@ export class SearchPage implements OnInit {
       this.logging.log('Refreshing Results..', LogLevel.VERBOSE);
     }
 
-   
+
     // this.appState.isSearchInProgress = true;
 
     const params = new POISearchParams();
     this.mapping.getMapCenter().subscribe((mapcentre) => {
-      if (mapcentre.coords.latitude==0 && mapcentre.coords.longitude==0){
+      if (mapcentre.coords.latitude == 0 && mapcentre.coords.longitude == 0) {
         this.logging.log('Zero map coords', LogLevel.VERBOSE);
         return;
       }
 
       if (mapcentre != null) {
 
-        this.initialResultsShown = true;
+
         params.latitude = mapcentre.coords.latitude;
         params.longitude = mapcentre.coords.longitude;
 
@@ -272,8 +272,12 @@ export class SearchPage implements OnInit {
 
       // if (this.appConfig.enableLiveMapQuerying) {
       // if (this.mappingManager.isMapReady()) {
+
+
+      // for first search discard the bounds and search by radious, subsequent searches use map bounds
+
       this.mapping.getMapBounds().subscribe((bounds) => {
-        if (bounds != null) {
+        if (bounds != null && this.initialResultsShown == true) {
 
           params.boundingbox = '(' + bounds[0].latitude +
             ',' + bounds[0].longitude + '),(' + bounds[1].latitude +
@@ -284,7 +288,9 @@ export class SearchPage implements OnInit {
         }
         // close zooms are 1:1 level of detail, zoomed out samples less data
         this.mapping.getMapZoom().subscribe((zoomLevel: number) => {
-          this.logging.log('map zoom level to be converted to level of detail:' + zoomLevel);
+         
+         
+         /* this.logging.log('map zoom level to be converted to level of detail:' + zoomLevel);
           if (zoomLevel > 10) {
             params.levelOfDetail = 1;
           } else if (zoomLevel > 6) {
@@ -296,6 +302,7 @@ export class SearchPage implements OnInit {
           } else {
             params.levelOfDetail = 20;
           }
+*/
 
           // apply filter settings from search settings
           if (this.appManager.searchSettings != null) {
@@ -342,7 +349,10 @@ export class SearchPage implements OnInit {
           // TODO: use stack of requests as may be multiple in sync
           this.appManager.isRequestInProgress = true;
 
-          this.poiManager.fetchPOIList(params);
+          this.poiManager.fetchPOIList(params).then(() => {
+
+            this.initialResultsShown = true;
+          });
           /*
             .then(() => { }, (err) => {
               this.appManager.showToastNotification(this.nav, 'Could not fetch POI list. Check connection.');
@@ -465,7 +475,7 @@ export class SearchPage implements OnInit {
       this.mapping.setMapZoom(15); // TODO: provider specific ideal zoom for 'summary'
       // this.mapping.updateMapSize();
 
-     // this.showPOIListOnMap(null); // show initial map view
+      // this.showPOIListOnMap(null); // show initial map view
 
       /// this.refreshResultsAfterMapChange(); //fetch new poi results based on map viewport
     }).catch((err) => {

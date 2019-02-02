@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { Component, NgZone } from '@angular/core';
 import { Location } from '@angular/common';
-import { NavController, NavParams, AlertController, LoadingController } from '@ionic/angular';
+import { NavController, NavParams, AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { UserProfile } from '../../model/UserProfile';
 
 @Component({
@@ -17,8 +17,7 @@ export class SignInPage {
 
     constructor(
         public appManager: AppManager,
-        public nav: NavController,
-        public zone: NgZone,
+        public modalController: ModalController,
         public translate: TranslateService,
         public alertController: AlertController,
         public loadingController: LoadingController,
@@ -35,8 +34,7 @@ export class SignInPage {
     }
 
     cancelSignIn() {
-        // FIXME: this.nav.pop();
-        this.location.back();
+        this.modalController.dismiss();
     }
 
     async performSignIn() {
@@ -59,7 +57,8 @@ export class SignInPage {
             localStorage.setItem('authResponse', JSON.stringify(this.appManager.api.authResponse));
 
             // navigation to main app. TODO: navigate to last requested page (route guard)
-            this.router.navigateByUrl('/search');
+            this.modalController.dismiss();
+            //this.router.navigateByUrl('/search');
 
         } catch (err) {
             signInFailed = true;

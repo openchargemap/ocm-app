@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar color="primary">
+    <ion-toolbar>
         <ion-title>
             {{'ocm.navigation.profile.sectionTitle' | translate}}
         </ion-title>
@@ -17,18 +17,19 @@
 
 
             <ion-item>
-                <ion-avatar item-left>
+                <ion-avatar slot="start">
                     <img src="{{userProfile.ProfileImageURL}}">
                 </ion-avatar>
                 <h2>{{userProfile.Username}}</h2>
-                <p>
-                    {{userProfile.DateCreated}}
-                </p>
+
             </ion-item>
 
 
             <ion-card-content>
                 <p> {{userProfile.Profile}}</p>
+                <p> Date Joined:
+                    {{userProfile.DateCreated}}
+                </p>
             </ion-card-content>
 
             <ion-item>
@@ -37,11 +38,22 @@
                     {{userProfile.ReputationPoints}} Contributor Points
                 </ion-note>
 
-
             </ion-item>
 
         </ion-card>
 
-        <button (click)="signOut()" ion-button>Sign Out</button>
+
     </div>
 </ion-content>
+<ion-footer>
+    <ion-toolbar>
+        <ion-buttons slot="end">
+            <ion-button (click)="close()">
+                <ion-icon name="close" slot="start"></ion-icon>
+                Close
+
+            </ion-button>
+        </ion-buttons>
+
+    </ion-toolbar>
+</ion-footer>

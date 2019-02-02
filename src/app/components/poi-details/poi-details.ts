@@ -7,6 +7,8 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { NavController, ModalController, ActionSheetController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../../core/AppConfig';
+import { POIManager } from '../../services/POIManager';
+import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
 
 
 @Component({
@@ -29,7 +31,9 @@ export class PoiDetails implements OnInit {
     public translate: TranslateService,
     public logging: Logging,
     public modalController: ModalController,
-    public actionSheetController: ActionSheetController) {
+    public actionSheetController: ActionSheetController,
+    public poiManager: POIManager
+  ) {
 
   }
 
@@ -100,6 +104,12 @@ export class PoiDetails implements OnInit {
           poi: this.poi
         }
       });
+
+      // refresh poi after dismiss
+      setTimeout(() => {
+        this.refresh();
+      }, 1000);
+
       await modal.present();
 
     } else {
@@ -117,10 +127,18 @@ export class PoiDetails implements OnInit {
         }
       });
 
+      modal.onDidDismiss().then(() => {
+        // refresh poi after dismiss
+        setTimeout(() => {
+          this.refresh();
+        }, 1000);
+
+      });
+
       await modal.present();
 
     } else {
-      this.appManager.showToastNotification( 'Please Sign In (see Profile tab)');
+      this.appManager.showToastNotification('Please Sign In (see Profile tab)');
     }
 
   }
@@ -185,5 +203,16 @@ export class PoiDetails implements OnInit {
 
   edit() {
     this.appManager.launchOCMWebPage('/poi/edit/' + this.poi.ID);
+  }
+
+  refresh() {
+    if (this.poi) {
+      this.poiManager.getPOIById(this.poi.ID, true, true).then(p => {
+        if (p) {
+          this.poi = p;
+          this.ngOnChanges(null);
+        }
+      });
+    }
   }
 }

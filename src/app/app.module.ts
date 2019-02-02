@@ -29,6 +29,9 @@ import { ProfilePage } from './pages/profile/profile';
 import { SettingsPage } from './pages/settings/settings';
 import { ProfileModule } from './pages/profile/profile.module';
 import { SettingsModule } from './pages/settings/settings.module';
+import { JourneysModule } from './pages/journeys/journeys.module';
+import { FavouriteEditorPage } from './pages/journeys/favourite-editor';
+import { NullableTranslatePipe } from './pipes/NullableTranslatePipe';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -52,7 +55,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage, MediaUploadPage], // , JourneysPage, MediaUploadPage, POIDetailsPage, ProfilePage, SettingsPage, SignInPage
+  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage, MediaUploadPage, FavouriteEditorPage], // , JourneysPage, MediaUploadPage, POIDetailsPage, ProfilePage, SettingsPage, SignInPage
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -72,6 +75,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     }),
     SearchPageModule,
     RoutePlannerPageModule,
+    JourneysModule,
     SignInModule,
     CommentModule,
     MediaUploadModule,

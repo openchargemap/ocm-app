@@ -2,6 +2,7 @@ import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
 import { SearchSettings } from './../../model/SearchSettings';
 import { Component } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   templateUrl: 'settings.html'
@@ -19,7 +20,11 @@ export class SettingsPage {
   languages: any;
   powerRange = { lower: 0, upper: 500 };
 
-  constructor(public appManager: AppManager, public poiManager: POIManager) {
+  constructor(
+    public appManager: AppManager, 
+    public poiManager: POIManager, 
+    private modalController:ModalController
+    ) {
 
     this.searchSettings = appManager.searchSettings;
 
@@ -58,5 +63,9 @@ export class SettingsPage {
   onLanguageChange() {
     //update UI language
    this.appManager.setLanguage(this.searchSettings.Language);
+  }
+
+  close(){
+    this.modalController.dismiss();
   }
 }

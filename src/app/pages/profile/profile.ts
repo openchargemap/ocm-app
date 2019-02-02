@@ -48,10 +48,7 @@ export class ProfilePage {
 
     }
 
-    signOut() {
-        this.appManager.signOutCurrentUser();
-        this.userProfile = null;
-
-        this.appManager.showToastNotification('You are now signed out.');
+    close(){
+        this.modalController.dismiss();
     }
 }

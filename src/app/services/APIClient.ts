@@ -8,11 +8,12 @@ import { CoreReferenceData } from './../model/CoreReferenceData';
 import { Logging, LogLevel } from './Logging';
 import { ReferenceDataManager } from './ReferenceDataManager';
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions } from '@angular/http';
+
 import { Observable } from 'rxjs/Observable';
-import { HttpClient } from '@angular/common/http';
+
 import { POISearchParams, SubmissionType, GeoLatLng } from '../model/AppModels';
-import { nextTick } from 'q';
+
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -53,7 +54,7 @@ export class APIClient {
     return output;
   }
 
-  async fetchPOIListByParam(params: POISearchParams) {
+  async fetchPOIListByParam(params: POISearchParams): Promise<Array<any>> {
     const serviceURL = this.serviceBaseURL + '/poi/?client=' +
       this.clientName + (this.allowMirror ? ' &allowmirror=true' : '')
       + '&verbose=false&output=json';
@@ -91,44 +92,50 @@ export class APIClient {
 
     const apiCallURL = serviceURL + serviceParams;
 
-    if (this.lastPOIApiCallURL !== apiCallURL) {
+    if (this.lastPOIApiCallURL !== apiCallURL || params.enableCaching == false) {
 
       this.lastPOIApiCallURL = apiCallURL;
 
       this.logging.log('API Call:' + apiCallURL, LogLevel.VERBOSE);
 
-      return this.http
-        .get(apiCallURL).toPromise().then((poiResults: Array<any>) => {
+      try {
+        let result = await this.http
+          .get(apiCallURL).toPromise();
 
-          return this.refData.hydrateCompactPOIList(poiResults);
-        }, (error) => {
-          const errMsg = error.message || 'Could not fetch POI list from server.';
-          this.logging.log('API Client: ' + JSON.stringify(error), LogLevel.ERROR);
-          throw (errMsg);
-        });
+        let poiResults = this.refData.hydrateCompactPOIList(<Array<any>>result);
+        return poiResults;
+      }
+
+      catch (error) {
+        const errMsg = error.message || 'Could not fetch POI list from server.';
+        this.logging.log('API Client: ' + JSON.stringify(error), LogLevel.ERROR);
+        throw (errMsg);
+      }
     } else {
       this.logging.log('Skipped API call due to same query being repeated.');
-
+      return [];
     }
   }
 
-  /**
-   * get request options including authorization headers for use in api requests
-   * */
-  getHttpRequestOptions(): any {
+  private getHttpRequestOptions(useJsonContentType: boolean = true): any {
 
-    // attach auth header if we have auth info for client api
+    //attach auth header if we have auth info for client api        
+    let headers = new HttpHeaders();
 
-    if (this.authResponse && this.authResponse.Data && this.authResponse.Data.access_token) {
-      const headers = new Headers();
-      headers.set('Authorization', 'Bearer ' + this.authResponse.Data.access_token);
-      const options = new RequestOptions({ headers: headers });
-
-      return options;
-    } else {
-      // no auth present
-      return null;
+    //set content type if required
+    if (useJsonContentType) {
+      headers = headers.append('Content-Type', 'application/json');
     }
+
+    //set auth header (if required)
+    if (this.authResponse && this.authResponse.Data && this.authResponse.Data.access_token) {
+      headers = headers.append('Authorization', 'Bearer ' + this.authResponse.Data.access_token);
+    }
+
+    headers = headers.append('X-Custom', 'test');
+    let options = { headers: headers };
+
+    return options;
   }
 
   /**
@@ -188,13 +195,14 @@ export class APIClient {
 
     this.logging.log('[api] Submitting user comment');
 
-    return this.http.post(this.serviceBaseURL + '/comment/', jsonString, this.getHttpRequestOptions()).toPromise();
+    return this.http.post(this.serviceBaseURL + '/comment/', jsonString, this.getHttpRequestOptions(true))
+      .toPromise();
   }
 
   submitMediaItem(data): Promise<any> {
     const jsonString = JSON.stringify(data);
 
-    return this.http.post(this.serviceBaseURL + '/mediaitem/', jsonString, this.getHttpRequestOptions())
+    return this.http.post(this.serviceBaseURL + '/mediaitem/', jsonString, this.getHttpRequestOptions(true))
       .toPromise();
   }
 

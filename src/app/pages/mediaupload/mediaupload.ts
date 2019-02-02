@@ -146,6 +146,11 @@ export class MediaUploadPage {
 
     async performUpload() {
 
+        if (!this.imgData){
+            await this.appManager.showToastNotification('Select an image to upload.');
+            return;
+        }
+
         const submission = {
             chargePointID: this.chargePointId,
             comment: this.comment,

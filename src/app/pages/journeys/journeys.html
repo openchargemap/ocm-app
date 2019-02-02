@@ -1,7 +1,7 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
+            <ion-back-button (click)="dismiss()"></ion-back-button>
         </ion-buttons>
         <ion-title>
             Journeys
@@ -28,9 +28,9 @@
 
                 <ion-title> {{journey.Title}}</ion-title>
                 <ion-buttons slot="primary">
-                    <button ion-button (click)="deleteJourney(journey.ID)" icon-only>
-                        <ion-icon name="close"></ion-icon>
-                    </button>
+                    <ion-button (click)="deleteJourney(journey.ID)">
+                        <ion-icon name="close" slot="icon-only"></ion-icon>
+                    </ion-button>
                 </ion-buttons>
             </ion-toolbar>
 
@@ -48,7 +48,7 @@
 
                 <ion-item *ngFor="let w of s.WayPoints">
 
-                    <ion-thumbnail item-left>
+                    <ion-thumbnail slot="start">
                         <ion-icon name="arrow-down" style="font-size:4rem;"></ion-icon>
                     </ion-thumbnail>
                     <h2>{{w.Title}}</h2>
@@ -82,3 +82,12 @@
     </ion-card>
 
 </ion-content>
+
+<ion-footer>
+        <ion-toolbar>
+            <ion-buttons slot="end">
+                <ion-button (click)="dismiss()"> <ion-icon name="close" slot="start"></ion-icon> Close</ion-button>
+    
+            </ion-buttons>    
+        </ion-toolbar>
+    </ion-footer>

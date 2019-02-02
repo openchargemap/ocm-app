@@ -2,7 +2,7 @@ import { JourneyManager } from './../../services/JourneyManager';
 import { AppManager } from './../../services/AppManager';
 import { WayPoint, BookmarkedPOI, Journey } from './../../model/Journey';
 import { Component } from '@angular/core';
-import { NavParams, NavController } from '@ionic/angular';
+import { NavParams, NavController, ModalController } from '@ionic/angular';
 
 @Component({
   templateUrl: 'favourite-editor.html',
@@ -23,8 +23,8 @@ export class FavouriteEditorPage {
   constructor(
     public appManager: AppManager,
     public navParams: NavParams,
-    public nav: NavController,
-    public journeyManager: JourneyManager
+    public journeyManager: JourneyManager,
+    private modalController:ModalController
   ) {
 
     this.poi = this.navParams.get('poi');
@@ -43,7 +43,9 @@ export class FavouriteEditorPage {
 
   cancel() {
     // FIXME: this.nav.pop
+    this.modalController.dismiss();
   }
+
   add() {
 
     // TODO: validation
@@ -73,7 +75,7 @@ export class FavouriteEditorPage {
     // todo: async promise for server save
     this.journeyManager.saveJourneys();
 
-    // FIXME: this.nav.pop();
+    this.modalController.dismiss();
   }
 
 }

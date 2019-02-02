@@ -16,7 +16,12 @@ export class NullableTranslatePipe extends TranslatePipe {
                 //console.log(JSON.stringify(args[0].default));
                 return args[0].default;
             } else {
-                return "..no value..";
+                if (args[0].Title) {
+                    return args[0].Title;
+                } else {
+                    return result;
+                }
+                //return "..no value..";
             }
 
         } else {

@@ -18,7 +18,7 @@ export class JourneysPage {
 
   constructor(
     public appManager: AppManager,
-    public nav: NavController,
+
     public journeyManager: JourneyManager,
     public api: APIClient,
     public modalController: ModalController,
@@ -29,6 +29,9 @@ export class JourneysPage {
     // console.log(JSON.stringify(this.journeyManager.journeys, null, 4));
   }
 
+  dismiss(){
+    this.modalController.dismiss();
+  }
 
   discoverImages() {
     // populate panormaio for each point
