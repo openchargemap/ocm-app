@@ -47,7 +47,7 @@ export class CommentPage {
     }
 
     cancel() {
-        // TODO:
+        this.modalController.dismiss();
     }
 
     async add() {

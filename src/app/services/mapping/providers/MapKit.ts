@@ -67,13 +67,6 @@ export class MapKitMapProvider implements IMapProvider {
 
         this.map = new mapkit.Map(mapCanvasID);
 
-        /*  var startRegion = new mapkit.CoordinateRegion(
-            new mapkit.Coordinate(37.3316850890998, -122.030067374026),
-            new mapkit.CoordinateSpan(0.167647972, 0.354985255)
-          );
-  
-          this.map.region = startRegion;*/
-
         this.mapReady = true;
 
         mapkit.addEventListener("configuration-change", (event) => {

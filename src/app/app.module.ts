@@ -7,6 +7,7 @@ import { SearchPage } from './pages/search/search';
 import { RoutePlannerPage } from './pages/route-planner/route-planner';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -88,6 +89,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     Keyboard,
     Camera,
     SplashScreen,
+    WebView,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
