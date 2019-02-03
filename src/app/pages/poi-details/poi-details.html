@@ -3,28 +3,16 @@
         <ion-title>
             {{poi.AddressInfo.Title}} <small>OCM-{{poi.ID}}</small>
         </ion-title>
-        <ion-buttons slot="secondary">
+        <ion-buttons slot="start">
                 <ion-button (click)="close()">
-                    <ion-icon name="close" slot="end"></ion-icon>
-                    Close
+                    <ion-icon name="close" slot="icon-only"></ion-icon>
+                  
     
                 </ion-button>
             </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
-<!--
-<ion-toolbar *ngIf="hasNavbar==false">
-
-    <ion-title>{{ 'ocm.details.sectionTitle' | translate }}</ion-title>
-    <ion-buttons slot="primary">
-        <ion-button ion-button (click)="close()">
-            <ion-icon name="close" slot="icon-only"></ion-icon>
-        </ion-button>
-    </ion-buttons>
-</ion-toolbar>
--->
-
-<ion-content class="poi-details" padding>
+<ion-content class="poi-details">
     <poi-details [poi]="poi"></poi-details>
 </ion-content>

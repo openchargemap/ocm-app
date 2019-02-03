@@ -71,15 +71,15 @@ export class APIClient {
     if (params.maxResults != null) serviceParams += '&maxresults=' + params.maxResults;
     if (params.countryIdList != null) serviceParams += '&countryid=' + this.getNumberListString(params.countryIdList);
     if (params.levelIdList != null) serviceParams += '&levelid=' + this.getNumberListString(params.levelIdList);
-    if (params.connectionTypeIdList != null) serviceParams += '&connectiontypeid=' + this.getNumberListString(params.connectionTypeIdList);
-    if (params.operatorIdList != null) serviceParams += '&operatorid=' + this.getNumberListString(params.operatorIdList);
-    if (params.usageTypeIdList != null) serviceParams += '&usagetypeid=' + this.getNumberListString(params.usageTypeIdList);
-    if (params.statusTypeIdList != null) serviceParams += '&statustypeid=' + this.getNumberListString(params.statusTypeIdList);
+    if (params.connectionTypeIdList != null && params.connectionTypeIdList.length > 0) serviceParams += '&connectiontypeid=' + this.getNumberListString(params.connectionTypeIdList);
+    if (params.operatorIdList != null && params.operatorIdList.length > 0) serviceParams += '&operatorid=' + this.getNumberListString(params.operatorIdList);
+    if (params.usageTypeIdList != null && params.usageTypeIdList.length > 0) serviceParams += '&usagetypeid=' + this.getNumberListString(params.usageTypeIdList);
+    if (params.statusTypeIdList != null && params.statusTypeIdList.length > 0) serviceParams += '&statustypeid=' + this.getNumberListString(params.statusTypeIdList);
     if (params.locationTitle != null) serviceParams += '&locationtitle=' + params.locationTitle;
-    if (params.minPowerKW != null) serviceParams += '&minpowerkw=' + params.minPowerKW;
-    if (params.maxPowerKW != null) serviceParams += '&maxpowerkw=' + params.maxPowerKW;
+    if (params.minPowerKW != null && params.minPowerKW > 0) serviceParams += '&minpowerkw=' + params.minPowerKW;
+    if (params.maxPowerKW != null && params.maxPowerKW > 0) serviceParams += '&maxpowerkw=' + params.maxPowerKW;
     if (params.submissionStatusTypeIdList != null) serviceParams += '&submissionstatustypeid=' + this.getNumberListString(params.submissionStatusTypeIdList);
-    if (params.poiIdList != null) serviceParams += '&chargepointid=' + this.getNumberListString(params.poiIdList);
+    if (params.poiIdList != null && params.poiIdList.length>0) serviceParams += '&chargepointid=' + this.getNumberListString(params.poiIdList);
 
     if (params.enableCaching == false) serviceParams += '&enablecaching=false';
     if (params.compact != null) serviceParams += '&compact=' + params.compact;

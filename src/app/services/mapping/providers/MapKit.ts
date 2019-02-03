@@ -245,7 +245,7 @@ export class MapKitMapProvider implements IMapProvider {
   }
 
   setMapCenter(pos: GeoPosition) {
-    if (this.mapReady) {
+    if (this.map) {
       this.map.setCenterAnimated(new mapkit.Coordinate(pos.coords.latitude, pos.coords.longitude));
     }
   }
@@ -269,7 +269,6 @@ export class MapKitMapProvider implements IMapProvider {
   setMapZoom(zoom: number) {
     this.logging.log("MapKit: setMapZoom not supported", LogLevel.VERBOSE);
     // this.map.setZoom(zoomLevel);
-
 
     // use the zoom level to compute the region
 
@@ -315,8 +314,8 @@ export class MapKitMapProvider implements IMapProvider {
       var bounds = new Array<GeoLatLng>();
 
       var mapBounds = this.map.region.toBoundingRegion();
-      bounds.push(new GeoLatLng(mapBounds.northLatitude, mapBounds.eastLongitude));
       bounds.push(new GeoLatLng(mapBounds.southLatitude, mapBounds.westLongitude));
+      bounds.push(new GeoLatLng(mapBounds.northLatitude, mapBounds.eastLongitude));
 
       observer.next(bounds);
       observer.complete();

@@ -6,56 +6,49 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="media-upload" padding>
+<ion-content class="media-upload">
 
-  <div class="banner">
-    <h1>{{poi.AddressInfo.Title}}</h1>
-    <p>{{poi.AddressInfo.AddressLine1}}</p>
-  </div>
-  <p>You can upload a photo from your device or take a new photo:
-  </p>
-  <div>
-
-    <div *ngIf="isBrowserMode()==false">
-      <button (click)="loadCameraOrLibraryImage()">Select Photo</button>
+  <div padding>
+    <div class="banner">
+      <h1>{{poi.AddressInfo.Title}}</h1>
+      <p>{{poi.AddressInfo.AddressLine1}}</p>
     </div>
+    <p>You can upload a photo from your device or take a new photo:
+    </p>
+    <div>
 
-    <div *ngIf="isBrowserMode()==true">
-      <label class="button button-default button-icon-left upload">
-        <span class="button-inner" icon-left>
-          <ion-icon name="camera" role="img" class="ion-md-camera" aria-label="camera"></ion-icon>
-          Choose Image..
-        </span>
-        <input type="file" required id="img-upload-media" (change)="loadCameraOrLibraryImage()" />
+      <label  class="upload">
+     
+          <ion-button>
+            <ion-icon name="camera" role="img" class="ion-md-camera" aria-label="camera"></ion-icon>
+            <ion-label>Choose Photo..</ion-label>
+          </ion-button>
+          <input type="file" required id="img-upload-media" (change)="loadCameraOrLibraryImage()" />
 
-      </label>
-
+     
+        </label>
     </div>
     <canvas id="img-upload-canvas" style="display:none;width:500;height:500;border:1px solid red;"></canvas>
     <ion-card *ngIf="imgData!=null">
+      <ion-toolbar>
+        <ion-title slot="start">Preview</ion-title>
+        <ion-buttons slot="end">
 
+          <ion-button (click)="rotateImage()">
+            <ion-icon name="refresh" slot="start"></ion-icon>
+            <ion-label>Rotate</ion-label>
+          </ion-button>
+
+        </ion-buttons>
+
+      </ion-toolbar>
       <ion-card-content>
-        <ion-card-title>
-          Preview
-        </ion-card-title>
 
-
-
-        <ion-toolbar>
-          <ion-buttons slot="secondary">
-
-            <ion-button (click)="rotateImage()">
-              <ion-icon name="refresh" slot="start"></ion-icon> Rotate
-            </ion-button>
-
-          </ion-buttons>
-
-        </ion-toolbar>
         <ion-list>
 
           <ion-item>
-            <ion-label position="fixed">Comment</ion-label>
-            <ion-input type="text" [(ngModel)]="comment"></ion-input>
+            <ion-label position="floating">Comment</ion-label>
+            <ion-input type="text" [(ngModel)]="comment" placeholder="(optional comment)"></ion-input>
 
           </ion-item>
 
@@ -74,7 +67,7 @@
       <ion-button (click)="cancel()">
         <ion-icon name="close" slot="start"></ion-icon>
         Cancel
-        </ion-button>
+      </ion-button>
     </ion-buttons>
     <ion-buttons slot="primary">
       <ion-button (click)="performUpload()">

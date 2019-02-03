@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { RoutePlannerPage } from './../route-planner/route-planner';
 import { POIDetailsPage } from './../poi-details/poi-details';
-import { GeoLatLng } from './../../model/GeoPosition';
+import { GeoLatLng, GeoPosition } from './../../model/GeoPosition';
 import { POISearchParams } from './../../model/POISearchParams';
 import { Utils } from './../../core/Utils';
 import { Logging, LogLevel } from './../../services/Logging';
@@ -33,7 +33,7 @@ export class SearchPage implements OnInit {
 
   private initialResultsShown: boolean = false;
 
-  private searchOnDemand: boolean = true;
+  private searchOnDemand: boolean = false;
 
   poiViewMode: string = 'modal'; // side or modal
   private searchPolyline: string;
@@ -138,23 +138,29 @@ export class SearchPage implements OnInit {
     this.events.subscribe('ocm:mapping:ready', () => {
       if (!this.initialResultsShown) {
 
-        // centre map on users location before starting to fetch other info
-        // get user position
-        // attempt to find user current position
-
-        this.locateUser().then(() => {
-          this.logging.log('Search: maps ready, showing first set of results');
+        // if start position already set, use that for first search
+        if (this.appManager.searchSettings.StartSearchPosition) {
+          this.searchOnDemand = true;
           this.debouncedRefreshResults();
-          this.logging.log('Default search..');
+        } else {
 
-        }, (rejection) => {
-          this.logging.log('Could not locate user..');
+          // attempt to geolocate user and perform search
 
-        }).catch(() => {
-          this.logging.log('Default search..');
-          this.initialResultsShown = true;
-          this.debouncedRefreshResults();
-        });
+          this.locateUser().then(() => {
+            this.logging.log('Search: maps ready, showing first set of results');
+            // this.debouncedRefreshResults();
+
+
+          }, (rejection) => {
+            this.logging.log('Could not locate user..');
+
+          }).catch(() => {
+            this.logging.log('Default search..');
+            this.initialResultsShown = true;
+            this.debouncedRefreshResults();
+          });
+        }
+
       }
     });
 
@@ -177,17 +183,17 @@ export class SearchPage implements OnInit {
     this.checkViewportMode();
 
 
-    // TODO: if this is cordova, map init can't happen until after platform ready
-    if (this.mapping.mapOptions.mapAPI === MappingAPI.GOOGLE_NATIVE) {
-      this.platform.ready().then(() => {
-        // alert('platform ready');
-        this.mapping.initMap(this.mapCanvasID);
-      });
+    // if this is cordova, map init can't happen until after platform ready
 
-    } else {
+    this.platform.ready().then(() => {
+      // alert('platform ready');
+      this.mapping.initMap(this.mapCanvasID);
+    });
+
+    /*} else {
       // non-native maps
       this.mapping.initMap(this.mapCanvasID);
-    }
+    }*/
 
     // TODO:centre map to initial location (last search pos?)
 
@@ -195,7 +201,7 @@ export class SearchPage implements OnInit {
     if (!this.appManager.referenceDataManager.referenceDataLoaded()) {
       this.logging.log('No cached ref dat, fetching ..', LogLevel.VERBOSE);
       this.appManager.api.fetchCoreReferenceData(null).subscribe((res) => {
-        this.logging.log('Got core ref data. Updating local POIs', LogLevel.VERBOSE);
+        this.logging.log('Got refreshed core ref data.', LogLevel.VERBOSE);
 
       }, (rejection) => {
         this.logging.log('Error fetching core ref data:' + rejection);
@@ -233,7 +239,7 @@ export class SearchPage implements OnInit {
   }
 
 
-  refreshResultsAfterMapChange() {
+  async refreshResultsAfterMapChange() {
     if (!this.searchOnDemand) {
       this.logging.log('Skipping refresh, search on demand disabled..', LogLevel.VERBOSE);
       return;
@@ -242,130 +248,128 @@ export class SearchPage implements OnInit {
     }
 
 
+
     // this.appState.isSearchInProgress = true;
 
     const params = new POISearchParams();
-    this.mapping.getMapCenter().subscribe((mapcentre) => {
-      if (mapcentre.coords.latitude == 0 && mapcentre.coords.longitude == 0) {
-        this.logging.log('Zero map coords', LogLevel.VERBOSE);
-        return;
-      }
+    let mapcentre: GeoPosition = null;
 
-      if (mapcentre != null) {
+    if (this.appManager.searchSettings.StartSearchPosition) {
+      mapcentre = new GeoPosition(this.appManager.searchSettings.StartSearchPosition.latitude, this.appManager.searchSettings.StartSearchPosition.longitude);
+      // clear start position after first search
+      this.appManager.searchSettings.StartSearchPosition = null;
+    } else {
+      mapcentre = await this.mapping.getMapCenter().toPromise();
+    }
+
+    if (mapcentre && mapcentre.coords.latitude == 0 && mapcentre.coords.longitude == 0) {
+      this.logging.log('Map center is zero. No query will be performed', LogLevel.WARNING);
+      return;
+    }
+
+    if (mapcentre != null) {
+      params.latitude = mapcentre.coords.latitude;
+      params.longitude = mapcentre.coords.longitude;
+
+      // store this as last known map centre
+      this.appManager.searchSettings.LastSearchPosition = new GeoLatLng(mapcentre.coords.latitude, mapcentre.coords.longitude);
+    }
+
+    /////
+    // params.distance = distance;
+    // params.distanceUnit = distance_unit;
+    // params.maxResults = this.appConfig.maxResults;
+    params.includeComments = true;
+    params.enableCaching = true;
+
+    // map viewport search on bounding rectangle instead of map centre
+
+    // for first search discard the bounds and search by radius, subsequent searches use map bounds
+    let bounds = await this.mapping.getMapBounds().toPromise();
 
 
-        params.latitude = mapcentre.coords.latitude;
-        params.longitude = mapcentre.coords.longitude;
+    if (bounds != null && this.initialResultsShown == true) {
 
-        // store this as last known map centre
-        this.appManager.searchSettings.LastSearchPosition = new GeoLatLng(mapcentre.coords.latitude, mapcentre.coords.longitude);
-      }
+      params.boundingbox = '(' + bounds[0].latitude +
+        ',' + bounds[0].longitude + '),(' + bounds[1].latitude +
+        ',' + bounds[1].longitude + ')';
 
-      /////
-      // params.distance = distance;
-      // params.distanceUnit = distance_unit;
-      // params.maxResults = this.appConfig.maxResults;
-      params.includeComments = true;
-      params.enableCaching = true;
+      this.logging.log(JSON.stringify(bounds), LogLevel.VERBOSE);
 
-      // map viewport search on bounding rectangle instead of map centre
+    }
 
-      // if (this.appConfig.enableLiveMapQuerying) {
-      // if (this.mappingManager.isMapReady()) {
+    if (!this.initialResultsShown) {
+      // default search distance initially
+      params.distance = 100;
+
+    }
+
+    // close zooms are 1:1 level of detail, zoomed out samples less data
+    //this.mapping.getMapZoom().subscribe((zoomLevel: number) => {
 
 
-      // for first search discard the bounds and search by radious, subsequent searches use map bounds
-
-      this.mapping.getMapBounds().subscribe((bounds) => {
-        if (bounds != null && this.initialResultsShown == true) {
-
-          params.boundingbox = '(' + bounds[0].latitude +
-            ',' + bounds[0].longitude + '),(' + bounds[1].latitude +
-            ',' + bounds[1].longitude + ')';
-
-          this.logging.log(JSON.stringify(bounds), LogLevel.VERBOSE);
-
-        }
-        // close zooms are 1:1 level of detail, zoomed out samples less data
-        this.mapping.getMapZoom().subscribe((zoomLevel: number) => {
-         
-         
-         /* this.logging.log('map zoom level to be converted to level of detail:' + zoomLevel);
-          if (zoomLevel > 10) {
-            params.levelOfDetail = 1;
-          } else if (zoomLevel > 6) {
-            params.levelOfDetail = 3;
-          } else if (zoomLevel > 4) {
-            params.levelOfDetail = 5;
-          } else if (zoomLevel > 3) {
-            params.levelOfDetail = 10;
-          } else {
-            params.levelOfDetail = 20;
-          }
+    /* this.logging.log('map zoom level to be converted to level of detail:' + zoomLevel);
+     if (zoomLevel > 10) {
+       params.levelOfDetail = 1;
+     } else if (zoomLevel > 6) {
+       params.levelOfDetail = 3;
+     } else if (zoomLevel > 4) {
+       params.levelOfDetail = 5;
+     } else if (zoomLevel > 3) {
+       params.levelOfDetail = 10;
+     } else {
+       params.levelOfDetail = 20;
+     }
 */
 
-          // apply filter settings from search settings
-          if (this.appManager.searchSettings != null) {
-            if (this.appManager.searchSettings.ConnectionTypeList != null) {
-              params.connectionTypeIdList = this.appManager.searchSettings.ConnectionTypeList;
-            }
+    // apply filter settings from search settings
+    if (this.appManager.searchSettings != null) {
+      if (this.appManager.searchSettings.ConnectionTypeList != null) {
+        params.connectionTypeIdList = this.appManager.searchSettings.ConnectionTypeList;
+      }
 
-            if (this.appManager.searchSettings.UsageTypeList != null) {
-              params.usageTypeIdList = this.appManager.searchSettings.UsageTypeList;
-            }
+      if (this.appManager.searchSettings.UsageTypeList != null) {
+        params.usageTypeIdList = this.appManager.searchSettings.UsageTypeList;
+      }
 
-            if (this.appManager.searchSettings.StatusTypeList != null) {
-              params.statusTypeIdList = this.appManager.searchSettings.StatusTypeList;
-            }
+      if (this.appManager.searchSettings.StatusTypeList != null) {
+        params.statusTypeIdList = this.appManager.searchSettings.StatusTypeList;
+      }
 
-            if (this.appManager.searchSettings.OperatorList != null) {
-              params.operatorIdList = this.appManager.searchSettings.OperatorList;
-            }
+      if (this.appManager.searchSettings.OperatorList != null) {
+        params.operatorIdList = this.appManager.searchSettings.OperatorList;
+      }
 
-            if (this.appManager.searchSettings.MinPowerKW != null) {
-              params.minPowerKW = this.appManager.searchSettings.MinPowerKW;
-            }
-            if (this.appManager.searchSettings.MaxPowerKW != null) {
-              params.maxPowerKW = this.appManager.searchSettings.MaxPowerKW;
-            }
+      if (this.appManager.searchSettings.MinPowerKW != null && this.appManager.searchSettings.MinPowerKW>0 ) {
+        params.minPowerKW = this.appManager.searchSettings.MinPowerKW;
+      }
+      if (this.appManager.searchSettings.MaxPowerKW != null && this.appManager.searchSettings.MaxPowerKW>0) {
+        params.maxPowerKW = this.appManager.searchSettings.MaxPowerKW;
+      }
 
-            if (this.journeyManager.getRoutePolyline() != null) {
-              // when searching along a polyline we discard any other bounding box filters etc
-              params.polyline = this.journeyManager.getRoutePolyline();
-              params.boundingbox = null;
-              params.levelOfDetail = null;
-              params.latitude = null;
-              params.longitude = null;
-              // params.distance = this.routeSearchDistance;
-            }
+      if (this.journeyManager.getRoutePolyline() != null) {
+        // when searching along a polyline we discard any other bounding box filters etc
+        params.polyline = this.journeyManager.getRoutePolyline();
+        params.boundingbox = null;
+        params.levelOfDetail = null;
+        params.latitude = null;
+        params.longitude = null;
+        // params.distance = this.routeSearchDistance;
+      }
 
-            /*
-            if ($('#filter-submissionstatus').val() != 200) params.submissionStatusTypeID = $('#filter-submissionstatus').val();
-            if ($('#filter-connectionlevel').val() != '') params.levelID = $('#filter-connectionlevel').val();
-            */
+    }
 
-          }
+    // TODO: use stack of requests as may be multiple in sync
+    this.appManager.isRequestInProgress = true;
 
-          // TODO: use stack of requests as may be multiple in sync
-          this.appManager.isRequestInProgress = true;
+    this.poiManager.fetchPOIList(params).then(() => {
 
-          this.poiManager.fetchPOIList(params).then(() => {
-
-            this.appManager.isRequestInProgress = false;
-            this.initialResultsShown = true;
-          });
-          /*
-            .then(() => { }, (err) => {
-              this.appManager.showToastNotification(this.nav, 'Could not fetch POI list. Check connection.');
-            });*/
-
-        });
-      });
-
-    }, (error) => {
-      this.logging.log('No map centre, can\'t begin refresh.' + error);
+      this.appManager.isRequestInProgress = false;
+      this.initialResultsShown = true;
 
     });
+
+
 
   }
 
@@ -473,12 +477,18 @@ export class SearchPage implements OnInit {
       this.logging.log('Got user location.');
 
       this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true);
+
+
       this.mapping.setMapZoom(15); // TODO: provider specific ideal zoom for 'summary'
       // this.mapping.updateMapSize();
 
       // this.showPOIListOnMap(null); // show initial map view
 
-      /// this.refreshResultsAfterMapChange(); //fetch new poi results based on map viewport
+      this.searchOnDemand = true;
+
+      this.appManager.searchSettings.StartSearchPosition = new GeoLatLng(position.coords.latitude, position.coords.longitude);
+
+      this.debouncedRefreshResults(); //fetch new poi results based on map viewport
     }).catch((err) => {
       /// no geolocation
       this.logging.log('Failed to get user location.');
@@ -494,8 +504,12 @@ export class SearchPage implements OnInit {
       this.mapping.updateMapCentrePos(searchPos.latitude, searchPos.longitude, true);
       this.mapping.setMapZoom(15);
 
-      this.refreshResultsAfterMapChange();
+      this.searchOnDemand = true;
+
+      this.debouncedRefreshResults();
       this.mapping.updateMapSize();
+
+
 
     });
 
@@ -511,7 +525,7 @@ export class SearchPage implements OnInit {
 
     this.mapping.updateMapCentrePos(place.Location.latitude, place.Location.longitude, true);
 
-    this.refreshResultsAfterMapChange();
+    this.debouncedRefreshResults();
     /// this.mapping.setMapZoom(15);
     // this.debouncedRefreshResults();
 

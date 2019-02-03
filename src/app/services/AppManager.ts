@@ -34,6 +34,8 @@ export class AppManager {
 
   public isRequestInProgress: boolean = false;
 
+  public title:string ="Open Charge Map";
+
   constructor(
     public http: HttpClient,
     public events: Events,
@@ -91,7 +93,7 @@ export class AppManager {
     }
   }
 
-  getQueryVariable(variable): Array<number> {
+  getQueryVariable(variable): Array<any> {
     let query = window.location.search.substring(1);
     let vars = query.split('&');
     for (let i = 0; i < vars.length; i++) {
@@ -100,7 +102,7 @@ export class AppManager {
       if (decodeURIComponent(pair[0]) == variable) {
         let valueList = pair[1].split(',');
         let decodedValues = valueList.map((v) =>
-          parseInt(decodeURIComponent(v), 10)
+          decodeURIComponent(v)
         );
         return decodedValues;
       }
@@ -108,10 +110,27 @@ export class AppManager {
     return null;
   }
 
+  /**
+   * If any query string parameters passed in the URL, apply them here
+   */
   public applyURLQueryStringOptions() {
     if (this.getQueryVariable('operatorid')) {
       let values = this.getQueryVariable('operatorid');
-      this.searchSettings.OperatorList.unshift(...values);
+      for (let v of values) {
+        this.searchSettings.OperatorList.unshift(parseInt(v, 10));
+      }
+
+    }
+
+    if (this.getQueryVariable('latitude') && this.getQueryVariable('longitude')) {
+      let latitude = this.getQueryVariable('latitude')[0];
+      let longitude = this.getQueryVariable('longitude')[0];
+
+      this.searchSettings.StartSearchPosition = new GeoLatLng(parseFloat(latitude), parseFloat(longitude));
+    }
+
+    if (this.getQueryVariable('title')) {
+      this.title =  this.getQueryVariable('title')[0];
     }
   }
   /**
@@ -220,7 +239,7 @@ export class AppManager {
     }
   }
 
-  public async showToastNotification( msg: string) {
+  public async showToastNotification(msg: string) {
     const toast = await this.toastController.create({
       message: msg,
       duration: 3000,

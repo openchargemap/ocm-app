@@ -2,6 +2,8 @@ import { AppManager } from './../../services/AppManager';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController } from '@ionic/angular';
 import { Camera } from '@ionic-native/camera/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { Logging, LogLevel } from '../../services/Logging';
 
 @Component({
     templateUrl: 'mediaupload.html',
@@ -24,7 +26,9 @@ export class MediaUploadPage {
         public appManager: AppManager,
         public nav: NavController,
         private modalController: ModalController,
-        private camera: Camera
+        private camera: Camera,
+        public logging: Logging,
+        private webview: WebView
     ) {
 
         this.processingQuality = 0.8;
@@ -38,45 +42,91 @@ export class MediaUploadPage {
         this.comment = '';
     }
 
-    loadCameraOrLibraryImage() {
+    processNativeImageSource(imageData) {
+        // imageData is either a base64 encoded string or a file URI
+        // If it's base64:
+        // let base64Image = 'data:image/jpeg;base64,' + imageData;
+
+        let imgUrl = this.webview.convertFileSrc(imageData);
+        //this.logging.log("img load:" + imgUrl);
+        const canvas = <HTMLCanvasElement>document.getElementById('img-upload-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // draw source image into the off-screen canvas to get base64 version
+
+        const img = new Image();
+
+        img.onload = () => {
+            this.logging.log("img load:" + img.width);
+
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.fillStyle = 'rgb(0,0,0)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            this.imgData = canvas.toDataURL('image/png');
+            this.processImage();
+        };
+
+        // initiate image load
+        img.src = imgUrl;
+    }
+
+    loadCameraOrLibraryImage(fromImageLibrary: boolean = false) {
+
+        /*
+                if (!this.isBrowserMode()) {
+                    this.logging.log("Native mode: fetching image");
+        
+                    if (fromImageLibrary) {
+                        this.camera.getPicture({ targetWidth: this.targetWidth, sourceType: this.camera.PictureSourceType.PHOTOLIBRARY }).then((imageData) => {
+        
+                            this.processNativeImageSource(imageData);
+        
+                        }, (err) => {
+                            this.logging.log("Error processing getPicture (library):" + err, LogLevel.ERROR);
+                        });
+                    } else {
+                        this.camera.getPicture({ targetWidth: this.targetWidth, sourceType: this.camera.PictureSourceType.CAMERA }).then((imageData) => {
+                            this.processNativeImageSource(imageData);
+                        }, (err) => {
+                            this.logging.log("Error processing getPicture (camera):" + err, LogLevel.ERROR);
+                        });
+                    }
+                }
+        */
 
 
-        if (!this.isBrowserMode()) {
-            this.camera.getPicture({ targetWidth: this.targetWidth }).then((imageData) => {
-                // imageData is either a base64 encoded string or a file URI
-                // If it's base64:
-                // let base64Image = 'data:image/jpeg;base64,' + imageData;
-                this.imgData = imageData;
-                this.processImage();
-            }, (err) => {
-            });
-        }
+        this.logging.log("PWA mode: fetching image");
 
-        if (this.isBrowserMode()) {
-            const reader = new FileReader();
+        const reader = new FileReader();
 
-            reader.onload = () => {
-                this.imgData = reader.result;
-                this.processImage();
-            };
+        reader.onload = () => {
+            this.imgData = reader.result;
+            this.processImage();
+        };
 
-            reader.onerror = () => {
-                // alert('reader error');
-            };
+        reader.onerror = () => {
+            // alert('reader error');
+        };
 
-            // read data from file input, this will then fire the onload event
-            reader.readAsDataURL((<any>document.getElementById('img-upload-media')).files[0]);
-        }
+        // read data from file input, this will then fire the onload event
+        reader.readAsDataURL((<any>document.getElementById('img-upload-media')).files[0]);
+
 
     }
 
     isBrowserMode(): boolean {
-        return (this.appManager.isPlatform('desktop') || this.appManager.isPlatform('pwa'));
+        return (this.appManager.isPlatform('desktop') || this.appManager.isPlatform('hybrid'));
     }
 
     processImage() {
         const _appContext = this;
         if (this.imgData != null) {
+
+            //  this.logging.log("processImage: " + this.imgData);
+
             // create an off-screen canvas
             const canvas = <HTMLCanvasElement>document.getElementById('img-upload-canvas');
             const ctx = canvas.getContext('2d');
@@ -99,6 +149,8 @@ export class MediaUploadPage {
 
             img.src = this.imgData;
 
+        } else {
+            this.logging.log("processImage: nothing to process.");
         }
     }
 
@@ -146,7 +198,7 @@ export class MediaUploadPage {
 
     async performUpload() {
 
-        if (!this.imgData){
+        if (!this.imgData) {
             await this.appManager.showToastNotification('Select an image to upload.');
             return;
         }
