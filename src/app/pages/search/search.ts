@@ -126,14 +126,11 @@ export class SearchPage implements OnInit {
     }*/
   }
 
-  ngOnInit() {
+  async initialiseMapping() {
+
+    await this.platform.ready();
 
     this.debouncedRefreshResults = Utils.debounce(this.refreshResultsAfterMapChange, 1000, false);
-
-    this.events.subscribe('ocm:poi:selected', (args) => {
-      // console.log(JSON.stringify(args));
-      this.viewPOIDetails(args);
-    });
 
     this.events.subscribe('ocm:mapping:ready', () => {
       if (!this.initialResultsShown) {
@@ -179,23 +176,30 @@ export class SearchPage implements OnInit {
       }
     });
 
+    this.events.subscribe('ocm:poi:selected', (args) => {
+      // console.log(JSON.stringify(args));
+      this.viewPOIDetails(args);
+    });
+
+
     // switch app to to side view mode if display wide enough
     this.checkViewportMode();
 
 
     // if this is cordova, map init can't happen until after platform ready
+    // platform ready
+    this.mapping.initMap(this.mapCanvasID);
 
-    this.platform.ready().then(() => {
-      // alert('platform ready');
-      this.mapping.initMap(this.mapCanvasID);
-    });
-
-    /*} else {
-      // non-native maps
-      this.mapping.initMap(this.mapCanvasID);
-    }*/
 
     // TODO:centre map to initial location (last search pos?)
+
+  }
+
+  async ngAfterViewInit() {
+    await this.initialiseMapping();
+  }
+
+  async ngOnInit() {
 
     // first start up, get fresh core reference data, then we can start getting POI results nearby
     if (!this.appManager.referenceDataManager.referenceDataLoaded()) {
@@ -207,6 +211,7 @@ export class SearchPage implements OnInit {
         this.logging.log('Error fetching core ref data:' + rejection);
       });
     }
+
 
   }
 
@@ -340,10 +345,10 @@ export class SearchPage implements OnInit {
         params.operatorIdList = this.appManager.searchSettings.OperatorList;
       }
 
-      if (this.appManager.searchSettings.MinPowerKW != null && this.appManager.searchSettings.MinPowerKW>0 ) {
+      if (this.appManager.searchSettings.MinPowerKW != null && this.appManager.searchSettings.MinPowerKW > 0) {
         params.minPowerKW = this.appManager.searchSettings.MinPowerKW;
       }
-      if (this.appManager.searchSettings.MaxPowerKW != null && this.appManager.searchSettings.MaxPowerKW>0) {
+      if (this.appManager.searchSettings.MaxPowerKW != null && this.appManager.searchSettings.MaxPowerKW > 0) {
         params.maxPowerKW = this.appManager.searchSettings.MaxPowerKW;
       }
 

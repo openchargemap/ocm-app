@@ -1,8 +1,9 @@
 import { Logging } from './../../services/Logging';
 import { PlaceSearchResult } from './../../model/PlaceSearchResult';
-import { Component, Input, Output, ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { Component, Input, Output, ChangeDetectorRef, EventEmitter, OnInit } from '@angular/core';
 import { MapKitMapProvider } from '../../services/mapping/providers/MapKit';
 import { GeoLatLng } from '../../model/AppModels';
+import { environment } from '../../../environments/environment';
 
 //declare var google: any;
 
@@ -15,7 +16,7 @@ declare var mapkit: any;
     selector: 'place-search',
     templateUrl: 'place-search.html'
 })
-export class PlaceSearch {
+export class PlaceSearch implements OnInit {
 
     private placeSearchType: string;
     private placeList: Array<PlaceSearchResult>;
@@ -36,6 +37,14 @@ export class PlaceSearch {
     constructor(public logging: Logging, public changeDetector: ChangeDetectorRef) {
         this.searchKeyword = "";
         this.searchInProgress = false;
+    }
+
+    ngOnInit(){
+        mapkit.init({
+            authorizationCallback: function (done) {
+              done(environment.mapKitToken);
+            }
+          });
     }
 
     onSearchFocus() {

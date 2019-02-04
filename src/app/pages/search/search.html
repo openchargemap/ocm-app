@@ -30,16 +30,18 @@
 
 <ion-content class="search-page">
 
-	<place-search #placeSearchMapPOI (placeChanged)="placeSelected($event)" style="position:absolute;z-index:1000;"></place-search>
+	<place-search #placeSearchMapPOI (placeChanged)="placeSelected($event)" ></place-search>
 
-	<ion-grid>
+	<div id="map-canvas" style="height:100%;width:100%;min-height:300px;"></div>
+
+	<!--
+	<ion-grid >
 		<ion-row>
 			<ion-col>
-				<div id="map-canvas" style="height:99.99vh"></div>
+				
 			</ion-col>
 
 			<ion-col size="3" *ngIf="poiViewMode=='side'" class="sideview">
-				<!--<ion-scroll scrollY="true" style="height:100%">-->
 
 				<ion-toolbar color="primary">
 					<ion-buttons slot="secondary">
@@ -95,9 +97,11 @@
 						</ion-list>
 					</div>
 				</div>
-				<!--</ion-scroll>-->
+			
 			</ion-col>
 
 		</ion-row>
 	</ion-grid>
+
+-->
 </ion-content>

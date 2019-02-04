@@ -18,14 +18,15 @@ import {
     GoogleMapsEvent,
     GoogleMapOptions,
     CameraPosition,
+    MarkerCluster,
     MarkerOptions,
     Marker,
-    BaseArrayClass
-  } from '@ionic-native/google-maps/ngx';
-
-
-declare var plugin: any;
-declare var google: any;
+    BaseArrayClass,
+    GoogleMapsMapTypeId,
+    Environment,
+    LatLngBounds
+} from '@ionic-native/google-maps/ngx';
+import { environment } from '../../../../environments/environment';
 
 /**Map Provider for Google Maps Native API (Cordova Plugin)
  * @module Mapping
@@ -37,8 +38,8 @@ export class GoogleMapsNative implements IMapProvider {
     providerError: string;
     mapCanvasID: string;
 
-    private map: any;
-    private markerList: Dictionary<number, google.maps.Marker>;
+    private map: GoogleMap;
+    private markerList: Dictionary<number, Marker>;
     private maxMarkers: number = 200;
     private markerAllocCount: number = 0;
     private polylinePath: any;
@@ -64,50 +65,63 @@ export class GoogleMapsNative implements IMapProvider {
         this.mapCanvasID = mapCanvasID;
 
         var apiAvailable = true;
-        if (plugin && plugin.google && plugin.google.maps) {
+        if (GoogleMaps) {
             apiAvailable = true;
 
             this.logging.log("Native maps plugin is available.");
 
             if (this.map == null) {
 
-                var mapCanvas = document.getElementById(mapCanvasID);
 
-                this.map = plugin.google.maps.Map.getMap(mapCanvas);
+                let key = environment.googleMapsKey;
+                Environment.setEnv({
+                    'API_KEY_FOR_BROWSER_RELEASE': key,
+                    'API_KEY_FOR_BROWSER_DEBUG': key
+                });
 
-                let mapManagerContext = this;
+                this.map = GoogleMaps.create(mapCanvasID, {
+                    mapType: GoogleMapsMapTypeId.ROADMAP,
+                    controls: {
+                        compass: true,
+                        myLocationButton: true,
+                        zoom: true
+                    },
+                    gestures: {
+                        scroll: true,
+                        tilt: true,
+                        rotate: true,
+                        zoom: true
+                    },
+                    camera: {
+                        'target': {
+                            "lat": 37.415328,
+                            "lng": -122.076575
+                        },
+                        'zoom': 10
+                    }
+                }
+                );
 
-                this.map.one(plugin.google.maps.event.MAP_READY, () => {
+                this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
+
+
+                    //   this.map.on(plugin.google.maps.event.MAP_READY).subscribe(() => {
                     this.logging.log("Native Mapping Ready.", LogLevel.INFO);
 
-                    var mapOptions = {
-                        mapType: plugin.google.maps.MapTypeId.ROADMAP,
-                        controls: {
-                            compass: true,
-                            myLocationButton: true,
-                            zoom: true
-                        },
-                        gestures: {
-                            scroll: true,
-                            tilt: true,
-                            rotate: true,
-                            zoom: true
-                        }
-                    };
 
-                    this.map.setOptions(mapOptions);
-                    // mapManagerContext.map.setDiv(mapCanvas);
                     this.map.setVisible(true);
                     this.mapReady = true;
                     this.events.publish('ocm:mapping:ready');
                     this.setMapCenter(new GeoPosition(37.415328, -122.076575)); // native maps needs a map centre before anything is displayed
 
                     //setup map manipulation events
-                    this.map.addEventListener(plugin.google.maps.event.CAMERA_MOVE_END, () => {
+                    this.map.addEventListener(GoogleMapsEvent.CAMERA_MOVE_END).subscribe(() => {
                         this.events.publish('ocm:mapping:dragend');
                         this.events.publish('ocm:mapping:zoom');
                     });
                 });
+
+                // });
             } else {
                 this.logging.log("Map object is not null at init..");
             }
@@ -151,7 +165,7 @@ export class GoogleMapsNative implements IMapProvider {
     renderPOIMarkers(clearMarkersOnRefresh: boolean, poiList: Array<any>) {
         let map = this.map;
         let _providerContext = this;
-        let bounds = new plugin.google.maps.LatLngBounds();
+        let bounds = new LatLngBounds();
         let markersAdded = 0;
 
         //clear existing markers (if enabled)
@@ -160,146 +174,189 @@ export class GoogleMapsNative implements IMapProvider {
             this.clearMarkers();
         }
 
+        let markersToAdd = [];
+
         if (poiList != null) {
             //render poi markers
             let poiCount = poiList.length;
             for (let i = 0; i < poiList.length; i++) {
-                if (poiList[i].AddressInfo != null) {
-                  /*  if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-                        let poi = poiList[i];
-
-                        let addMarker = true;
-                        if (this.markerList != null) {
-                            //find if this poi already exists in the marker list
-                            if (this.markerList.containsKey(poi.ID)) {
-                                addMarker = false;
-                            }
-                        }
-
-                        if (addMarker) {
-                            var poiLevel = Utils.getMaxLevelOfPOI(poi);
-
-                            var iconURL = null;
-                            var animation = null;
-                            var shadow = null;
-                            var markerImg = null;
-
-                            iconURL = window.location.href.replace(/\/([^\/]+)$/, "") + "assets/images/icons/map/level" + poiLevel;
-
-                            if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
-                                iconURL += "_private";
-                            } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
-                                iconURL += "_nonoperational";
-                            } else {
-                                iconURL += "_operational";
-                            }
-
-                            iconURL += "_icon.png";
-
-                            var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
-                            if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
-                            if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
-                            if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
-
-                            //cache marker details
-                            this.markerList.setValue(poi.ID, poi.ID);
-                            this.markerAllocCount++;
-                            markersAdded++;
-                            var newMarker = map.addMarker({
-                                'position': { lat: poi.AddressInfo.Latitude, lng: poi.AddressInfo.Longitude },
-                                'title': markerTooltip,
-                                'snippet': "View details",
-                                'iconData': {
-                                    'url': iconURL,
-                                    'size': {
-                                        'width': 30,
-                                        'height': 50
-                                    }
-                                }
-                            }, (marker) => {
-                                //show full details when info window tapped
-                                //marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
-                                marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function () {
-                                    var markerTitle = marker.getTitle();
-                                    var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
-
-                                    if (console) console.log("POI clicked:" + poiId);
-                                    _providerContext.events.publish('ocm:poi:selected', { poi: null, poiId: poiId });
-
-                                });
-
-
-                            });
-
-                            //bounds.extend(markerPos);
-
-                        }
+                let item = poiList[i];
+                if (item.AddressInfo != null && item.AddressInfo.Latitude != null && item.AddressInfo.Longitude != null) {
+                    if (!this.markerList.containsKey(item.ID)) {
+                        markersToAdd.push(item);
                     }
-                    */
                 }
             }
+            /*  if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
+                  let poi = poiList[i];
+
+                  let addMarker = true;
+                  if (this.markerList != null) {
+                      //find if this poi already exists in the marker list
+                      if (this.markerList.containsKey(poi.ID)) {
+                          addMarker = false;
+                      }
+                  }
+
+                  if (addMarker) {
+                      var poiLevel = Utils.getMaxLevelOfPOI(poi);
+
+                      var iconURL = null;
+                      var animation = null;
+                      var shadow = null;
+                      var markerImg = null;
+
+                      iconURL = window.location.href.replace(/\/([^\/]+)$/, "") + "assets/images/icons/map/level" + poiLevel;
+
+                      if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
+                          iconURL += "_private";
+                      } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
+                          iconURL += "_nonoperational";
+                      } else {
+                          iconURL += "_operational";
+                      }
+
+                      iconURL += "_icon.png";
+
+                      var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
+                      if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
+                      if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
+                      if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
+
+                      //cache marker details
+                      this.markerList.setValue(poi.ID, poi.ID);
+                      this.markerAllocCount++;
+                      markersAdded++;
+                      var newMarker = map.addMarker({
+                          'position': { lat: poi.AddressInfo.Latitude, lng: poi.AddressInfo.Longitude },
+                          'title': markerTooltip,
+                          'snippet': "View details",
+                          'iconData': {
+                              'url': iconURL,
+                              'size': {
+                                  'width': 30,
+                                  'height': 50
+                              }
+                          }
+                      }, (marker) => {
+                          //show full details when info window tapped
+                          //marker.addEventListener(plugin.google.maps.event.INFO_CLICK, function () {
+                          marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, function () {
+                              var markerTitle = marker.getTitle();
+                              var poiId = markerTitle.substr(4, markerTitle.indexOf(":") - 4);
+
+                              if (console) console.log("POI clicked:" + poiId);
+                              _providerContext.events.publish('ocm:poi:selected', { poi: null, poiId: poiId });
+
+                          });
 
 
-            let baseArray: BaseArrayClass<any> = new BaseArrayClass<any>(poiList);
+                      });
 
-            baseArray.mapAsync((poi: any, callback: (marker: Marker) => void) => {
+                      //bounds.extend(markerPos);
 
-                var poiLevel = Utils.getMaxLevelOfPOI(poi);
+                  }
+              }
+              */
 
-                var iconURL = null;
-                var animation = null;
-                var shadow = null;
-                var markerImg = null;
+              let useClustering = false;
 
-                iconURL = window.location.href.replace(/\/([^\/]+)$/, "") + "assets/images/icons/map/level" + poiLevel;
 
-                if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
-                    iconURL += "_private";
-                } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
-                    iconURL += "_nonoperational";
+            if (markersToAdd.length > 0) {
+
+                if (useClustering)
+                {
+                    let markerCluster: MarkerCluster = this.map.addMarkerClusterSync({
+                        markers: markersToAdd,
+                        icons: [
+                            {
+                              min: 3,
+                              max: 9,
+                              url: "./assets/markercluster/small.png",
+                              label: {
+                                color: "white"
+                              }
+                            },
+                            {
+                              min: 10,
+                              url: "./assets/markercluster/large.png",
+                              label: {
+                                color: "white"
+                              }
+                            }
+                          ]
+                    });
+
                 } else {
-                    iconURL += "_operational";
-                }
+                    let baseArray: BaseArrayClass<any> = new BaseArrayClass<any>(markersToAdd);
 
-                iconURL += "_icon.png";
+                    baseArray.mapAsync((poi: any, callback: (marker: Marker) => void) => {
+    
+                        var poiLevel = Utils.getMaxLevelOfPOI(poi);
+    
+                        var iconURL = null;
 
-                var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
-                if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
-                if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
-                if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
-
-                let opt = {
-                    'position': { lat: poi.AddressInfo.Latitude, lng: poi.AddressInfo.Longitude },
-                    'title': poi.Title,
-                    'snippet': "View details",
-                    'iconData': {
-                        'url': iconURL,
-                        'size': {
-                            'width': 30,
-                            'height': 50
+                        iconURL = window.location.href.replace(/\/([^\/]+)$/, "") + "/assets/images/icons/map/level" + poiLevel;
+    
+                        if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
+                            iconURL += "_private";
+                        } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
+                            iconURL += "_nonoperational";
+                        } else {
+                            iconURL += "_operational";
                         }
-                    }
-                };
+    
+                        iconURL += "_icon.png";
+    
+                        var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
+                        if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
+                        if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
+                        if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
+    
+                        let opt = {
+                            position: { lat: poi.AddressInfo.Latitude, lng: poi.AddressInfo.Longitude },
+                            title: poi.Title,
+                            icon: {
+                                url: iconURL,
+                                size: {
+                                    width: 34,
+                                    height: 50
+                                }
+                            } 
+                        };
+                        /*
+                            */
+    
+                        map.addMarker(opt).then((m=>{
+                            m.poi = poi;
+                            m.on(GoogleMapsEvent.MARKER_CLICK).subscribe((poiClicked)=>{
+                                this.events.publish('ocm:poi:selected', { poi: poiClicked[1].poi, poiId: poiClicked[1].poi.ID });
+                            });
+                          
+                        }));
+    
+                    }).then((markers: Marker[]) => {
+                        //  console.log(markers);
 
-                map.addMarker(opt).then(callback);
-
-                }).then((markers: Marker[]) => {
-                 console.log(markers);
-            });
-            this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.values.length + " [alloc:" + this.markerAllocCount + "]");
+                        markersAdded= markers.length;
+                        this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.values.length + " [alloc:" + this.markerAllocCount + "]");
+                    });
+                   
+                }
+              
+            }
         }
 
-        var uiContext = this;
-        //zoom to bounds of markers
 
         this.refreshMapLayout();
     }
+
     refreshMapLayout() {
         /* if (this.map != null) {
-             this.map.refreshLayout();
-             this.logging.log("refreshed map layout, focusing map");
-             this.focusMap();
-         }*/
+              this.map.trigger(GoogleMapsEvent.);
+              this.logging.log("refreshed map layout, focusing map");
+              this.focusMap();
+          }*/
     }
 
     setMapCenter(pos: GeoPosition) {

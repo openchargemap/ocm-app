@@ -1,29 +1,10 @@
 <div *ngIf="poi!=null && poi.AddressInfo!=null">
   <div class="banner">
 
-   <div padding>
-    <ion-segment [(ngModel)]="selectedTab">
-      <ion-segment-button value="location" selected>
-        <ion-label>
-         Details
-      </ion-label>
-      </ion-segment-button>
+    <ion-toolbar>
+      <ion-buttons slot="start">
 
-      <ion-segment-button value="comments">
-        <ion-label>Comments ({{poi.UserComments?poi.UserComments.length:0}})</ion-label>
-
-      </ion-segment-button>
-      <ion-segment-button value="media">
-        <ion-label> Photos ({{poi.MediaItems?poi.MediaItems.length:0}})</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </div>
-
-    <div *ngIf="selectedTab=='location'" class="address-details">
-
-      <ion-toolbar>
-        <ion-buttons slot="start">
-
+        <ng-container *ngIf="selectedTab=='location'">
           <ion-button size="small" (click)="addFavourite()" title="Add to Favourites">
             <ion-icon name="star" slot="start"></ion-icon>
             <ion-label>Save</ion-label>
@@ -32,15 +13,55 @@
             <ion-icon name="create" slot="start"></ion-icon>
             <ion-label>Edit</ion-label>
           </ion-button>
-        </ion-buttons>
+        </ng-container>
+      </ion-buttons>
 
-        <ion-buttons slot="end">
+      <ion-buttons slot="end">
+
+        <ng-container *ngIf="selectedTab=='location'">
           <ion-button (click)="launchNavigation()">
             <ion-icon name="navigate" slot="start"></ion-icon>
             <ion-label>Navigate</ion-label>
           </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
+        </ng-container>
+
+        <ng-container *ngIf="selectedTab=='comments'">
+          <ion-button size="small" (click)="addComment()" title="Add a comment or charging check-in">
+            <ion-icon name="chatbubbles" slot="start"></ion-icon>
+            <ion-label>Add Comment</ion-label>
+          </ion-button>
+        </ng-container>
+
+        <ng-container *ngIf="selectedTab=='media'">
+          <ion-button size="small" (click)="addMedia()" title="Add a Photo">
+            <ion-icon name="camera" slot="start"></ion-icon>
+            <ion-label> Add Photo</ion-label>
+          </ion-button>
+        </ng-container>
+      </ion-buttons>
+    </ion-toolbar>
+
+    <div padding>
+      <ion-segment [(ngModel)]="selectedTab">
+        <ion-segment-button value="location" selected>
+          <ion-label>
+            Details
+          </ion-label>
+        </ion-segment-button>
+
+        <ion-segment-button value="comments">
+          <ion-label>Comments ({{poi.UserComments?poi.UserComments.length:0}})</ion-label>
+
+        </ion-segment-button>
+        <ion-segment-button value="media">
+          <ion-label> Photos ({{poi.MediaItems?poi.MediaItems.length:0}})</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <div *ngIf="selectedTab=='location'" class="address-details">
+
+     
       <ion-card *ngIf="poi.AddressInfo">
 
         <ion-card-header>
@@ -184,17 +205,6 @@
 
     <div *ngIf="selectedTab=='comments'">
 
-      <ion-toolbar>
-        <ion-buttons slot="end">
-          <ion-button size="small" (click)="addComment()" title="Add a comment or charging check-in">
-            <ion-icon name="chatbubbles" slot="start"></ion-icon>
-            <ion-label>Add Comment</ion-label>
-          </ion-button>
-
-        </ion-buttons>
-
-      </ion-toolbar>
-
       <ng-container *ngIf="poi._hasComments==true">
         <ion-card *ngFor="let item of poi.UserComments">
           <ion-item>
@@ -233,19 +243,6 @@
 
     </div>
     <div *ngIf="selectedTab=='media'">
-
-      <ion-toolbar>
-        <ion-buttons slot="end">
-
-          <ion-button size="small" (click)="addMedia()" title="Add a Photo">
-            <ion-icon name="camera" slot="start"></ion-icon>
-            <ion-label> Add Photo</ion-label>
-          </ion-button>
-
-
-        </ion-buttons>
-
-      </ion-toolbar>
 
 
       <div *ngIf="poi._hasPhotos">

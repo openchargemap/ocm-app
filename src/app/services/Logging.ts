@@ -1,5 +1,6 @@
 
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 export enum LogLevel {
     VERBOSE,
@@ -15,6 +16,10 @@ export class Logging {
     public logLevel: LogLevel;
     constructor() {
         this.logLevel = LogLevel.VERBOSE;
+
+        if (environment.production){
+            this.logLevel = LogLevel.ERROR;
+        }
     }
     public log(msg: string, level: LogLevel = LogLevel.VERBOSE) {
         if (console && console.log && this.logLevel >= level) {

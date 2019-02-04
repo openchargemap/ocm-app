@@ -67,6 +67,15 @@ export class MapKitMapProvider implements IMapProvider {
 
         this.map = new mapkit.Map(mapCanvasID);
 
+        // set cluster formatting
+        this.map.annotationForCluster = function (clusterAnnotation) {
+          if (clusterAnnotation.clusteringIdentifier === "poi") {
+            clusterAnnotation.title = "Charging Location";
+            clusterAnnotation.subtitle = clusterAnnotation.memberAnnotations
+              .reduce((total, clusterAnnotation) => total + clusterAnnotation.population, 0);
+          }
+        };
+
         this.mapReady = true;
 
         mapkit.addEventListener("configuration-change", (event) => {
@@ -171,7 +180,8 @@ export class MapKitMapProvider implements IMapProvider {
               let marker = new mapkit.ImageAnnotation(coordinates, {
                 title: markerTooltip,
                 size: { width: 34, height: 50 },
-                url: { 1: iconURL }
+                url: { 1: iconURL },
+                clusteringIdentifier: "poi"
               });
 
 
@@ -193,6 +203,9 @@ export class MapKitMapProvider implements IMapProvider {
       }
 
       if (newMarkers.length > 0) {
+
+
+
         this.map.addAnnotations(newMarkers);
 
 

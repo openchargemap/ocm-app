@@ -59,20 +59,20 @@
       },
       "mediaItems": {
         "sectionTitle": "Photos",
-        "addPrompt": "Upload your own photos for this location"
+        "addPrompt": "If you have used this charging location please share a photo."
       },
       "metadataValues": {
         "sectionTitle": "Additional Tags"
       },
       "commentsAndRatings": {
         "sectionTitle": "Comments and Ratings",
-        "zeroComments": "No user comments submitted",
+        "zeroComments": "No check-ins or comments yet. If you have used this charging location please add a comment.",
         "addPrompt": "Add a comment or quick status update"
       },
       "equipment": {
         "sectionTitle": "Equipment Details",
         "connectionType": "Connection Type",
-        "powerKW": "Max Power (KW)",
+        "powerKW": "Max Power (kW)",
         "powerLevel": "Level",
         "quantity": "Quantity",
         "supplyType": "Supply Type",

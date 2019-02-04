@@ -13,15 +13,12 @@ import { Observable } from 'rxjs/Observable';
 import { GoogleMapsNative } from './providers/GoogleMapsNative';
 import { GoogleMapsWeb } from './providers/GoogleMapsWeb';
 import { LeafletMap } from './providers/LeafletMap';
+import { MapKitMapProvider } from './providers/MapKit';
 import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
 import { Events } from '@ionic/angular'; //TODO remove dependency on ionic here?
-import { MapKitMapProvider } from './providers/MapKit';
 
 declare var plugin: any;
 declare var google: any;
-
-
-
 
 /** Mapping - provides a way to render to various mapping APIs
  * @module Mapping
@@ -149,7 +146,7 @@ export class Mapping implements IMapManager {
         }
     }
 
-    updateSearchPosMarker(searchPos) {
+/*    updateSearchPosMarker(searchPos) {
         //skip search marker if using live map viewport bounds querying
         if (this.parentAppContext.appConfig.enableLiveMapQuerying) return;
 
@@ -239,6 +236,7 @@ export class Mapping implements IMapManager {
             }
         }
     }
+    */
 
     /**
     * Used by map provider as callback when a zoom or pan/drag has been performed
