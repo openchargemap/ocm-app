@@ -259,45 +259,44 @@ export class GoogleMapsNative implements IMapProvider {
               }
               */
 
-              let useClustering = false;
+            let useClustering = false;
 
 
             if (markersToAdd.length > 0) {
 
-                if (useClustering)
-                {
+                if (useClustering) {
                     let markerCluster: MarkerCluster = this.map.addMarkerClusterSync({
                         markers: markersToAdd,
                         icons: [
                             {
-                              min: 3,
-                              max: 9,
-                              url: "./assets/markercluster/small.png",
-                              label: {
-                                color: "white"
-                              }
+                                min: 3,
+                                max: 9,
+                                url: "./assets/markercluster/small.png",
+                                label: {
+                                    color: "white"
+                                }
                             },
                             {
-                              min: 10,
-                              url: "./assets/markercluster/large.png",
-                              label: {
-                                color: "white"
-                              }
+                                min: 10,
+                                url: "./assets/markercluster/large.png",
+                                label: {
+                                    color: "white"
+                                }
                             }
-                          ]
+                        ]
                     });
 
                 } else {
                     let baseArray: BaseArrayClass<any> = new BaseArrayClass<any>(markersToAdd);
 
                     baseArray.mapAsync((poi: any, callback: (marker: Marker) => void) => {
-    
+
                         var poiLevel = Utils.getMaxLevelOfPOI(poi);
-    
+
                         var iconURL = null;
 
                         iconURL = window.location.href.replace(/\/([^\/]+)$/, "") + "/assets/images/icons/map/level" + poiLevel;
-    
+
                         if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
                             iconURL += "_private";
                         } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
@@ -305,14 +304,14 @@ export class GoogleMapsNative implements IMapProvider {
                         } else {
                             iconURL += "_operational";
                         }
-    
+
                         iconURL += "_icon.png";
-    
+
                         var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
                         if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
                         if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
                         if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
-    
+
                         let opt = {
                             position: { lat: poi.AddressInfo.Latitude, lng: poi.AddressInfo.Longitude },
                             title: poi.Title,
@@ -322,28 +321,27 @@ export class GoogleMapsNative implements IMapProvider {
                                     width: 34,
                                     height: 50
                                 }
-                            } 
+                            }
                         };
-                        /*
-                            */
-    
-                        map.addMarker(opt).then((m=>{
+
+
+                        map.addMarker(opt).then((m => {
                             m.poi = poi;
-                            m.on(GoogleMapsEvent.MARKER_CLICK).subscribe((poiClicked)=>{
+                            m.on(GoogleMapsEvent.MARKER_CLICK).subscribe((poiClicked) => {
                                 this.events.publish('ocm:poi:selected', { poi: poiClicked[1].poi, poiId: poiClicked[1].poi.ID });
                             });
-                          
+
                         }));
-    
+
                     }).then((markers: Marker[]) => {
                         //  console.log(markers);
 
-                        markersAdded= markers.length;
+                        markersAdded = markers.length;
                         this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.values.length + " [alloc:" + this.markerAllocCount + "]");
                     });
-                   
+
                 }
-              
+
             }
         }
 

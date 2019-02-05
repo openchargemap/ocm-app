@@ -10,3 +10,10 @@ Build and test:
 > npm install
 
 > ionic serve
+
+
+Platforn Specifics
+- Web uses the MapKitJS mapping provider
+- Android and iOS use the Google Maps Native mapping provider
+    - iOS and Android versions historically have different bundle ids.
+    - iOS fresh setup: <ios>/pod deintegrate, pod install

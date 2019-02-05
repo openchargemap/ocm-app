@@ -14,7 +14,7 @@ import { Mapping } from './../../services/mapping/Mapping';
 import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
 
-import { Component, OnInit, NgZone, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, NgZone, ChangeDetectorRef, ViewChild, AfterViewInit } from '@angular/core';
 import { NavController, Events, Platform, ModalController } from '@ionic/angular';
 import { MappingAPI } from '../../services/mapping/interfaces/mapping';
 import { PlaceSearch } from '../../components/place-search/place-search';
@@ -25,7 +25,7 @@ import { PlaceSearchResult } from '../../model/AppModels';
   styleUrls: ['./search.scss']
 })
 
-export class SearchPage implements OnInit {
+export class SearchPage implements OnInit, AfterViewInit {
 
   private mapDisplayed: boolean = false;
   private debouncedRefreshResults: any;
@@ -470,7 +470,7 @@ export class SearchPage implements OnInit {
 
   search(ev) {
     //alert(ev);
-    this.placeSearchMapPOI.getPlacesAutoComplete(ev, 'poiSearch')
+    this.placeSearchMapPOI.getPlacesAutoComplete(ev, 'poiSearch');
   }
 
   locateUser(): Promise<any> {
