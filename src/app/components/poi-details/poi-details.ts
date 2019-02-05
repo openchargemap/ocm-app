@@ -26,6 +26,10 @@ export class PoiDetails implements OnInit {
 
   hasNavBar: boolean = false;
 
+  backdropImage: string;
+  avgRating: number;
+  connectionSummary: string;
+
   constructor(
     public appManager: AppManager,
     public nav: NavController,
@@ -44,7 +48,7 @@ export class PoiDetails implements OnInit {
 
 
     if (this.poi == null || this.poi.AddressInfo == null) {
-      alert('Got null POI');
+      // alert('Got null POI');
       return;
     }
     this.selectedTab = 'location';
@@ -55,14 +59,43 @@ export class PoiDetails implements OnInit {
       for (let i of this.poi.MediaItems) {
         i.ItemMediumURL = i.ItemThumbnailURL.replace('.thmb.', '.medi.');
       }
+      this.backdropImage = this.poi.MediaItems[this.poi.MediaItems.length-1].ItemThumbnailURL.replace('.thmb.', '.medi.');
     } else {
       this.poi._hasPhotos = false;
+      this.backdropImage = null;
     }
 
     if (this.poi.UserComments != null && this.poi.UserComments.length > 0) {
       this.poi._hasComments = true;
+
+      try {
+        let ratings = this.poi.UserComments.filter(u => u.Rating > 0);
+        if (ratings.length > 0) {
+          let sum = 0;
+
+          for (let r of ratings) sum += r.Rating;
+
+          this.avgRating = sum / ratings.length;
+        } else {
+          this.avgRating = null;
+        }
+      } catch{ }
+
+
     } else {
       this.poi._hasComments = false;
+    }
+
+    if (this.poi.Connections && this.poi.Connections.length > 0) {
+      let summary = ""
+      for (let c of this.poi.Connections) {
+        if (summary.indexOf(c.ConnectionType.Title) == -1) {
+          summary += (summary != "" ? ", " : "") + c.ConnectionType.Title;
+
+        }
+      }
+      this.connectionSummary = summary;
+
     }
   }
 
@@ -114,7 +147,7 @@ export class PoiDetails implements OnInit {
   }
 
   async addComment() {
-    if (this.appManager.isUserAuthenticated()) {
+    if (this.appManager.isUserAuthenticated(true)) {
 
       await this.continueAddComment();
 
@@ -125,7 +158,7 @@ export class PoiDetails implements OnInit {
       });
 
       modal.onDidDismiss().then(async () => {
-        if (this.appManager.isUserAuthenticated()) {
+        if (this.appManager.isUserAuthenticated(true)) {
           await this.continueAddComment();
         }
 
@@ -155,7 +188,7 @@ export class PoiDetails implements OnInit {
   }
 
   async addMedia() {
-    if (this.appManager.isUserAuthenticated()) {
+    if (this.appManager.isUserAuthenticated(true)) {
 
       await this.continueAddMedia();
 
@@ -166,7 +199,7 @@ export class PoiDetails implements OnInit {
       });
 
       modal.onDidDismiss().then(async () => {
-        if (this.appManager.isUserAuthenticated()) {
+        if (this.appManager.isUserAuthenticated(true)) {
           await this.continueAddMedia();
         }
 

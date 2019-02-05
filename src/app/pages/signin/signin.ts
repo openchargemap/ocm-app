@@ -56,6 +56,9 @@ export class SignInPage {
             // signed in OK, save response and return to main app
             localStorage.setItem('authResponse', JSON.stringify(this.appManager.api.authResponse));
 
+
+            this.appManager.isUserAuthenticated(true);
+            
             // navigation to main app. TODO: navigate to last requested page (route guard)
             this.modalController.dismiss();
             //this.router.navigateByUrl('/search');

@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { Dictionary } from 'typescript-collections';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
 import { Logging, LogLevel } from './../../Logging';
-import { environment } from '../../../../environments/environment.prod';
+import { environment } from '../../../../environments/environment';
 
 
 declare var mapkit: any;
@@ -103,7 +103,8 @@ export class MapKitMapProvider implements IMapProvider {
     if (this.markerList != null) {
       for (var i = 0; i < this.markerList.size(); i++) {
         if (this.markerList[i]) {
-          this.markerList[i].setMap(null);
+          this.map.removeAnnotation(this.markerList[i]);
+
         }
       }
     }

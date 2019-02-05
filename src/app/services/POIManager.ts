@@ -20,19 +20,31 @@ export class POIManager {
 
   }
 
-  public fetchPOIList(searchParams: POISearchParams) {
+  /**
+   * Perform query and set poiList property to list of results
+   * @param searchParams 
+   */
+  public async refreshPOIList(searchParams: POISearchParams): Promise<number> {
 
     this.isRequestInProgress = true;
 
-    return this.api.fetchPOIListByParam(searchParams).then((results: []) => {
-      this.isRequestInProgress = false;
-      if (results && results.length) this.logging.log('fetched POI list [' + results.length + ']');
-      this.poiList = results;
-      this.events.publish('ocm:poiList:updated');
-    }, (rejected) => {
+    try {
+      let results = await this.api.fetchPOIListByParam(searchParams);
+
       this.isRequestInProgress = false;
 
-    });
+      if (results && results.length) this.logging.log('fetched POI list [' + results.length + ']');
+
+      this.poiList = results;
+
+      this.events.publish('ocm:poiList:updated');
+
+      return this.poiList.length;
+    }
+    catch (rejected) {
+      this.isRequestInProgress = false;
+      return 0;
+    }
   }
 
   public clearResults() {

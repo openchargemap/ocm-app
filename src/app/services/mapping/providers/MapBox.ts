@@ -12,6 +12,7 @@ import { Dictionary } from 'typescript-collections';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
 import { Logging, LogLevel } from './../../Logging';
 import * as mapboxgl from 'mapbox-gl';
+import { environment } from '../../../../environments/environment.prod';
 
 /**Map Provider for MapBox GL JS API
 * @module MapProviders
@@ -54,10 +55,12 @@ export class MapBoxMapProvider implements IMapProvider {
       if (this.map == null) {
         var mapCanvas = document.getElementById(mapCanvasID);
 
-        (<any>mapboxgl).accessToken = 'pk.eyJ1Ijoid2VicHJvZnVzaW9uIiwiYSI6ImNqbzJqYTZ5eDBteXIzd3FzNGJ0ZjFpYzcifQ.b9Sy_pRRDRS_dTSLaB65Kg';
+        (<any>mapboxgl).accessToken = environment.mapBoxToken;
+
         this.map = new mapboxgl.Map({
           container: mapCanvasID,
-          style: 'mapbox://styles/mapbox/streets-v10'
+          style: 'mapbox://styles/mapbox/streets-v10',
+          zoom: 15
         });
 
         this.mapReady = true;
@@ -92,58 +95,31 @@ export class MapBoxMapProvider implements IMapProvider {
             });*/
           }
         });
-        /* if (mapCanvas != null) {
-           (<any>google.maps).visualRefresh = true;
-
-           mapCanvas.style.width = '100%';
-           mapCanvas.style.height = Utils.getClientHeight().toString();
-           this.logging.log("Defaulted map height to " + Utils.getClientHeight());
-           //create map
-           var mapOptions = {
-             zoom: 10,
-             minZoom: mapConfig.minZoomLevel,
-             mapTypeId: google.maps.MapTypeId.ROADMAP,
-             mapTypeControl: true,
-             mapTypeControlOptions: {
-               style: google.maps.MapTypeControlStyle.DEFAULT,
-               position: google.maps.ControlPosition.BOTTOM_LEFT,
-               mapTypeIds: ['roadmap', 'terrain', 'satellite']
-             },
-             zoomControl: true,
-             zoomControlOptions: {
-               style: google.maps.ZoomControlStyle.DEFAULT,
-               position: google.maps.ControlPosition.BOTTOM_LEFT
-             },
-
-             streetViewControl: true,
-             streetViewControlOptions: {
-               position: google.maps.ControlPosition.BOTTOM_LEFT
-             }
-           };
-
-           this.map = new google.maps.Map(mapCanvas, mapOptions);
-
-           //TODO: events for map manipulation to perform search
-           var mapProviderContext = this;
-           google.maps.event.addListener(this.map, 'dragend', function () {
-             mapProviderContext.events.publish('ocm:mapping:dragend');
-           });
-
-           google.maps.event.addListener(this.map, 'zoom_changed', function () {
-             mapProviderContext.events.publish('ocm:mapping:zoom');
-           });
-
-           google.maps.event.addListenerOnce(this.map, 'idle', function () {
-             mapProviderContext.events.publish('ocm:mapping:ready');
-           });
-
-           this.mapReady = true;
-
-           //this.events.publish('ocm:mapping:ready');
+        /*
+  
+             this.map = new google.maps.Map(mapCanvas, mapOptions);
+  
+             //TODO: events for map manipulation to perform search
+             var mapProviderContext = this;
+             google.maps.event.addListener(this.map, 'dragend', function () {
+               mapProviderContext.events.publish('ocm:mapping:dragend');
+             });
+  
+             google.maps.event.addListener(this.map, 'zoom_changed', function () {
+               mapProviderContext.events.publish('ocm:mapping:zoom');
+             });
+  
+             google.maps.event.addListenerOnce(this.map, 'idle', function () {
+               mapProviderContext.events.publish('ocm:mapping:ready');
+             });
+  
+             this.mapReady = true;
+  
+             //this.events.publish('ocm:mapping:ready');
+           }
          }
-       }
-
-       */
+  
+         */
 
 
       }
@@ -159,7 +135,9 @@ export class MapBoxMapProvider implements IMapProvider {
     if (this.markerList != null) {
       for (var i = 0; i < this.markerList.size(); i++) {
         if (this.markerList[i]) {
-          this.markerList[i].setMap(null);
+          try {
+            this.markerList[i].remove();
+          } catch{ }
         }
       }
     }
@@ -190,78 +168,58 @@ export class MapBoxMapProvider implements IMapProvider {
       //render poi markers
       var poiCount = poiList.length;
       for (var i = 0; i < poiList.length; i++) {
-        if (poiList[i].AddressInfo != null) {
-          if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-            var poi = poiList[i];
+        if (poiList[i].AddressInfo != null && poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
 
-            let addMarker = true;
-            if (!clearMarkersOnRefresh && this.markerList != null) {
-              // find if this poi already exists in the marker list
-              if (this.markerList.containsKey(poi.ID)) {
-                addMarker = false;
+          var poi = poiList[i];
 
-                // set marker scale based on zoom?
-                // var m = this.markerList.getValue(poi.ID);
-                // if (m.set())
-              }
-            }
-
-            if (addMarker) {
-
-              var iconURL = null;
-              var animation = null;
-              var shadow = null;
-              var markerImg = null;
-
-              iconURL = Utils.getIconForPOI(poi);
-
-              markerImg = {
-                url: iconURL,
-                size: new google.maps.Size(68, 100.0),
-
-                anchor: new google.maps.Point(15, 45),
-                scaledSize: new google.maps.Size(34, 50)
-
-              };
-
-              var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
-              if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
-
-              if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
-
-              var newMarker = new mapboxgl.Marker()
-                .setLngLat([poi.AddressInfo.Longitude, poi.AddressInfo.Latitude])
-                .addTo(map);
-              /* {
-                position: new google.maps.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude),
-                map: map,
-                icon: markerImg != null ? markerImg : iconURL,
-                title: markerTooltip
-              });*/
-
-              // newMarker.poi = poi;
-              var markerElement =
-                newMarker.getElement();
-
-              (<any>markerElement).poi = poi;
-              markerElement.addEventListener('click', (el) => {
-                const clickedPOI = (<any>el.currentTarget).poi;
-                this.events.publish('ocm:poi:selected', { poi: clickedPOI, poiId: clickedPOI.ID });
-              });
-              /* google.maps.event.addListener(newMarker, 'click', function () {
-                 // broadcast details of selected POI
-                 if (console) console.log("POI clicked:" + this.poi.ID);
-
-                 mapProviderContext.events.publish('ocm:poi:selected', { poi: this.poi, poiId: this.poi.ID });
-
-               });*/
-
-              bounds.extend(newMarker.getLngLat());
-
-              this.markerList.setValue(poi.ID, newMarker);
-              markersAdded++;
+          let addMarker = true;
+          if (!clearMarkersOnRefresh && this.markerList != null) {
+            // find if this poi already exists in the marker list
+            if (this.markerList.containsKey(poi.ID)) {
+              addMarker = false;
             }
           }
+
+          if (addMarker) {
+
+            let iconURL = Utils.getIconForPOI(poi);
+
+            var icon = document.createElement("img");
+            icon.src = iconURL;
+            icon.width = 34;
+            icon.height = 50;
+
+            let markerOptions = {
+              element: icon
+            };
+
+            var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
+            if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
+
+            if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
+
+            let newMarker = new mapboxgl.Marker(markerOptions)
+              .setLngLat([poi.AddressInfo.Longitude, poi.AddressInfo.Latitude])
+              .addTo(map);
+
+
+            (<any>newMarker).poi = poi;
+
+            let markerElement = newMarker.getElement();
+
+            (<any>markerElement).poi = poi;
+            markerElement.addEventListener('click', (el) => {
+              const clickedPOI = (<any>el.currentTarget).poi;
+              this.events.publish('ocm:poi:selected', { poi: clickedPOI, poiId: clickedPOI.ID });
+            });
+
+
+            bounds.extend(newMarker.getLngLat());
+
+            this.markerList.setValue(poi.ID, newMarker);
+            markersAdded++;
+          }
+
         }
       }
 
@@ -296,7 +254,7 @@ export class MapBoxMapProvider implements IMapProvider {
 
       setTimeout(() => {
         this.logging.log("MapBoxGL: refreshMapLayout", LogLevel.VERBOSE);
-        //this.map.resize();
+        this.map.resize();
 
       }, 200);
 
@@ -358,8 +316,8 @@ export class MapBoxMapProvider implements IMapProvider {
       var bounds = new Array<GeoLatLng>();
 
       var mapBounds = this.map.getBounds();
-      bounds.push(new GeoLatLng(mapBounds.getNorthEast().lat, mapBounds.getNorthEast().lng));
       bounds.push(new GeoLatLng(mapBounds.getSouthWest().lat, mapBounds.getSouthWest().lng));
+      bounds.push(new GeoLatLng(mapBounds.getNorthEast().lat, mapBounds.getNorthEast().lng));
 
 
       observer.next(bounds);

@@ -22,7 +22,7 @@ export class ProfilePage {
 
         this.userProfile = this.appManager.getUserProfile();
 
-        if (this.userProfile == null || !this.appManager.isUserAuthenticated()) {
+        if (this.userProfile == null || !this.appManager.isUserAuthenticated(true)) {
             this.showSignInModal();
         } else {
             this.refreshProfileView();

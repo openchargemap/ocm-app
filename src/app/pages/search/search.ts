@@ -1,4 +1,4 @@
-import { environment } from './../../../environments/environment.prod';
+import { environment } from './../../../environments/environment';
 import { AppConfig } from './../../core/AppConfig';
 import { SettingsPage } from './../settings/settings';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,12 +13,11 @@ import { JourneyManager } from './../../services/JourneyManager';
 import { Mapping } from './../../services/mapping/Mapping';
 import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
-
-import { Component, OnInit, NgZone, ChangeDetectorRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, AfterViewInit } from '@angular/core';
 import { NavController, Events, Platform, ModalController } from '@ionic/angular';
-import { MappingAPI } from '../../services/mapping/interfaces/mapping';
 import { PlaceSearch } from '../../components/place-search/place-search';
 import { PlaceSearchResult } from '../../model/AppModels';
+
 
 @Component({
   templateUrl: 'search.html',
@@ -226,7 +225,7 @@ export class SearchPage implements OnInit, AfterViewInit {
       this.mapDisplayed = true;
     }
 
-    this.mapping.updateMapSize();
+  //  this.mapping.updateMapSize();
   }
 
   getIconForPOI(poi) {
@@ -251,7 +250,6 @@ export class SearchPage implements OnInit, AfterViewInit {
     } else {
       this.logging.log('Refreshing Results..', LogLevel.VERBOSE);
     }
-
 
 
     // this.appState.isSearchInProgress = true;
@@ -367,15 +365,15 @@ export class SearchPage implements OnInit, AfterViewInit {
     // TODO: use stack of requests as may be multiple in sync
     this.appManager.isRequestInProgress = true;
 
-    this.poiManager.fetchPOIList(params).then(() => {
+    this.poiManager.refreshPOIList(params).then((numResults) => {
 
       this.appManager.isRequestInProgress = false;
       this.initialResultsShown = true;
 
+      if (numResults>= params.maxResults){
+        this.appManager.showToastNotification("A maximum of "+ numResults + " results are returned per search. Zoom in for details.")
+      }
     });
-
-
-
   }
 
   viewPOIDetails(data: any) {

@@ -14,6 +14,7 @@ Build and test:
 
 Platforn Specifics
 - Web uses the MapKitJS mapping provider
+    - ionic cordova build browser --prod
 - Android and iOS use the Google Maps Native mapping provider
     - iOS and Android versions historically have different bundle ids.
     - iOS fresh setup: <ios>/pod deintegrate, pod install

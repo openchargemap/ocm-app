@@ -2,7 +2,7 @@ import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
 import { SearchSettings } from './../../model/SearchSettings';
 import { Component } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, Events } from '@ionic/angular';
 
 @Component({
   templateUrl: 'settings.html'
@@ -23,7 +23,8 @@ export class SettingsPage {
   constructor(
     public appManager: AppManager, 
     public poiManager: POIManager, 
-    private modalController:ModalController
+    private modalController:ModalController,
+    private events: Events
     ) {
 
     this.searchSettings = appManager.searchSettings;
@@ -52,12 +53,13 @@ export class SettingsPage {
     if (this.searchSettings.MinPowerKW == 1) this.searchSettings.MinPowerKW = null;
     if (this.searchSettings.MaxPowerKW == 500) this.searchSettings.MaxPowerKW = null;
 
-    //save search settings
+    // save search settings
     this.appManager.searchSettings = this.searchSettings;
     this.appManager.saveSearchSettings();
 
-    //TODO: publish event to refresh results based on new criteria
-    this.poiManager.clearResults();
+    // publish event to refresh results based on new criteria
+    this.events.publish("ocm:poiList:cleared");
+    
   }
 
   onLanguageChange() {

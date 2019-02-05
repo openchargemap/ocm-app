@@ -10,6 +10,8 @@ import { SignInPage } from "./pages/signin/signin";
 import { JourneysPage } from "./pages/journeys/journeys";
 import { AppManager } from "./services/AppManager";
 import { ProfilePage } from "./pages/profile/profile";
+import { Logging } from "./services/Logging";
+import { environment } from "../environments/environment";
 
 @Component({
   selector: "app-root",
@@ -32,8 +34,12 @@ export class AppComponent {
     public translate: TranslateService,
     public mapping: Mapping,
     public modalController: ModalController,
-    public appManager: AppManager
+    public appManager: AppManager,
+    public logger: Logging
   ) {
+
+    this.logger.log("Environment: "+environment.name);
+
     this.initializeApp();
   }
 
@@ -95,6 +101,7 @@ export class AppComponent {
     modal.onDidDismiss().then(data => {
       // focus map again..
       this.mapping.focusMap();
+      this.appManager.isUserAuthenticated(true);
     });
 
     await modal.present();

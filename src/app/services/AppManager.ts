@@ -34,7 +34,9 @@ export class AppManager {
 
   public isRequestInProgress: boolean = false;
 
-  public title:string ="Open Charge Map";
+  public title: string = "Open Charge Map";
+
+  public _isUserAuthenticated?: boolean = null;
 
   constructor(
     public http: HttpClient,
@@ -130,7 +132,7 @@ export class AppManager {
     }
 
     if (this.getQueryVariable('title')) {
-      this.title =  this.getQueryVariable('title')[0];
+      this.title = this.getQueryVariable('title')[0];
     }
   }
   /**
@@ -140,18 +142,21 @@ export class AppManager {
     this.searchSettings.CheckForActiveFilters();
     localStorage.setItem('searchSettings', JSON.stringify(this.searchSettings));
   }
+
   public getLanguages(): Array<string> {
     return this.translateService.getLangs();
   }
+
   public setLanguage(languageCode: string) {
     this.logging.log('Changing language: ' + languageCode);
     this.translateService.use(languageCode);
   }
+
   public initAppManager() {
     this.initAuthFromStorage();
 
     // if user authenticated and submission queue active and pending then start processing queue again
-    if (this.isUserAuthenticated()) {
+    if (this.isUserAuthenticated(true)) {
       if (this.enableSubmissionQueue) {
         if (this.submissionQueue != null) {
           if (this.submissionQueue.hasPendingItems()) {
@@ -180,15 +185,20 @@ export class AppManager {
     }
   }
 
-  public isUserAuthenticated(): boolean {
+  public isUserAuthenticated(recheckAuth: boolean = false): boolean {
+
+    if (recheckAuth==false && this._isUserAuthenticated != null) return this._isUserAuthenticated;
+
+    this._isUserAuthenticated = false;
+
     if (this.api.authResponse != null) {
       const jwt = this.api.authResponse;
       if (!this.jwtHelper.isTokenExpired(jwt.Data.access_token)) {
-        return true;
+        this._isUserAuthenticated = true;
       }
     }
 
-    return false;
+    return this._isUserAuthenticated;
   }
 
   public getCurrentAuthToken(): string {
@@ -210,6 +220,7 @@ export class AppManager {
   public signOutCurrentUser() {
     localStorage.removeItem('authResponse');
     this.api.authResponse = null;
+    this._isUserAuthenticated = false;
   }
 
   public submitComment(data: any) {
@@ -266,7 +277,7 @@ export class AppManager {
    * Launch an OCM resource URL with optional authentication token
    */
   public launchOCMWebPage(url: string) {
-    if (this.isUserAuthenticated) {
+    if (this.isUserAuthenticated(true)) {
       if (url.indexOf('?') === -1) {
         url += '?';
       }

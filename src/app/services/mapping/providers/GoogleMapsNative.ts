@@ -414,8 +414,9 @@ export class GoogleMapsNative implements IMapProvider {
             if (mapBounds != null) {
                 var bounds = new Array<GeoLatLng>();
                 // this.logging.log(JSON.stringify(mapBounds));
-                bounds.push(new GeoLatLng(mapBounds.northeast.lat, mapBounds.northeast.lng));
+          
                 bounds.push(new GeoLatLng(mapBounds.southwest.lat, mapBounds.southwest.lng));
+                bounds.push(new GeoLatLng(mapBounds.northeast.lat, mapBounds.northeast.lng));
 
                 observer.next(bounds);
                 observer.complete();
