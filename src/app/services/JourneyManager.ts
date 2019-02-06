@@ -75,7 +75,7 @@ export class JourneyManager {
         });
     }
 
-    /** Update details of a POI if ti occurs in a jounrey or favourites */
+    /** Update details of a POI if it occurs in a journey or favourites */
     public updateStoredPOI(poi) {
 
         // updated all journeys which use this poi, TODO: this is messy
@@ -116,6 +116,7 @@ export class JourneyManager {
             }
         }
     }
+
     public saveJourneys() {
         // save to local cache, then save to server copy
         let cloneOfJourneys = <Array<Journey>>JSON.parse(JSON.stringify(this.journeys));
@@ -183,7 +184,7 @@ export class JourneyManager {
         if (stageIndex == null) {
             // create new journey stage, then add waypoint
             var newStage: JourneyStage = new JourneyStage();
-            newStage.Title = "Stage " + journey.Stages.length + 1;
+            newStage.Title = "Stage " + (journey.Stages.length + 1);
             newStage.WayPoints.push(waypoint);
             journey.Stages.push(newStage);
         } else {

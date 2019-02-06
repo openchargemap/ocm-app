@@ -84,7 +84,7 @@ export class GoogleMapsNative implements IMapProvider {
                     mapType: GoogleMapsMapTypeId.ROADMAP,
                     controls: {
                         compass: true,
-                        myLocationButton: true,
+                        myLocationButton: false,
                         zoom: true
                     },
                     gestures: {
@@ -94,10 +94,10 @@ export class GoogleMapsNative implements IMapProvider {
                         zoom: true
                     },
                     camera: {
-                        'target': {
-                            "lat": 37.415328,
-                            "lng": -122.076575
-                        },
+                        /* 'target': {
+                             "lat": 37.415328,
+                             "lng": -122.076575
+                         },*/
                         'zoom': 10
                     }
                 }
@@ -155,7 +155,7 @@ export class GoogleMapsNative implements IMapProvider {
         this.logging.log("map:clearing markers");
         if (this.markerList != null) {
             for (var i = 0; i < this.markerList.size(); i++) {
-                if (this.markerList[i] && this.markerList[i] != null) {
+                if (this.markerList[i]) {
                     this.markerList[i].setMap(null);
                 }
             }
@@ -362,9 +362,12 @@ export class GoogleMapsNative implements IMapProvider {
           }*/
     }
 
-    setMapCenter(pos: GeoPosition) {
+    setMapCenter(pos: GeoPosition, zoomLevel?: number) {
         if (this.mapReady) {
-            this.map.setCameraTarget({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+            this.map.moveCamera({
+                target: { lat: pos.coords.latitude, lng: pos.coords.longitude },
+                zoom: zoomLevel ? zoomLevel : null
+            });
         }
     }
 

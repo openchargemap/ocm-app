@@ -88,7 +88,7 @@ export class PlaceSearch implements OnInit {
             this.logging.log("Starting place lookup for:" + keywordForSearch);
             this.searchInProgress = true;
 
-            let searchService = new mapkit.Search({ getUsersLocation: true });
+            let searchService = new mapkit.Search({ getsUserLocation: true });
 
             searchService.search(keywordForSearch, (error, data) => {
                 this.searchInProgress = false;

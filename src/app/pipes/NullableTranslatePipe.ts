@@ -10,6 +10,7 @@ export class NullableTranslatePipe extends TranslatePipe {
 
     }
     transform(query: string, ...args: any[]): any {
+        
         var result = super.transform(query, ...args);
         if (result == query) {
             if (args != null && args[0].default) {

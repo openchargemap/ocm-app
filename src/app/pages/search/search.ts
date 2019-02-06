@@ -18,7 +18,6 @@ import { NavController, Events, Platform, ModalController } from '@ionic/angular
 import { PlaceSearch } from '../../components/place-search/place-search';
 import { PlaceSearchResult } from '../../model/AppModels';
 
-
 @Component({
   templateUrl: 'search.html',
   styleUrls: ['./search.scss']
@@ -34,15 +33,16 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   private searchOnDemand: boolean = false;
 
-  poiViewMode: string = 'modal'; // side or modal
+  public poiViewMode: string = 'modal'; // side or modal
+  public sideViewAvailable = false;
+  
   private searchPolyline: string;
   private routePlanningMode: boolean = true;
-  sideViewAvailable = false;
+  
+  public searchKeyword: string = '';
+  public selectedPOI: any;
 
-  searchKeyword: string = '';
-  selectedPOI: any;
-
-  appConfig = new AppConfig();
+  public appConfig = new AppConfig();
 
   @ViewChild(PlaceSearch)
   placeSearchMapPOI: PlaceSearch;
@@ -66,9 +66,7 @@ export class SearchPage implements OnInit, AfterViewInit {
 
     this.mapCanvasID = 'map-canvas';
 
-
     this.mapping.setMapAPI(environment.defaultMapProvider);
-
   }
 
   ionViewDidEnter() {
@@ -80,7 +78,7 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   ionViewWillLeave() {
     // remove input focus from native map
-    this.logging.log('Leavings search page.', LogLevel.VERBOSE);
+    this.logging.log('Leaving search page.', LogLevel.VERBOSE);
     this.mapping.unfocusMap();
   }
 
@@ -129,32 +127,25 @@ export class SearchPage implements OnInit, AfterViewInit {
 
     await this.platform.ready();
 
-    this.debouncedRefreshResults = Utils.debounce(this.refreshResultsAfterMapChange, 1000, false);
+    this.debouncedRefreshResults = Utils.debounce(this.refreshResultsQueryChange, 1000, false);
 
-    this.events.subscribe('ocm:mapping:ready', () => {
+    this.events.subscribe('ocm:mapping:ready', async () => {
+
+      this.logging.log("init map: mapping ready");
+      // on map ready, perform an initial search either a a preset position or the users location
+
       if (!this.initialResultsShown) {
 
         // if start position already set, use that for first search
         if (this.appManager.searchSettings.StartSearchPosition) {
+
           this.searchOnDemand = true;
           this.debouncedRefreshResults();
+
         } else {
 
           // attempt to geolocate user and perform search
-
-          this.locateUser().then(() => {
-            this.logging.log('Search: maps ready, showing first set of results');
-            // this.debouncedRefreshResults();
-
-
-          }, (rejection) => {
-            this.logging.log('Could not locate user..');
-
-          }).catch(() => {
-            this.logging.log('Default search..');
-            this.initialResultsShown = true;
-            this.debouncedRefreshResults();
-          });
+          await this.locateUser();
         }
 
       }
@@ -176,7 +167,6 @@ export class SearchPage implements OnInit, AfterViewInit {
     });
 
     this.events.subscribe('ocm:poi:selected', (args) => {
-      // console.log(JSON.stringify(args));
       this.viewPOIDetails(args);
     });
 
@@ -188,9 +178,6 @@ export class SearchPage implements OnInit, AfterViewInit {
     // if this is cordova, map init can't happen until after platform ready
     // platform ready
     this.mapping.initMap(this.mapCanvasID);
-
-
-    // TODO:centre map to initial location (last search pos?)
 
   }
 
@@ -217,15 +204,12 @@ export class SearchPage implements OnInit, AfterViewInit {
   showPOIListOnMap(listType: string) {
 
     const preferredMapHeight = this.getPreferredMapHeight(null);
-    // TODO: vary by list type
+
     this.mapping.refreshMapView(preferredMapHeight, this.poiManager.poiList, null);
 
     if (!this.mapDisplayed) {
-      // TODO:centre map on first load
       this.mapDisplayed = true;
     }
-
-  //  this.mapping.updateMapSize();
   }
 
   getIconForPOI(poi) {
@@ -243,7 +227,7 @@ export class SearchPage implements OnInit, AfterViewInit {
   }
 
 
-  async refreshResultsAfterMapChange() {
+  async refreshResultsQueryChange() {
     if (!this.searchOnDemand) {
       this.logging.log('Skipping refresh, search on demand disabled..', LogLevel.VERBOSE);
       return;
@@ -251,8 +235,9 @@ export class SearchPage implements OnInit, AfterViewInit {
       this.logging.log('Refreshing Results..', LogLevel.VERBOSE);
     }
 
-
-    // this.appState.isSearchInProgress = true;
+    /**
+     * given a StartSearchPosition a lat/lng centered search will be performed, otherwise we perform a query based on the current map bounds
+     */
 
     const params = new POISearchParams();
     let mapcentre: GeoPosition = null;
@@ -262,7 +247,7 @@ export class SearchPage implements OnInit, AfterViewInit {
       // clear start position after first search
       this.appManager.searchSettings.StartSearchPosition = null;
     } else {
-      mapcentre = await this.mapping.getMapCenter().toPromise();
+      //mapcentre = await this.mapping.getMapCenter().toPromise();
     }
 
     if (mapcentre && mapcentre.coords.latitude == 0 && mapcentre.coords.longitude == 0) {
@@ -274,8 +259,13 @@ export class SearchPage implements OnInit, AfterViewInit {
       params.latitude = mapcentre.coords.latitude;
       params.longitude = mapcentre.coords.longitude;
 
+      params.distance = 25;
+
       // store this as last known map centre
       this.appManager.searchSettings.LastSearchPosition = new GeoLatLng(mapcentre.coords.latitude, mapcentre.coords.longitude);
+    } else {
+      params.latitude = null;
+      params.longitude = null;
     }
 
     /////
@@ -287,24 +277,17 @@ export class SearchPage implements OnInit, AfterViewInit {
 
     // map viewport search on bounding rectangle instead of map centre
 
-    // for first search discard the bounds and search by radius, subsequent searches use map bounds
-    let bounds = await this.mapping.getMapBounds().toPromise();
-
-
-    if (bounds != null && this.initialResultsShown == true) {
-
+    // for sarching around a position, ignore the map bounds and search by radius, subsequent searches use map bounds
+    if (this.appManager.searchSettings.StartSearchPosition == null) {
+      let bounds = await this.mapping.getMapBounds().toPromise();
       params.boundingbox = '(' + bounds[0].latitude +
         ',' + bounds[0].longitude + '),(' + bounds[1].latitude +
         ',' + bounds[1].longitude + ')';
 
       this.logging.log(JSON.stringify(bounds), LogLevel.VERBOSE);
 
-    }
-
-    if (!this.initialResultsShown) {
-      // default search distance initially
-      params.distance = 100;
-
+    } else {
+      params.boundingbox = null;
     }
 
     // close zooms are 1:1 level of detail, zoomed out samples less data
@@ -365,15 +348,15 @@ export class SearchPage implements OnInit, AfterViewInit {
     // TODO: use stack of requests as may be multiple in sync
     this.appManager.isRequestInProgress = true;
 
-    this.poiManager.refreshPOIList(params).then((numResults) => {
+    let numResults = await this.poiManager.refreshPOIList(params);
 
-      this.appManager.isRequestInProgress = false;
-      this.initialResultsShown = true;
+    this.appManager.isRequestInProgress = false;
+    this.initialResultsShown = true;
 
-      if (numResults>= params.maxResults){
-        this.appManager.showToastNotification("A maximum of "+ numResults + " results are returned per search. Zoom in for details.")
-      }
-    });
+    if (numResults >= params.maxResults) {
+      this.appManager.showToastNotification("A maximum of " + numResults + " results are returned per search. Zoom in for details.")
+    }
+
   }
 
   viewPOIDetails(data: any) {
@@ -471,48 +454,43 @@ export class SearchPage implements OnInit, AfterViewInit {
     this.placeSearchMapPOI.getPlacesAutoComplete(ev, 'poiSearch');
   }
 
-  locateUser(): Promise<any> {
+  async locateUser(): Promise<any> {
 
     const geoPromise = new Promise((resolve, reject) => {
+
       this.logging.log('Attempting to locate user..');
       navigator.geolocation.getCurrentPosition(resolve, reject);
+
     }).then((position: any) => {
       this.logging.log('Got user location.');
 
-      this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true);
-
-
-      this.mapping.setMapZoom(15); // TODO: provider specific ideal zoom for 'summary'
-      // this.mapping.updateMapSize();
-
-      // this.showPOIListOnMap(null); // show initial map view
+      this.appManager.searchSettings.StartSearchPosition = new GeoLatLng(position.coords.latitude, position.coords.longitude);
 
       this.searchOnDemand = true;
 
-      this.appManager.searchSettings.StartSearchPosition = new GeoLatLng(position.coords.latitude, position.coords.longitude);
+      this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true, 15);
 
-      this.debouncedRefreshResults(); //fetch new poi results based on map viewport
+
     }).catch((err) => {
+
       /// no geolocation
-      this.logging.log('Failed to get user location.');
+      this.logging.log('Failed to get user location. Searching using default or last position.');
       this.appManager.showToastNotification('Your location could not be determined.');
 
       // use a default location, or the last known search position if known
       let searchPos = new GeoLatLng(37.415328, -122.076575);
+
       if (this.appManager.searchSettings.LastSearchPosition != null) {
         searchPos = this.appManager.searchSettings.LastSearchPosition;
-      }
+      } 
 
-      this.appManager.searchSettings.LastSearchPosition = searchPos;
-      this.mapping.updateMapCentrePos(searchPos.latitude, searchPos.longitude, true);
-      this.mapping.setMapZoom(15);
+      this.appManager.searchSettings.StartSearchPosition = searchPos;
+      
+      this.appManager.searchSettings.LastSearchPosition = null;
 
       this.searchOnDemand = true;
 
-      this.debouncedRefreshResults();
-      this.mapping.updateMapSize();
-
-
+      this.mapping.updateMapCentrePos(searchPos.latitude, searchPos.longitude, true, 15);
 
     });
 

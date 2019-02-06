@@ -9,7 +9,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content class="journeys-page" padding>
+<ion-content class="journeys-page">
     <p>
         You can create and plan journeys to group your favourite charging routes together.
     </p>
@@ -54,10 +54,10 @@
                     </ion-thumbnail>
 
 
-                    <p>{{w.Note}}</p>
+                    <p>{{w.Notes}}</p>
 
-                    <div *ngFor="let p of w.PoiList">
-                        <div *ngIf="p.Poi" style="width:100%">
+                    <div *ngFor="let p of w.PoiList" style="text-align:right;width:100%;">
+                        <div *ngIf="p.Poi">
                             <div (click)="viewPOIDetails(p.Poi)" tappable>
                                 <p *ngIf="p.Poi.AddressInfo.AddressLine1"> {{p.Poi.AddressInfo.AddressLine1}}</p>
                                 <p *ngIf="p.Poi.AddressInfo.AddressLine2"> {{p.Poi.AddressInfo.AddressLine2}}</p>
@@ -85,10 +85,12 @@
 </ion-content>
 
 <ion-footer>
-        <ion-toolbar>
-            <ion-buttons slot="end">
-                <ion-button (click)="dismiss()"> <ion-icon name="close" slot="start"></ion-icon> Close</ion-button>
+    <ion-toolbar>
+        <ion-buttons slot="end">
+            <ion-button (click)="dismiss()">
+                <ion-icon name="close" slot="start"></ion-icon> Close
+            </ion-button>
 
-            </ion-buttons>
-        </ion-toolbar>
-    </ion-footer>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-footer>

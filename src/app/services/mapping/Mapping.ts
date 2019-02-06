@@ -265,11 +265,11 @@ export class Mapping implements IMapManager {
         }
     }
 
-    updateMapCentrePos(lat: number, lng: number, moveMap: boolean) {
+    updateMapCentrePos(lat: number, lng: number, moveMap: boolean, zoomLevel?:number) {
         //update record of map centre so search results can optionally be refreshed
         if (moveMap) {
             if (this.mapProvider != null) {
-                this.mapProvider.setMapCenter(new GeoPosition(lat, lng));
+                this.mapProvider.setMapCenter(new GeoPosition(lat, lng), zoomLevel);
             }
         }
 

@@ -17,4 +17,6 @@ Platforn Specifics
     - ionic cordova build browser --prod
 - Android and iOS use the Google Maps Native mapping provider
     - iOS and Android versions historically have different bundle ids.
-    - iOS fresh setup: <ios>/pod deintegrate, pod install
+    - iOS fresh setup: install and update latest cocoapods version, then  /platforms/ios/ pod deintegrate, pod install
+        - change bundle id to org.openchargemap.app and name to Open Charge (Open Charge Map is too long)
+        - Use square icon for iOS

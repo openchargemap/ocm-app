@@ -1,13 +1,7 @@
 - UI:
-    - Sign In loops on cancel
     - Need way for new users to quickly register (API changes required)
 - Map:
-    - Initial load doesn't show results until you move the Map
-- Android
-    - Native Map
-
-- IOS
-    - Native Map
+    - initial gelocation on ios
 
     Map tips:
         - check cordova plugin installed and keys setup
@@ -16,6 +10,10 @@
         - check android debug monitor for errors
         - use chrome remote device debugging to inspect running app
         - check div/element height for map as map won't initialise if not visible
+- Journeys:
+    - need to sync with server when signed in (merge journeys if different journeys exist)
+    - need simple favourites list
+- Settings: too many items to bind == slow loading. Ideally options could filter by the current country (optional).
 
 Plugin notes:
 - geolocation requires setting on ios: https://ionicframework.com/docs/native/geolocation/

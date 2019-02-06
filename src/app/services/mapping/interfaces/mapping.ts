@@ -22,7 +22,7 @@ export interface IMapProvider {
     getMapZoom(): Observable<number>;
     setMapZoom(zoomLevel: number);
     getMapCenter(): Observable<GeoPosition>;
-    setMapCenter(pos: GeoPosition);
+    setMapCenter(pos: GeoPosition, zoomLevel?:number);
     setMapType(mapType: string);
     getMapBounds(): Observable<Array<GeoLatLng>>;
     moveToMapBounds(bounds: GeoBounds);
