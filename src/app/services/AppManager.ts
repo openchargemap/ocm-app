@@ -187,7 +187,7 @@ export class AppManager {
 
   public isUserAuthenticated(recheckAuth: boolean = false): boolean {
 
-    if (recheckAuth==false && this._isUserAuthenticated != null) return this._isUserAuthenticated;
+    if (recheckAuth === false && this._isUserAuthenticated != null) return this._isUserAuthenticated;
 
     this._isUserAuthenticated = false;
 

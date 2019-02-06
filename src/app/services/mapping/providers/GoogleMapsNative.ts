@@ -27,6 +27,7 @@ import {
     LatLngBounds
 } from '@ionic-native/google-maps/ngx';
 import { environment } from '../../../../environments/environment';
+import { MapIcons } from '../Icons';
 
 /**Map Provider for Google Maps Native API (Cordova Plugin)
  * @module Mapping
@@ -293,19 +294,24 @@ export class GoogleMapsNative implements IMapProvider {
 
                         var poiLevel = Utils.getMaxLevelOfPOI(poi);
 
-                        var iconURL = null;
 
-                        iconURL = window.location.href.replace(/\/([^\/]+)$/, "") + "/assets/images/icons/map/level" + poiLevel;
+                        /*  var iconURL = null;
 
-                        if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
-                            iconURL += "_private";
-                        } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
-                            iconURL += "_nonoperational";
-                        } else {
-                            iconURL += "_operational";
-                        }
+                          iconURL = window.location.href.replace(/\/([^\/]+)$/, "") + "/assets/images/icons/map/level" + poiLevel;
+                         // iconURL = iconURL.replace("ionic://localhost", "");
 
-                        iconURL += "_icon.png";
+                          if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
+                              iconURL += "_private";
+                          } else if (poi.StatusType != null && poi.StatusType.IsOperational != true) {
+                              iconURL += "_nonoperational";
+                          } else {
+                              iconURL += "_operational";
+                          }
+
+                          iconURL += "_icon.png";
+                          */
+
+                        let iconName = MapIcons.getIconName(poi, poiLevel, false);
 
                         var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
                         if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
@@ -316,14 +322,13 @@ export class GoogleMapsNative implements IMapProvider {
                             position: { lat: poi.AddressInfo.Latitude, lng: poi.AddressInfo.Longitude },
                             title: poi.Title,
                             icon: {
-                                url: iconURL,
+                                url: MapIcons.getIcon(iconName),
                                 size: {
                                     width: 34,
                                     height: 50
                                 }
                             }
                         };
-
 
                         map.addMarker(opt).then((m => {
                             m.poi = poi;
@@ -414,7 +419,7 @@ export class GoogleMapsNative implements IMapProvider {
             if (mapBounds != null) {
                 var bounds = new Array<GeoLatLng>();
                 // this.logging.log(JSON.stringify(mapBounds));
-          
+
                 bounds.push(new GeoLatLng(mapBounds.southwest.lat, mapBounds.southwest.lng));
                 bounds.push(new GeoLatLng(mapBounds.northeast.lat, mapBounds.northeast.lng));
 
@@ -430,7 +435,7 @@ export class GoogleMapsNative implements IMapProvider {
     }
 
     moveToMapBounds(bounds: GeoBounds) {
-        alert("move to map bounds not implemented");
+        // alert("move to map bounds not implemented");
         /*this.map.fitBounds(
             new google.maps.LatLngBounds(
                 new google.maps.LatLng(bounds.southWest.latitude, bounds.southWest.longitude),

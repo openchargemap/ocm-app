@@ -16,6 +16,7 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { TranslateModule, MissingTranslationHandler, MissingTranslationHandlerParams, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -90,6 +91,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     Camera,
     SplashScreen,
     WebView,
+    InAppBrowser,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

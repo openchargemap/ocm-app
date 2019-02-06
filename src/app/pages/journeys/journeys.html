@@ -48,15 +48,16 @@
 
                 <ion-item *ngFor="let w of s.WayPoints">
 
+                    <h2>{{w.Title}}</h2>
                     <ion-thumbnail slot="start">
                         <ion-icon name="arrow-down" style="font-size:4rem;"></ion-icon>
                     </ion-thumbnail>
-                    <h2>{{w.Title}}</h2>
+
 
                     <p>{{w.Note}}</p>
 
                     <div *ngFor="let p of w.PoiList">
-                        <div *ngIf="p.Poi">
+                        <div *ngIf="p.Poi" style="width:100%">
                             <div (click)="viewPOIDetails(p.Poi)" tappable>
                                 <p *ngIf="p.Poi.AddressInfo.AddressLine1"> {{p.Poi.AddressInfo.AddressLine1}}</p>
                                 <p *ngIf="p.Poi.AddressInfo.AddressLine2"> {{p.Poi.AddressInfo.AddressLine2}}</p>
@@ -87,7 +88,7 @@
         <ion-toolbar>
             <ion-buttons slot="end">
                 <ion-button (click)="dismiss()"> <ion-icon name="close" slot="start"></ion-icon> Close</ion-button>
-    
-            </ion-buttons>    
+
+            </ion-buttons>
         </ion-toolbar>
     </ion-footer>
