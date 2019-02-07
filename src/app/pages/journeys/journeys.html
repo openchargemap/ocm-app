@@ -10,15 +10,20 @@
 </ion-header>
 
 <ion-content class="journeys-page">
-    <p>
-        You can create and plan journeys to group your favourite charging routes together.
-    </p>
 
-    <p *ngIf="journeyManager.journeys==null || journeyManager.journeys.length==0">
-        You have no journeys yet. Start by browsing to a charging location, then add it as Favourite to start a new
-        Journey.
+    <div padding>
 
-    </p>
+        <p>
+            You can create and plan journeys to group your favourite charging routes together.
+        </p>
+
+        <p *ngIf="journeyManager.journeys==null || journeyManager.journeys.length==0">
+            You have no journeys yet. Start by browsing to a charging location, then add it as Favourite to start a new
+            Journey.
+
+        </p>
+
+    </div>
 
     <ion-card *ngFor="let journey of journeyManager.journeys">
 

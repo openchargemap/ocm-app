@@ -20,3 +20,8 @@ Platforn Specifics
     - iOS fresh setup: install and update latest cocoapods version, then  /platforms/ios/ pod deintegrate, pod install
         - change bundle id to org.openchargemap.app and name to Open Charge (Open Charge Map is too long)
         - Use square icon for iOS
+        - File> Workspace> Legacy Build
+        - ionic cordova platform remove ios
+        - ionic cordova platform add ios
+        - platforms/ios/ pod deintegrate, pod install
+        - ionic cordova prepare ios --prod

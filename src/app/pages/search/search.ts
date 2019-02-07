@@ -35,10 +35,10 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   public poiViewMode: string = 'modal'; // side or modal
   public sideViewAvailable = false;
-  
+
   private searchPolyline: string;
   private routePlanningMode: boolean = true;
-  
+
   public searchKeyword: string = '';
   public selectedPOI: any;
 
@@ -482,10 +482,10 @@ export class SearchPage implements OnInit, AfterViewInit {
 
       if (this.appManager.searchSettings.LastSearchPosition != null) {
         searchPos = this.appManager.searchSettings.LastSearchPosition;
-      } 
+      }
 
       this.appManager.searchSettings.StartSearchPosition = searchPos;
-      
+
       this.appManager.searchSettings.LastSearchPosition = null;
 
       this.searchOnDemand = true;
@@ -499,6 +499,7 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   placeSelected(place: PlaceSearchResult) {
 
+    this.searchKeyword = place.Title;
     this.logging.log('Got place details:' + place.Title);
 
     // give map back the input focus (mainly for native map)
@@ -506,8 +507,6 @@ export class SearchPage implements OnInit, AfterViewInit {
 
     this.mapping.updateMapCentrePos(place.Location.latitude, place.Location.longitude, true);
 
-    this.debouncedRefreshResults();
-    /// this.mapping.setMapZoom(15);
     // this.debouncedRefreshResults();
 
   }

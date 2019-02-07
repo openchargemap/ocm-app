@@ -86,6 +86,8 @@ export class PlaceSearch implements OnInit {
 
         if (keywordForSearch && keywordForSearch.length > 3) {
             this.logging.log("Starting place lookup for:" + keywordForSearch);
+
+            this.placeSearchActive = true;
             this.searchInProgress = true;
 
             let searchService = new mapkit.Search({ getsUserLocation: true });

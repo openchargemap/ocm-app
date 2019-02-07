@@ -1,5 +1,9 @@
 <div class="place-search" *ngIf="placeSearchActive">
 
+  <div *ngIf="searchInProgress">
+    <ion-spinner></ion-spinner>
+  </div>
+
   <div id="place-attribution"></div>
 
   <ion-list>
