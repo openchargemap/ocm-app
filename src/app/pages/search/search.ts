@@ -26,7 +26,7 @@ import { PlaceSearchResult } from '../../model/AppModels';
 export class SearchPage implements OnInit, AfterViewInit {
 
   private mapDisplayed: boolean = false;
-  private debouncedRefreshResults: any;
+  private debouncedRefreshMapResults: any;
   private mapCanvasID: string;
 
   private initialResultsShown: boolean = false;
@@ -127,7 +127,7 @@ export class SearchPage implements OnInit, AfterViewInit {
 
     await this.platform.ready();
 
-    this.debouncedRefreshResults = Utils.debounce(this.refreshResultsQueryChange, 1000, false);
+    this.debouncedRefreshMapResults = Utils.debounce(this.refreshMapResults, 1000, false);
 
     this.events.subscribe('ocm:mapping:ready', async () => {
 
@@ -140,7 +140,7 @@ export class SearchPage implements OnInit, AfterViewInit {
         if (this.appManager.searchSettings.StartSearchPosition) {
 
           this.searchOnDemand = true;
-          this.debouncedRefreshResults();
+          this.debouncedRefreshMapResults();
 
         } else {
 
@@ -151,12 +151,12 @@ export class SearchPage implements OnInit, AfterViewInit {
       }
     });
 
-    this.events.subscribe('ocm:mapping:zoom', () => { this.debouncedRefreshResults(); });
-    this.events.subscribe('ocm:mapping:dragend', () => { this.debouncedRefreshResults(); });
+    this.events.subscribe('ocm:mapping:zoom', () => { this.debouncedRefreshMapResults(); });
+    this.events.subscribe('ocm:mapping:dragend', () => { this.debouncedRefreshMapResults(); });
     this.events.subscribe('ocm:poiList:updated', (listType) => { this.showPOIListOnMap(listType); });
     this.events.subscribe('ocm:poiList:cleared', () => {
       this.mapping.clearMarkers();
-      this.debouncedRefreshResults();
+      this.debouncedRefreshMapResults();
     });
 
     this.events.subscribe('ocm:window:resized', (size) => {
@@ -227,7 +227,7 @@ export class SearchPage implements OnInit, AfterViewInit {
   }
 
 
-  async refreshResultsQueryChange() {
+  async refreshMapResults() {
     if (!this.searchOnDemand) {
       this.logging.log('Skipping refresh, search on demand disabled..', LogLevel.VERBOSE);
       return;
@@ -499,15 +499,15 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   placeSelected(place: PlaceSearchResult) {
 
-    this.searchKeyword = place.Title;
-    this.logging.log('Got place details:' + place.Title);
+    this.searchKeyword = place.Address;
+    this.logging.log('Got place details:' + place.Address);
 
     // give map back the input focus (mainly for native map)
     this.mapping.focusMap();
 
     this.mapping.updateMapCentrePos(place.Location.latitude, place.Location.longitude, true);
 
-    // this.debouncedRefreshResults();
+    this.debouncedRefreshMapResults();
 
   }
 }

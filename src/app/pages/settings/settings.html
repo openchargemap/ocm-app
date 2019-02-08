@@ -8,9 +8,9 @@
 
 <ion-content class="settings-page" padding>
   <h2>Search Filters</h2>
-  <p>Search filters to apply when search for charging locations:</p>
+  <p>Note: Filters will remove usable charging locations from your search results if we do not have complete data (i.e Operator or Power Levels).</p>
   <p *ngIf="searchSettings.HasActiveFilters==true" danger>
-    <ion-icon name="alert"></ion-icon> One or more filters are currently being applied.</p>
+    <ion-icon name="alert"></ion-icon> One or more filters are currently being applied. </p>
   <ion-list>
     <ion-item>
       <ion-label>{{'ocm.search.networkOperators' | translate}}</ion-label>

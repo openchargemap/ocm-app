@@ -53,7 +53,7 @@ export class AppManager {
     public logging: Logging
   ) {
 
-    this.api.clientName = 'ocm.app.ionic.v6_0_0';
+    this.api.clientName = 'ocm.app.ionic.v7_0_0';
     this.isDebugMode = false;
     this.enableSubmissionQueue = false;
     this.submissionQueue.setAppManager(this);

@@ -51,7 +51,7 @@ export class GoogleMapsNative implements IMapProvider {
         this.mapAPIType = MappingAPI.GOOGLE_NATIVE;
         this.mapReady = false;
         this.mapCanvasID = "map-view";
-        this.markerList = new Dictionary<number, any>();
+        this.markerList = new Dictionary<number, Marker>();
     }
 
     /**
@@ -143,24 +143,26 @@ export class GoogleMapsNative implements IMapProvider {
 
         this.map.setVisible(true);
 
-        if (this.markerList != null && this.markerList.size() > this.maxMarkers) {
+        /*if (this.markerList != null && this.markerList.size() > this.maxMarkers) {
             //max markers on map, start new batch again
             this.logging.log("map:max markers. clearing map.");
             this.map.clear();
-        }
+        }*/
         this.renderPOIMarkers(clearMarkersOnRefresh, poiList);
     }
 
     clearMarkers() {
         this.logging.log("map:clearing markers");
         if (this.markerList != null) {
-            for (var i = 0; i < this.markerList.size(); i++) {
-                if (this.markerList[i]) {
-                    this.markerList[i].setMap(null);
-                }
-            }
+            this.markerList.forEach((key, marker) => {
+                try {
+                    marker.remove();
+                } catch{ }
+            });
+
         }
-        this.markerList = new Dictionary<number, any>();
+
+        this.markerList = new Dictionary<number, Marker>();
     }
 
     renderPOIMarkers(clearMarkersOnRefresh: boolean, poiList: Array<any>) {
@@ -170,7 +172,7 @@ export class GoogleMapsNative implements IMapProvider {
         let markersAdded = 0;
 
         //clear existing markers (if enabled)
-        if (clearMarkersOnRefresh == true || (this.markerList != null && this.markerList.values.length > this.maxMarkers)) {
+        if (clearMarkersOnRefresh == true) {
 
             this.clearMarkers();
         }
@@ -331,6 +333,9 @@ export class GoogleMapsNative implements IMapProvider {
                         };
 
                         map.addMarker(opt).then((m => {
+
+                            this.markerList.setValue(poi.ID, m);
+
                             m.poi = poi;
                             m.on(GoogleMapsEvent.MARKER_CLICK).subscribe((poiClicked) => {
                                 this.events.publish('ocm:poi:selected', { poi: poiClicked[1].poi, poiId: poiClicked[1].poi.ID });
@@ -342,6 +347,7 @@ export class GoogleMapsNative implements IMapProvider {
                         //  console.log(markers);
 
                         markersAdded = markers.length;
+
                         this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.values.length + " [alloc:" + this.markerAllocCount + "]");
                     });
 
@@ -364,10 +370,16 @@ export class GoogleMapsNative implements IMapProvider {
 
     setMapCenter(pos: GeoPosition, zoomLevel?: number) {
         if (this.mapReady) {
-            this.map.moveCamera({
-                target: { lat: pos.coords.latitude, lng: pos.coords.longitude },
-                zoom: zoomLevel ? zoomLevel : null
-            });
+
+            let mapOptions: any = {
+                target: { lat: pos.coords.latitude, lng: pos.coords.longitude }
+            };
+
+            if (zoomLevel) {
+                mapOptions.zoom = zoomLevel;
+            }
+
+            this.map.moveCamera(mapOptions);
         }
     }
 

@@ -17,9 +17,6 @@ import { MapKitMapProvider } from './providers/MapKit';
 import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
 import { Events } from '@ionic/angular'; //TODO remove dependency on ionic here?
 
-declare var plugin: any;
-declare var google: any;
-
 /** Mapping - provides a way to render to various mapping APIs
  * @module Mapping
  */
@@ -31,15 +28,10 @@ export class Mapping implements IMapManager {
     public mapCentreMarker: any;
     public mapsInitialised: boolean; //initial map setup initiated
     public mapAPIReady: boolean; //api loaded
-
     public mapOptions: MapOptions;
-    public markerClusterer: any;
-    public markerList: Array<any>;
     public searchMarker: any;
-
     public errorMessage: string;
     public parentAppContext: any;
-    private _mapMoveTimer: any;
     private mapProvider: IMapProvider;
     private debouncedMapPositionUpdate: any;
 
@@ -248,14 +240,6 @@ export class Mapping implements IMapManager {
         if (manipulationType == "drag" || manipulationType == "zoom") {
             //after the center of the map centre has stopped changing, update search centre pos
             this.debouncedMapPositionUpdate();
-        }
-    }
-
-    isNativeMapsAvailable(): boolean {
-        if (plugin && plugin.google && plugin.google.maps) {
-            return true;
-        } else {
-            return false;
         }
     }
 
