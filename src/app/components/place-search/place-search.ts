@@ -4,6 +4,7 @@ import { Component, Input, Output, ChangeDetectorRef, EventEmitter, OnInit } fro
 import { MapKitMapProvider } from '../../services/mapping/providers/MapKit';
 import { GeoLatLng } from '../../model/AppModels';
 import { environment } from '../../../environments/environment';
+import { Platform } from '@ionic/angular';
 
 //declare var google: any;
 
@@ -34,12 +35,15 @@ export class PlaceSearch implements OnInit {
     @Output()
     placeChanged = new EventEmitter();
 
-    constructor(public logging: Logging, public changeDetector: ChangeDetectorRef) {
+    constructor(public logging: Logging, public changeDetector: ChangeDetectorRef, private platform:Platform) {
         this.searchKeyword = "";
         this.searchInProgress = false;
     }
 
-    ngOnInit(){
+    async ngOnInit(){
+
+        await this.platform.ready();
+
         mapkit.init({
             authorizationCallback: function (done) {
               done(environment.mapKitToken);
