@@ -4,7 +4,10 @@ import { Component, Input, Output, ChangeDetectorRef, EventEmitter, OnInit } fro
 import { MapKitMapProvider } from '../../services/mapping/providers/MapKit';
 import { GeoLatLng } from '../../model/AppModels';
 import { environment } from '../../../environments/environment';
-import { Platform } from '@ionic/angular';
+import { Platform, Events } from '@ionic/angular';
+import { IMapProvider } from '../../services/mapping/interfaces/mapping';
+import { MapBoxMapProvider } from '../../services/mapping/providers/MapBox';
+import { HttpClient } from '@angular/common/http';
 
 //declare var google: any;
 
@@ -15,7 +18,8 @@ declare var mapkit: any;
 */
 @Component({
     selector: 'place-search',
-    templateUrl: 'place-search.html'
+    templateUrl: 'place-search.html',
+    styleUrls: ['./place-search.scss']
 })
 export class PlaceSearch implements OnInit {
 
@@ -28,6 +32,7 @@ export class PlaceSearch implements OnInit {
 
     placeSearchFocused: boolean;
     placeSearchActive: boolean = false;
+    placeAttribution: string = "";
 
     @Output()
     selectedPlace: any;
@@ -35,20 +40,20 @@ export class PlaceSearch implements OnInit {
     @Output()
     placeChanged = new EventEmitter();
 
-    constructor(public logging: Logging, public changeDetector: ChangeDetectorRef, private platform:Platform) {
+    mapService: IMapProvider;
+
+    constructor(public logging: Logging, public changeDetector: ChangeDetectorRef, private platform: Platform, private http: HttpClient, private events: Events) {
         this.searchKeyword = "";
         this.searchInProgress = false;
+
+        this.mapService = new MapBoxMapProvider(events, logging, http);
     }
 
-    async ngOnInit(){
+    async ngOnInit() {
 
         await this.platform.ready();
 
-        mapkit.init({
-            authorizationCallback: function (done) {
-              done(environment.mapKitToken);
-            }
-          });
+        this.mapService.initAPI();
     }
 
     onSearchFocus() {
@@ -65,7 +70,7 @@ export class PlaceSearch implements OnInit {
         //this.appManager.isRequestInProgress = false;
     }
 
-    public getPlacesAutoComplete($event, searchType) {
+    public async getPlacesAutoComplete($event, searchType) {
 
         this.placeSearchType = searchType;
         let keywordForSearch = $event.target.value;
@@ -94,31 +99,25 @@ export class PlaceSearch implements OnInit {
             this.placeSearchActive = true;
             this.searchInProgress = true;
 
-            let searchService = new mapkit.Search({ getsUserLocation: true });
+            this.searchInProgress = false;
+            this.placeSearchActive = true;
 
-            searchService.search(keywordForSearch, (error, data) => {
-                this.searchInProgress = false;
-                this.placeSearchActive = true;
+            try {
+                this.placeList = await this.mapService.placeSearch(keywordForSearch);
 
-                if (error) {
-                    // Handle search error
-                    return;
+                if (this.placeList && this.placeList.length > 0) {
+                    this.placeAttribution = this.placeList[0].Attribution;
                 }
+            }
+            catch (error) {
 
-                this.placeList = [];
-                data.places.map((place) => {
+            }
 
-                    let placeResult = new PlaceSearchResult();
-
-                    placeResult.Title = place.name;
-                    //placeResult.ReferenceID = (<any>place).place_id;
-                    placeResult.Address = place.formattedAddress;
-                    placeResult.Type = "place";
-                    placeResult.Location = new GeoLatLng(place.coordinate.latitude, place.coordinate.longitude);
-
-                    this.placeList.push(placeResult);
-                });
-            });
+            this.searchInProgress = false;
+            this.placeSearchActive = true;
+        } else {
+            this.searchInProgress = false;
+            this.placeSearchActive = false;
         }
     }
 

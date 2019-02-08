@@ -1,6 +1,6 @@
 import { environment } from './../../../../environments/environment';
 import { Observable } from "rxjs-compat/Observable";
-import { GeoPosition, GeoLatLng, GeoBounds } from "../../../model/AppModels";
+import { GeoPosition, GeoLatLng, GeoBounds, PlaceSearchResult } from "../../../model/AppModels";
 
 export enum MappingAPI {
     GOOGLE_WEB,
@@ -15,6 +15,7 @@ export interface IMapProvider {
     mapReady: boolean;
     providerError: string;
 
+    initAPI();
     initMap(mapCanvasID: string, mapConfig: MapOptions, mapManagerContext: IMapManager);
     refreshMapLayout();
     renderMap(poiList: Array<any>, mapHeight: number, parentContext: any);
@@ -30,6 +31,7 @@ export interface IMapProvider {
     clearPolyline();
     focusMap();
     unfocusMap();
+    placeSearch(keyword: string): Promise<Array<PlaceSearchResult>>;
 }
 
 export class MapOptions {

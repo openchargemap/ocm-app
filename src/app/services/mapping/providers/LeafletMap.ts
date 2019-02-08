@@ -4,7 +4,7 @@
 * @copyright Webprofusion Pty Ltd https://webprofusion.com
 */
 import { Utils } from '../../../core/Utils';
-import { MappingAPI, IMapProvider, MapOptions, IMapManager} from '../interfaces/mapping';
+import { MappingAPI, IMapProvider, MapOptions, IMapManager } from '../interfaces/mapping';
 import { Events } from '@ionic/angular';
 import { Observable } from 'rxjs/Observable';
 import { Dictionary } from 'typescript-collections';
@@ -12,6 +12,7 @@ import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition'
 import { Logging, LogLevel } from './../../Logging';
 
 import { Icon, Map, LatLng, Marker, TileLayer, LatLngBounds } from 'leaflet';
+import { PlaceSearchResult } from '../../../model/AppModels';
 
 /**Map Provider for Leaflet API
 * @module MapProviders
@@ -34,6 +35,11 @@ export class LeafletMap implements IMapProvider {
         this.markerList = new Dictionary<number, google.maps.Marker>();
     }
 
+    
+    initAPI(){
+
+    }
+    
     /**
     * Performs one-time init of map object for this map provider
     * @param mapcanvasID  dom element for map canvas
@@ -92,14 +98,16 @@ export class LeafletMap implements IMapProvider {
 
     /** Clear current markers */
     clearMarkers() {
+
         if (this.markerList != null) {
-            this.logging.log("Clearing all markers [" + this.markerList.size() + "]");
-            for (var i = 0; i < this.markerList.size(); i++) {
-                if (this.markerList[i]) {
-                    this.markerList[i].setMap(null);
-                }
-            }
+
+            this.markerList.forEach((key, marker) => {
+                try {
+                    marker.setMap(null);
+                } catch{ }
+            });
         }
+
         this.markerList = new Dictionary<number, any>();
     }
     /**
@@ -336,5 +344,10 @@ export class LeafletMap implements IMapProvider {
     }
     unfocusMap() {
         //
+    }
+
+    placeSearch(keyword: string): Promise<Array<PlaceSearchResult>>{
+        // not implemented
+        return null;
     }
 }

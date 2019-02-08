@@ -40,7 +40,7 @@ export class APIClient {
   constructor(public http: HttpClient, public refData: ReferenceDataManager, public logging: Logging) {
 
     this.serviceBaseURL = this.serviceBaseURL_Standard;
-    // this.serviceBaseURL = this.serviceBaseURL_LocalDev;
+     //this.serviceBaseURL = this.serviceBaseURL_LocalDev;
   }
 
   getNumberListString(numberList: Array<number>): string {

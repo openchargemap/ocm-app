@@ -28,6 +28,7 @@ import {
 } from '@ionic-native/google-maps/ngx';
 import { environment } from '../../../../environments/environment';
 import { MapIcons } from '../Icons';
+import { PlaceSearchResult } from '../../../model/AppModels';
 
 /**Map Provider for Google Maps Native API (Cordova Plugin)
  * @module Mapping
@@ -54,6 +55,10 @@ export class GoogleMapsNative implements IMapProvider {
         this.markerList = new Dictionary<number, Marker>();
     }
 
+    initAPI(){
+
+    }
+    
     /**
     * Performs one-time init of map object for this map provider
     * @param mapcanvasID  dom element for map canvas
@@ -152,7 +157,7 @@ export class GoogleMapsNative implements IMapProvider {
     }
 
     clearMarkers() {
-        this.logging.log("map:clearing markers");
+
         if (this.markerList != null) {
             this.markerList.forEach((key, marker) => {
                 try {
@@ -500,5 +505,10 @@ export class GoogleMapsNative implements IMapProvider {
             this.logging.log("focus: map not ready..");
         }
 
+    }
+
+    placeSearch(keyword: string): Promise<Array<PlaceSearchResult>>{
+        // not implemented
+        return null;
     }
 }

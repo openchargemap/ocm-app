@@ -4,7 +4,7 @@
     <ion-spinner></ion-spinner>
   </div>
 
-  <div id="place-attribution"></div>
+
 
   <ion-list>
     <ion-item *ngFor="let item of placeList" (click)="placeSelected(item)">
@@ -15,6 +15,14 @@
       <ion-label>
       <p>{{item.Address}}</p>
     </ion-label>
+    </ion-item>
+
+    <ion-item>
+     
+        <p class="place-attribution">
+          {{placeAttribution}}
+        </p>
+     
     </ion-item>
   </ion-list>
 

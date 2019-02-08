@@ -11,6 +11,7 @@ import { Observable } from 'rxjs/Observable';
 import { Dictionary } from 'typescript-collections';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
 import { Logging, LogLevel } from './../../Logging';
+import { PlaceSearchResult } from '../../../model/AppModels';
 
 /**Map Provider for Google Maps Web API
 * @module MapProviders
@@ -34,6 +35,11 @@ export class GoogleMapsWeb implements IMapProvider {
         this.markerList = new Dictionary<number, google.maps.Marker>();
     }
 
+    
+    initAPI(){
+
+    }
+    
     /**
     * Performs one-time init of map object for this map provider
     * @param mapcanvasID  dom element for map canvas
@@ -114,14 +120,15 @@ export class GoogleMapsWeb implements IMapProvider {
 
     clearMarkers() {
         if (this.markerList != null) {
-            for (var i = 0; i < this.markerList.size(); i++) {
-                if (this.markerList[i]) {
-                    this.markerList[i].setMap(null);
-                }
-            }
-        }
-        this.markerList = new Dictionary<number, google.maps.Marker>();
 
+            this.markerList.forEach((key, marker) => {
+                try {
+                    marker.setMap(null);
+                } catch{ }
+            });
+        }
+
+        this.markerList = new Dictionary<number, google.maps.Marker>();
     }
 
     /**
@@ -359,10 +366,17 @@ export class GoogleMapsWeb implements IMapProvider {
             this.polylinePath.setMap(null);
         }
     }
+    
     focusMap() {
         //
     }
+    
     unfocusMap() {
         //
+    }
+
+    placeSearch(keyword: string): Promise<Array<PlaceSearchResult>>{
+        // not implemented
+        return null;
     }
 }

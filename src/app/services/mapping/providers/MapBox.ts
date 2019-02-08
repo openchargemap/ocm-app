@@ -13,10 +13,16 @@ import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition'
 import { Logging, LogLevel } from './../../Logging';
 import * as mapboxgl from 'mapbox-gl';
 import { environment } from '../../../../environments/environment.prod';
+import { map } from 'leaflet';
+import { PlaceSearchResult } from '../../../model/AppModels';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 /**Map Provider for MapBox GL JS API
 * @module MapProviders
 */
+
+@Injectable()
 export class MapBoxMapProvider implements IMapProvider {
   mapAPIType: MappingAPI;
   mapReady: boolean;
@@ -28,18 +34,24 @@ export class MapBoxMapProvider implements IMapProvider {
   private polylinePath: any;
 
   /** @constructor */
-  constructor(private events: Events, private logging: Logging) {
+  constructor(private events: Events, private logging: Logging, private http: HttpClient) {
     this.events = events;
     this.mapAPIType = MappingAPI.MAPBOX;
     this.mapReady = false;
     this.markerList = new Dictionary<number, any>();
   }
 
+  initAPI() {
+    if (mapboxgl) {
+      (<any>mapboxgl).accessToken = environment.mapBoxToken;
+    }
+  }
+
   /**
   * Performs one-time init of map object for this map provider
   * @param mapcanvasID  dom element for map canvas
   * @param mapConfig  general map config/options
-
+ 
   */
   initMap(mapCanvasID, mapConfig: MapOptions, parentMapManager: IMapManager) {
     this.mapCanvasID = mapCanvasID;
@@ -55,13 +67,19 @@ export class MapBoxMapProvider implements IMapProvider {
       if (this.map == null) {
         var mapCanvas = document.getElementById(mapCanvasID);
 
-        (<any>mapboxgl).accessToken = environment.mapBoxToken;
+        this.initAPI();
 
         this.map = new mapboxgl.Map({
           container: mapCanvasID,
           style: 'mapbox://styles/mapbox/streets-v10',
-          zoom: 15
+          zoom: 15,
+          attributionControl: false
         });
+
+        this.map.addControl(new mapboxgl.AttributionControl({
+          compact: true,
+          customAttribution: ["Open Charge Map Contributors"]
+        }));
 
         this.mapReady = true;
 
@@ -133,16 +151,15 @@ export class MapBoxMapProvider implements IMapProvider {
 
   clearMarkers() {
     if (this.markerList != null) {
-      for (var i = 0; i < this.markerList.size(); i++) {
-        if (this.markerList[i]) {
-          try {
-            this.markerList[i].remove();
-          } catch{ }
-        }
-      }
-    }
-    this.markerList = new Dictionary<number, google.maps.Marker>();
 
+      this.markerList.forEach((key, marker) => {
+        try {
+          marker.remove();
+        } catch{ }
+      });
+    }
+
+    this.markerList = new Dictionary<number, google.maps.Marker>();
   }
 
   /**
@@ -374,4 +391,36 @@ export class MapBoxMapProvider implements IMapProvider {
   unfocusMap() {
     //
   }
+
+  async placeSearch(keyword: string): Promise<Array<PlaceSearchResult>> {
+
+    let api = `https://api.mapbox.com/geocoding/v5/mapbox.places/${keyword}.json?access_token=${environment.mapBoxToken}`;
+
+    return new Promise<Array<PlaceSearchResult>>(async (resolve, reject) => {
+
+      this.http.get(api).toPromise().then((results: any) => {
+
+        let placeList: Array<PlaceSearchResult> = [];
+
+        placeList = [];
+        if (results.features) {
+          results.features.map((feature) => {
+
+            let placeResult = new PlaceSearchResult();
+
+            placeResult.Title = feature.place_name;
+
+            placeResult.Address = feature.place_name;
+            placeResult.Type = "place";
+            placeResult.Location = new GeoLatLng(feature.center[1], feature.center[0]);
+            placeResult.Attribution = results.attribution;
+            placeList.push(placeResult);
+          });
+        }
+
+
+        resolve(placeList);
+      });
+    });
+  };
 }

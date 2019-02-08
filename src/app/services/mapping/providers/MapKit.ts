@@ -12,6 +12,7 @@ import { Dictionary } from 'typescript-collections';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
 import { Logging, LogLevel } from './../../Logging';
 import { environment } from '../../../../environments/environment';
+import { PlaceSearchResult } from '../../../model/AppModels';
 
 
 declare var mapkit: any;
@@ -39,6 +40,16 @@ export class MapKitMapProvider implements IMapProvider {
     this.mapkitUtils = new MapKitUtils();
   }
 
+  initAPI() {
+    if (mapkit) {
+      mapkit.init({
+        authorizationCallback: function (done) {
+          done(environment.mapKitToken);
+        }
+      });
+    }
+  }
+
   /**
   * Performs one-time init of map object for this map provider
   * @param mapcanvasID  dom element for map canvas
@@ -56,14 +67,12 @@ export class MapKitMapProvider implements IMapProvider {
     }
 
     if (apiLoaded) {
+
+      this.initAPI();
+
       if (this.map == null) {
         var mapCanvas = document.getElementById(mapCanvasID);
 
-        mapkit.init({
-          authorizationCallback: function (done) {
-            done(environment.mapKitToken);
-          }
-        });
 
         this.map = new mapkit.Map(mapCanvasID);
 
@@ -100,14 +109,16 @@ export class MapKitMapProvider implements IMapProvider {
   }
 
   clearMarkers() {
-    if (this.markerList != null) {
-      for (var i = 0; i < this.markerList.size(); i++) {
-        if (this.markerList[i]) {
-          this.map.removeAnnotation(this.markerList[i]);
 
-        }
-      }
+    if (this.markerList != null) {
+
+      this.markerList.forEach((key, marker) => {
+        try {
+          this.map.removeAnnotation(marker);
+        } catch{ }
+      });
     }
+
     this.markerList = new Dictionary<number, google.maps.Marker>();
 
   }
@@ -385,6 +396,41 @@ export class MapKitMapProvider implements IMapProvider {
   }
   unfocusMap() {
     //
+  }
+
+  async placeSearch(keyword: string): Promise<Array<PlaceSearchResult>> {
+    let searchService = new mapkit.Search({ getsUserLocation: true });
+
+    return new Promise<Array<PlaceSearchResult>>(async (resolve, reject) => {
+
+      let placeList: Array<PlaceSearchResult> = [];
+
+      searchService.search(keyword, async (error, data) => {
+
+        if (error) {
+          // Handle search error
+          reject(error);
+        }
+
+        placeList = [];
+
+        data.places.map((place) => {
+
+          let placeResult = new PlaceSearchResult();
+
+          placeResult.Title = place.name;
+          //placeResult.ReferenceID = (<any>place).place_id;
+          placeResult.Address = place.formattedAddress;
+          placeResult.Type = "place";
+          placeResult.Location = new GeoLatLng(place.coordinate.latitude, place.coordinate.longitude);
+
+          placeList.push(placeResult);
+        });
+
+        resolve(placeList);
+      });
+    });
+
   }
 }
 

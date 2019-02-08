@@ -16,6 +16,7 @@ import { LeafletMap } from './providers/LeafletMap';
 import { MapKitMapProvider } from './providers/MapKit';
 import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
 import { Events } from '@ionic/angular'; //TODO remove dependency on ionic here?
+import { HttpClient } from '@angular/common/http';
 
 /** Mapping - provides a way to render to various mapping APIs
  * @module Mapping
@@ -39,7 +40,7 @@ export class Mapping implements IMapManager {
 
     private isFocused: boolean = false;
     /** @constructor */
-    constructor(events: Events, private logging: Logging) {
+    constructor(events: Events, private logging: Logging, private http: HttpClient) {
 
         this.events = events;
         this.mapOptions = new MapOptions();
@@ -88,7 +89,7 @@ export class Mapping implements IMapManager {
         }
 
         if (this.mapOptions.mapAPI == MappingAPI.MAPBOX) {
-            this.mapProvider = new MapBoxMapProvider(this.events, this.logging);
+            this.mapProvider = new MapBoxMapProvider(this.events, this.logging, this.http);
         }
 
         if (this.mapOptions.mapAPI == MappingAPI.MAPKIT_JS) {
@@ -360,6 +361,8 @@ export class Mapping implements IMapManager {
     }
 
     clearMarkers() {
+        this.logging.log("mapping: clearing markers");
+
         this.mapProvider.clearMarkers();
     }
 }
