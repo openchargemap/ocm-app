@@ -156,7 +156,9 @@ export class SearchPage implements OnInit, AfterViewInit {
     this.events.subscribe('ocm:poiList:updated', (listType) => { this.showPOIListOnMap(listType); });
     this.events.subscribe('ocm:poiList:cleared', () => {
       this.mapping.clearMarkers();
-      this.debouncedRefreshMapResults();
+      setTimeout(()=>{
+        this.debouncedRefreshMapResults();
+      }, 500);
     });
 
     this.events.subscribe('ocm:window:resized', (size) => {
