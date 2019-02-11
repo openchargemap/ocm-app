@@ -1,13 +1,13 @@
 import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
 import { SearchSettings } from './../../model/SearchSettings';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController, Events } from '@ionic/angular';
 
 @Component({
   templateUrl: 'settings.html'
 })
-export class SettingsPage {
+export class SettingsPage implements OnInit {
 
 
   operators: Array<any>;
@@ -32,22 +32,26 @@ export class SettingsPage {
    
     //TODO reference data manager with filtered versions of reference type lists
     //
+  
+  }
+
+  async ngOnInit(){
     if (this.searchSettings.MinPowerKW != null) this.powerRange.lower = this.searchSettings.MinPowerKW;
     if (this.searchSettings.MaxPowerKW != null) this.powerRange.upper = this.searchSettings.MaxPowerKW;
     if (this.powerRange.upper == 0) this.powerRange.upper = 500;
 
-    this.populateReferenceData();
+    await this.populateReferenceData();
   }
 
   async populateReferenceData(){
-    setTimeout(()=>{
+
       this.operators = this.appManager.referenceDataManager.getNetworkOperators(this.filterByCountryPref);
       this.usageTypes = this.appManager.referenceDataManager.getUsageTypes(this.filterByCountryPref);
       this.statusTypes = this.appManager.referenceDataManager.getStatusTypes(this.filterByCountryPref);
       this.connectionTypes = this.appManager.referenceDataManager.getConnectionTypes(this.filterByCountryPref);
   
       this.languages = this.appManager.getLanguages();
-    },1000);
+    
    
   }
 

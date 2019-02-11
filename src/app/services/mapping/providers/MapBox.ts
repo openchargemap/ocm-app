@@ -33,6 +33,8 @@ export class MapBoxMapProvider implements IMapProvider {
   private markerList: Dictionary<number, any>;
   private polylinePath: any;
 
+  private searchMarker: mapboxgl.Marker;
+
   /** @constructor */
   constructor(private events: Events, private logging: Logging, private http: HttpClient) {
     this.events = events;
@@ -281,6 +283,13 @@ export class MapBoxMapProvider implements IMapProvider {
   setMapCenter(pos: GeoPosition) {
     if (this.mapReady) {
       this.map.setCenter(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
+
+      if (!this.searchMarker){
+        this.searchMarker = new mapboxgl.Marker({color:'#f0f0f0',anchor:'top'});
+      }
+
+      this.searchMarker.setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
+      this.searchMarker.addTo(this.map);
     }
   }
 

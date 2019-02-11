@@ -44,6 +44,8 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   public appConfig = new AppConfig();
 
+  public defaultMapZoom:number = 15;
+
   @ViewChild(PlaceSearch)
   placeSearchMapPOI: PlaceSearch;
 
@@ -140,7 +142,10 @@ export class SearchPage implements OnInit, AfterViewInit {
         if (this.appManager.searchSettings.StartSearchPosition) {
 
           this.searchOnDemand = true;
-          this.debouncedRefreshMapResults();
+
+          this.mapping.updateMapCentrePos(this.appManager.searchSettings.StartSearchPosition.latitude, this.appManager.searchSettings.StartSearchPosition.longitude, true, this.defaultMapZoom);
+
+//          this.debouncedRefreshMapResults();
 
         } else {
 
@@ -156,7 +161,7 @@ export class SearchPage implements OnInit, AfterViewInit {
     this.events.subscribe('ocm:poiList:updated', (listType) => { this.showPOIListOnMap(listType); });
     this.events.subscribe('ocm:poiList:cleared', () => {
       this.mapping.clearMarkers();
-      setTimeout(()=>{
+      setTimeout(() => {
         this.debouncedRefreshMapResults();
       }, 500);
     });
@@ -262,25 +267,15 @@ export class SearchPage implements OnInit, AfterViewInit {
       params.longitude = mapcentre.coords.longitude;
 
       params.distance = 25;
+      params.boundingbox = null;
 
       // store this as last known map centre
       this.appManager.searchSettings.LastSearchPosition = new GeoLatLng(mapcentre.coords.latitude, mapcentre.coords.longitude);
     } else {
       params.latitude = null;
       params.longitude = null;
-    }
 
-    /////
-    // params.distance = distance;
-    // params.distanceUnit = distance_unit;
-    // params.maxResults = this.appConfig.maxResults;
-    params.includeComments = true;
-    params.enableCaching = true;
-
-    // map viewport search on bounding rectangle instead of map centre
-
-    // for sarching around a position, ignore the map bounds and search by radius, subsequent searches use map bounds
-    if (this.appManager.searchSettings.StartSearchPosition == null) {
+      // map viewport search on bounding rectangle instead of map centre
       let bounds = await this.mapping.getMapBounds().toPromise();
       params.boundingbox = '(' + bounds[0].latitude +
         ',' + bounds[0].longitude + '),(' + bounds[1].latitude +
@@ -288,13 +283,18 @@ export class SearchPage implements OnInit, AfterViewInit {
 
       this.logging.log(JSON.stringify(bounds), LogLevel.VERBOSE);
 
-    } else {
-      params.boundingbox = null;
     }
+
+    /////
+    // params.distance = distance;
+    // params.distanceUnit = distance_unit;
+    // params.maxResults = this.appConfig.maxResults;
+
+    params.includeComments = true;
+    params.enableCaching = true;
 
     // close zooms are 1:1 level of detail, zoomed out samples less data
     //this.mapping.getMapZoom().subscribe((zoomLevel: number) => {
-
 
     /* this.logging.log('map zoom level to be converted to level of detail:' + zoomLevel);
      if (zoomLevel > 10) {
@@ -470,7 +470,7 @@ export class SearchPage implements OnInit, AfterViewInit {
 
       this.searchOnDemand = true;
 
-      this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true, 15);
+      this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true, this.defaultMapZoom);
 
 
     }).catch((err) => {
@@ -492,7 +492,7 @@ export class SearchPage implements OnInit, AfterViewInit {
 
       this.searchOnDemand = true;
 
-      this.mapping.updateMapCentrePos(searchPos.latitude, searchPos.longitude, true, 15);
+      this.mapping.updateMapCentrePos(searchPos.latitude, searchPos.longitude, true, this.defaultMapZoom);
 
     });
 

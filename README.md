@@ -14,8 +14,10 @@ Build and test:
 
 Platforn Specifics
 - Web uses the MapKitJS mapping provider
+    - ionic cordova plugin remove cordova-plugin-inappbrowser
     - ionic cordova build browser --prod
 - Android and iOS use the Google Maps Native mapping provider
+    - ionic cordova plugin add cordova-plugin-inappbrowser
     - iOS and Android versions historically have different bundle ids.
     - iOS fresh setup: install and update latest cocoapods version, then  /platforms/ios/ pod deintegrate, pod install
         - change bundle id to org.openchargemap.app and name to Open Charge (Open Charge Map is too long)

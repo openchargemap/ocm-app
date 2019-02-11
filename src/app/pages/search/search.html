@@ -16,8 +16,9 @@
 			<!--<ion-button (click)="openRoutePlannerModal()" *ngIf="sideViewAvailable==false">
 				<ion-icon name="map" slot="start"></ion-icon>
 			</ion-button>-->
-			<ion-button (click)="openSearchOptions()">
+			<ion-button (click)="openSearchOptions()" [color]="appManager.searchSettings.HasActiveFilters?'danger':'default'">
 				<ion-icon name="options" slot="end"></ion-icon>
+				
 			</ion-button>
 
 			<ion-button (click)="openSideView()" *ngIf="sideViewAvailable==true && poiViewMode=='modal'">
