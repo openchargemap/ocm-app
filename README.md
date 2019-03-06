@@ -11,6 +11,8 @@ Build and test:
 
 > ionic serve
 
+Web build:
+> ionic cordova build browser --prod
 
 Platforn Specifics
 - Web uses the MapKitJS mapping provider

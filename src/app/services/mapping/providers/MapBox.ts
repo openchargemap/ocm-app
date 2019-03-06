@@ -35,10 +35,13 @@ export class MapBoxMapProvider implements IMapProvider {
 
   private searchMarker: mapboxgl.Marker;
 
+  public mapTileSet: string;
+
   /** @constructor */
   constructor(private events: Events, private logging: Logging, private http: HttpClient) {
     this.events = events;
     this.mapAPIType = MappingAPI.MAPBOX;
+    this.mapTileSet = 'mapbox://styles/mapbox/streets-v10';
     this.mapReady = false;
     this.markerList = new Dictionary<number, any>();
   }
@@ -73,7 +76,7 @@ export class MapBoxMapProvider implements IMapProvider {
 
         this.map = new mapboxgl.Map({
           container: mapCanvasID,
-          style: 'mapbox://styles/mapbox/streets-v10',
+          style: this.mapTileSet,
           zoom: 15,
           attributionControl: false
         });
@@ -99,49 +102,22 @@ export class MapBoxMapProvider implements IMapProvider {
           this.events.publish('ocm:mapping:zoom');
         });
 
-        this.map.on('click', (e) => {
+        /*this.map.on('click', (e) => {
           this.logging.log('Click:' + e.target);
 
           var features = this.map.queryRenderedFeatures(e.point); //, { layers: ['markers'] });
 
           if (features.length) {
             var clickedPoint = features[0];
-
+*/
             //this.events.publish('ocm:poi:selected', { poi: poi, poiId: poi.ID });
             /*this.map.flyTo({
               center: clickedPoint.bbox.,
               zoom: 15,
               speed: .75
             });*/
-          }
-        });
-        /*
-  
-             this.map = new google.maps.Map(mapCanvas, mapOptions);
-  
-             //TODO: events for map manipulation to perform search
-             var mapProviderContext = this;
-             google.maps.event.addListener(this.map, 'dragend', function () {
-               mapProviderContext.events.publish('ocm:mapping:dragend');
-             });
-  
-             google.maps.event.addListener(this.map, 'zoom_changed', function () {
-               mapProviderContext.events.publish('ocm:mapping:zoom');
-             });
-  
-             google.maps.event.addListenerOnce(this.map, 'idle', function () {
-               mapProviderContext.events.publish('ocm:mapping:ready');
-             });
-  
-             this.mapReady = true;
-  
-             //this.events.publish('ocm:mapping:ready');
-           }
-         }
-  
-         */
-
-
+         /* }
+        });*/
       }
     } else {
       this.logging.log("Call to initMap before API is ready:" + MappingAPI[this.mapAPIType], LogLevel.ERROR);
@@ -284,8 +260,8 @@ export class MapBoxMapProvider implements IMapProvider {
     if (this.mapReady) {
       this.map.setCenter(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
 
-      if (!this.searchMarker){
-        this.searchMarker = new mapboxgl.Marker({color:'#f0f0f0',anchor:'top'});
+      if (!this.searchMarker) {
+        this.searchMarker = new mapboxgl.Marker({ color: '#f0f0f0', anchor: 'top' });
       }
 
       this.searchMarker.setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));

@@ -12,6 +12,7 @@ import { AppManager } from "./services/AppManager";
 import { ProfilePage } from "./pages/profile/profile";
 import { Logging } from "./services/Logging";
 import { environment } from "../environments/environment";
+import { PoiEditorPage } from "./pages/poi-editor/poi-editor.page";
 
 @Component({
   selector: "app-root",
@@ -81,6 +82,21 @@ export class AppComponent {
 
     const modal = await this.modalController.create({
       component: RoutePlannerPage
+    });
+
+    modal.onDidDismiss().then(data => {
+      // focus map again..
+      this.mapping.focusMap();
+    });
+
+    await modal.present();
+  }
+
+  async add() {
+    this.mapping.unfocusMap();
+
+    const modal = await this.modalController.create({
+      component: PoiEditorPage
     });
 
     modal.onDidDismiss().then(data => {

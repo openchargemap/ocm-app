@@ -17,6 +17,7 @@ import { MapKitMapProvider } from './providers/MapKit';
 import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
 import { Events } from '@ionic/angular'; //TODO remove dependency on ionic here?
 import { HttpClient } from '@angular/common/http';
+import { MapTilerMapProvider } from './providers/MapTiler';
 
 /** Mapping - provides a way to render to various mapping APIs
  * @module Mapping
@@ -94,6 +95,10 @@ export class Mapping implements IMapManager {
 
         if (this.mapOptions.mapAPI == MappingAPI.MAPKIT_JS) {
             this.mapProvider = new MapKitMapProvider(this.events, this.logging);
+        }
+
+        if (this.mapOptions.mapAPI == MappingAPI.MAPTILER) {
+            this.mapProvider = new MapTilerMapProvider(this.events, this.logging, this.http);
         }
     }
 

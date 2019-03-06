@@ -34,6 +34,8 @@ import { SettingsModule } from './pages/settings/settings.module';
 import { JourneysModule } from './pages/journeys/journeys.module';
 import { FavouriteEditorPage } from './pages/journeys/favourite-editor';
 import { NullableTranslatePipe } from './pipes/NullableTranslatePipe';
+import { PoiEditorPage } from './pages/poi-editor/poi-editor.page';
+import { PoiEditorPageModule } from './pages/poi-editor/poi-editor.module';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -57,7 +59,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage, MediaUploadPage, FavouriteEditorPage], // , JourneysPage, MediaUploadPage, POIDetailsPage, ProfilePage, SettingsPage, SignInPage
+  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage, MediaUploadPage, FavouriteEditorPage, PoiEditorPage], // , JourneysPage, MediaUploadPage, POIDetailsPage, ProfilePage, SettingsPage, SignInPage
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -82,6 +84,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     CommentModule,
     MediaUploadModule,
     POIDetailsModule,
+    PoiEditorPageModule,
     ProfileModule,
     SettingsModule
   ],

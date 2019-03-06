@@ -3,11 +3,12 @@ import { Observable } from "rxjs-compat/Observable";
 import { GeoPosition, GeoLatLng, GeoBounds, PlaceSearchResult } from "../../../model/AppModels";
 
 export enum MappingAPI {
-    GOOGLE_WEB,
-    GOOGLE_NATIVE,
-    LEAFLET,
-    MAPBOX,
-    MAPKIT_JS
+    GOOGLE_WEB = 1,
+    GOOGLE_NATIVE = 2,
+    LEAFLET = 3,
+    MAPBOX = 4,
+    MAPKIT_JS = 5,
+    MAPTILER =6
 }
 
 export interface IMapProvider {
