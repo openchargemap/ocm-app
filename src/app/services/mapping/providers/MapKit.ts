@@ -269,9 +269,13 @@ export class MapKitMapProvider implements IMapProvider {
     }
   }
 
-  setMapCenter(pos: GeoPosition) {
+  setMapCenter(pos: GeoPosition, zoomLevel?:number) {
     if (this.map) {
-      this.map.setCenterAnimated(new mapkit.Coordinate(pos.coords.latitude, pos.coords.longitude));
+      this.map.setCenterAnimated(new mapkit.Coordinate(pos.coords.latitude, pos.coords.longitude), false);
+
+      if (zoomLevel){
+        this.setMapZoom(zoomLevel);
+      }
     }
   }
 
@@ -292,7 +296,7 @@ export class MapKitMapProvider implements IMapProvider {
   }
 
   setMapZoom(zoom: number) {
-    this.logging.log("MapKit: setMapZoom not supported", LogLevel.VERBOSE);
+    //this.logging.log("MapKit: setMapZoom not supported", LogLevel.VERBOSE);
     // this.map.setZoom(zoomLevel);
 
     // use the zoom level to compute the region

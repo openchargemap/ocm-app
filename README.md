@@ -1,7 +1,7 @@
 # ocm-app
 The OCM web and mobile app
 
-Implement using Ionic, Angular and TypeScript
+Implemented using Ionic, Angular and TypeScript
 
 Install Ionic CLI & Cordova:
 > npm install -g cordova ionic
@@ -14,11 +14,11 @@ Build and test:
 Web build:
 > ionic cordova build browser --prod
 
-Platforn Specifics
-- Web uses the MapKitJS mapping provider
+Platform Specifics
+- Web uses a web/js mapping provider for the browser version
     - ionic cordova plugin remove cordova-plugin-inappbrowser
     - ionic cordova build browser --prod
-- Android and iOS use the Google Maps Native mapping provider
+- Android and iOS currently use the Google Maps Native mapping provider
     - ionic cordova plugin add cordova-plugin-inappbrowser
     - iOS and Android versions historically have different bundle ids.
     - iOS fresh setup: install and update latest cocoapods version, then  /platforms/ios/ pod deintegrate, pod install
