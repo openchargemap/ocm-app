@@ -8,6 +8,7 @@ import { RoutePlanner } from '../../components/route-planner/route-planner';
 export class RoutePlannerPage {
 
   hasNavbar: boolean = false;
+  
   constructor(public modalController: ModalController) {
 
   }

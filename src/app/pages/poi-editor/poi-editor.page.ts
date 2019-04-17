@@ -10,6 +10,8 @@ export class PoiEditorPage implements OnInit {
   constructor() { }
 
   ngOnInit() {
+
+    
   }
 
 }

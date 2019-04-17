@@ -13,6 +13,7 @@ import { ProfilePage } from "./pages/profile/profile";
 import { Logging } from "./services/Logging";
 import { environment } from "../environments/environment";
 import { PoiEditorPage } from "./pages/poi-editor/poi-editor.page";
+import { Analytics } from "./services/Analytics";
 
 @Component({
   selector: "app-root",
@@ -36,10 +37,11 @@ export class AppComponent {
     public mapping: Mapping,
     public modalController: ModalController,
     public appManager: AppManager,
-    public logger: Logging
+    public logger: Logging,
+    public analytics: Analytics
   ) {
 
-    this.logger.log("Environment: "+environment.name);
+    this.logger.log("Environment: " + environment.name);
 
     this.initializeApp();
   }
@@ -72,8 +74,17 @@ export class AppComponent {
         .get("ocm.search.performSearch")
         .toPromise()
         .then(v => {
-          console.log("TRANSLATE:" + v);
+          //
         });
+
+      this.analytics.init(environment.analyticsId)
+        .then(() => {
+          this.analytics.setAppVersion(environment.version);
+          this.analytics.appEvent('Startup', 'App Loaded');
+
+        })
+        .catch(e => this.logger.log("Error starting analytics"));
+
     });
   }
 
@@ -157,5 +168,5 @@ export class AppComponent {
     await modal.present();
   }
 
-  
+
 }

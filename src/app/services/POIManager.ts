@@ -7,6 +7,7 @@ import { Logging, LogLevel } from './Logging';
 import { Injectable, Inject } from '@angular/core';
 import { POISearchParams } from '../model/AppModels';
 import { APIClient } from './APIClient';
+import { Analytics } from './Analytics';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,7 @@ export class POIManager {
   poiList: any[];
   isRequestInProgress: boolean = false;
 
-  constructor(public api: APIClient, public events: Events, public logging: Logging) {
+  constructor(public api: APIClient, public events: Events, public logging: Logging, public analytics:Analytics) {
 
   }
 
@@ -29,6 +30,9 @@ export class POIManager {
     this.isRequestInProgress = true;
 
     try {
+      
+      
+
       let results = await this.api.fetchPOIListByParam(searchParams);
 
       this.isRequestInProgress = false;
@@ -38,6 +42,8 @@ export class POIManager {
       this.poiList = results;
 
       this.events.publish('ocm:poiList:updated');
+
+      this.analytics.appEvent('Search','Fetched Results');
 
       return this.poiList.length;
     }

@@ -41,6 +41,8 @@ export class SettingsPage implements OnInit {
     if (this.powerRange.upper == 0) this.powerRange.upper = 500;
 
     await this.populateReferenceData();
+
+    this.appManager.analytics.viewEvent('Settings');
   }
 
   async populateReferenceData(){

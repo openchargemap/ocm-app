@@ -221,10 +221,12 @@ export class MediaUploadPage {
                 this.modalController.dismiss();
             });
 
+            this.appManager.analytics.appEvent("MediaUpload","Completed");
             // TODO: refresh this POI in background to see results with upload
         } catch (rejected) {
             await this.appManager.dismissLoadingProgress();
             await this.appManager.showToastNotification('Upload failed, please try again.');
+            this.appManager.analytics.appEvent("MediaUpload","Failed");
 
         }
 

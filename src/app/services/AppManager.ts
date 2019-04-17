@@ -15,6 +15,7 @@ import { JourneyManager } from './JourneyManager';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Platforms } from '@ionic/core';
+import { Analytics } from './Analytics';
 
 @Injectable({
   providedIn: 'root',
@@ -50,7 +51,8 @@ export class AppManager {
     public toastController: ToastController,
     public loadingController: LoadingController,
     public jwtHelper: JwtHelperService,
-    public logging: Logging
+    public logging: Logging,
+    public analytics: Analytics
   ) {
 
     this.api.clientName = 'ocm.app.ionic.v7_0_0';

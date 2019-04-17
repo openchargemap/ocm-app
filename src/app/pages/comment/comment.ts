@@ -65,12 +65,15 @@ export class CommentPage {
 
                 this.loadingController.dismiss();
 
+                this.appManager.analytics.appEvent("Comment", "Failed");
             });
 
-        this.logging.log('Comment submitted');
+        if (submission) {
+            this.logging.log('Comment submitted');
 
-        await loading.dismiss();
-        await this.modalController.dismiss();
-
+            await loading.dismiss();
+            await this.modalController.dismiss();
+            this.appManager.analytics.appEvent("Comment", "Submitted");
+        }
     }
 }

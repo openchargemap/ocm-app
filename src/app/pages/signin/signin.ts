@@ -63,6 +63,8 @@ export class SignInPage {
             this.modalController.dismiss();
             //this.router.navigateByUrl('/search');
 
+            this.appManager.analytics.appEvent("Profile","SignedIn");
+
         } catch (err) {
             signInFailed = true;
             // sign in rejected

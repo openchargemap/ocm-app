@@ -27,6 +27,8 @@ export class ProfilePage {
         } else {
             this.refreshProfileView();
         }
+
+        this.appManager.analytics.viewEvent('Profile');
     }
 
     refreshProfileView() {
