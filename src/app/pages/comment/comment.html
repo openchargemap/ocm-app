@@ -20,7 +20,7 @@
 
     <ion-item>
       <ion-label position="stacked">Comment Type</ion-label>
-      <ion-select [(ngModel)]="commentModel.UserCommentTypeID">
+      <ion-select [(ngModel)]="commentModel.CommentTypeID">
         <ion-select-option *ngFor="let item of commentTypes" [value]="item.ID" [selected]="false">{{item.Title}}</ion-select-option>
       </ion-select>
 

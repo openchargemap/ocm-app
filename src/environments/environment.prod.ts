@@ -2,7 +2,9 @@ import { MappingAPI } from "../app/services/mapping/interfaces/mapping";
 
 export const environment = {
   name: 'prod',
+  version: '7.0.1',
   production: true,
+  analyticsId: 'UA-76936-21',
   googleMapsKey: '',
   mapBoxToken: '',
   mapKitToken: '',

@@ -32,7 +32,7 @@ export class CommentPage {
             ChargePointID: this.navParams.get('id'),
             Comment: '',
             CheckinStatusTypeID: 10,
-            UserCommentTypeID: 10,
+            CommentTypeID: 10,
             Rating: null
         };
 

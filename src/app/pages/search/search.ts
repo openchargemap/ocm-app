@@ -46,7 +46,7 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   public defaultMapZoom:number = 15;
 
-  @ViewChild(PlaceSearch)
+  @ViewChild(PlaceSearch, {static: true})
   placeSearchMapPOI: PlaceSearch;
 
   constructor(

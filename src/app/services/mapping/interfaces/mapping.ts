@@ -1,6 +1,7 @@
 import { environment } from './../../../../environments/environment';
-import { Observable } from "rxjs-compat/Observable";
+
 import { GeoPosition, GeoLatLng, GeoBounds, PlaceSearchResult } from "../../../model/AppModels";
+import { Observable } from 'rxjs/Observable';
 
 export enum MappingAPI {
     GOOGLE_WEB = 1,
@@ -8,7 +9,7 @@ export enum MappingAPI {
     LEAFLET = 3,
     MAPBOX = 4,
     MAPKIT_JS = 5,
-    MAPTILER =6
+    MAPTILER = 6
 }
 
 export interface IMapProvider {
@@ -24,7 +25,7 @@ export interface IMapProvider {
     getMapZoom(): Observable<number>;
     setMapZoom(zoomLevel: number);
     getMapCenter(): Observable<GeoPosition>;
-    setMapCenter(pos: GeoPosition, zoomLevel?:number);
+    setMapCenter(pos: GeoPosition, zoomLevel?: number);
     setMapType(mapType: string);
     getMapBounds(): Observable<Array<GeoLatLng>>;
     moveToMapBounds(bounds: GeoBounds);

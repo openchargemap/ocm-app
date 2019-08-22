@@ -8,7 +8,6 @@ import { NavController, ModalController, ActionSheetController } from '@ionic/an
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../../core/AppConfig';
 import { POIManager } from '../../services/POIManager';
-import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
 import { SignInPage } from '../../pages/signin/signin';
 
 
