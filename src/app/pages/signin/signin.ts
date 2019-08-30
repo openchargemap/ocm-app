@@ -6,7 +6,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Component, NgZone } from '@angular/core';
 import { Location } from '@angular/common';
 import { NavController, NavParams, AlertController, LoadingController, ModalController } from '@ionic/angular';
-import { UserProfile } from '../../model/UserProfile';
 
 @Component({
     templateUrl: 'signin.html'
@@ -56,14 +55,13 @@ export class SignInPage {
             // signed in OK, save response and return to main app
             localStorage.setItem('authResponse', JSON.stringify(this.appManager.api.authResponse));
 
-
             this.appManager.isUserAuthenticated(true);
-            
+
             // navigation to main app. TODO: navigate to last requested page (route guard)
             this.modalController.dismiss();
             //this.router.navigateByUrl('/search');
 
-            this.appManager.analytics.appEvent("Profile","SignedIn");
+            this.appManager.analytics.appEvent("Profile", "SignedIn");
 
         } catch (err) {
             signInFailed = true;

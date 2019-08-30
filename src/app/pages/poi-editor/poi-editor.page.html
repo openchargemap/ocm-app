@@ -1,9 +1,110 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>poi-editor</ion-title>
+    <ion-title>Edit Charging Location</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
+  {{selectedTab}}
+  <ion-segment [(ngModel)]="selectedTab">
+    <ion-segment-button value="location">
+      <ion-label>Location</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="equipment">
+      <ion-label>Equipment</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="info">
+      <ion-label>Info</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ng-container *ngIf="selectedTab=='location'">
+
+    <h2>Address</h2>
+    <div id="edit-map" style="border:1px solid gainsboro;background-color:grey;width:100%;height:128px;"></div>
+    <ion-list>
+      <ion-item>
+        <ion-label position="floating">Location Name</ion-label>
+        <ion-input type="text" [(ngModel)]="item.AddressInfo.Title" placeholder="A title for this location"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Address Line 1</ion-label>
+        <ion-input type="text" [(ngModel)]="item.AddressInfo.AddressLine1" placeholder="The nearest street address"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Address Line 2</ion-label>
+        <ion-input type="text" [(ngModel)]="item.AddressInfo.AddressLine2" placeholder="Optional"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Town</ion-label>
+        <ion-input type="text" [(ngModel)]="item.AddressInfo.Town" placeholder="Town or City"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">State or Province</ion-label>
+        <ion-input type="text" [(ngModel)]="item.AddressInfo.StateOrProvince"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Postal Code</ion-label>
+        <ion-input type="text" [(ngModel)]="item.AddressInfo.Postcode" placeholder="Optional Postal Code"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Country</ion-label>
+        <ion-select [(ngModel)]="item.AddressInfo.CountryID">
+          <ion-select-option value="1">UK</ion-select-option>
+        </ion-select>
+
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Latitude</ion-label>
+        <ion-input type="number" [(ngModel)]="item.AddressInfo.Latitude" placeholder="Latitude (if entering manually)"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Longitude</ion-label>
+        <ion-input type="number" [(ngModel)]="item.AddressInfo.Longitude" placeholder="Longitude (if entering manually)"></ion-input>
+      </ion-item>
+    </ion-list>
+  </ng-container>
+  <ng-container *ngIf="selectedTab=='equipment'">
+    <ion-button (click)="addConnection()"><ion-icon name="add" slot="start"></ion-icon> Add Connection</ion-button>
+    <div *ngFor="let c of item.Connections">
+      <div>ID: {{c.ID}} {{c.Comments}} {{c.Amps}} {{c.PowerKW}} {{c.Quantity}} {{c.Voltage}} </div>
+
+
+        <ion-select [(ngModel)]="c.ConnectionTypeID">
+          <ion-select-option *ngFor="let t of connectionTypes" [value]="t.ID">{{t.ID}}</ion-select-option>
+
+        </ion-select>
+     
+    </div>
+  </ng-container>
+  <ng-container *ngIf="selectedTab=='info'">
+
+    <ion-item>
+      <ion-label position="floating">Usage Cost</ion-label>
+      <ion-input type="text" [(ngModel)]="item.UsageCost"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">General Comments</ion-label>
+      <ion-input type="text" [(ngModel)]="item.GeneralComments"></ion-input>
+    </ion-item>
+
+  </ng-container>
+
 
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="secondary">
+      <ion-button (click)="cancel()">
+        <ion-icon name="close" slot="start"></ion-icon>
+        Cancel
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="primary">
+      <ion-button (click)="save()">
+        Submit
+        <ion-icon name="send" slot="end"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

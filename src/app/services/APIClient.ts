@@ -39,8 +39,8 @@ export class APIClient {
 
   constructor(public http: HttpClient, public refData: ReferenceDataManager, public logging: Logging) {
 
-    this.serviceBaseURL = this.serviceBaseURL_Standard;
-     //this.serviceBaseURL = this.serviceBaseURL_LocalDev;
+    //this.serviceBaseURL = this.serviceBaseURL_Standard;
+     this.serviceBaseURL = this.serviceBaseURL_LocalDev;
   }
 
   getNumberListString(numberList: Array<number>): string {
@@ -180,7 +180,7 @@ export class APIClient {
 
   performSubmission(type: SubmissionType, data: any): Promise<any> {
     if (type === SubmissionType.POI) {
-      // return this.submitPOI(data);
+      return this.submitPOI(data);
     }
     if (type === SubmissionType.Comment) {
       return this.submitUserComment(data);
@@ -203,6 +203,13 @@ export class APIClient {
     const jsonString = JSON.stringify(data);
 
     return this.http.post(this.serviceBaseURL + '/mediaitem/', jsonString, this.getHttpRequestOptions(true))
+      .toPromise();
+  }
+
+  submitPOI(data): Promise<any> {
+    const jsonString = JSON.stringify(data);
+
+    return this.http.post(this.serviceBaseURL + '/poi/', jsonString, this.getHttpRequestOptions(true))
       .toPromise();
   }
 

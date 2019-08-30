@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 
-import { Platform, ModalController } from "@ionic/angular";
+import { Platform, ModalController, Events } from "@ionic/angular";
 import { SplashScreen } from "@ionic-native/splash-screen/ngx";
 import { StatusBar } from "@ionic-native/status-bar/ngx";
 import { TranslateService } from "@ngx-translate/core";
@@ -14,6 +14,7 @@ import { Logging } from "./services/Logging";
 import { environment } from "../environments/environment";
 import { PoiEditorPage } from "./pages/poi-editor/poi-editor.page";
 import { Analytics } from "./services/Analytics";
+import { GeoLatLng } from "./model/AppModels";
 
 @Component({
   selector: "app-root",
@@ -38,7 +39,8 @@ export class AppComponent {
     public modalController: ModalController,
     public appManager: AppManager,
     public logger: Logging,
-    public analytics: Analytics
+    public analytics: Analytics,
+    public events: Events
   ) {
 
     this.logger.log("Environment: " + environment.name);
@@ -85,6 +87,10 @@ export class AppComponent {
         })
         .catch(e => this.logger.log("Error starting analytics"));
 
+
+      this.events.subscribe('ocm:mapping:addpoi', async (pos) => {
+        this.add(pos);
+      });
     });
   }
 
@@ -103,11 +109,11 @@ export class AppComponent {
     await modal.present();
   }
 
-  async add() {
+  async add(pos?: GeoLatLng) {
     this.mapping.unfocusMap();
 
     const modal = await this.modalController.create({
-      component: PoiEditorPage
+      component: PoiEditorPage, componentProps: { startPos: pos }
     });
 
     modal.onDidDismiss().then(data => {

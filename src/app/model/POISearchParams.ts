@@ -4,7 +4,6 @@
  * */
 export class POISearchParams {
 
-
     public poiIdList: Array<number> = null;
     public countryCode: string = null;
     public latitude: number = null;

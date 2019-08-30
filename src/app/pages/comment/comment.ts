@@ -1,9 +1,9 @@
 import { Logging } from './../../services/Logging';
 import { AppManager } from './../../services/AppManager';
-import { UserComment } from './../../model/UserComment';
 import { Component, NgZone } from '@angular/core';
 import { NavController, NavParams, LoadingController, ModalController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { UserComment } from '../../model/CoreDataModel';
 
 @Component({
     templateUrl: 'comment.html'

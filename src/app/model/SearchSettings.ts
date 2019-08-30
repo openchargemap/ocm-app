@@ -1,4 +1,4 @@
-import {GeoLatLng} from './GeoPosition';
+import { GeoLatLng } from './GeoPosition';
 
 
 export class SearchSettings {
@@ -28,6 +28,7 @@ export class SearchSettings {
   public LoadSettings() {
 
   }
+
   public SaveSettings() {
 
   }

@@ -7,6 +7,7 @@ import { Logging, LogLevel } from './Logging';
 import { Injectable } from '@angular/core';
 import { CoreReferenceData } from '../model/CoreReferenceData';
 import { HttpClient } from '@angular/common/http';
+import { OperatorInfo } from '../model/CoreDataModel';
 
 @Injectable({
     providedIn: 'root',
@@ -106,7 +107,7 @@ export class ReferenceDataManager {
     /**
      * Get list of Network operators optionally filtered to those in use or by country usage
      */
-    public getNetworkOperators(filtered: boolean = false): Array<any> {
+    public getNetworkOperators(filtered: boolean = false): Array<OperatorInfo> {
         if (filtered) {
             return this.referenceData.Operators;
         } else {

@@ -29,3 +29,7 @@ Platform Specifics
         - ionic cordova platform add ios
         - platforms/ios/ pod deintegrate, pod install
         - ionic cordova prepare ios --prod
+
+
+Type Docs
+    `typedoc --options typedoc.json --exclude '**/*+(e2e|spec|index).ts' ./src/`

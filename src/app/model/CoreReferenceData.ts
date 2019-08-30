@@ -1,16 +1,18 @@
+import { ConnectionType, Country, OperatorInfo, DataProvider, UsageType, StatusType, CheckinStatusType, SubmissionStatusType, LevelType, CurrentType, CommentType } from "./CoreDataModel";
+
 export interface CoreReferenceData {
     CacheDate: Date;
-    ConnectionTypes: Array<any>;
-    Countries: Array<any>;
-    Operators: Array<any>;
-    DataProviders: Array<any>;
-    UsageTypes: Array<any>;
-    StatusTypes: Array<any>;
-    CheckinStatusTypes: Array<any>;
-    SubmissionStatusTypes: Array<any>;
-    ChargerTypes: Array<any>;
-    CurrentTypes: Array<any>;
-    UserCommentTypes: Array<any>;
+    ConnectionTypes: Array<ConnectionType>;
+    Countries: Array<Country>;
+    Operators: Array<OperatorInfo>;
+    DataProviders: Array<DataProvider>;
+    UsageTypes: Array<UsageType>;
+    StatusTypes: Array<StatusType>;
+    CheckinStatusTypes: Array<CheckinStatusType>;
+    SubmissionStatusTypes: Array<SubmissionStatusType>;
+    ChargerTypes: Array<LevelType>;
+    CurrentTypes: Array<CurrentType>;
+    UserCommentTypes: Array<CommentType>;
     DataTypes: Array<any>;
     MetadataGroups: Array<any>;
     UserProfile: any;

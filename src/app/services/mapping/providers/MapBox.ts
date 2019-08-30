@@ -94,6 +94,17 @@ export class MapBoxMapProvider implements IMapProvider {
           this.events.publish('ocm:mapping:ready');
         });
 
+        this.map.on('move', () => {
+
+          // if search maerk enabled, move marker to map centre
+          if (this.searchMarker) {
+            this.getMapCenter().subscribe(pos => {
+              this.searchMarker.setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
+            });
+
+          }
+        });
+
         this.map.on('moveend', () => {
           this.events.publish('ocm:mapping:dragend');
         });
@@ -102,22 +113,6 @@ export class MapBoxMapProvider implements IMapProvider {
           this.events.publish('ocm:mapping:zoom');
         });
 
-        /*this.map.on('click', (e) => {
-          this.logging.log('Click:' + e.target);
-
-          var features = this.map.queryRenderedFeatures(e.point); //, { layers: ['markers'] });
-
-          if (features.length) {
-            var clickedPoint = features[0];
-*/
-            //this.events.publish('ocm:poi:selected', { poi: poi, poiId: poi.ID });
-            /*this.map.flyTo({
-              center: clickedPoint.bbox.,
-              zoom: 15,
-              speed: .75
-            });*/
-         /* }
-        });*/
       }
     } else {
       this.logging.log("Call to initMap before API is ready:" + MappingAPI[this.mapAPIType], LogLevel.ERROR);
@@ -261,11 +256,16 @@ export class MapBoxMapProvider implements IMapProvider {
       this.map.setCenter(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
 
       if (!this.searchMarker) {
-        this.searchMarker = new mapboxgl.Marker({ color: '#f0f0f0', anchor: 'top' });
+        this.searchMarker = new mapboxgl.Marker({ color: '#99ccff', anchor: 'top' });
+        this.searchMarker.addTo(this.map);
+
+        this.searchMarker.getElement().addEventListener('click', () => {
+          let searchPos = this.searchMarker.getLngLat();
+          this.events.publish('ocm:mapping:addpoi', new GeoLatLng(searchPos.lat, searchPos.lng));
+        });
       }
 
       this.searchMarker.setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
-      this.searchMarker.addTo(this.map);
     }
   }
 
@@ -377,9 +377,9 @@ export class MapBoxMapProvider implements IMapProvider {
     //
   }
 
-  async placeSearch(keyword: string): Promise<Array<PlaceSearchResult>> {
+  async placeSearch(keyword: string, latitude?: number, longitude?: number): Promise<Array<PlaceSearchResult>> {
 
-    let api = `https://api.mapbox.com/geocoding/v5/mapbox.places/${keyword}.json?access_token=${environment.mapBoxToken}`;
+    let api = `https://api.mapbox.com/geocoding/v5/mapbox.places/${keyword ? keyword : longitude + ',' + latitude}.json?access_token=${environment.mapBoxToken}`;
 
     return new Promise<Array<PlaceSearchResult>>(async (resolve, reject) => {
 
