@@ -39,8 +39,8 @@ export class APIClient {
 
   constructor(public http: HttpClient, public refData: ReferenceDataManager, public logging: Logging) {
 
-    //this.serviceBaseURL = this.serviceBaseURL_Standard;
-     this.serviceBaseURL = this.serviceBaseURL_LocalDev;
+    this.serviceBaseURL = this.serviceBaseURL_Standard;
+    //this.serviceBaseURL = this.serviceBaseURL_LocalDev;
   }
 
   getNumberListString(numberList: Array<number>): string {
@@ -79,7 +79,7 @@ export class APIClient {
     if (params.minPowerKW != null && params.minPowerKW > 0) serviceParams += '&minpowerkw=' + params.minPowerKW;
     if (params.maxPowerKW != null && params.maxPowerKW > 0) serviceParams += '&maxpowerkw=' + params.maxPowerKW;
     if (params.submissionStatusTypeIdList != null) serviceParams += '&submissionstatustypeid=' + this.getNumberListString(params.submissionStatusTypeIdList);
-    if (params.poiIdList != null && params.poiIdList.length>0) serviceParams += '&chargepointid=' + this.getNumberListString(params.poiIdList);
+    if (params.poiIdList != null && params.poiIdList.length > 0) serviceParams += '&chargepointid=' + this.getNumberListString(params.poiIdList);
 
     if (params.enableCaching == false) serviceParams += '&enablecaching=false';
     if (params.compact != null) serviceParams += '&compact=' + params.compact;

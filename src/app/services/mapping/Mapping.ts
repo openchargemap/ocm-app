@@ -12,7 +12,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { GoogleMapsNative } from './providers/GoogleMapsNative';
 import { GoogleMapsWeb } from './providers/GoogleMapsWeb';
-import { LeafletMap } from './providers/LeafletMap';
+// import { LeafletMap } from './providers/LeafletMap';
 import { MapKitMapProvider } from './providers/MapKit';
 import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
 import { Events } from '@ionic/angular'; //TODO remove dependency on ionic here?
@@ -85,9 +85,9 @@ export class Mapping implements IMapManager {
             this.mapProvider = new GoogleMapsWeb(this.events, this.logging);
         }
 
-        if (this.mapOptions.mapAPI == MappingAPI.LEAFLET) {
+        /*if (this.mapOptions.mapAPI == MappingAPI.LEAFLET) {
             this.mapProvider = new LeafletMap(this.events, this.logging);
-        }
+        }*/
 
         if (this.mapOptions.mapAPI == MappingAPI.MAPBOX) {
             this.mapProvider = new MapBoxMapProvider(this.events, this.logging, this.http);

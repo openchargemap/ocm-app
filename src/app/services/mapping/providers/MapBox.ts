@@ -86,6 +86,9 @@ export class MapBoxMapProvider implements IMapProvider {
           customAttribution: ["Open Charge Map Contributors"]
         }));
 
+        // Add zoom and rotation controls to the map.
+        this.map.addControl(new mapboxgl.NavigationControl());
+
         this.mapReady = true;
 
 

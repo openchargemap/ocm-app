@@ -14,6 +14,7 @@ import { Logging, LogLevel } from './../../Logging';
 import { Icon, Map, LatLng, Marker, TileLayer, LatLngBounds } from 'leaflet';
 import { PlaceSearchResult } from '../../../model/AppModels';
 
+
 /**Map Provider for Leaflet API
 * @module MapProviders
 */
