@@ -6,7 +6,7 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content class="profile-page" padding>
+<ion-content class="profile-page ion-padding">
 
     <div *ngIf="userProfile==null">
         You are not signed in. <button ion-button (click)="showSignInModal()">{{'ocm.general.signIn' | translate}}</button>

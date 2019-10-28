@@ -14,16 +14,15 @@ import { Observable } from 'rxjs/Observable';
 import { POISearchParams, SubmissionType, GeoLatLng } from '../model/AppModels';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { ReferenceDataFilters } from '../model/ReferenceDataFilters';
 
 @Injectable({
   providedIn: 'root',
 })
 export class APIClient {
-  public serviceBaseURL: string = 'https://api.openchargemap.io/v3';
-  public serviceBaseURL_Standard: string = 'https://api.openchargemap.io/v3';
-  public serviceBaseURL_Sandbox: string = 'https://sandbox.api.openchargemap.io/v2';
-  public serviceBaseURL_LocalDev: string = 'http://localhost:8080/v3';
-
+  public serviceBase: string = 'https://api.openchargemap.io';
+  public serviceBaseURL: string = this.serviceBase + '/v3';
   public hasAuthorizationError: boolean = false;
 
   public ATTRIBUTION_METADATAFIELDID = 4;
@@ -39,8 +38,7 @@ export class APIClient {
 
   constructor(public http: HttpClient, public refData: ReferenceDataManager, public logging: Logging) {
 
-    this.serviceBaseURL = this.serviceBaseURL_Standard;
-    //this.serviceBaseURL = this.serviceBaseURL_LocalDev;
+    this.serviceBaseURL = environment.apiBase + '/v3';
   }
 
   getNumberListString(numberList: Array<number>): string {
@@ -141,13 +139,13 @@ export class APIClient {
   /**
    * fetch core reference data such as Connector Types, Countries, Network Operators etc, optionally filtered by country usage
    */
-  fetchCoreReferenceData(filters): Observable<any> {
+  fetchCoreReferenceData(filters: ReferenceDataFilters): Observable<any> {
 
     let serviceURL = this.serviceBaseURL + '/referencedata/?client='
       + this.clientName + '&output=json' + (this.allowMirror ? '&allowmirror=true' : '') + '&verbose=false&compact=true';
 
-    if (filters != null && filters.countryIdList != null) {
-      serviceURL += '&countryid=' + this.getNumberListString(filters.countryIdList);
+    if (filters != null && filters.CountryIds != null) {
+      serviceURL += '&countryid=' + this.getNumberListString(filters.CountryIds);
     }
 
     this.logging.log('API Call:' + serviceURL, LogLevel.VERBOSE);

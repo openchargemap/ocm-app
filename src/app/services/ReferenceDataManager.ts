@@ -8,6 +8,8 @@ import { Injectable } from '@angular/core';
 import { CoreReferenceData } from '../model/CoreReferenceData';
 import { HttpClient } from '@angular/common/http';
 import { OperatorInfo } from '../model/CoreDataModel';
+import { APIClient } from './APIClient';
+import { ReferenceDataFilters } from '../model/ReferenceDataFilters';
 
 @Injectable({
     providedIn: 'root',
@@ -23,6 +25,30 @@ export class ReferenceDataManager {
 
     constructor(public http: HttpClient, public logging: Logging) {
         this.loadCachedRefData();
+    }
+
+    public refreshReferenceData(api: APIClient) {
+
+        api.fetchCoreReferenceData(null).subscribe((res) => {
+            this.setCoreReferenceData(res);
+            this.setFilteredReferenceData(res);
+
+            this.logging.log('Got refreshed core ref data.', LogLevel.VERBOSE);
+        }, (rejection) => {
+            this.logging.log('Error fetching core ref data:' + rejection);
+        });
+    }
+
+    public refreshFilteredReferenceData(api: APIClient, filters: ReferenceDataFilters)
+    {
+        api.fetchCoreReferenceData(filters).subscribe((res) => {
+           
+            this.setFilteredReferenceData(res);
+
+            this.logging.log('Got refreshed filtered reference data.', LogLevel.VERBOSE);
+        }, (rejection) => {
+            this.logging.log('Error fetching filtered reference data:' + rejection);
+        });
     }
 
     public setCoreReferenceData(refData) {
@@ -46,10 +72,10 @@ export class ReferenceDataManager {
      * */
     public getCountries(filtered: boolean = false): Array<any> {
 
-        if (filtered) {
-            return this.referenceData.Countries;
-        } else {
+        if (filtered == true) {
             return this.filteredReferenceData.Countries;
+        } else {
+            return this.referenceData.Countries;
         }
 
     }
@@ -62,10 +88,10 @@ export class ReferenceDataManager {
      * Get list of connection types optionally filtered to those in use or by country usage
      */
     public getConnectionTypes(filtered: boolean = false): Array<any> {
-        if (filtered) {
-            return this.referenceData.ConnectionTypes;
-        } else {
+        if (filtered == true) {
             return this.filteredReferenceData.ConnectionTypes;
+        } else {
+            return this.referenceData.ConnectionTypes;
         }
     }
 
@@ -77,12 +103,11 @@ export class ReferenceDataManager {
     * Get list of usage types optionally filtered to those in use or by country usage
     */
     public getUsageTypes(filtered: boolean = false): Array<any> {
-        if (filtered) {
-            return this.referenceData.UsageTypes.filter(i => i.ID > 0);
-        } else {
+        if (filtered == true) {
             return this.filteredReferenceData.UsageTypes;
+        } else {
+            return this.referenceData.UsageTypes.filter(i => i.ID > 0);
         }
-
     }
 
     public getUsageTypeByID(id: number): any {
@@ -93,10 +118,10 @@ export class ReferenceDataManager {
      * Get list of Status types optionally filtered to those in use or by country usage
      */
     public getStatusTypes(filtered: boolean = false): Array<any> {
-        if (filtered) {
-            return this.referenceData.StatusTypes.filter(i => i.ID > 0);
-        } else {
+        if (filtered == true) {
             return this.filteredReferenceData.StatusTypes;
+        } else {
+            return this.referenceData.StatusTypes.filter(i => i.ID > 0);
         }
     }
 
@@ -108,10 +133,10 @@ export class ReferenceDataManager {
      * Get list of Network operators optionally filtered to those in use or by country usage
      */
     public getNetworkOperators(filtered: boolean = false): Array<OperatorInfo> {
-        if (filtered) {
-            return this.referenceData.Operators;
-        } else {
+        if (filtered == true) {
             return this.filteredReferenceData.Operators;
+        } else {
+            return this.referenceData.Operators;
         }
     }
 
@@ -123,10 +148,10 @@ export class ReferenceDataManager {
      * Get list of Data Providers optionally filtered to those in use or by country usage
      */
     public getDataProviders(filtered: boolean = false): Array<any> {
-        if (filtered) {
-            return this.referenceData.DataProviders;
-        } else {
+        if (filtered == true) {
             return this.filteredReferenceData.DataProviders;
+        } else {
+            return this.referenceData.DataProviders;
         }
     }
 
@@ -140,10 +165,10 @@ export class ReferenceDataManager {
     public getCheckinStatusTypes(filtered: boolean = false, userSelectable = true): Array<any> {
         let results = null;
 
-        if (filtered) {
-            results = this.referenceData.CheckinStatusTypes;
-        } else {
+        if (filtered == true) {
             results = this.filteredReferenceData.CheckinStatusTypes;
+        } else {
+            results = this.referenceData.CheckinStatusTypes;
         }
 
         if (userSelectable) {
@@ -163,10 +188,10 @@ export class ReferenceDataManager {
     public getCommentTypes(filtered: boolean = false, userSelectable: boolean = true): Array<any> {
         let results;
 
-        if (filtered) {
-            results = this.referenceData.UserCommentTypes;
-        } else {
+        if (filtered == true) {
             results = this.filteredReferenceData.UserCommentTypes;
+        } else {
+            results = this.referenceData.UserCommentTypes;
         }
 
         if (userSelectable) {
@@ -179,14 +204,15 @@ export class ReferenceDataManager {
     public getCommentTypeByID(id: number): any {
         return this.getRefDataByID(this.referenceData.UserCommentTypes, id);
     }
+
     /**
      * Get list optionally filtered to those in use or by country usage
      */
     public getSubmissionStatusTypes(filtered: boolean = false): Array<any> {
-        if (filtered) {
-            return this.referenceData.SubmissionStatusTypes;
-        } else {
+        if (filtered == true) {
             return this.filteredReferenceData.SubmissionStatusTypes;
+        } else {
+            return this.referenceData.SubmissionStatusTypes;
         }
     }
 
@@ -198,10 +224,10 @@ export class ReferenceDataManager {
    * Get list optionally filtered to those in use or by country usage
    */
     public getChargingLevelTypes(filtered: boolean = false): Array<any> {
-        if (filtered) {
-            return this.referenceData.ChargerTypes;
-        } else {
+        if (filtered == true) {
             return this.filteredReferenceData.ChargerTypes;
+        } else {
+            return this.referenceData.ChargerTypes;
         }
     }
 
@@ -233,12 +259,16 @@ export class ReferenceDataManager {
 
             this.http.get<CoreReferenceData>('./assets/data/CoreReferenceData.json').subscribe(res => {
                 this.logging.log('Using bundled reference data as cached ref data.');
-                this.referenceData = res;
+                this.setCoreReferenceData(res);
 
             });
         } else {
-            this.referenceData = JSON.parse(cachedRefData);
+            let res = JSON.parse(cachedRefData);
+            this.setCoreReferenceData(res);
         }
+
+        this.setFilteredReferenceData(this.referenceData);
+
     }
 
     private cacheRefData(refData) {
@@ -313,18 +343,23 @@ export class ReferenceDataManager {
         if (poi.DataProviderID != null && poi.DataProvider == null) {
             poi.DataProvider = refData.getDataProviderByID(poi.DataProviderID);
         }
+
         if (poi.OperatorID != null && poi.OperatorInfo == null) {
             poi.OperatorInfo = refData.getNetworkOperatorByID(poi.OperatorID);
         }
+
         if (poi.UsageTypeID != null && poi.UsageType == null) {
             poi.UsageType = refData.getUsageTypeByID(poi.UsageTypeID);
         }
+
         if (poi.AddressInfo.CountryID != null && poi.AddressInfo.Country == null) {
             poi.AddressInfo.Country = refData.getCountryByID(poi.AddressInfo.CountryID);
         }
+
         if (poi.StatusTypeID != null && poi.StatusType == null) {
             poi.StatusType = refData.getStatusTypeByID(poi.StatusTypeID);
         }
+
         if (poi.SubmissionStatusTypeID != null && poi.SubmissionStatusType == null) {
             poi.SubmissionStatusType = refData.getSubmissionStatusTypesByID(poi.SubmissionStatusTypeID);
         }

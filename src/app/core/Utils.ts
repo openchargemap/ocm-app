@@ -345,4 +345,8 @@ export class Utils {
             if (callNow) func.apply(context, args);
         };
     }
+
+    static getRandomInt(max:number){
+        return Math.floor(Math.random() * Math.floor(max));
+    }
 }

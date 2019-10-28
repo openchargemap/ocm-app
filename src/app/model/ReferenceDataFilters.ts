@@ -1,5 +1,5 @@
-export interface SearchFilters {
+export interface ReferenceDataFilters {
     CountryIds: Array<number>;
-    IncludeUsed: boolean;
-    IncludeUnused: boolean;
+    IncludeUsed?: boolean;
+    IncludeUnused?: boolean;
 }

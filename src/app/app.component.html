@@ -18,21 +18,23 @@
                 {{p.title}}
               </ion-label>
             </ion-item>
-            <!--<ion-item (click)="openRoutePlannerModal()"> <ion-icon slot="start" name="map"></ion-icon>
+           
+            <ion-item (click)="openRoutePlannerModal()" *ngIf="enabledFeatures.includes('ROUTE_PLANNER')"> <ion-icon slot="start" name="map"></ion-icon>
               <ion-label>
                Route Planner
               </ion-label>
             </ion-item>
-            -->
+           
 
-           <ion-item (click)="add()">
+          <ion-item (click)="add()" *ngIf="enabledFeatures.includes('ADD_POI')">
               <ion-icon slot="start" name="add-circle-outline"></ion-icon>
               <ion-label>
                 Add Location
               </ion-label>
             </ion-item>
+          
 
-            <ion-item (click)="journeys()">
+            <ion-item (click)="journeys()" *ngIf="enabledFeatures.includes('FAVOURITES')">
               <ion-icon slot="start" name="map"></ion-icon>
               <ion-label>
                 Journeys

@@ -4,8 +4,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  {{selectedTab}}
+<ion-content class="ion-padding">
+
   <ion-segment [(ngModel)]="selectedTab">
     <ion-segment-button value="location">
       <ion-label>Location</ion-label>
@@ -20,8 +20,11 @@
 
   <ng-container *ngIf="selectedTab=='location'">
 
-    <h2>Address</h2>
+    <p>Drag the map to center the marker on the location of this charging equipment.</p>
     <div id="edit-map" style="border:1px solid gainsboro;background-color:grey;width:100%;height:128px;"></div>
+    <p>The closest address appears to be:<br> <strong>{{suggestedAddress}}</strong>
+      <ion-button size="small" (click)="useSuggestedAddress()">Use This Address &gt;</ion-button>
+    </p>
     <ion-list>
       <ion-item>
         <ion-label position="floating">Location Name</ion-label>
@@ -50,7 +53,7 @@
       <ion-item>
         <ion-label position="floating">Country</ion-label>
         <ion-select [(ngModel)]="item.AddressInfo.CountryID">
-          <ion-select-option value="1">UK</ion-select-option>
+          <ion-select-option *ngFor="let c of countries" [value]="c.ID">{{c.Title}}</ion-select-option>
         </ion-select>
 
       </ion-item>
@@ -65,17 +68,104 @@
     </ion-list>
   </ng-container>
   <ng-container *ngIf="selectedTab=='equipment'">
-    <ion-button (click)="addConnection()"><ion-icon name="add" slot="start"></ion-icon> Add Connection</ion-button>
-    <div *ngFor="let c of item.Connections">
-      <div>ID: {{c.ID}} {{c.Comments}} {{c.Amps}} {{c.PowerKW}} {{c.Quantity}} {{c.Voltage}} </div>
+
+      <ion-item>
+          <ion-label position="floating">Network Operator</ion-label>
+          <ion-select [(ngModel)]="item.OperatorID">
+            <ion-select-option *ngFor="let i of operators" [value]="i.ID">{{i.Title}}</ion-select-option>
+            <ion-select-option value="-2">Other...</ion-select-option>
+          </ion-select>
+  
+        </ion-item>
+
+    <ng-container *ngIf="conn==null">
+      <ion-button (click)="addConnection()" size="small">
+        <ion-icon name="add" slot="start"></ion-icon> Add
+      </ion-button>
 
 
-        <ion-select [(ngModel)]="c.ConnectionTypeID">
-          <ion-select-option *ngFor="let t of connectionTypes" [value]="t.ID">{{t.ID}}</ion-select-option>
+      <ion-grid>
+          <ng-container *ngFor="let c of item.Connections">
+            <ion-row>
 
+              <ion-col size="12">
+
+                  <ion-badge color="success">{{c.Quantity}}x</ion-badge>
+                <h3>
+                  <ion-icon name="flash" slot="start"></ion-icon> {{c.ConnectionType?.Title}} 
+                </h3>
+              </ion-col>
+            </ion-row>
+            <ion-row class="details">
+
+              <ion-col><span *ngIf="c.PowerKW">{{c.PowerKW}} kW</span> </ion-col>
+              <ion-col><span *ngIf="c.Amps">{{c.Amps}}A</span> </ion-col>
+              <ion-col><span *ngIf="c.Voltage">{{c.Voltage}}V</span> </ion-col>
+              <ion-col><span *ngIf="c.CurrentTypeID">{{c.CurrentType?.Title}}</span> </ion-col>
+
+            </ion-row>
+            <ion-row *ngIf="c.Comments">{{c.Comments}}</ion-row>
+            <ion-row>
+              <ion-col>  <ion-button (click)="editConnection(c.ID)">Edit</ion-button></ion-col>
+            </ion-row>
+          </ng-container>
+        </ion-grid>
+
+    
+    
+    </ng-container>
+
+    <ng-container *ngIf="conn!=null">
+      <h2>Edit Equipment Connection Info {{conn.ID}}</h2>
+      <ion-item>
+        <ion-label position="floating">Connection Type</ion-label>
+        <ion-select [(ngModel)]="conn.ConnectionTypeID">
+          <ion-select-option value="0">Unknown</ion-select-option>
+          <ion-select-option *ngFor="let t of connectionTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
         </ion-select>
-     
-    </div>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Supply Type</ion-label>
+        <ion-select [(ngModel)]="conn.CurrentTypeID">
+          <ion-select-option value="0">Unknown</ion-select-option>
+          <ion-select-option *ngFor="let t of currentTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Power (kW)</ion-label>
+        <ion-input type="number" [(ngModel)]="conn.PowerKW"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Amps</ion-label>
+        <ion-input type="number" [(ngModel)]="conn.Amps"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Voltage</ion-label>
+        <ion-input type="number" [(ngModel)]="conn.Voltage"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Status</ion-label>
+        <ion-select [(ngModel)]="conn.StatusTypeID">
+          <ion-select-option *ngFor="let t of statusTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Quantity Available</ion-label>
+        <ion-input type="number" [(ngModel)]="conn.Quantity"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Comment</ion-label>
+        <ion-input type="text" [(ngModel)]="conn.Comments" placeholder="(optional) other comments"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Operators Reference</ion-label>
+        <ion-input type="text" [(ngModel)]="conn.Reference"></ion-input>
+      </ion-item>
+
+      <ion-button (click)="updateConnection()" size="small">Update</ion-button>
+      <ion-button (click)="cancelEditConnection()" size="small">Cancel</ion-button>
+    </ng-container>
   </ng-container>
   <ng-container *ngIf="selectedTab=='info'">
 

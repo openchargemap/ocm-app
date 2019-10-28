@@ -30,6 +30,8 @@ export class AppComponent {
 
   ];
 
+  public enabledFeatures: string[];
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -46,6 +48,8 @@ export class AppComponent {
     this.logger.log("Environment: " + environment.name);
 
     this.initializeApp();
+
+    this.enabledFeatures = environment.enabledFeatures;
   }
 
 

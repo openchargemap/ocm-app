@@ -259,16 +259,15 @@ export class MapBoxMapProvider implements IMapProvider {
       this.map.setCenter(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
 
       if (!this.searchMarker) {
-        this.searchMarker = new mapboxgl.Marker({ color: '#99ccff', anchor: 'top' });
-        this.searchMarker.addTo(this.map);
+        this.searchMarker = new mapboxgl.Marker({ color: '#99ccff', anchor: 'top' })
+                            .setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude))
+                            .addTo(this.map);
 
         this.searchMarker.getElement().addEventListener('click', () => {
           let searchPos = this.searchMarker.getLngLat();
           this.events.publish('ocm:mapping:addpoi', new GeoLatLng(searchPos.lat, searchPos.lng));
         });
       }
-
-      this.searchMarker.setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
     }
   }
 

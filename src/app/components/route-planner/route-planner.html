@@ -58,8 +58,8 @@
 
   <place-search #placeSearchRouteDestination (placeChanged)="routeDestinationSelected($event)"></place-search>
 
-  <p padding *ngIf="routeCalcInProgress">
-    <ion-spinner padding></ion-spinner> Calculating Route..
+  <p class="ion-padding" *ngIf="routeCalcInProgress">
+    <ion-spinner class="ion-padding"></ion-spinner> Calculating Route..
   </p>
 
   <ion-list *ngIf="selectedJourneyRoute!=null">

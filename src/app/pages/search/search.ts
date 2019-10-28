@@ -197,12 +197,9 @@ export class SearchPage implements OnInit, AfterViewInit {
     // first start up, get fresh core reference data, then we can start getting POI results nearby
     if (!this.appManager.referenceDataManager.referenceDataLoaded()) {
       this.logging.log('No cached ref dat, fetching ..', LogLevel.VERBOSE);
-      this.appManager.api.fetchCoreReferenceData(null).subscribe((res) => {
-        this.logging.log('Got refreshed core ref data.', LogLevel.VERBOSE);
+      this.appManager.referenceDataManager.refreshReferenceData(this.appManager.api);
 
-      }, (rejection) => {
-        this.logging.log('Error fetching core ref data:' + rejection);
-      });
+      
     }
 
 

@@ -9,6 +9,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../../core/AppConfig';
 import { POIManager } from '../../services/POIManager';
 import { SignInPage } from '../../pages/signin/signin';
+import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
+import { PoiEditorPage } from '../../pages/poi-editor/poi-editor.page';
 
 
 @Component({
@@ -36,7 +39,8 @@ export class PoiDetails implements OnInit {
     public logging: Logging,
     public modalController: ModalController,
     public actionSheetController: ActionSheetController,
-    public poiManager: POIManager
+    public poiManager: POIManager,
+    private router: Router
   ) {
 
   }
@@ -58,7 +62,7 @@ export class PoiDetails implements OnInit {
       for (let i of this.poi.MediaItems) {
         i.ItemMediumURL = i.ItemThumbnailURL.replace('.thmb.', '.medi.');
       }
-      this.backdropImage = this.poi.MediaItems[this.poi.MediaItems.length-1].ItemThumbnailURL.replace('.thmb.', '.medi.');
+      this.backdropImage = this.poi.MediaItems[this.poi.MediaItems.length - 1].ItemThumbnailURL.replace('.thmb.', '.medi.');
     } else {
       this.poi._hasPhotos = false;
       this.backdropImage = null;
@@ -257,8 +261,23 @@ export class PoiDetails implements OnInit {
     this.appManager.launchWebPage(url);
   }
 
-  edit() {
-    this.appManager.launchOCMWebPage('/poi/edit/' + this.poi.ID);
+  async edit() {
+    if (environment.enabledFeatures.find(f => f == 'EDIT_POI')) {
+
+      const modal = await this.modalController.create({
+        component: PoiEditorPage, componentProps: { id: this.poi.ID }
+      });
+
+      modal.onDidDismiss().then(data => {
+        this.refresh();
+      });
+
+      await modal.present();
+
+    } else {
+      this.appManager.launchOCMWebPage('/poi/edit/' + this.poi.ID);
+    }
+
   }
 
   refresh() {

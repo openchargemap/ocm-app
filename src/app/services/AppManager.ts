@@ -16,6 +16,7 @@ import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Platforms } from '@ionic/core';
 import { Analytics } from './Analytics';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -55,7 +56,7 @@ export class AppManager {
     public analytics: Analytics
   ) {
 
-    this.api.clientName = 'ocm.app.ionic.v7_0_0';
+    this.api.clientName = 'ocm.app.ionic.' + environment.version;
     this.isDebugMode = false;
     this.enableSubmissionQueue = false;
     this.submissionQueue.setAppManager(this);

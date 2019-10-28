@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { POIDetails, OperatorInfo, ConnectionType } from '../../model/CoreDataModel';
+import { POIDetails, OperatorInfo, ConnectionType, Country, ConnectionInfo, StatusType } from '../../model/CoreDataModel';
 import { AppManager } from '../../services/AppManager';
 import { NavController, ModalController, Events } from '@ionic/angular';
 import { Mapping } from '../../services/mapping/Mapping';
@@ -8,6 +8,8 @@ import { MapBoxMapProvider } from '../../services/mapping/providers/MapBox';
 import { Logging } from '../../services/Logging';
 import { HttpClient } from '@angular/common/http';
 import { GeoLatLng, GeoPosition } from '../../model/AppModels';
+import { Utils } from '../../core/Utils';
+import { POIManager } from '../../services/POIManager';
 
 @Component({
   selector: 'app-poi-editor',
@@ -16,16 +18,31 @@ import { GeoLatLng, GeoPosition } from '../../model/AppModels';
 })
 export class PoiEditorPage implements OnInit {
 
+  id: number;
   item: POIDetails;
+  conn: ConnectionInfo;
+
+  originalMarkerPos: GeoLatLng;
 
   public startPos: GeoLatLng;
 
   mapService: IMapProvider;
 
   selectedTab: string = 'location';
+  suggestedAddress: string = '';
 
-  constructor(private appManager: AppManager, private modalController: ModalController,
-    public mapping: Mapping, private events: Events, private logging: Logging, private http: HttpClient) {
+  useFilteredConnectionTypes: boolean = true;
+  useFilteredOperators: boolean = true;
+
+  constructor(
+    private appManager: AppManager,
+    private modalController: ModalController,
+    public mapping: Mapping,
+    private events: Events,
+    private logging: Logging,
+    private http: HttpClient,
+    private poiManager: POIManager
+  ) {
 
     this.item = {
       ID: -1,
@@ -52,27 +69,31 @@ export class PoiEditorPage implements OnInit {
       }
     };
 
-    // add a default connection
-    this.addConnection();
   }
 
   get operators(): Array<OperatorInfo> {
-    return this.appManager.referenceDataManager.getNetworkOperators();
+    return this.appManager.referenceDataManager.getNetworkOperators(this.useFilteredOperators);
   }
 
   get connectionTypes(): Array<ConnectionType> {
-    return this.appManager.referenceDataManager.getConnectionTypes();
+    return this.appManager.referenceDataManager.getConnectionTypes(this.useFilteredConnectionTypes);
   }
 
-  /* this.usageTypes = this.appManager.referenceDataManager.getUsageTypes(this.filterByCountryPref);
- this.statusTypes = this.appManager.referenceDataManager.getStatusTypes(this.filterByCountryPref);
- this.connectionTypes = this.appManager.referenceDataManager.getConnectionTypes(this.filterByCountryPref);
- */
+  get currentTypes(): Array<ConnectionType> {
+    return this.appManager.referenceDataManager.getOutputCurrentTypes();
+  }
+
+  get statusTypes(): Array<StatusType> {
+    return this.appManager.referenceDataManager.getStatusTypes();
+  }
+
+  get countries(): Array<Country> {
+    return this.appManager.referenceDataManager.getCountries();
+  }
 
   ngOnInit() {
     this.mapService = new MapBoxMapProvider(this.events, this.logging, this.http);
     this.mapService.initAPI();
-
 
   }
 
@@ -80,8 +101,16 @@ export class PoiEditorPage implements OnInit {
 
     this.mapService.initMap("edit-map", new MapOptions(), null);
 
-    if (this.item.ID == -1) {
+    if (this.id != null) {
+      // edit existing
+      this.poiManager.getPOIById(this.id, true).then(poi => {
+        this.item = Object.assign({}, poi);
 
+        this.mapService.setMapCenter(new GeoPosition(this.item.AddressInfo.Latitude, this.item.AddressInfo.Longitude));
+      });
+    }
+    else {
+      // add new
       if (this.startPos) {
         this.item.AddressInfo.Latitude = this.startPos.latitude;
         this.item.AddressInfo.Longitude = this.startPos.longitude;
@@ -100,13 +129,11 @@ export class PoiEditorPage implements OnInit {
             }
           });
         }
+
+
+        this.mapService.setMapCenter(new GeoPosition(this.item.AddressInfo.Latitude, this.item.AddressInfo.Longitude));
       }
-
-
-      this.mapService.setMapCenter(new GeoPosition(this.item.AddressInfo.Latitude, this.item.AddressInfo.Longitude));
-
     }
-
 
 
   }
@@ -116,16 +143,55 @@ export class PoiEditorPage implements OnInit {
       // now resolve an address
       this.mapService.placeSearch(null, this.item.AddressInfo.Latitude, this.item.AddressInfo.Longitude).then(results => {
         if (results.length > 0) {
-          this.item.AddressInfo.AddressLine1 = results[0].Address;
+          this.suggestedAddress = results[0].Address;
+
         }
       });
     }
   }
 
-  addConnection() {
-    this.item.Connections.push({
-      ID: -1, ConnectionTypeID: null, StatusTypeID: null, PowerKW: 0, Quantity: 1
-    });
+  useSuggestedAddress() {
+    this.item.AddressInfo.AddressLine1 = this.suggestedAddress;
+  }
+
+  editConnection(id) {
+    const source = this.item.Connections.find(f => f.ID == id);
+    this.conn = Object.assign({}, source);
+  }
+
+  cancelEditConnection() {
+    this.conn = null;
+  }
+
+  async addConnection() {
+    this.conn = {
+      ID: -Utils.getRandomInt(10000),
+      ConnectionTypeID: null,
+      StatusTypeID: null,
+      PowerKW: 0,
+      Quantity: 1
+    };
+
+    // get filtered reference data
+    this.appManager.referenceDataManager.refreshFilteredReferenceData(this.appManager.api, { CountryIds: [this.item.AddressInfo.CountryID] })
+  }
+
+  updateConnection() {
+    // once the current connection info item has been edited, add or update it in the list
+    if (this.conn) {
+      let update = this.item.Connections.find(f => f.ID == this.conn.ID);
+      if (update) {
+        Object.assign(update, this.conn);
+      } else {
+        // add new
+        this.item.Connections.push(this.conn);
+      }
+
+      this.conn = null;
+    }
+
+    // decorate object with expenaded relationship properties
+    this.appManager.referenceDataManager.hydrateCompactPOI(this.item);
   }
 
   async save() {
@@ -133,7 +199,7 @@ export class PoiEditorPage implements OnInit {
     try {
       await this.appManager.submitPOI(this.item);
 
-      this.appManager.showToastNotification("You submission wil be reviewed (if required) and published shortly.");
+      this.appManager.showToastNotification("You submission will be reviewed (if required) and published shortly.");
       this.modalController.dismiss();
     } catch (err) {
       if (err.error) {

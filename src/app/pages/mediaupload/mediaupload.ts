@@ -61,6 +61,8 @@ export class MediaUploadPage {
 
             canvas.width = img.width;
             canvas.height = img.height;
+
+            //TODO: resize source image before upload
             ctx.fillStyle = 'rgb(0,0,0)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -157,7 +159,7 @@ export class MediaUploadPage {
     refreshImageFromCanvas() {
         const canvas = <HTMLCanvasElement>document.getElementById('img-upload-canvas');
         // encode image to data-uri with base64 version of compressed image
-        this.imgData = canvas.toDataURL('image/png');
+        this.imgData = canvas.toDataURL('image/jpeg', 0.8);
 
         // now ready to upload
         (<HTMLImageElement>document.getElementById('preview')).src = this.imgData;

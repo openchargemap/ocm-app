@@ -28,6 +28,9 @@
         <ion-fab-button (click)="edit()" title="Submit an Edit">
           <ion-icon name="create"></ion-icon>
         </ion-fab-button>
+        <ion-fab-button (click)="refresh()" title="Refresh">
+          <ion-icon name="refresh"></ion-icon>
+        </ion-fab-button>
       </ion-fab-list>
 
     </ion-fab>
@@ -72,7 +75,7 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <div padding>
+  <div class="ion-padding">
     <ion-segment [(ngModel)]="selectedTab">
       <ion-segment-button value="location" selected>
         <ion-label>
@@ -222,7 +225,7 @@
       </ion-card-header>
       <ion-card-content>
         <div class="details">
-          <p padding-left>
+          <p class="ion-padding-left">
             {{poi.OperatorInfo.Title}}
           </p>
           <p *ngIf="poi.OperatorInfo.WebsiteURL">
@@ -293,7 +296,7 @@
       </ion-card>
     </ng-container>
 
-    <p *ngIf="poi._hasComments==false" padding>
+    <p *ngIf="poi._hasComments==false" class="ion-padding">
       {{ 'ocm.details.commentsAndRatings.zeroComments' | translate }}
     </p>
 
@@ -328,7 +331,7 @@
       </ion-card>
     </div>
 
-    <div *ngIf="!poi._hasPhotos" padding>
+    <div *ngIf="!poi._hasPhotos" class="ion-padding">
       <p class='subtle'> {{ 'ocm.details.mediaItems.addPrompt' | translate }}</p>
     </div>
   </div>

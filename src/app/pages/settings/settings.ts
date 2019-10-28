@@ -16,7 +16,7 @@ export class SettingsPage implements OnInit {
   connectionTypes: Array<any>;
 
   searchSettings: SearchSettings;
-  filterByCountryPref: boolean = true;
+  filterByCountryPref: boolean = false;
   languages: any;
   powerRange = { lower: 0, upper: 500 };
 
