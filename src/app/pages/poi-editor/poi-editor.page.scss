@@ -1,0 +1,20 @@
+ul.breadcrumb {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: inline-flex;
+    margin-right: 6px;
+    color: var(--ion-color-light-shade);
+    font-size: 10px;
+  }
+
+  li.active {
+    color: var(--ion-color-dark-shade);
+  }
+  li::before {
+    content: ">";
+    padding-right:4px;
+  }
+}

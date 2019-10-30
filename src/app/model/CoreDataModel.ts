@@ -101,6 +101,7 @@ export interface ExtendedPOIDetails extends POIDetails {
     PercentageSimilarity: number | null;
     IsRecentlyVerified: boolean;
     DateLastVerified: Date | null;
+    Distance: number | null;
 }
 
 export interface AddressInfo {

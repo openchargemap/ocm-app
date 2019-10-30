@@ -6,195 +6,278 @@
 
 <ion-content class="ion-padding">
 
-  <ion-segment [(ngModel)]="selectedTab">
-    <ion-segment-button value="location">
-      <ion-label>Location</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="equipment">
-      <ion-label>Equipment</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="info">
-      <ion-label>Info</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+  <ng-container *ngIf="useQuickAdd">
+    <h2>Quick Add</h2>
 
-  <ng-container *ngIf="selectedTab=='location'">
+    <ng-container *ngIf="step=='location'">
+      <ul class="breadcrumb">
+        <li class="active">Location</li>
+        <li>Equipment</li>
+        <li>Submit</li>
+      </ul>
+      <p>Drag the map to center the marker on the charging location:</p>
+      <div id="edit-map" style="border:1px solid gainsboro;background-color:grey;width:100%;height:128px;"></div>
 
-    <p>Drag the map to center the marker on the location of this charging equipment.</p>
-    <div id="edit-map" style="border:1px solid gainsboro;background-color:grey;width:100%;height:128px;"></div>
-    <p>The closest address appears to be:<br> <strong>{{suggestedAddress}}</strong>
-      <ion-button size="small" (click)="useSuggestedAddress()">Use This Address &gt;</ion-button>
-    </p>
-    <ion-list>
-      <ion-item>
-        <ion-label position="floating">Location Name</ion-label>
-        <ion-input type="text" [(ngModel)]="item.AddressInfo.Title" placeholder="A title for this location"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Address Line 1</ion-label>
-        <ion-input type="text" [(ngModel)]="item.AddressInfo.AddressLine1" placeholder="The nearest street address"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Address Line 2</ion-label>
-        <ion-input type="text" [(ngModel)]="item.AddressInfo.AddressLine2" placeholder="Optional"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Town</ion-label>
-        <ion-input type="text" [(ngModel)]="item.AddressInfo.Town" placeholder="Town or City"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">State or Province</ion-label>
-        <ion-input type="text" [(ngModel)]="item.AddressInfo.StateOrProvince"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Postal Code</ion-label>
-        <ion-input type="text" [(ngModel)]="item.AddressInfo.Postcode" placeholder="Optional Postal Code"></ion-input>
-      </ion-item>
+      <ng-container *ngIf="suggestedAddress">
+        <p>
+          The closest address to this position is:
+        </p>
+        <p>
+          <strong>{{suggestedAddress.AddressLine1}}</strong>
+          <br>
+          {{suggestedAddress.AddressLine2}}
+          {{suggestedAddress.Town}}
+          {{suggestedAddress.StateOrProvince}}
+          {{suggestedAddress.Postcode}}
+        </p>
+      </ng-container>
+
+    </ng-container>
+
+    <ng-container *ngIf="step=='poi-nearby'">
+      <h3>Locations Nearby</h3>
+      <p>The following locations already exist nearby. Please ensure you are not adding a duplicate. You can edit any of these listings if required instead:</p>
+      <app-poi-list [poiList]='nearbySites' [enableEditOption]='true' (onEdit)='editPOI($event)'>
+      </app-poi-list>
+
+    </ng-container>
+    <ng-container *ngIf="step=='operator'">
       <ion-item>
         <ion-label position="floating">Country</ion-label>
-        <ion-select [(ngModel)]="item.AddressInfo.CountryID">
+        <ion-select [(ngModel)]="item.AddressInfo.CountryID" (ionChange)="onCountryChange()">
           <ion-select-option *ngFor="let c of countries" [value]="c.ID">{{c.Title}}</ion-select-option>
         </ion-select>
+      </ion-item>
 
-      </ion-item>
       <ion-item>
-        <ion-label position="floating">Latitude</ion-label>
-        <ion-input type="number" [(ngModel)]="item.AddressInfo.Latitude" placeholder="Latitude (if entering manually)"></ion-input>
+        <ion-label position="floating">Network Operator</ion-label>
+        <ion-select [(ngModel)]="item.OperatorID" (ionChange)="onOperatorChange()">
+          <ion-select-option *ngFor="let i of operators" [value]="i.ID">{{i.Title}}</ion-select-option>
+          <ion-select-option value="-2">Other...</ion-select-option>
+        </ion-select>
       </ion-item>
-      <ion-item>
-        <ion-label position="floating">Longitude</ion-label>
-        <ion-input type="number" [(ngModel)]="item.AddressInfo.Longitude" placeholder="Longitude (if entering manually)"></ion-input>
-      </ion-item>
-    </ion-list>
+
+      <ng-container *ngIf="item.AddressInfo.CountryID && item.OperatorID">
+        <ng-container *ngIf="selectedTemplatePOI">
+          <h2>Copying the equipment configuration from:</h2>
+          <ion-item>
+
+            <ion-label>
+              {{selectedTemplatePOI.AddressInfo.Title}}
+              <br>
+              {{selectedTemplatePOI.AddressInfo.AddressLine1}}
+              <br>
+              {{selectedTemplatePOI.Connections[0].ConnectionType?.Title}}
+              <br>
+              {{selectedTemplatePOI.Connections[0].PowerKW}}
+              <br>
+              {{selectedTemplatePOI.DateCreated}}
+
+            </ion-label>
+            <ion-button slot="start" size="small" (click)="changeTemplatePOI()">Change..</ion-button>
+          </ion-item>
+        </ng-container>
+
+        <ng-container *ngIf="!selectedTemplatePOI">
+          <ng-container *ngIf="templateSites.length>0">
+
+            <h2>Similar Sites</h2>
+            <p>Copy the settings for a similar site, then adjust as required or select More Details.. to provide more info:</p>
+            <app-poi-list [enableCopyOption]='true' [poiList]='templateSites' (onCopy)='useTemplatePOI($event)'>
+
+            </app-poi-list>
+          </ng-container>
+
+          <ng-container *ngIf="templateSites.length==0">
+            <p>
+              There are no suggested sites to copy for this network operator. Use Advanced to enter the full site details.
+            </p>
+          </ng-container>
+        </ng-container>
+
+
+      </ng-container>
+
+    </ng-container>
+    <p style="margin-top:4em">
+      <ion-button size="small" color="light" (click)="editFullDetails()">Advanced <ion-icon name="create" slot="end"></ion-icon>
+      </ion-button>
+    </p>
   </ng-container>
-  <ng-container *ngIf="selectedTab=='equipment'">
+
+  <ng-container *ngIf="!useQuickAdd">
+    <p>Please review the details shown are correct then submit your changes.</p>
+
+    <ion-segment [(ngModel)]="selectedTab">
+      <ion-segment-button value="location">
+        <ion-label>Location</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="equipment">
+        <ion-label>Equipment</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="info">
+        <ion-label>Info</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ng-container *ngIf="selectedTab=='location'">
+
+      <p>Drag the map to center the marker on the location of this charging equipment.</p>
+      <div id="edit-map" style="border:1px solid gainsboro;background-color:grey;width:100%;height:128px;"></div>
+      <p>The closest address appears to be:<br> <strong>{{suggestedAddress}}</strong>
+        <ion-button size="small" (click)="useSuggestedAddress()">Use This Address &gt;</ion-button>
+      </p>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Location Name</ion-label>
+          <ion-input type="text" [(ngModel)]="item.AddressInfo.Title" placeholder="A title for this location"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Address Line 1</ion-label>
+          <ion-input type="text" [(ngModel)]="item.AddressInfo.AddressLine1" placeholder="The nearest street address"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Address Line 2</ion-label>
+          <ion-input type="text" [(ngModel)]="item.AddressInfo.AddressLine2" placeholder="Optional"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Town</ion-label>
+          <ion-input type="text" [(ngModel)]="item.AddressInfo.Town" placeholder="Town or City"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">State or Province</ion-label>
+          <ion-input type="text" [(ngModel)]="item.AddressInfo.StateOrProvince"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Postal Code</ion-label>
+          <ion-input type="text" [(ngModel)]="item.AddressInfo.Postcode" placeholder="Optional Postal Code"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Country</ion-label>
+          <ion-select [(ngModel)]="item.AddressInfo.CountryID" (ionChange)="onCountryChange()">
+            <ion-select-option *ngFor="let c of countries" [value]="c.ID">{{c.Title}}</ion-select-option>
+          </ion-select>
+
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Latitude</ion-label>
+          <ion-input type="number" [(ngModel)]="item.AddressInfo.Latitude" placeholder="Latitude (if entering manually)"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Longitude</ion-label>
+          <ion-input type="number" [(ngModel)]="item.AddressInfo.Longitude" placeholder="Longitude (if entering manually)"></ion-input>
+        </ion-item>
+      </ion-list>
+    </ng-container>
+    <ng-container *ngIf="selectedTab=='equipment'">
 
       <ion-item>
-          <ion-label position="floating">Network Operator</ion-label>
-          <ion-select [(ngModel)]="item.OperatorID">
-            <ion-select-option *ngFor="let i of operators" [value]="i.ID">{{i.Title}}</ion-select-option>
-            <ion-select-option value="-2">Other...</ion-select-option>
+        <ion-label position="floating">Network Operator</ion-label>
+        <ion-select [(ngModel)]="item.OperatorID">
+          <ion-select-option *ngFor="let i of operators" [value]="i.ID">{{i.Title}}</ion-select-option>
+          <ion-select-option value="-2">Other...</ion-select-option>
+        </ion-select>
+
+      </ion-item>
+
+      <ng-container *ngIf="conn==null">
+        <ion-button (click)="addConnection()" size="small">
+          <ion-icon name="add" slot="start"></ion-icon> Add
+        </ion-button>
+
+        <app-equipment-details [item]="item" [enableEdit]="true" (onEdit)="editConnection($event.id)"></app-equipment-details>
+
+      </ng-container>
+
+      <ng-container *ngIf="conn!=null">
+        <h2>Edit Equipment Connection Info {{conn.ID}}</h2>
+        <ion-item>
+          <ion-label position="floating">Connection Type</ion-label>
+          <ion-select [(ngModel)]="conn.ConnectionTypeID">
+            <ion-select-option value="0">Unknown</ion-select-option>
+            <ion-select-option *ngFor="let t of connectionTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
           </ion-select>
-  
         </ion-item>
 
-    <ng-container *ngIf="conn==null">
-      <ion-button (click)="addConnection()" size="small">
-        <ion-icon name="add" slot="start"></ion-icon> Add
-      </ion-button>
+        <ion-item>
+          <ion-label position="floating">Supply Type</ion-label>
+          <ion-select [(ngModel)]="conn.CurrentTypeID">
+            <ion-select-option value="0">Unknown</ion-select-option>
+            <ion-select-option *ngFor="let t of currentTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Power (kW)</ion-label>
+          <ion-input type="number" [(ngModel)]="conn.PowerKW"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Amps</ion-label>
+          <ion-input type="number" [(ngModel)]="conn.Amps"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Voltage</ion-label>
+          <ion-input type="number" [(ngModel)]="conn.Voltage"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Status</ion-label>
+          <ion-select [(ngModel)]="conn.StatusTypeID">
+            <ion-select-option *ngFor="let t of statusTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Quantity Available</ion-label>
+          <ion-input type="number" [(ngModel)]="conn.Quantity"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Comment</ion-label>
+          <ion-input type="text" [(ngModel)]="conn.Comments" placeholder="(optional) other comments"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Operators Reference</ion-label>
+          <ion-input type="text" [(ngModel)]="conn.Reference"></ion-input>
+        </ion-item>
 
-
-      <ion-grid>
-          <ng-container *ngFor="let c of item.Connections">
-            <ion-row>
-
-              <ion-col size="12">
-
-                  <ion-badge color="success">{{c.Quantity}}x</ion-badge>
-                <h3>
-                  <ion-icon name="flash" slot="start"></ion-icon> {{c.ConnectionType?.Title}} 
-                </h3>
-              </ion-col>
-            </ion-row>
-            <ion-row class="details">
-
-              <ion-col><span *ngIf="c.PowerKW">{{c.PowerKW}} kW</span> </ion-col>
-              <ion-col><span *ngIf="c.Amps">{{c.Amps}}A</span> </ion-col>
-              <ion-col><span *ngIf="c.Voltage">{{c.Voltage}}V</span> </ion-col>
-              <ion-col><span *ngIf="c.CurrentTypeID">{{c.CurrentType?.Title}}</span> </ion-col>
-
-            </ion-row>
-            <ion-row *ngIf="c.Comments">{{c.Comments}}</ion-row>
-            <ion-row>
-              <ion-col>  <ion-button (click)="editConnection(c.ID)">Edit</ion-button></ion-col>
-            </ion-row>
-          </ng-container>
-        </ion-grid>
-
-    
-    
+        <ion-button (click)="updateConnection()" size="small">Update</ion-button>
+        <ion-button (click)="cancelEditConnection()" size="small">Cancel</ion-button>
+      </ng-container>
     </ng-container>
-
-    <ng-container *ngIf="conn!=null">
-      <h2>Edit Equipment Connection Info {{conn.ID}}</h2>
-      <ion-item>
-        <ion-label position="floating">Connection Type</ion-label>
-        <ion-select [(ngModel)]="conn.ConnectionTypeID">
-          <ion-select-option value="0">Unknown</ion-select-option>
-          <ion-select-option *ngFor="let t of connectionTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
-        </ion-select>
-      </ion-item>
+    <ng-container *ngIf="selectedTab=='info'">
 
       <ion-item>
-        <ion-label position="floating">Supply Type</ion-label>
-        <ion-select [(ngModel)]="conn.CurrentTypeID">
-          <ion-select-option value="0">Unknown</ion-select-option>
-          <ion-select-option *ngFor="let t of currentTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
-        </ion-select>
+        <ion-label position="floating">Usage Cost</ion-label>
+        <ion-input type="text" [(ngModel)]="item.UsageCost"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">Power (kW)</ion-label>
-        <ion-input type="number" [(ngModel)]="conn.PowerKW"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Amps</ion-label>
-        <ion-input type="number" [(ngModel)]="conn.Amps"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Voltage</ion-label>
-        <ion-input type="number" [(ngModel)]="conn.Voltage"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Status</ion-label>
-        <ion-select [(ngModel)]="conn.StatusTypeID">
-          <ion-select-option *ngFor="let t of statusTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Quantity Available</ion-label>
-        <ion-input type="number" [(ngModel)]="conn.Quantity"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Comment</ion-label>
-        <ion-input type="text" [(ngModel)]="conn.Comments" placeholder="(optional) other comments"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Operators Reference</ion-label>
-        <ion-input type="text" [(ngModel)]="conn.Reference"></ion-input>
+        <ion-label position="floating">General Comments</ion-label>
+        <ion-input type="text" [(ngModel)]="item.GeneralComments"></ion-input>
       </ion-item>
 
-      <ion-button (click)="updateConnection()" size="small">Update</ion-button>
-      <ion-button (click)="cancelEditConnection()" size="small">Cancel</ion-button>
     </ng-container>
   </ng-container>
-  <ng-container *ngIf="selectedTab=='info'">
-
-    <ion-item>
-      <ion-label position="floating">Usage Cost</ion-label>
-      <ion-input type="text" [(ngModel)]="item.UsageCost"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">General Comments</ion-label>
-      <ion-input type="text" [(ngModel)]="item.GeneralComments"></ion-input>
-    </ion-item>
-
-  </ng-container>
-
 
 </ion-content>
 <ion-footer>
   <ion-toolbar>
-    <ion-buttons slot="secondary">
+    <ion-buttons slot="start">
       <ion-button (click)="cancel()">
         <ion-icon name="close" slot="start"></ion-icon>
         Cancel
       </ion-button>
     </ion-buttons>
-    <ion-buttons slot="primary">
-      <ion-button (click)="save()">
-        Submit
-        <ion-icon name="send" slot="end"></ion-icon>
+    <ion-buttons slot="end">
+      
+      <ion-button (click)="previous()" *ngIf="step!='location'">
+          Previous
+          <ion-icon name="arrow-dropleft" slot="start"></ion-icon>
+        </ion-button>
+      <ion-button (click)="next()" *ngIf="isReadyToSubmit!=true">
+        Next
+        <ion-icon name="arrow-dropright" slot="end"></ion-icon>
       </ion-button>
+      <ion-button (click)="save()" *ngIf="isReadyToSubmit==true">
+          Submit
+          <ion-icon name="send" slot="end"></ion-icon>
+        </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>

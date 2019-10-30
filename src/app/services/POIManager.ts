@@ -8,6 +8,7 @@ import { Injectable, Inject } from '@angular/core';
 import { POISearchParams } from '../model/AppModels';
 import { APIClient } from './APIClient';
 import { Analytics } from './Analytics';
+import { ExtendedPOIDetails } from '../model/CoreDataModel';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class POIManager {
   poiList: any[];
   isRequestInProgress: boolean = false;
 
-  constructor(public api: APIClient, public events: Events, public logging: Logging, public analytics:Analytics) {
+  constructor(public api: APIClient, public events: Events, public logging: Logging, public analytics: Analytics) {
 
   }
 
@@ -26,12 +27,27 @@ export class POIManager {
    * @param searchParams 
    */
   public async refreshPOIList(searchParams: POISearchParams): Promise<number> {
+  
+    try {
+
+      this.poiList = await this.fetchPOIList(searchParams);
+
+      this.events.publish('ocm:poiList:updated');
+
+      this.analytics.appEvent('Search', 'Fetched Results');
+
+      return this.poiList.length;
+    }
+    catch (rejected) {
+      return 0;
+    }
+  }
+
+  public async fetchPOIList(searchParams: POISearchParams): Promise<Array<ExtendedPOIDetails>> {
 
     this.isRequestInProgress = true;
 
     try {
-      
-      
 
       let results = await this.api.fetchPOIListByParam(searchParams);
 
@@ -39,17 +55,12 @@ export class POIManager {
 
       if (results && results.length) this.logging.log('fetched POI list [' + results.length + ']');
 
-      this.poiList = results;
+      return results;
 
-      this.events.publish('ocm:poiList:updated');
-
-      this.analytics.appEvent('Search','Fetched Results');
-
-      return this.poiList.length;
     }
     catch (rejected) {
       this.isRequestInProgress = false;
-      return 0;
+      return [];
     }
   }
 

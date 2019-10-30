@@ -106,10 +106,16 @@ export class MapBoxMapProvider implements IMapProvider {
             });
 
           }
+
         });
 
         this.map.on('moveend', () => {
           this.events.publish('ocm:mapping:dragend');
+
+            // optional callback when map moves
+            if (mapConfig.onMapMoveCompleted) {
+              mapConfig.onMapMoveCompleted();
+            }
         });
 
         this.map.on('zoomend', () => {
@@ -260,8 +266,8 @@ export class MapBoxMapProvider implements IMapProvider {
 
       if (!this.searchMarker) {
         this.searchMarker = new mapboxgl.Marker({ color: '#99ccff', anchor: 'top' })
-                            .setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude))
-                            .addTo(this.map);
+          .setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude))
+          .addTo(this.map);
 
         this.searchMarker.getElement().addEventListener('click', () => {
           let searchPos = this.searchMarker.getLngLat();

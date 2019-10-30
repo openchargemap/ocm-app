@@ -1,0 +1,19 @@
+<ion-list>
+  <ion-item *ngFor="let p of poiList" detail>
+
+    <ion-label>
+      {{p.AddressInfo.Title}}
+      <br>
+      {{p.AddressInfo.AddressLine1}}
+      <br>
+      {{p.Connections[0].ConnectionType?.Title}}
+      <br>
+      {{p.Connections[0].PowerKW}}
+      <br>
+      {{p.DateCreated}}
+
+    </ion-label>
+    <ion-button *ngIf="enableCopyOption" slot="start" size="small" (click)="onCopyCommand(p)">Copy</ion-button>
+    <ion-button *ngIf="enableEditOption" slot="start" size="small" (click)="onEditCommand(p)">Edit</ion-button>
+  </ion-item>
+</ion-list>

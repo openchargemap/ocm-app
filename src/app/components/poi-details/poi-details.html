@@ -2,7 +2,7 @@
   <div class="banner" [style.background-image]="backdropImage?'url(' + backdropImage + ')':''">
 
 
-    
+
     <div class="banner-content">
       <h2> {{poi.AddressInfo.Title}} </h2>
       <div><small>OCM-{{poi.ID}}</small></div>
@@ -171,30 +171,7 @@
           <span class="details">{{poi.NumberOfPoints}}</span>
         </p>
 
-
-        <ion-grid>
-          <ng-container *ngFor="let item of poi.Connections">
-            <ion-row>
-
-              <ion-col size="12">
-                <h3>
-                  <ion-icon name="flash" slot="start"></ion-icon> {{item.ConnectionType?.Title}} <span class="details"
-                    *ngIf="item.Quantity">x{{item.Quantity}}</span>
-                </h3>
-              </ion-col>
-            </ion-row>
-            <ion-row class="details">
-
-              <ion-col><span *ngIf="item.PowerKW">{{item.PowerKW}} kW</span> </ion-col>
-              <ion-col><span *ngIf="item.Amps">{{item.Amps}}A</span> </ion-col>
-              <ion-col><span *ngIf="item.Voltage">{{item.Voltage}}V</span> </ion-col>
-              <ion-col><span *ngIf="item.CurrentType">{{item.CurrentType?.Title}}</span> </ion-col>
-
-            </ion-row>
-          </ng-container>
-        </ion-grid>
-
-
+        <app-equipment-details [item]="poi"></app-equipment-details>
 
       </ion-card-content>
     </ion-card>

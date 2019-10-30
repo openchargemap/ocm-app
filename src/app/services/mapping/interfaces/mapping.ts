@@ -33,7 +33,7 @@ export interface IMapProvider {
     clearPolyline();
     focusMap();
     unfocusMap();
-    placeSearch(keyword: string, latitude?:number, longitude?:number): Promise<Array<PlaceSearchResult>>;
+    placeSearch(keyword: string, latitude?: number, longitude?: number): Promise<Array<PlaceSearchResult>>;
 }
 
 export class MapOptions {
@@ -54,7 +54,7 @@ export class MapOptions {
     public enableSearchRadiusIndicator: boolean;
     public mapType: string;
     public minZoomLevel: number;
-
+    public onMapMoveCompleted: any;
 
     /** @constructor */
     constructor() {

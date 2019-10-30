@@ -1,0 +1,25 @@
+
+<ion-grid>
+  <ng-container *ngFor="let i of item.Connections">
+    <ion-row>
+
+      <ion-col size="12">
+        <h3>
+          <ion-icon name="flash" slot="start"></ion-icon> {{$any(i).ConnectionType?.Title}}   
+          <ion-badge color="success" *ngIf="i.Quantity">{{i.Quantity}}x</ion-badge>
+        </h3>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+
+      <ion-col><span *ngIf="i.PowerKW">{{i.PowerKW}} kW</span> </ion-col>
+      <ion-col><span *ngIf="i.Amps">{{i.Amps}}A</span> </ion-col>
+      <ion-col><span *ngIf="i.Voltage">{{i.Voltage}}V</span> </ion-col>
+      <ion-col><span *ngIf="i.CurrentTypeID">{{$any(i).CurrentType?.Title}}</span> </ion-col>
+      <ion-col *ngIf="enableEdit">
+        <ion-button size="small" (click)="editConnection(i.ID)">Edit</ion-button>
+      </ion-col>
+ 
+    </ion-row>
+  </ng-container>
+</ion-grid>

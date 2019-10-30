@@ -34,15 +34,16 @@ export class ReferenceDataManager {
             this.setFilteredReferenceData(res);
 
             this.logging.log('Got refreshed core ref data.', LogLevel.VERBOSE);
+
+            this.cacheCurrentRefData();
         }, (rejection) => {
             this.logging.log('Error fetching core ref data:' + rejection);
         });
     }
 
-    public refreshFilteredReferenceData(api: APIClient, filters: ReferenceDataFilters)
-    {
+    public refreshFilteredReferenceData(api: APIClient, filters: ReferenceDataFilters) {
         api.fetchCoreReferenceData(filters).subscribe((res) => {
-           
+
             this.setFilteredReferenceData(res);
 
             this.logging.log('Got refreshed filtered reference data.', LogLevel.VERBOSE);
@@ -260,6 +261,8 @@ export class ReferenceDataManager {
             this.http.get<CoreReferenceData>('./assets/data/CoreReferenceData.json').subscribe(res => {
                 this.logging.log('Using bundled reference data as cached ref data.');
                 this.setCoreReferenceData(res);
+                this.setFilteredReferenceData(res);
+
 
             });
         } else {
@@ -271,7 +274,7 @@ export class ReferenceDataManager {
 
     }
 
-    private cacheRefData(refData) {
+    private cacheCurrentRefData() {
         if (this.referenceData != null) {
             this.referenceData.CacheDate = new Date();
             localStorage.setItem('referenceData', JSON.stringify(this.referenceData));

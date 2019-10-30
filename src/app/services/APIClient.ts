@@ -11,7 +11,7 @@ import { Injectable } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 
-import { POISearchParams, SubmissionType, GeoLatLng } from '../model/AppModels';
+import { POISearchParams, SubmissionType, GeoLatLng, PlaceSearchResult } from '../model/AppModels';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
@@ -224,6 +224,13 @@ export class APIClient {
       return this.http.get(url).toPromise();
     });
   }
+
+  fetchReverseGeocodeResult(latitude: number, longitude: number): Promise<PlaceSearchResult> {
+  
+    let serviceURL = this.serviceBaseURL + '/geocode/?client=' + this.clientName + '&output=json&camelcase=false&latitude=' + latitude + "&longitude=" + longitude;
+    return this.http.get<PlaceSearchResult>(serviceURL).toPromise();
+  }
+
   /* fetchLocationById(id, callbackname, errorcallback, disableCaching) {
        var serviceURL = this.serviceBaseURL + '/poi/?client=' + this.clientName
        + '&output=json&includecomments.=true&chargepointid=' + id;
