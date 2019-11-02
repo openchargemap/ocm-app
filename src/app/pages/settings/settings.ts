@@ -3,6 +3,7 @@ import { AppManager } from './../../services/AppManager';
 import { SearchSettings } from './../../model/SearchSettings';
 import { Component, OnInit } from '@angular/core';
 import { ModalController, Events } from '@ionic/angular';
+import { OperatorInfo, UsageType, StatusType, ConnectionType, Country } from '../../model/CoreDataModel';
 
 @Component({
   templateUrl: 'settings.html'
@@ -10,32 +11,28 @@ import { ModalController, Events } from '@ionic/angular';
 export class SettingsPage implements OnInit {
 
 
-  operators: Array<any>;
-  usageTypes: Array<any>;
-  statusTypes: Array<any>;
-  connectionTypes: Array<any>;
+  operators: Array<OperatorInfo>;
+  usageTypes: Array<UsageType>;
+  statusTypes: Array<StatusType>;
+  connectionTypes: Array<ConnectionType>;
+  countries: Array<Country>;
 
   searchSettings: SearchSettings;
-  filterByCountryPref: boolean = false;
+
   languages: any;
   powerRange = { lower: 0, upper: 500 };
 
   constructor(
-    public appManager: AppManager, 
-    public poiManager: POIManager, 
-    private modalController:ModalController,
+    public appManager: AppManager,
+    public poiManager: POIManager,
+    private modalController: ModalController,
     private events: Events
-    ) {
+  ) {
 
     this.searchSettings = appManager.searchSettings;
-
-   
-    //TODO reference data manager with filtered versions of reference type lists
-    //
-  
   }
 
-  async ngOnInit(){
+  async ngOnInit() {
     if (this.searchSettings.MinPowerKW != null) this.powerRange.lower = this.searchSettings.MinPowerKW;
     if (this.searchSettings.MaxPowerKW != null) this.powerRange.upper = this.searchSettings.MaxPowerKW;
     if (this.powerRange.upper == 0) this.powerRange.upper = 500;
@@ -45,16 +42,26 @@ export class SettingsPage implements OnInit {
     this.appManager.analytics.viewEvent('Settings');
   }
 
-  async populateReferenceData(){
+  async populateReferenceData() {
+    this.countries = this.appManager.referenceDataManager.getCountries();
 
-      this.operators = this.appManager.referenceDataManager.getNetworkOperators(this.filterByCountryPref);
-      this.usageTypes = this.appManager.referenceDataManager.getUsageTypes(this.filterByCountryPref);
-      this.statusTypes = this.appManager.referenceDataManager.getStatusTypes(this.filterByCountryPref);
-      this.connectionTypes = this.appManager.referenceDataManager.getConnectionTypes(this.filterByCountryPref);
-  
-      this.languages = this.appManager.getLanguages();
-    
-   
+    let useFilteredOptions: boolean = false;
+    if (this.searchSettings.FilterOptionsByCountryId) {
+      useFilteredOptions = true;
+
+      await this.appManager.referenceDataManager.refreshFilteredReferenceData(this.appManager.api, { CountryIds: [this.searchSettings.FilterOptionsByCountryId] });
+      this.operators = this.appManager.referenceDataManager.getNetworkOperators(useFilteredOptions);
+      this.connectionTypes = this.appManager.referenceDataManager.getConnectionTypes(useFilteredOptions);
+    } else {
+
+      this.operators = this.appManager.referenceDataManager.getNetworkOperators(useFilteredOptions);
+      this.connectionTypes = this.appManager.referenceDataManager.getConnectionTypes(useFilteredOptions);
+    }
+
+    this.usageTypes = this.appManager.referenceDataManager.getUsageTypes(useFilteredOptions);
+    this.statusTypes = this.appManager.referenceDataManager.getStatusTypes(useFilteredOptions);
+
+    this.languages = this.appManager.getLanguages();
   }
 
   ionViewWillLeave() {
@@ -74,15 +81,19 @@ export class SettingsPage implements OnInit {
 
     // publish event to refresh results based on new criteria
     this.events.publish("ocm:poiList:cleared");
-    
+
   }
 
   onLanguageChange() {
     //update UI language
-   this.appManager.setLanguage(this.searchSettings.Language);
+    this.appManager.setLanguage(this.searchSettings.Language);
   }
 
-  close(){
+  async onCountryChange() {
+    await this.populateReferenceData();
+  }
+
+  close() {
     this.modalController.dismiss();
   }
 }

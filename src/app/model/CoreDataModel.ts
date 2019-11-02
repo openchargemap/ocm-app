@@ -102,6 +102,7 @@ export interface ExtendedPOIDetails extends POIDetails {
     IsRecentlyVerified: boolean;
     DateLastVerified: Date | null;
     Distance: number | null;
+    Connections: ExtendedConnectionDetails[];
 }
 
 export interface AddressInfo {

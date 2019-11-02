@@ -51,6 +51,34 @@ export class Utils {
         return iconURL;
     }
 
+    static getIconForConnector(id: number): string {
+        let iconURL = "assets/images/icons/connectors/";
+        if (id == 1) {
+            iconURL += "Type1_J1772.svg";
+        } else if (id == 2) {
+            iconURL += "Chademo_type4.svg";
+        } else if (id == 25) {
+            iconURL += "Type2_socket.svg";
+        } else if (id == 32) {
+            iconURL += "Type1_CCS.svg";
+        }  else if (id == 33) {
+            iconURL += "Type2_CCS.svg";
+        } else if (id == 1036) {
+            iconURL += "Type2_tethered.svg";
+        } else {
+            iconURL += "Unknown.svg";
+        }
+        return iconURL;
+    }
+
+    static getFormattedDistance(poi): string {
+        if (poi && poi.AddressInfo && poi.AddressInfo.Distance) {
+            return poi.AddressInfo.Distance.toFixed(1) + ' ' + (poi.AddressInfo.DistanceUnit == 1 ? 'km' : 'miles');
+        } else {
+            return "";
+        }
+    }
+
     static applyLocalisation(isTestMode: boolean) {
         //TODO: non jquery version
         /*try {
@@ -346,7 +374,7 @@ export class Utils {
         };
     }
 
-    static getRandomInt(max:number){
+    static getRandomInt(max: number) {
         return Math.floor(Math.random() * Math.floor(max));
     }
 }

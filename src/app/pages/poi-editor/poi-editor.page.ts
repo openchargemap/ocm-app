@@ -113,41 +113,6 @@ export class PoiEditorPage implements OnInit {
   ngOnInit() {
     this.mapService = new MapBoxMapProvider(this.events, this.logging, this.http);
     this.mapService.initAPI();
-
-  }
-  async previous() {
-    if (this.step == 'operator') {
-      this.step = 'poi-nearby';
-      await this.refreshNearbySites();
-      if (this.nearbySites.length > 0) {
-        return;
-      }
-    }
-
-    if (this.step == 'poi-nearby') {
-      this.step = 'location';
-    }
-  }
-  async next() {
-    if (this.step == 'location') {
-
-      if (this.suggestedAddress) {
-        this.useSuggestedAddress();
-      }
-
-      // check if there are any nearby sites already, if so user has to confirm they are not adding a duplicate
-      this.step = 'poi-nearby';
-      await this.refreshNearbySites();
-
-      if (this.nearbySites.length > 0) {
-        return;
-      }
-    }
-
-    if (this.step == 'poi-nearby') {
-      this.step = 'operator';
-      await this.refreshTemplateSites();
-    }
   }
 
   ionViewDidEnter() {
@@ -165,7 +130,6 @@ export class PoiEditorPage implements OnInit {
         }
       });
     };
-
 
 
     if (this.id != null) {
@@ -211,6 +175,47 @@ export class PoiEditorPage implements OnInit {
 
   }
 
+  async previous() {
+    if (this.step == 'operator') {
+      this.step = 'poi-nearby';
+      await this.refreshNearbySites();
+      if (this.nearbySites.length > 0) {
+        return;
+      }
+    }
+
+    if (this.step == 'poi-nearby') {
+      this.step = 'location';
+    }
+  }
+  
+  async next() {
+    if (this.step == 'location') {
+
+      if (this.suggestedAddress) {
+        this.useSuggestedAddress();
+      }
+
+      // check if there are any nearby sites already, if so user has to confirm they are not adding a duplicate
+      this.step = 'poi-nearby';
+      await this.refreshNearbySites();
+
+      if (this.nearbySites.length > 0) {
+        return;
+      }
+    }
+
+    if (this.step == 'poi-nearby') {
+      this.step = 'operator';
+      await this.refreshTemplateSites();
+    }
+  }
+
+  editFullDetails() {
+    // switch to advanded mode
+    this.useQuickAdd = false;
+  }
+
   async onCountryChange() {
     this.refreshFilteredReferenceData();
   }
@@ -222,10 +227,6 @@ export class PoiEditorPage implements OnInit {
       // remember this as the most recently chosen operator
       localStorage.setItem("_editor-operatorid", this.item.OperatorID.toString());
     }
-  }
-
-  editFullDetails() {
-    this.useQuickAdd = false;
   }
 
   async getAddressForCurrentLatLng() {

@@ -14,7 +14,7 @@ import { Mapping } from './../../services/mapping/Mapping';
 import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
 import { Component, OnInit, NgZone, ViewChild, AfterViewInit } from '@angular/core';
-import { NavController, Events, Platform, ModalController } from '@ionic/angular';
+import { NavController, Events, Platform, ModalController, AlertController } from '@ionic/angular';
 import { PlaceSearch } from '../../components/place-search/place-search';
 import { PlaceSearchResult } from '../../model/AppModels';
 
@@ -44,9 +44,11 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   public appConfig = new AppConfig();
 
-  public defaultMapZoom:number = 15;
+  public defaultMapZoom: number = 15;
 
-  @ViewChild(PlaceSearch, {static: true})
+  public defaultStartPos = new GeoLatLng(37.415328, -122.076575);
+
+  @ViewChild(PlaceSearch, { static: true })
   placeSearchMapPOI: PlaceSearch;
 
   constructor(
@@ -62,6 +64,7 @@ export class SearchPage implements OnInit, AfterViewInit {
     public zone: NgZone,
 
     public modalController: ModalController,
+    private alertController: AlertController,
     private keyboard: Keyboard,
     public logging: Logging
   ) {
@@ -145,12 +148,46 @@ export class SearchPage implements OnInit, AfterViewInit {
 
           this.mapping.updateMapCentrePos(this.appManager.searchSettings.StartSearchPosition.latitude, this.appManager.searchSettings.StartSearchPosition.longitude, true, this.defaultMapZoom);
 
-//          this.debouncedRefreshMapResults();
+          //          this.debouncedRefreshMapResults();
 
         } else {
 
-          // attempt to geolocate user and perform search
-          await this.locateUser();
+          // when embedded the browser will need to prompt the user for location permission, this should be as the result of a user interaction.
+          let locationEnabled = localStorage.getItem("_locationEnabled");
+
+          if (this.appManager.isEmbeddedMode == true && locationEnabled != 'true') {
+
+            // user need to be asked for position
+            const alert = await this.alertController.create({
+              header: 'Search using your location?',
+              message: 'Select OK to continue.',
+              buttons: [
+                {
+                  text: 'Cancel',
+                  role: 'cancel',
+                  cssClass: 'secondary',
+                  handler: async (blah) => {
+                    // denied
+                    await this.useFallbackPosition();
+                  }
+                }, {
+                  text: 'OK',
+                  handler: async () => {
+
+                    await this.locateUser();
+                  }
+                }
+              ]
+            });
+
+            await alert.present();
+
+
+
+          } else {
+            // attempt to geolocate user and perform search
+            await this.locateUser();
+          }
         }
 
       }
@@ -195,14 +232,10 @@ export class SearchPage implements OnInit, AfterViewInit {
   async ngOnInit() {
 
     // first start up, get fresh core reference data, then we can start getting POI results nearby
-    if (!this.appManager.referenceDataManager.referenceDataLoaded()) {
-      this.logging.log('No cached ref dat, fetching ..', LogLevel.VERBOSE);
+   // if (!this.appManager.referenceDataManager.referenceDataLoaded()) {
+      this.logging.log('Refreshing reference data ..', LogLevel.VERBOSE);
       this.appManager.referenceDataManager.refreshReferenceData(this.appManager.api);
-
-      
-    }
-
-
+    //}
   }
 
   showPOIListOnMap(listType: string) {
@@ -453,47 +486,50 @@ export class SearchPage implements OnInit, AfterViewInit {
     this.placeSearchMapPOI.getPlacesAutoComplete(ev, 'poiSearch');
   }
 
+  useFallbackPosition() {
+    // use a default location, or the last known search position if known
+    let searchPos = this.defaultStartPos;
+
+    if (this.appManager.searchSettings.LastSearchPosition != null) {
+      searchPos = this.appManager.searchSettings.LastSearchPosition;
+    }
+
+    this.appManager.searchSettings.StartSearchPosition = searchPos;
+
+    this.appManager.searchSettings.LastSearchPosition = null;
+
+    this.searchOnDemand = true;
+
+    this.mapping.updateMapCentrePos(searchPos.latitude, searchPos.longitude, true, this.defaultMapZoom);
+  }
+
   async locateUser(): Promise<any> {
 
-    const geoPromise = new Promise((resolve, reject) => {
+    try {
+      const geoPromise = await new Promise((resolve, reject) => {
 
-      this.logging.log('Attempting to locate user..');
-      navigator.geolocation.getCurrentPosition(resolve, reject);
+        this.logging.log('Attempting to locate user..');
+        navigator.geolocation.getCurrentPosition(resolve, reject);
 
-    }).then((position: any) => {
-      this.logging.log('Got user location.');
+      }).then((position: any) => {
+        this.logging.log('Got user location.');
 
-      this.appManager.searchSettings.StartSearchPosition = new GeoLatLng(position.coords.latitude, position.coords.longitude);
+        this.appManager.searchSettings.StartSearchPosition = new GeoLatLng(position.coords.latitude, position.coords.longitude);
 
-      this.searchOnDemand = true;
+        this.searchOnDemand = true;
 
-      this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true, this.defaultMapZoom);
-
-
-    }).catch((err) => {
-
+        this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true, this.defaultMapZoom);
+        localStorage.setItem("_locationEnabled", "true");
+        return true;
+      });
+    } catch (err) {
       /// no geolocation
-      this.logging.log('Failed to get user location. Searching using default or last position.');
+      this.logging.log('Failed to get user location. Searching using default or last position.' + err);
       this.appManager.showToastNotification('Your location could not be determined.');
 
-      // use a default location, or the last known search position if known
-      let searchPos = new GeoLatLng(37.415328, -122.076575);
-
-      if (this.appManager.searchSettings.LastSearchPosition != null) {
-        searchPos = this.appManager.searchSettings.LastSearchPosition;
-      }
-
-      this.appManager.searchSettings.StartSearchPosition = searchPos;
-
-      this.appManager.searchSettings.LastSearchPosition = null;
-
-      this.searchOnDemand = true;
-
-      this.mapping.updateMapCentrePos(searchPos.latitude, searchPos.longitude, true, this.defaultMapZoom);
-
-    });
-
-    return geoPromise;
+      this.useFallbackPosition();
+      return false;
+    }
   }
 
   placeSelected(place: PlaceSearchResult) {

@@ -151,13 +151,6 @@ export class APIClient {
     this.logging.log('API Call:' + serviceURL, LogLevel.VERBOSE);
 
     return this.http.get<CoreReferenceData>(serviceURL);
-
-    /*.catch((error) => {
-        let errMsg = error.message || 'Could not fetch reference data from server.';
-        this.logging.log('API Client: ' + errMsg, LogLevel.ERROR);
-
-        return Observable.throw(errMsg);
-    });*/
   }
 
   performSignIn(username: string, password: string): Promise<any> {
@@ -226,68 +219,10 @@ export class APIClient {
   }
 
   fetchReverseGeocodeResult(latitude: number, longitude: number): Promise<PlaceSearchResult> {
-  
+
     let serviceURL = this.serviceBaseURL + '/geocode/?client=' + this.clientName + '&output=json&camelcase=false&latitude=' + latitude + "&longitude=" + longitude;
     return this.http.get<PlaceSearchResult>(serviceURL).toPromise();
   }
-
-  /* fetchLocationById(id, callbackname, errorcallback, disableCaching) {
-       var serviceURL = this.serviceBaseURL + '/poi/?client=' + this.clientName
-       + '&output=json&includecomments.=true&chargepointid=' + id;
-       if (disableCaching) serviceURL += '&enablecaching=false';
-       if (!errorcallback) errorcallback = this.handleGeneralAjaxError;
-
-       var ajaxSettings: JQueryAjaxSettings = {
-           type: 'GET',
-           url: serviceURL + '&callback=' + callbackname,
-           jsonp: 'false',
-           contentType: 'application/json;',
-           dataType: 'jsonp',
-           crossDomain: true,
-           error: errorcallback
-       };
-
-       $.ajax(ajaxSettings);
-   }
-
-   fetchGeocodeResult(address, successCallback, authSessionInfo, errorCallback) {
-       var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
-
-       var ajaxSettings: JQueryAjaxSettings = {
-           type: 'GET',
-           url: this.serviceBaseURL + '/geocode/?client=' + this.clientName
-           + '&address=' + address + '&output=json&verbose=false&camelcase=true&' + authInfoParams,
-           contentType: 'application/json;',
-           dataType: 'jsonp',
-           crossDomain: true,
-           success: successCallback,
-           error: (errorCallback != null ? errorCallback : this.handleGeneralAjaxError)
-       };
-
-       $.ajax(ajaxSettings);
-   }
-
-
-
-   submitLocation(data, authSessionInfo, completedCallback, failureCallback) {
-       var authInfoParams = this.getAuthParamsFromSessionInfo(authSessionInfo);
-
-       var jsonString = JSON.stringify(data);
-
-       var ajaxSettings: JQueryAjaxSettings = {
-           type: 'POST',
-           url: this.serviceBaseURL + '/?client=' + this.clientName + '&action=cp_submission&format=json' + authInfoParams,
-           data: jsonString,
-           complete: function(jqXHR, textStatus) { completedCallback(jqXHR, textStatus); },
-           crossDomain: true,
-           error: this.handleGeneralAjaxError
-       };
-
-       $.ajax(ajaxSettings);
-   }
-
-   */
-
 
   isLocalStorageAvailable() {
     return typeof window.localStorage !== 'undefined';

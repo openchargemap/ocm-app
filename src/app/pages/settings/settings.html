@@ -10,8 +10,17 @@
   <h2>Search Filters</h2>
   <p>Note: Filters will remove usable charging locations from your search results if we do not have complete data (i.e Operator or Power Levels).</p>
   <p *ngIf="searchSettings.HasActiveFilters==true" danger>
-    <ion-icon name="alert"></ion-icon> One or more filters are currently being applied. </p>
+    <ion-icon name="alert"></ion-icon> One or more filters are currently being applied.
+  </p>
   <ion-list>
+    <ion-item>
+      <ion-label>Filter By Country</ion-label>
+      <ion-select [(ngModel)]="searchSettings.FilterOptionsByCountryId" multiple="false" cancelText="Cancel" okText="OK" (ionChange)="onCountryChange()">
+        <ion-select value="">(All Countries)</ion-select>
+        <ion-select-option *ngFor="let item of countries" [value]="item.ID">{{item.Title}}</ion-select-option>
+
+      </ion-select>
+    </ion-item>
     <ion-item>
       <ion-label>{{'ocm.search.networkOperators' | translate}}</ion-label>
       <ion-select [(ngModel)]="searchSettings.OperatorList" multiple="true" cancelText="Cancel" okText="OK">
@@ -70,13 +79,13 @@
 
 </ion-content>
 <ion-footer>
-    <ion-toolbar>
-        <ion-buttons slot="end">
-            <ion-button (click)="close()">
-                <ion-icon name="close" slot="start"></ion-icon>
-                Close
-            </ion-button>
-        </ion-buttons>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon name="close" slot="start"></ion-icon>
+        Close
+      </ion-button>
+    </ion-buttons>
 
-    </ion-toolbar>
+  </ion-toolbar>
 </ion-footer>

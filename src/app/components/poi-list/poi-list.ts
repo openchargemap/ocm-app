@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { POIDetails, ExtendedPOIDetails } from '../../model/CoreDataModel';
+import { Utils } from '../../core/Utils';
 
 @Component({
   selector: 'app-poi-list',
@@ -35,5 +36,34 @@ export class PoiListComponent implements OnInit {
   onEditCommand(poi) {
     // emit edit command
     this.onEdit.emit(poi);
+  }
+
+  getFormattedAddress(poi: ExtendedPOIDetails): string {
+    let address = "";
+    if (poi.AddressInfo.Title != poi.AddressInfo.AddressLine1) {
+      address + poi.AddressInfo.Title;
+    } else {
+      address += poi.AddressInfo.Town
+    }
+    return address;
+  }
+
+  getFormattedConnectorList(poi: ExtendedPOIDetails): string {
+    let list = [];
+    for (let c of poi.Connections) {
+      if (!list.find(l => l == c.ConnectionType.Title)) {
+        list.push(c.ConnectionType.Title);
+      }
+    }
+
+    return list.join(", ");
+  }
+
+  getIconForPOI(poi): string {
+    return Utils.getIconForPOI(poi);
+  }
+
+  getFormattedDistance(poi): string {
+    return Utils.getFormattedDistance(poi);
   }
 }

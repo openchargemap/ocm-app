@@ -1,5 +1,7 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { ExtendedPOIDetails } from '../../model/CoreDataModel';
+import { Util } from 'leaflet';
+import { Utils } from '../../core/Utils';
 
 @Component({
   selector: 'app-equipment-details',
@@ -23,5 +25,9 @@ export class EquipmentDetailsComponent implements OnInit {
 
   editConnection(id: number) {
     this.onEdit.emit(id);
+  }
+
+  getConnectorTypeIcon(id: number):string {
+    return Utils.getIconForConnector(id);
   }
 }

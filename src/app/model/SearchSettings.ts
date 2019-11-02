@@ -14,6 +14,7 @@ export class SearchSettings {
   LastSearchPosition: GeoLatLng;
   StartSearchPosition: GeoLatLng;
   Language: string;
+  FilterOptionsByCountryId: number;
 
   constructor() {
     this.OperatorList = [];
@@ -23,6 +24,9 @@ export class SearchSettings {
     this.StatusTypeList = [];
     this.HasActiveFilters = false;
     //TODO: reference data filtered by country (most popular for given country ids)
+
+    this.FilterOptionsByCountryId = null;
+    this.UseDistanceInKM = true;
   }
 
   public LoadSettings() {

@@ -40,6 +40,8 @@ export class AppManager {
 
   public _isUserAuthenticated?: boolean = null;
 
+  public isEmbeddedMode: boolean = false;
+
   constructor(
     public http: HttpClient,
     public events: Events,
@@ -119,6 +121,15 @@ export class AppManager {
    * If any query string parameters passed in the URL, apply them here
    */
   public applyURLQueryStringOptions() {
+
+    if (this.getQueryVariable('mode')) {
+      let mode = this.getQueryVariable('mode')[0];
+      
+      if (mode == 'embedded') {
+        this.isEmbeddedMode = true;
+      }
+    }
+    
     if (this.getQueryVariable('operatorid')) {
       let values = this.getQueryVariable('operatorid');
       for (let v of values) {

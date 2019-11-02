@@ -35,6 +35,7 @@ export class ReferenceDataManager {
 
             this.logging.log('Got refreshed core ref data.', LogLevel.VERBOSE);
 
+            this.sortCoreReferenceData();
             this.cacheCurrentRefData();
         }, (rejection) => {
             this.logging.log('Error fetching core ref data:' + rejection);
@@ -46,6 +47,8 @@ export class ReferenceDataManager {
 
             this.setFilteredReferenceData(res);
 
+            this.sortCoreReferenceData();
+            
             this.logging.log('Got refreshed filtered reference data.', LogLevel.VERBOSE);
         }, (rejection) => {
             this.logging.log('Error fetching filtered reference data:' + rejection);
@@ -306,6 +309,11 @@ export class ReferenceDataManager {
         this.sortReferenceData(this.referenceData.StatusTypes);
         this.sortReferenceData(this.referenceData.CheckinStatusTypes);
         this.sortReferenceData(this.referenceData.SubmissionStatusTypes);
+
+        if (this.filteredReferenceData){
+            this.sortReferenceData(this.filteredReferenceData.ConnectionTypes);
+            this.sortReferenceData(this.filteredReferenceData.Operators);
+        }
     }
 
     private sortReferenceData(sourceList) {

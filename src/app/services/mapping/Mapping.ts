@@ -121,7 +121,7 @@ export class Mapping implements IMapManager {
      */
     initMap(mapcanvasID: string) {
         if (this.isMapReady()) return;
-        
+
         if (this.mapProvider != null) {
             if (this.mapsInitialised) {
                 this.logging.log("initMap: Map provider already initialised");
@@ -144,98 +144,6 @@ export class Mapping implements IMapManager {
         }
     }
 
-/*    updateSearchPosMarker(searchPos) {
-        //skip search marker if using live map viewport bounds querying
-        if (this.parentAppContext.appConfig.enableLiveMapQuerying) return;
-
-
-        if (this.mapProvider != null) {
-            //TODO:?
-        } else {
-            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
-                let map = this.map;
-
-                if (this.mapCentreMarker != null) {
-                    this.logging.log("Updating search marker position");
-                    this.mapCentreMarker.setPosition(searchPos);
-                    map.refreshLayout();
-                    //mapManagerContext.mapCentreMarker.setMap(map);
-                } else {
-
-                    this.logging.log("Adding search marker position");
-
-                    map.addMarker({
-                        'position': searchPos,
-                        'draggable': true,
-                        title: "Tap to Searching from here, Drag to change position.",
-                        content: 'Your search position'
-                        // icon: "images/icons/compass.png"
-                    }, (marker) => {
-                        this.mapCentreMarker = marker;
-
-                        //marker click
-                        marker.addEventListener(plugin.google.maps.event.MARKER_CLICK, (m) => {
-                            m.getPosition((pos) => {
-                                this.logging.log("Search marker tapped, requesting search from current position.");
-
-                                this.updateMapCentrePos(pos.lat(), pos.lng(), false);
-                                this.mapOptions.requestSearchUpdate = true;
-                            });
-                        });
-
-                        //marker drag
-                        marker.addEventListener(plugin.google.maps.event.MARKER_DRAG_END, (m) => {
-                            m.getPosition((pos) => {
-
-                                this.updateMapCentrePos(pos.lat(), pos.lng(), false);
-                                this.mapOptions.requestSearchUpdate = true;
-                            });
-                        });
-                    });
-
-                }
-            }
-
-            if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_WEB) {
-                let map = this.map;
-                if (this.mapCentreMarker != null) {
-                    this.logging.log("Updating search marker position");
-                    this.mapCentreMarker.setPosition(searchPos);
-                    this.mapCentreMarker.setMap(map);
-                } else {
-                    this.logging.log("Adding search marker position");
-                    this.mapCentreMarker = new google.maps.Marker({
-                        position: searchPos,
-                        map: map,
-                        draggable: true,
-                        title: "Tap to Searching from here, Drag to change position.",
-                        icon: "images/icons/compass.png"
-                    });
-
-                    var infowindow = new google.maps.InfoWindow({
-                        content: "Tap marker to search from here, Drag marker to change search position."
-                    });
-                    infowindow.open(map, this.mapCentreMarker);
-
-                    google.maps.event.addListener(this.mapCentreMarker, 'click', () => {
-                        this.logging.log("Search markers tapped, requesting search.");
-                        var pos = this.mapCentreMarker.getPosition();
-                        this.updateMapCentrePos(pos.lat(), pos.lng(), false);
-                        this.mapOptions.requestSearchUpdate = true;
-                    });
-
-                    google.maps.event.addListener(this.mapCentreMarker, 'dragend', () => {
-                        this.logging.log("Search marker moved, requesting search.");
-                        var pos = this.mapCentreMarker.getPosition();
-                        this.updateMapCentrePos(pos.lat(), pos.lng(), false);
-                        this.mapOptions.requestSearchUpdate = true;
-                    });
-                }
-            }
-        }
-    }
-    */
-
     /**
     * Used by map provider as callback when a zoom or pan/drag has been performed
     * @param manipulationType  string name for event "zoom", "drag" etc
@@ -255,7 +163,7 @@ export class Mapping implements IMapManager {
         }
     }
 
-    updateMapCentrePos(lat: number, lng: number, moveMap: boolean, zoomLevel?:number) {
+    updateMapCentrePos(lat: number, lng: number, moveMap: boolean, zoomLevel?: number) {
         //update record of map centre so search results can optionally be refreshed
         if (moveMap) {
             if (this.mapProvider != null) {
