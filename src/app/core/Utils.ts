@@ -1,3 +1,5 @@
+import { environment } from "../../environments/environment";
+
 /**
 * @author Christopher Cook
 * @copyright Webprofusion Pty Ltd https://webprofusion.com
@@ -5,7 +7,17 @@
 
 declare var device: any;
 
+export type FeatureOption = 'MAP' | 'ADD_POI' | 'EDIT_POI' | 'ADD_COMMENT' | 'ADD_PHOTO' | 'FAVOURITES' | 'ROUTE_PLANNER' | 'FILTER_OPTIONS_BY_COUNTRY' | 'ROUTE_PLANNER' | 'GOOGLE_MAPS';
+
 export class Utils {
+
+    static isFeatureEnabled(feature: FeatureOption): boolean {
+        if (environment.enabledFeatures.find(f => f == feature)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     static getClientHeight(): number {
         var body = document.body, html = document.documentElement;
@@ -61,7 +73,7 @@ export class Utils {
             iconURL += "Type2_socket.svg";
         } else if (id == 32) {
             iconURL += "Type1_CCS.svg";
-        }  else if (id == 33) {
+        } else if (id == 33) {
             iconURL += "Type2_CCS.svg";
         } else if (id == 1036) {
             iconURL += "Type2_tethered.svg";

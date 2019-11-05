@@ -5,6 +5,7 @@
 
 import { AppConfig } from './../../core/AppConfig';
 import { MappingAPI } from './interfaces/mapping';
+import { Utils } from '../../core/Utils';
 
 declare var ocm_app: any;
 declare var plugin: any;
@@ -58,5 +59,8 @@ function loadGoogleMaps() {
     document.body.appendChild(script);
 }
 
-//if we are not running under cordova then we use Google Maps Web API, otherwise we still use API for distance etc
-window.onload = loadGoogleMaps;
+if (Utils.isFeatureEnabled('GOOGLE_MAPS'))
+{
+    //if we are not running under cordova then we use Google Maps Web API, otherwise we still use API for distance etc
+    window.onload = loadGoogleMaps;
+}

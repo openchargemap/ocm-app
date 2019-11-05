@@ -15,6 +15,7 @@ import { environment } from "../environments/environment";
 import { PoiEditorPage } from "./pages/poi-editor/poi-editor.page";
 import { Analytics } from "./services/Analytics";
 import { GeoLatLng } from "./model/AppModels";
+import { Utils } from "./core/Utils";
 
 @Component({
   selector: "app-root",
@@ -93,7 +94,9 @@ export class AppComponent {
 
 
       this.events.subscribe('ocm:mapping:addpoi', async (pos) => {
-        this.add(pos);
+        if (Utils.isFeatureEnabled('ADD_POI')) {
+          this.add(pos);
+        }
       });
     });
   }

@@ -4,22 +4,15 @@ import { SearchSettings } from './../../model/SearchSettings';
 import { Component, OnInit } from '@angular/core';
 import { ModalController, Events } from '@ionic/angular';
 import { OperatorInfo, UsageType, StatusType, ConnectionType, Country } from '../../model/CoreDataModel';
+import { environment } from '../../../environments/environment';
+import { Utils } from '../../core/Utils';
 
 @Component({
   templateUrl: 'settings.html'
 })
 export class SettingsPage implements OnInit {
 
-
-  operators: Array<OperatorInfo>;
-  usageTypes: Array<UsageType>;
-  statusTypes: Array<StatusType>;
-  connectionTypes: Array<ConnectionType>;
-  countries: Array<Country>;
-
   searchSettings: SearchSettings;
-
-  languages: any;
   powerRange = { lower: 0, upper: 500 };
 
   constructor(
@@ -37,31 +30,44 @@ export class SettingsPage implements OnInit {
     if (this.searchSettings.MaxPowerKW != null) this.powerRange.upper = this.searchSettings.MaxPowerKW;
     if (this.powerRange.upper == 0) this.powerRange.upper = 500;
 
-    await this.populateReferenceData();
-
     this.appManager.analytics.viewEvent('Settings');
   }
 
-  async populateReferenceData() {
-    this.countries = this.appManager.referenceDataManager.getCountries();
+  get useFilteredOptions(): boolean {
 
-    let useFilteredOptions: boolean = false;
     if (this.searchSettings.FilterOptionsByCountryId) {
-      useFilteredOptions = true;
-
-      await this.appManager.referenceDataManager.refreshFilteredReferenceData(this.appManager.api, { CountryIds: [this.searchSettings.FilterOptionsByCountryId] });
-      this.operators = this.appManager.referenceDataManager.getNetworkOperators(useFilteredOptions);
-      this.connectionTypes = this.appManager.referenceDataManager.getConnectionTypes(useFilteredOptions);
+      return true;
     } else {
-
-      this.operators = this.appManager.referenceDataManager.getNetworkOperators(useFilteredOptions);
-      this.connectionTypes = this.appManager.referenceDataManager.getConnectionTypes(useFilteredOptions);
+      return false;
     }
+  }
 
-    this.usageTypes = this.appManager.referenceDataManager.getUsageTypes(useFilteredOptions);
-    this.statusTypes = this.appManager.referenceDataManager.getStatusTypes(useFilteredOptions);
+  get operators() {
+    return this.appManager.referenceDataManager.getNetworkOperators(this.useFilteredOptions);
+  }
 
-    this.languages = this.appManager.getLanguages();
+  get connectionTypes() {
+    return this.appManager.referenceDataManager.getConnectionTypes(this.useFilteredOptions);
+  }
+
+  get usageTypes() {
+    return this.appManager.referenceDataManager.getUsageTypes(this.useFilteredOptions);
+  }
+
+  get statusTypes() {
+    return this.appManager.referenceDataManager.getStatusTypes(this.useFilteredOptions);
+  }
+
+  get countries() {
+    return this.appManager.referenceDataManager.getCountries(this.useFilteredOptions);
+  }
+
+  get isCountryFilterFeatureEnabled(): boolean {
+    return Utils.isFeatureEnabled('FILTER_OPTIONS_BY_COUNTRY');
+  }
+
+  get languages() {
+    return this.appManager.getLanguages();
   }
 
   ionViewWillLeave() {
@@ -90,7 +96,7 @@ export class SettingsPage implements OnInit {
   }
 
   async onCountryChange() {
-    await this.populateReferenceData();
+    this.appManager.referenceDataManager.refreshFilteredReferenceData(this.appManager.api, { CountryIds: [this.searchSettings.FilterOptionsByCountryId] });
   }
 
   close() {

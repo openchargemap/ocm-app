@@ -10,8 +10,8 @@ import { Logging, LogLevel } from './../Logging';
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { GoogleMapsNative } from './providers/GoogleMapsNative';
-import { GoogleMapsWeb } from './providers/GoogleMapsWeb';
+// import { GoogleMapsNative } from './providers/GoogleMapsNative';
+// import { GoogleMapsWeb } from './providers/GoogleMapsWeb';
 // import { LeafletMap } from './providers/LeafletMap';
 import { MapKitMapProvider } from './providers/MapKit';
 import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
@@ -77,6 +77,7 @@ export class Mapping implements IMapManager {
     setMapAPI(api: MappingAPI) {
         this.mapOptions.mapAPI = api;
 
+        /*
         if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
             this.mapProvider = new GoogleMapsNative(this.events, this.logging);
         }
@@ -85,7 +86,7 @@ export class Mapping implements IMapManager {
             this.mapProvider = new GoogleMapsWeb(this.events, this.logging);
         }
 
-        /*if (this.mapOptions.mapAPI == MappingAPI.LEAFLET) {
+        if (this.mapOptions.mapAPI == MappingAPI.LEAFLET) {
             this.mapProvider = new LeafletMap(this.events, this.logging);
         }*/
 

@@ -12,6 +12,7 @@ import { SignInPage } from '../../pages/signin/signin';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { PoiEditorPage } from '../../pages/poi-editor/poi-editor.page';
+import { Utils } from '../../core/Utils';
 
 
 @Component({
@@ -262,7 +263,7 @@ export class PoiDetails implements OnInit {
   }
 
   async edit() {
-    if (environment.enabledFeatures.find(f => f == 'EDIT_POI')) {
+    if (Utils.isFeatureEnabled('EDIT_POI')) {
 
       const modal = await this.modalController.create({
         component: PoiEditorPage, componentProps: { id: this.poi.ID }

@@ -13,7 +13,7 @@
     <ion-icon name="alert"></ion-icon> One or more filters are currently being applied.
   </p>
   <ion-list>
-    <ion-item>
+    <ion-item *ngIf="isCountryFilterFeatureEnabled">
       <ion-label>Filter By Country</ion-label>
       <ion-select [(ngModel)]="searchSettings.FilterOptionsByCountryId" multiple="false" cancelText="Cancel" okText="OK" (ionChange)="onCountryChange()">
         <ion-select value="">(All Countries)</ion-select>

@@ -1,6 +1,6 @@
 <ion-app>
-  <ion-split-pane [disabled]="true">
-    <ion-menu>
+  <ion-split-pane [disabled]="true" contentId="main-content">
+    <ion-menu contentId="main-content">
       <ion-header>
         <ion-toolbar>
           <ion-thumbnail slot="start">
@@ -73,6 +73,6 @@
         </ion-list>
       </ion-content>
     </ion-menu>
-    <ion-router-outlet main></ion-router-outlet>
+    <ion-router-outlet id="main-content"></ion-router-outlet>
   </ion-split-pane>
 </ion-app>
