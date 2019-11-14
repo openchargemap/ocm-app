@@ -1,0 +1,21 @@
+<p>Drag the map to center the marker on the charging location:</p>
+<div id="editor-map"></div>
+
+<ng-container *ngIf="suggestedAddress">
+  <ion-note>
+  <p>
+    The closest address to this position is:
+  </p>
+  <p>
+    <strong>{{suggestedAddress.AddressLine1}}</strong>
+    <br>
+    {{suggestedAddress.AddressLine2}}
+    {{suggestedAddress.Town}}
+    {{suggestedAddress.StateOrProvince}}
+    {{suggestedAddress.Postcode}}
+    <br>
+    <ion-button size="small" (click)="useAddressSelection()">Use This Address <ion-icon slot="end" name="copy"></ion-icon></ion-button>
+  </p>
+</ion-note>
+
+</ng-container>

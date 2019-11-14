@@ -1,16 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { POIDetails, OperatorInfo, ConnectionType, Country, ConnectionInfo, StatusType, ExtendedPOIDetails, ExtendedAddressInfo } from '../../model/CoreDataModel';
 import { AppManager } from '../../services/AppManager';
-import { NavController, ModalController, Events } from '@ionic/angular';
-import { Mapping } from '../../services/mapping/Mapping';
-import { IMapProvider, MapOptions } from '../../services/mapping/interfaces/mapping';
-import { MapBoxMapProvider } from '../../services/mapping/providers/MapBox';
-import { Logging } from '../../services/Logging';
-import { HttpClient } from '@angular/common/http';
+import { NavController, ModalController, Events, LoadingController, AlertController } from '@ionic/angular';
 import { GeoLatLng, GeoPosition, POISearchParams } from '../../model/AppModels';
 import { Utils } from '../../core/Utils';
 import { POIManager } from '../../services/POIManager';
 import { PoiDetails } from '../../components/poi-details/poi-details';
+import { Mapping } from '../../services/mapping/Mapping';
+import { PoiLocationEditorComponent } from '../../components/poi-location-editor/poi-location-editor';
 
 interface ValidationResult {
   isValid: boolean;
@@ -27,38 +24,80 @@ export class PoiEditorPage implements OnInit {
   id: number;
   item: POIDetails;
   conn: ConnectionInfo;
-  step: string = "location";
 
-  originalMarkerPos: GeoLatLng;
+  /*
+   * The 'step' defines the granular part of the workflow we're at in the process
+   */
+  step: 'location' | 'operator' | 'poi-nearby' | 'info';
 
-  public startPos: GeoLatLng;
+  /**
+   * Defines the overall UI grouping for our current step
+   */
+  selectedTab: 'location' | 'equipment' | 'info';
 
-  mapService: IMapProvider;
 
-  selectedTab: string = 'location';
-  suggestedAddress: ExtendedAddressInfo = null;
-  suggestedAddressAttribution: string = null;
-
+  startPos: GeoLatLng;
   useFilteredConnectionTypes: boolean = true;
   useFilteredOperators: boolean = true;
 
-  useQuickAdd: boolean = true;
   templateSites: Array<ExtendedPOIDetails> = [];
   nearbySites: Array<ExtendedPOIDetails> = [];
   selectedTemplatePOI: ExtendedPOIDetails = null;
-  debouncedGecode: any;
-  mapOptions: MapOptions;
+
+  suggestedAddress: ExtendedAddressInfo = null;
+  suggestedAddressAttribution: string = null;
+
+  isNonDuplicateConfirmed: boolean = false;
+  skipPOICopy: boolean = false;
+
+  loading: any;
+
+  @ViewChild(PoiLocationEditorComponent, { static: false })
+  private editorMap: PoiLocationEditorComponent;
+
+  get operators(): Array<OperatorInfo> {
+    return this.appManager.referenceDataManager.getNetworkOperators(this.useFilteredOperators);
+  }
+
+  get connectionTypes(): Array<ConnectionType> {
+    return this.appManager.referenceDataManager.getConnectionTypes(this.useFilteredConnectionTypes);
+  }
+
+  get currentTypes(): Array<ConnectionType> {
+    return this.appManager.referenceDataManager.getOutputCurrentTypes();
+  }
+
+  get statusTypes(): Array<StatusType> {
+    return this.appManager.referenceDataManager.getStatusTypes();
+  }
+
+  get countries(): Array<Country> {
+    return this.appManager.referenceDataManager.getCountries();
+  }
+
+  get isAddMode(): boolean {
+
+    if (this.item.ID <= 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   constructor(
     private appManager: AppManager,
     private modalController: ModalController,
+    private poiManager: POIManager,
     public mapping: Mapping,
-    private events: Events,
-    private logging: Logging,
-    private http: HttpClient,
-    private poiManager: POIManager
+    public loadingController: LoadingController,
+    private alertController: AlertController
   ) {
 
+    this.initNewItem();
+
+  }
+
+  initNewItem() {
     this.item = {
       ID: -1,
       DataProviderID: 1,
@@ -83,54 +122,34 @@ export class PoiEditorPage implements OnInit {
         Longitude: 0
       }
     };
-
-  }
-
-  get operators(): Array<OperatorInfo> {
-    return this.appManager.referenceDataManager.getNetworkOperators(this.useFilteredOperators);
-  }
-
-  get connectionTypes(): Array<ConnectionType> {
-    return this.appManager.referenceDataManager.getConnectionTypes(this.useFilteredConnectionTypes);
-  }
-
-  get currentTypes(): Array<ConnectionType> {
-    return this.appManager.referenceDataManager.getOutputCurrentTypes();
-  }
-
-  get statusTypes(): Array<StatusType> {
-    return this.appManager.referenceDataManager.getStatusTypes();
-  }
-
-  get countries(): Array<Country> {
-    return this.appManager.referenceDataManager.getCountries();
+    this.step = 'location';
+    this.selectedTab = 'location';
   }
 
   get isReadyToSubmit(): boolean {
-    return this.validate().isValid;
+    // true if basic validation has passed and we are at last step of workflow
+    return this.validate().isValid && this.step == 'info';
   }
 
   ngOnInit() {
-    this.mapService = new MapBoxMapProvider(this.events, this.logging, this.http);
-    this.mapService.initAPI();
+
+  }
+
+  async presentLoadingUI() {
+    if (!this.loading) {
+      this.loading = await this.loadingController.create({
+        message: 'Please Wait..'
+      });
+    }
+
+    await this.loading.present();
+  }
+
+  async dismissLoadingUI() {
+    if (this.loading) await this.loading.dismiss();
   }
 
   ionViewDidEnter() {
-
-    this.mapOptions = new MapOptions();
-
-    // listen for map centre moves and use the new position
-    this.mapOptions.onMapMoveCompleted = () => {
-      this.mapService.getMapCenter().subscribe((pos) => {
-        if (pos) {
-          this.item.AddressInfo.Latitude = pos.coords.latitude;
-          this.item.AddressInfo.Longitude = pos.coords.longitude;
-
-          this.getAddressForCurrentLatLng();
-        }
-      });
-    };
-
 
     if (this.id != null) {
 
@@ -138,16 +157,13 @@ export class PoiEditorPage implements OnInit {
 
     }
     else {
-
-
+      // adding new POI
       let lastOperatorId = localStorage.getItem("_editor-operatorid");
       if (lastOperatorId) {
         this.item.OperatorID = parseInt(lastOperatorId);
       }
 
-      this.mapService.initMap("edit-map", this.mapOptions, null);
 
-      // add new
       if (this.startPos) {
         this.item.AddressInfo.Latitude = this.startPos.latitude;
         this.item.AddressInfo.Longitude = this.startPos.longitude;
@@ -167,7 +183,7 @@ export class PoiEditorPage implements OnInit {
           });
         }
 
-        this.mapService.setMapCenter(new GeoPosition(this.item.AddressInfo.Latitude, this.item.AddressInfo.Longitude));
+        //this.mapService.setMapCenter(new GeoPosition(this.item.AddressInfo.Latitude, this.item.AddressInfo.Longitude));
       }
     }
 
@@ -176,44 +192,95 @@ export class PoiEditorPage implements OnInit {
   }
 
   async previous() {
-    if (this.step == 'operator') {
-      this.step = 'poi-nearby';
-      await this.refreshNearbySites();
-      if (this.nearbySites.length > 0) {
-        return;
-      }
+
+    switch (this.step) {
+      case 'info':
+        this.step = 'operator';
+        break;
+      case 'operator':
+        this.step = 'poi-nearby';
+        break;
+      case 'poi-nearby':
+        this.step = 'location';
+        break;
     }
 
-    if (this.step == 'poi-nearby') {
-      this.step = 'location';
+    await this.initCurrentStep(false);
+
+  }
+
+  async next() {
+
+
+    if (this.step == 'poi-nearby' && this.nearbySites.length > 0 && !this.isNonDuplicateConfirmed) {
+      const alert = await this.alertController.create({
+        header: 'Confirm',
+        message: 'Please confirm you are not adding a duplicate site.',
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: (blah) => {
+
+            }
+          }, {
+            text: 'I Confirm',
+            handler: () => {
+              this.isNonDuplicateConfirmed = true;
+              this.next();
+            }
+          }
+        ]
+      });
+
+      alert.present();
+      return;
+    }
+
+    const validation = this.validate(this.step);
+    if (validation.isValid) {
+
+      switch (this.step) {
+        case 'location':
+          this.step = 'poi-nearby';
+          break;
+        case 'poi-nearby':
+          this.step = 'operator';
+          break;
+        case 'operator':
+          this.step = 'info';
+          break;
+      }
+
+      await this.initCurrentStep(true);
+    } else {
+      const a = await this.alertController.create({ message: validation.msg });
+      a.present();
     }
   }
-  
-  async next() {
-    if (this.step == 'location') {
 
-      if (this.suggestedAddress) {
-        this.useSuggestedAddress();
-      }
+  async initCurrentStep(isNextDirection: boolean) {
 
+    if (this.step == 'poi-nearby') {
       // check if there are any nearby sites already, if so user has to confirm they are not adding a duplicate
-      this.step = 'poi-nearby';
-      await this.refreshNearbySites();
+      this.selectedTab = 'location';
+      const siteNum = await this.refreshNearbySites();
 
-      if (this.nearbySites.length > 0) {
-        return;
+      // if no poi nearby, skip to next/previous step as required
+      if (siteNum == 0) {
+        isNextDirection ? await this.next() : await this.previous();
       }
     }
 
-    if (this.step == 'poi-nearby') {
-      this.step = 'operator';
+    if (this.step == 'operator') {
+      this.selectedTab = 'equipment';
       await this.refreshTemplateSites();
     }
-  }
 
-  editFullDetails() {
-    // switch to advanded mode
-    this.useQuickAdd = false;
+    if (this.step == 'info') {
+      this.selectedTab = 'info';
+    }
   }
 
   async onCountryChange() {
@@ -229,29 +296,12 @@ export class PoiEditorPage implements OnInit {
     }
   }
 
-  async getAddressForCurrentLatLng() {
-    if (this.item.AddressInfo.Latitude && this.item.AddressInfo.Longitude) {
-      // now resolve an address
-      this.appManager.api.fetchReverseGeocodeResult(this.item.AddressInfo.Latitude, this.item.AddressInfo.Longitude).then(results => {
-        if (results.AddressInfo) {
-          if (results.AddressInfo.CountryID) {
-            this.item.AddressInfo.CountryID = results.AddressInfo.CountryID;
-          }
-          this.suggestedAddress = results.AddressInfo;
-        }
-
-      });
-
-      /*return this.mapService.placeSearch(null, this.item.AddressInfo.Latitude, this.item.AddressInfo.Longitude).then(results => {
-        if (results.length > 0) {
-          this.suggestedAddress = results[0].Address;
-  
-        }
-      });*/
+  useSuggestedAddress($evt = null) {
+    if ($evt) {
+      this.suggestedAddress = $evt.suggestedAddress;
+      this.suggestedAddressAttribution = $evt.suggestedAddressAttribution;
     }
-  }
 
-  useSuggestedAddress() {
     Object.assign(this.item.AddressInfo, this.suggestedAddress);
     // attribution
     if (this.suggestedAddressAttribution) {
@@ -305,29 +355,50 @@ export class PoiEditorPage implements OnInit {
     this.appManager.referenceDataManager.hydrateCompactPOI(this.item);
   }
 
-  validate(): ValidationResult {
+  validate(step: string = 'all'): ValidationResult {
     // validate
     let validationMsg = null;
 
-    if (this.item.AddressInfo.Title == '') {
-      validationMsg = "A location title is required"
+    if (step == 'all' || step == 'location') {
+
+      // location info
+      if (!this.item.AddressInfo.Latitude || !this.item.AddressInfo.Longitude) {
+        validationMsg = "Location is required";
+      }
+
+      if (this.item.AddressInfo.Title == '') {
+        validationMsg = "A location title is required"
+      }
+
+      if (!this.item.AddressInfo.CountryID) {
+        validationMsg = "A country selection is required";
+      }
+
+      if (!this.item.AddressInfo.Latitude || !this.item.AddressInfo.Longitude) {
+        validationMsg = "A location latitude and longitude is required";
+      }
     }
 
-    if (!this.item.AddressInfo.CountryID) {
-      validationMsg = "A country selection is required";
+
+    if (step == 'all' || step == 'poi-nearby') {
+      if (!this.item.OperatorID) {
+        validationMsg = "Please confirm the charging network or equipment operator.";
+      }
+
+      // poi's nearby
+      if (this.nearbySites.length > 0 && !this.isNonDuplicateConfirmed) {
+        validationMsg = "Please confirm that the site is not a duplicate";
+      }
     }
 
-    if (!this.item.AddressInfo.Latitude || !this.item.AddressInfo.Longitude) {
-      validationMsg = "A location latitude and longitude is required";
+    if (step == 'all' || step == 'equipment') {
+
+      if (this.item.Connections.length == 0) {
+        validationMsg = "Equipment information is required";
+      }
     }
 
-    if (!this.item.OperatorID) {
-      validationMsg = "A Network Operator selection is required";
-    }
-
-    if (this.item.Connections.length == 0) {
-      validationMsg = "Equipment information is required";
-    }
+    // TODO: status, usage type, submission status
 
     if (validationMsg) {
       return { isValid: false, msg: validationMsg };
@@ -345,12 +416,17 @@ export class PoiEditorPage implements OnInit {
       return;
     }
 
+    await this.presentLoadingUI();
     try {
       await this.appManager.submitPOI(this.item);
 
+      await this.dismissLoadingUI();
+
       this.appManager.showToastNotification("You submission will be reviewed (if required) and published shortly.");
+
       this.modalController.dismiss();
     } catch (err) {
+      await this.dismissLoadingUI();
       if (err.error) {
         alert(err.error);
       }
@@ -366,7 +442,10 @@ export class PoiEditorPage implements OnInit {
    */
   async refreshTemplateSites() {
 
-    if (this.useQuickAdd && this.item.AddressInfo.CountryID && this.item.OperatorID) {
+    if (this.item.AddressInfo.CountryID && this.item.OperatorID) {
+
+      await this.presentLoadingUI();
+
       this.templateSites = [];
 
       let filter = new POISearchParams();
@@ -382,12 +461,19 @@ export class PoiEditorPage implements OnInit {
       });
 
       this.templateSites = results;
+
+      this.dismissLoadingUI();
     }
   }
 
-  async refreshNearbySites() {
+  /**
+   * Fetch list of POis dear the currently set location, return numbers of results  
+   * */
+  async refreshNearbySites(): Promise<number> {
 
     if (this.item.AddressInfo.Latitude && this.item.AddressInfo.Longitude) {
+      await this.presentLoadingUI();
+
       this.nearbySites = [];
 
       let filter = new POISearchParams();
@@ -405,7 +491,17 @@ export class PoiEditorPage implements OnInit {
       });
 
       this.nearbySites = results;
+
+      this.dismissLoadingUI();
+      return results.length;
+    } else {
+      return 0;
     }
+  }
+
+  confirmNonDuplicate() {
+    this.isNonDuplicateConfirmed = true;
+    this.next();
   }
 
   changeTemplatePOI() {
@@ -417,21 +513,26 @@ export class PoiEditorPage implements OnInit {
     this.editExistingPOI(poi.ID);
   }
 
-  editExistingPOI(id: number) {
-    this.useQuickAdd = false;
+  async editExistingPOI(id: number) {
+
+    await this.presentLoadingUI();
 
     // edit existing
     this.poiManager.getPOIById(id, true).then(poi => {
       this.item = Object.assign({}, poi);
 
-      this.mapService.initMap("edit-map", this.mapOptions, null);
-
-      this.mapService.setMapCenter(new GeoPosition(this.item.AddressInfo.Latitude, this.item.AddressInfo.Longitude));
 
       this.refreshFilteredReferenceData();
+
+      this.dismissLoadingUI();
+
     });
   }
 
+  /**
+   * For a given POI, copy the equipment and usage details to the item currently being edited
+   * @param source POI detail to copy
+   */
   useTemplatePOI(source: ExtendedPOIDetails) {
 
     this.selectedTemplatePOI = source;
@@ -452,5 +553,9 @@ export class PoiEditorPage implements OnInit {
 
     // decorate object with expanded relationship properties
     this.appManager.referenceDataManager.hydrateCompactPOI(this.item);
+  }
+
+  skipCopyingPOI() {
+    this.skipPOICopy = true;
   }
 }
