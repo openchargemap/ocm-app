@@ -13,11 +13,12 @@ import { JourneyManager } from './../../services/JourneyManager';
 import { Mapping } from './../../services/mapping/Mapping';
 import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
-import { Component, OnInit, NgZone, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { NavController, Events, Platform, ModalController, AlertController } from '@ionic/angular';
 import { PlaceSearch } from '../../components/place-search/place-search';
 import { PlaceSearchResult } from '../../model/AppModels';
-
+import { fromEvent } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
 @Component({
   templateUrl: 'search.html',
   styleUrls: ['./search.scss']
@@ -72,6 +73,14 @@ export class SearchPage implements OnInit, AfterViewInit {
     this.mapCanvasID = 'map-canvas';
 
     this.mapping.setMapAPI(environment.defaultMapProvider);
+
+    // listen for window resize events
+    const resizeEvent = fromEvent(window, 'resize');
+    resizeEvent.pipe(debounceTime(500)).subscribe((event) => {
+      let size = { width: Utils.getClientHeight(), height: Utils.getClientWidth() };
+
+      this.events.publish('ocm:window:resized', [size]);
+    });
   }
 
   ionViewDidEnter() {
@@ -225,6 +234,8 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   }
 
+
+
   async ngAfterViewInit() {
     await this.initialiseMapping();
   }
@@ -232,10 +243,10 @@ export class SearchPage implements OnInit, AfterViewInit {
   async ngOnInit() {
 
     // first start up, get fresh core reference data, then we can start getting POI results nearby
-   // if (!this.appManager.referenceDataManager.referenceDataLoaded()) {
-      this.logging.log('Refreshing reference data ..', LogLevel.VERBOSE);
-      this.appManager.referenceDataManager.refreshReferenceData(this.appManager.api);
-    //}
+
+    this.logging.log('Refreshing reference data ..', LogLevel.VERBOSE);
+    this.appManager.referenceDataManager.refreshReferenceData(this.appManager.api);
+
   }
 
   showPOIListOnMap(listType: string) {
@@ -315,30 +326,8 @@ export class SearchPage implements OnInit, AfterViewInit {
 
     }
 
-    /////
-    // params.distance = distance;
-    // params.distanceUnit = distance_unit;
-    // params.maxResults = this.appConfig.maxResults;
-
     params.includeComments = true;
     params.enableCaching = true;
-
-    // close zooms are 1:1 level of detail, zoomed out samples less data
-    //this.mapping.getMapZoom().subscribe((zoomLevel: number) => {
-
-    /* this.logging.log('map zoom level to be converted to level of detail:' + zoomLevel);
-     if (zoomLevel > 10) {
-       params.levelOfDetail = 1;
-     } else if (zoomLevel > 6) {
-       params.levelOfDetail = 3;
-     } else if (zoomLevel > 4) {
-       params.levelOfDetail = 5;
-     } else if (zoomLevel > 3) {
-       params.levelOfDetail = 10;
-     } else {
-       params.levelOfDetail = 20;
-     }
-*/
 
     // apply filter settings from search settings
     if (this.appManager.searchSettings != null) {
@@ -372,12 +361,11 @@ export class SearchPage implements OnInit, AfterViewInit {
         params.levelOfDetail = null;
         params.latitude = null;
         params.longitude = null;
-        // params.distance = this.routeSearchDistance;
+
       }
 
     }
 
-    // TODO: use stack of requests as may be multiple in sync
     this.appManager.isRequestInProgress = true;
 
     let numResults = await this.poiManager.refreshPOIList(params);
