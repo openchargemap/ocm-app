@@ -2,12 +2,14 @@ import { MappingAPI } from "../app/services/mapping/interfaces/mapping";
 
 export const environment = {
   name: 'prod',
-  version: '7.0.1',
+  version: '7.1.0',
   production: true,
-  analyticsId: 'UA-76936-21',
+  analyticsId: '',
   googleMapsKey: '',
   mapBoxToken: '',
   mapKitToken: '',
   enableStaticMaps: false,
-  defaultMapProvider: 4 //1: GM native 4:MapBox // 4:MappingAPI.MAPKIT_JS
+  defaultMapProvider: 4, //1: GM native 4: MapBox // 5:MappingAPI.MAPKIT_JS  //6: mapbox GL with Maptiler,
+  apiBase: 'https://api.openchargemap.io/',
+  enabledFeatures: [ 'MAP', 'ADD_POI', 'EDIT_POI', 'ADD_COMMENT', 'ADD_PHOTO', 'FAVOURITES', 'ROUTE_PLANNER' ,'FILTER_OPTIONS_BY_COUNTRY']
 };
