@@ -1,7 +1,8 @@
 {
   "name": "io.openchargemap.app",
   "integrations": {
-    "cordova": {}
+    "cordova": {},
+    "capacitor": {}
   },
   "type": "angular"
 }
