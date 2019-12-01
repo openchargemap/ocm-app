@@ -6,6 +6,7 @@ import { ModalController, Events } from '@ionic/angular';
 import { OperatorInfo, UsageType, StatusType, ConnectionType, Country } from '../../model/CoreDataModel';
 import { environment } from '../../../environments/environment';
 import { Utils } from '../../core/Utils';
+import { Mapping } from '../../services/mapping/Mapping';
 
 @Component({
   templateUrl: 'settings.html'
@@ -18,6 +19,7 @@ export class SettingsPage implements OnInit {
   constructor(
     public appManager: AppManager,
     public poiManager: POIManager,
+    public mapping: Mapping,
     private modalController: ModalController,
     private events: Events
   ) {
@@ -97,6 +99,10 @@ export class SettingsPage implements OnInit {
 
   async onCountryChange() {
     this.appManager.referenceDataManager.refreshFilteredReferenceData(this.appManager.api, { CountryIds: [this.searchSettings.FilterOptionsByCountryId] });
+  }
+
+  async onMapTypeChange() {
+    this.mapping.setMapType(this.searchSettings.MapType);
   }
 
   close() {

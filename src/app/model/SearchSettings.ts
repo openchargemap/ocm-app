@@ -1,4 +1,5 @@
 import { GeoLatLng } from './GeoPosition';
+import { MapType } from '../services/mapping/interfaces/mapping';
 
 
 export class SearchSettings {
@@ -15,6 +16,7 @@ export class SearchSettings {
   StartSearchPosition: GeoLatLng;
   Language: string;
   FilterOptionsByCountryId: number;
+  MapType: MapType;
 
   constructor() {
     this.OperatorList = [];
@@ -27,6 +29,7 @@ export class SearchSettings {
 
     this.FilterOptionsByCountryId = null;
     this.UseDistanceInKM = true;
+    this.MapType ='ROADMAP';
   }
 
   public LoadSettings() {

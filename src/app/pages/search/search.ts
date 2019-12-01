@@ -72,6 +72,7 @@ export class SearchPage implements OnInit, AfterViewInit {
 
     this.mapCanvasID = 'map-canvas';
 
+    this.mapping.setMapType(appManager.searchSettings.MapType);
     this.mapping.setMapAPI(environment.defaultMapProvider);
 
     // listen for window resize events
@@ -245,8 +246,12 @@ export class SearchPage implements OnInit, AfterViewInit {
     // first start up, get fresh core reference data, then we can start getting POI results nearby
 
     this.logging.log('Refreshing reference data ..', LogLevel.VERBOSE);
-    this.appManager.referenceDataManager.refreshReferenceData(this.appManager.api);
+    const refreshedOK = await this.appManager.referenceDataManager.refreshReferenceData(this.appManager.api);
 
+    if (!refreshedOK) {
+      // problem connecting to API
+      this.appManager.isOffline = true;
+    }
   }
 
   showPOIListOnMap(listType: string) {

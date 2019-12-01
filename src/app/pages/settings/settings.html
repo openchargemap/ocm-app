@@ -68,11 +68,20 @@
     <ion-label>Show Distance in Kilometers</ion-label>
     <ion-toggle [(ngModel)]="searchSettings.UseDistanceInKM"></ion-toggle>
   </ion-item>
+
   <ion-item>
     <ion-label>Language</ion-label>
     <ion-select [(ngModel)]="searchSettings.Language" (ionChange)="onLanguageChange()" multiple="false">
       <ion-select-option *ngFor="let item of languages" [value]="item">{{item}}</ion-select-option>
 
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Map Type</ion-label>
+    <ion-select [(ngModel)]="searchSettings.MapType"(ionChange)="onMapTypeChange()" multiple="false" cancelText="Cancel" okText="OK">
+      <ion-select-option value="ROADMAP">Road Map</ion-select-option>
+      <ion-select-option value="SATELLITE">Satellite</ion-select-option>
     </ion-select>
   </ion-item>
 

@@ -5,7 +5,7 @@
 */
 
 import { Utils } from '../../../core/Utils';
-import { MappingAPI, IMapProvider, MapOptions, IMapManager } from '../interfaces/mapping';
+import { MappingAPI, IMapProvider, MapOptions, IMapManager, MapType } from '../interfaces/mapping';
 import { Events } from '@ionic/angular';
 import { Observable } from 'rxjs/Observable';
 import { Dictionary } from 'typescript-collections';
@@ -40,7 +40,7 @@ export class MapBoxMapProvider implements IMapProvider {
   constructor(private events: Events, private logging: Logging, private http: HttpClient) {
     this.events = events;
     this.mapAPIType = MappingAPI.MAPBOX;
-    this.mapTileSet = 'mapbox://styles/mapbox/streets-v10';
+
     this.mapReady = false;
     this.markerList = new Dictionary<number, any>();
   }
@@ -48,6 +48,14 @@ export class MapBoxMapProvider implements IMapProvider {
   initAPI() {
     if (mapboxgl) {
       (<any>mapboxgl).accessToken = environment.mapBoxToken;
+    }
+  }
+
+  private getCurrentMapTileSet(mapType: MapType): string {
+    if (mapType == 'SATELLITE') {
+      return 'mapbox://styles/mapbox/satellite-streets-v11';
+    } else {
+      return 'mapbox://styles/mapbox/streets-v11';
     }
   }
 
@@ -75,7 +83,7 @@ export class MapBoxMapProvider implements IMapProvider {
 
         this.map = new mapboxgl.Map({
           container: mapCanvasID,
-          style: this.mapTileSet,
+          style: this.getCurrentMapTileSet(mapConfig.mapType),
           zoom: 15,
           attributionControl: false
         });
@@ -111,10 +119,10 @@ export class MapBoxMapProvider implements IMapProvider {
         this.map.on('moveend', () => {
           this.events.publish('ocm:mapping:dragend');
 
-            // optional callback when map moves
-            if (mapConfig.onMapMoveCompleted) {
-              mapConfig.onMapMoveCompleted();
-            }
+          // optional callback when map moves
+          if (mapConfig.onMapMoveCompleted) {
+            mapConfig.onMapMoveCompleted();
+          }
         });
 
         this.map.on('zoomend', () => {
@@ -309,13 +317,9 @@ export class MapBoxMapProvider implements IMapProvider {
     return obs;
   }
 
-  setMapType(mapType: string) {
-    /* try {
-       this.map.set("google.maps.MapTypeId." + mapType);
-     } catch (exception) {
-       this.logging.log("Failed to set map type:" + mapType + " : " + exception.toString());
-     }*/
-    this.logging.log("MapBox: skipped setting Map Type :" + mapType);
+  setMapType(mapType: MapType) {
+
+    this.map.setStyle(this.getCurrentMapTileSet(mapType));
   }
 
   getMapBounds(): Observable<Array<GeoLatLng>> {

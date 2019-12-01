@@ -12,6 +12,8 @@ export enum MappingAPI {
     MAPTILER = 6
 }
 
+export type MapType = 'ROADMAP' | 'SATELLITE';
+
 export interface IMapProvider {
     mapAPIType: MappingAPI;
     mapReady: boolean;
@@ -26,7 +28,7 @@ export interface IMapProvider {
     setMapZoom(zoomLevel: number);
     getMapCenter(): Observable<GeoPosition>;
     setMapCenter(pos: GeoPosition, zoomLevel?: number);
-    setMapType(mapType: string);
+    setMapType(mapType: MapType);
     getMapBounds(): Observable<Array<GeoLatLng>>;
     moveToMapBounds(bounds: GeoBounds);
     renderPolyline(polyline: string);
@@ -52,7 +54,7 @@ export class MapOptions {
     public mapMoveQueryRefreshMS: number; // time to wait before recognising map centre has changed
     public requestSearchUpdate: boolean;
     public enableSearchRadiusIndicator: boolean;
-    public mapType: string;
+    public mapType: MapType;
     public minZoomLevel: number;
     public onMapMoveCompleted: any;
 

@@ -1,5 +1,5 @@
 import { MapBoxMapProvider } from './providers/MapBox';
-import { IMapManager, MapOptions, IMapProvider, MappingAPI } from './interfaces/mapping';
+import { IMapManager, MapOptions, IMapProvider, MappingAPI, MapType } from './interfaces/mapping';
 import { Utils } from './../../core/Utils';
 import { Logging, LogLevel } from './../Logging';
 
@@ -194,24 +194,14 @@ export class Mapping implements IMapManager {
         return true;
     }
 
-    setMapType(maptype: string) {
+    setMapType(maptype: MapType) {
         if (this.mapOptions.mapType == maptype) return;
 
         this.mapOptions.mapType = maptype;
         this.logging.log("Changing map type:" + maptype);
 
-        if (this.isMapReady()) {
-            if (this.mapProvider != null) {
-                this.mapProvider.setMapType(maptype);
-            } else {
-                if (this.mapOptions.mapAPI == MappingAPI.GOOGLE_NATIVE) {
-                    try {
-                        this.map.setMapTypeId("plugin.google.maps.MapTypeId." + maptype);
-                    } catch (exception) {
-                        this.logging.log("Failed to set map type:" + maptype + " : " + exception.toString());
-                    }
-                }
-            }
+        if (this.isMapReady() && this.mapProvider != null) {
+            this.mapProvider.setMapType(maptype);
         } else {
             this.logging.log("Map type set, maps not initialised yet.");
         }
