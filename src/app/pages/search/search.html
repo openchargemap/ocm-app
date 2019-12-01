@@ -6,11 +6,11 @@
 			<ion-menu-button></ion-menu-button>
 		</ion-buttons>
 		<ion-searchbar autocomplete="on" [(ngModel)]="searchKeyword" (ionInput)="search($event)"
-		 [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500">
+					   [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500">
 		</ion-searchbar>
 		<ion-buttons slot="end">
 			<ion-button (click)="locateUser()">
-				<ion-icon *ngIf="!appManager.isRequestInProgress" name="locate"  slot="start"></ion-icon>
+				<ion-icon *ngIf="!appManager.isRequestInProgress" name="locate" slot="start"></ion-icon>
 				<ion-spinner *ngIf="appManager.isRequestInProgress"></ion-spinner>
 			</ion-button>
 			<!--<ion-button (click)="openRoutePlannerModal()" *ngIf="sideViewAvailable==false">
@@ -18,7 +18,7 @@
 			</ion-button>-->
 			<ion-button (click)="openSearchOptions()" [color]="appManager.searchSettings.HasActiveFilters?'danger':'default'">
 				<ion-icon name="options" slot="end"></ion-icon>
-				
+
 			</ion-button>
 
 			<ion-button (click)="openSideView()" *ngIf="sideViewAvailable==true && poiViewMode=='modal'">
@@ -31,7 +31,13 @@
 
 <ion-content class="search-page">
 
-	<place-search #placeSearchMapPOI (placeChanged)="placeSelected($event)" ></place-search>
+	<place-search #placeSearchMapPOI (placeChanged)="placeSelected($event)"></place-search>
+
+	<ng-container *ngIf="appManager.isOffline">
+		<div style="position: absolute;">
+			<p>There was a problem communicating with Open Charge Map. Please check your data connection.</p>
+		</div>
+	</ng-container>
 
 	<div id="map-canvas" style="height:100%;width:100%;min-height:300px;"></div>
 

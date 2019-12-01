@@ -12,6 +12,7 @@
 
 <ion-content class="ion-padding">
 
+  <ion-label>{{selectedTab}} - {{step}}</ion-label>
   <ng-container>
 
     <ion-segment [ngModel]="selectedTab">
@@ -82,9 +83,11 @@
       <ng-container *ngIf="step=='poi-nearby'">
 
         <h3>Locations Nearby</h3>
-        <p>The following locations already exist nearby.</p>
-        <p>Ensure you are not adding a duplicate site unless it is for different equipment from another network operator.</p>
-        <p>You can edit any of these listings if required instead:</p>
+        <p><strong>The following locations already exist nearby.</strong></p>
+        <div class="instruction">
+          <p>Ensure you are not adding a duplicate site unless it is for different equipment from another network operator.</p>
+          <p>You can edit any of these listings if required instead:</p>
+        </div>
 
         <app-poi-list [poiList]='nearbySites' [enableEditOption]='true' (onEdit)='editPOI($event)'>
         </app-poi-list>
@@ -94,12 +97,14 @@
     </ng-container>
     <ng-container *ngIf="selectedTab=='equipment'">
 
-      <ng-container *ngIf="step=='operator' && isAddMode">
+      <ng-container *ngIf="step=='copy-equipment'">
 
         <ng-container *ngIf="!skipPOICopy">
-          <p>You can optionally copy the equipment settings from other equipment operated by the same network operator:   
-            <ion-button (click)="skipCopyingPOI()" color="light" size="small">Skip<ion-icon name="fastforward" slot="end"></ion-icon></ion-button></p>
-        
+          <p class="instruction">You can optionally copy the equipment settings from other sites operated by the same network operator:
+            <ion-button (click)="skipCopyingPOI()" color="light" size="small">Skip<ion-icon name="fastforward" slot="end"></ion-icon>
+            </ion-button>
+          </p>
+
           <ion-item>
             <ion-label position="floating">Network Operator</ion-label>
             <ion-select [(ngModel)]="item.OperatorID" (ionChange)="onOperatorChange()">
@@ -110,7 +115,7 @@
 
           <ng-container *ngIf="item.AddressInfo.CountryID && item.OperatorID">
             <ng-container *ngIf="selectedTemplatePOI">
-              <h2>Copying the equipment configuration from:</h2>
+              <p>Copied the equipment configuration from:</p>
               <ion-item>
 
                 <ion-label>
@@ -152,7 +157,7 @@
 
       </ng-container>
 
-      <ng-container *ngIf="!isAddMode || skipPOICopy">
+      <ng-container *ngIf="step=='edit-equipment'">
         <ion-item>
           <ion-label position="floating">Network Operator</ion-label>
           <ion-select [(ngModel)]="item.OperatorID">
@@ -161,67 +166,17 @@
           </ion-select>
 
         </ion-item>
-      </ng-container>
 
-      <ng-container *ngIf="conn==null">
+
+        <h4>Equipment</h4>
+
         <ion-button (click)="addConnection()" size="small">
-          <ion-icon name="add" slot="start"></ion-icon> Add
+          <ion-icon name="add" slot="icon-only"></ion-icon>
         </ion-button>
 
-        <app-equipment-details [item]="item" [enableEdit]="true" (onEdit)="editConnection($event.id)"></app-equipment-details>
+        <app-equipment-details [item]="item" [enableEdit]="true" (onEdit)="editConnection($event)" (onDelete)="deleteConnection($event)"></app-equipment-details>
 
-      </ng-container>
 
-      <ng-container *ngIf="conn!=null">
-        <h2>Edit Equipment Connection Info {{conn.ID}}</h2>
-        <ion-item>
-          <ion-label position="floating">Connection Type</ion-label>
-          <ion-select [(ngModel)]="conn.ConnectionTypeID">
-            <ion-select-option value="0">Unknown</ion-select-option>
-            <ion-select-option *ngFor="let t of connectionTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
-          </ion-select>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Supply Type</ion-label>
-          <ion-select [(ngModel)]="conn.CurrentTypeID">
-            <ion-select-option value="0">Unknown</ion-select-option>
-            <ion-select-option *ngFor="let t of currentTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Power (kW)</ion-label>
-          <ion-input type="number" [(ngModel)]="conn.PowerKW"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Amps</ion-label>
-          <ion-input type="number" [(ngModel)]="conn.Amps"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Voltage</ion-label>
-          <ion-input type="number" [(ngModel)]="conn.Voltage"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Status</ion-label>
-          <ion-select [(ngModel)]="conn.StatusTypeID">
-            <ion-select-option *ngFor="let t of statusTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
-          </ion-select>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Quantity Available</ion-label>
-          <ion-input type="number" [(ngModel)]="conn.Quantity"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Comment</ion-label>
-          <ion-input type="text" [(ngModel)]="conn.Comments" placeholder="(optional) other comments"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Operators Reference</ion-label>
-          <ion-input type="text" [(ngModel)]="conn.Reference"></ion-input>
-        </ion-item>
-
-        <ion-button (click)="updateConnection()" size="small">Update</ion-button>
-        <ion-button (click)="cancelEditConnection()" size="small">Cancel</ion-button>
       </ng-container>
     </ng-container>
     <ng-container *ngIf="selectedTab=='info'">

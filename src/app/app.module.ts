@@ -37,6 +37,7 @@ import { FavouriteEditorPage } from './pages/journeys/favourite-editor';
 import { NullableTranslatePipe } from './pipes/NullableTranslatePipe';
 import { PoiEditorPage } from './pages/poi-editor/poi-editor.page';
 import { PoiEditorPageModule } from './pages/poi-editor/poi-editor.module';
+import { PoiEquipmentEditorComponent } from './components/poi-equipment-editor/poi-equipment-editor';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -60,7 +61,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage, MediaUploadPage, FavouriteEditorPage, PoiEditorPage], // , JourneysPage, MediaUploadPage, POIDetailsPage, ProfilePage, SettingsPage, SignInPage
+  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage, MediaUploadPage, FavouriteEditorPage, PoiEditorPage, PoiEquipmentEditorComponent], // , JourneysPage, MediaUploadPage, POIDetailsPage, ProfilePage, SettingsPage, SignInPage
   imports: [
     BrowserModule,
     HttpClientModule,

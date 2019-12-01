@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
-import { ExtendedPOIDetails } from '../../model/CoreDataModel';
+import { ExtendedPOIDetails, ConnectionInfo } from '../../model/CoreDataModel';
 import { Util } from 'leaflet';
 import { Utils } from '../../core/Utils';
 
@@ -17,17 +17,24 @@ export class EquipmentDetailsComponent implements OnInit {
   public enableEdit: boolean = false;
 
   @Output()
-  public onEdit = new EventEmitter<number>();
+  public onEdit = new EventEmitter<any>();
+
+  @Output()
+  public onDelete = new EventEmitter<any>();
 
   constructor() { }
 
   ngOnInit() { }
 
-  editConnection(id: number) {
-    this.onEdit.emit(id);
+  editConnection(editItem: ConnectionInfo) {
+    this.onEdit.emit(editItem);
   }
 
-  getConnectorTypeIcon(id: number):string {
+  deleteConnection(editItem: ConnectionInfo) {
+    this.onDelete.emit(editItem);
+  }
+
+  getConnectorTypeIcon(id: number): string {
     return Utils.getIconForConnector(id);
   }
 }

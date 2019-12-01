@@ -27,9 +27,11 @@ export class ReferenceDataManager {
         this.loadCachedRefData();
     }
 
-    public refreshReferenceData(api: APIClient) {
+    public async refreshReferenceData(api: APIClient): Promise<boolean> {
 
-        api.fetchCoreReferenceData(null).subscribe((res) => {
+        try {
+            const res = await api.fetchCoreReferenceData(null).toPromise();
+
             this.setCoreReferenceData(res);
             this.setFilteredReferenceData(res);
 
@@ -37,9 +39,11 @@ export class ReferenceDataManager {
 
             this.sortCoreReferenceData();
             this.cacheCurrentRefData();
-        }, (rejection) => {
+            return true;
+        } catch (rejection) {
             this.logging.log('Error fetching core ref data:' + rejection);
-        });
+            return false;
+        };
     }
 
     public refreshFilteredReferenceData(api: APIClient, filters: ReferenceDataFilters) {
@@ -48,7 +52,7 @@ export class ReferenceDataManager {
             this.setFilteredReferenceData(res);
 
             this.sortCoreReferenceData();
-            
+
             this.logging.log('Got refreshed filtered reference data.', LogLevel.VERBOSE);
         }, (rejection) => {
             this.logging.log('Error fetching filtered reference data:' + rejection);
@@ -310,7 +314,7 @@ export class ReferenceDataManager {
         this.sortReferenceData(this.referenceData.CheckinStatusTypes);
         this.sortReferenceData(this.referenceData.SubmissionStatusTypes);
 
-        if (this.filteredReferenceData){
+        if (this.filteredReferenceData) {
             this.sortReferenceData(this.filteredReferenceData.ConnectionTypes);
             this.sortReferenceData(this.filteredReferenceData.Operators);
         }
@@ -347,31 +351,31 @@ export class ReferenceDataManager {
     }
 
 
-    hydrateCompactPOI(poi: any): Array<any> {
+    hydrateCompactPOI(poi: any, refreshAll: boolean = false): Array<any> {
 
         const refData = this;
 
-        if (poi.DataProviderID != null && poi.DataProvider == null) {
+        if (poi.DataProviderID != null && (refreshAll || poi.DataProvider == null)) {
             poi.DataProvider = refData.getDataProviderByID(poi.DataProviderID);
         }
 
-        if (poi.OperatorID != null && poi.OperatorInfo == null) {
+        if (poi.OperatorID != null && (refreshAll || poi.OperatorInfo == null)) {
             poi.OperatorInfo = refData.getNetworkOperatorByID(poi.OperatorID);
         }
 
-        if (poi.UsageTypeID != null && poi.UsageType == null) {
+        if (poi.UsageTypeID != null && (refreshAll || poi.UsageType == null)) {
             poi.UsageType = refData.getUsageTypeByID(poi.UsageTypeID);
         }
 
-        if (poi.AddressInfo.CountryID != null && poi.AddressInfo.Country == null) {
+        if (poi.AddressInfo.CountryID != null && (refreshAll || poi.AddressInfo.Country == null)) {
             poi.AddressInfo.Country = refData.getCountryByID(poi.AddressInfo.CountryID);
         }
 
-        if (poi.StatusTypeID != null && poi.StatusType == null) {
+        if (poi.StatusTypeID != null && (refreshAll || poi.StatusType == null)) {
             poi.StatusType = refData.getStatusTypeByID(poi.StatusTypeID);
         }
 
-        if (poi.SubmissionStatusTypeID != null && poi.SubmissionStatusType == null) {
+        if (poi.SubmissionStatusTypeID != null && (refreshAll || poi.SubmissionStatusType == null)) {
             poi.SubmissionStatusType = refData.getSubmissionStatusTypesByID(poi.SubmissionStatusTypeID);
         }
 
@@ -379,17 +383,17 @@ export class ReferenceDataManager {
         if (poi.Connections != null) {
             for (let c = 0; c < poi.Connections.length; c++) {
                 const conn = poi.Connections[c];
-                if (conn.ConnectionTypeID != null && conn.ConnectionType == null) {
+                if (conn.ConnectionTypeID != null && (refreshAll || conn.ConnectionType == null)) {
                     conn.ConnectionType = refData.getConnectionTypeByID(conn.ConnectionTypeID);
                 }
-                if (conn.LevelID != null && conn.Level == null) {
+                if (conn.LevelID != null && (refreshAll || conn.Level == null)) {
                     conn.Level = refData.getChargingLevelTypeByID(conn.LevelID);
                 }
-                if (conn.CurrentTypeID != null && conn.CurrentType == null) {
+                if (conn.CurrentTypeID != null && (refreshAll || conn.CurrentType == null)) {
                     conn.CurrentType = refData.getOutputCurrentTypeByID(conn.CurrentTypeID);
                 }
-                if (conn.StatusTypeID != null && conn.StatusType == null) {
-                    conn.StatusTypeID = refData.getStatusTypeByID(conn.StatusTypeID);
+                if (conn.StatusTypeID != null && (refreshAll || conn.StatusType == null)) {
+                    conn.StatusType = refData.getStatusTypeByID(conn.StatusTypeID);
                 }
 
                 poi.Connections[c] = conn;
@@ -399,10 +403,10 @@ export class ReferenceDataManager {
         if (poi.UserComments != null) {
             for (let c = 0; c < poi.UserComments.length; c++) {
                 const comment = poi.UserComments[c];
-                if (comment.CommentType != null && comment.CommentTypeID == null) {
+                if (comment.CommentTypeID != null && (refreshAll || comment.CommentType != null)) {
                     comment.CommentType = refData.getCommentTypeByID(comment.CommentTypeID);
                 }
-                if (comment.CheckinStatusType != null && comment.CheckinStatusTypeID == null) {
+                if (comment.CheckinStatusTypeID != null && (refreshAll || comment.CheckinStatusType != null)) {
                     comment.CheckinStatusTypeID = refData.getCheckinStatusTypeByID(comment.CheckinStatusTypeID);
                 }
                 poi.UserComments[c] = comment;

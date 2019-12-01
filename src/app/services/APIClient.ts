@@ -98,7 +98,7 @@ export class APIClient {
 
       try {
         let result = await this.http
-          .get(apiCallURL).toPromise();
+          .get(apiCallURL, this.getHttpRequestOptions()).toPromise();
 
         let poiResults = this.refData.hydrateCompactPOIList(<Array<any>>result);
         return poiResults;
@@ -115,7 +115,7 @@ export class APIClient {
     }
   }
 
-  private getHttpRequestOptions(useJsonContentType: boolean = true): any {
+  private getHttpRequestOptions(useJsonContentType: boolean = true): Object {
 
     //attach auth header if we have auth info for client api        
     let headers = new HttpHeaders();
@@ -130,7 +130,7 @@ export class APIClient {
       headers = headers.append('Authorization', 'Bearer ' + this.authResponse.Data.access_token);
     }
 
-    headers = headers.append('X-Custom', 'test');
+    headers = headers.append('X-API-Key', environment.apiKey);
     let options = { headers: headers };
 
     return options;
@@ -150,7 +150,7 @@ export class APIClient {
 
     this.logging.log('API Call:' + serviceURL, LogLevel.VERBOSE);
 
-    return this.http.get<CoreReferenceData>(serviceURL);
+    return this.http.get<CoreReferenceData>(serviceURL, this.getHttpRequestOptions());
   }
 
   performSignIn(username: string, password: string): Promise<any> {
@@ -161,7 +161,7 @@ export class APIClient {
 
     // observable result is wrapper in a Promise for API consumer to handle result/rejection etc
 
-    return this.http.post(serviceURL, JSON.stringify(data))
+    return this.http.post(serviceURL, JSON.stringify(data), this.getHttpRequestOptions())
       .toPromise()
       .then(response => {
         this.authResponse = response;
@@ -186,21 +186,21 @@ export class APIClient {
 
     this.logging.log('[api] Submitting user comment');
 
-    return this.http.post(this.serviceBaseURL + '/comment/', jsonString, this.getHttpRequestOptions(true))
+    return this.http.post(this.serviceBaseURL + '/comment/', jsonString, this.getHttpRequestOptions())
       .toPromise();
   }
 
   submitMediaItem(data): Promise<any> {
     const jsonString = JSON.stringify(data);
 
-    return this.http.post(this.serviceBaseURL + '/mediaitem/', jsonString, this.getHttpRequestOptions(true))
+    return this.http.post(this.serviceBaseURL + '/mediaitem/', jsonString, this.getHttpRequestOptions())
       .toPromise();
   }
 
   submitPOI(data): Promise<any> {
     const jsonString = JSON.stringify(data);
 
-    return this.http.post(this.serviceBaseURL + '/poi/', jsonString, this.getHttpRequestOptions(true))
+    return this.http.post(this.serviceBaseURL + '/poi/', jsonString, this.getHttpRequestOptions())
       .toPromise();
   }
 
@@ -221,7 +221,7 @@ export class APIClient {
   fetchReverseGeocodeResult(latitude: number, longitude: number): Promise<PlaceSearchResult> {
 
     let serviceURL = this.serviceBaseURL + '/geocode/?client=' + this.clientName + '&output=json&camelcase=false&latitude=' + latitude + "&longitude=" + longitude;
-    return this.http.get<PlaceSearchResult>(serviceURL).toPromise();
+    return this.http.get<PlaceSearchResult>(serviceURL, this.getHttpRequestOptions()).toPromise();
   }
 
   isLocalStorageAvailable() {

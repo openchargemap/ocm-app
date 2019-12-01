@@ -4,24 +4,23 @@
     <ion-col>
       <ion-row>
         <ion-col size="3">
-          <p>
-            <ion-badge color="success" *ngIf="i.Quantity">{{i.Quantity}}x</ion-badge>
-          </p>
+
 
           <img [src]="getConnectorTypeIcon(i.ConnectionTypeID)" style="max-width: 64px">
-
+          <ion-badge color="primary" *ngIf="i.Quantity">{{i.Quantity}} x</ion-badge>
+          <div class="info">{{i.StatusType?.Title}}</div>
         </ion-col>
         <ion-col>
-          <ion-row>
-            <ion-col>
-              {{$any(i).ConnectionType?.Title}}
-            </ion-col>
-          </ion-row>
+
           <ion-row>
             <ion-col>
               <ion-note>
+                <div>
+                  <strong title="{{i.ConnectionType?.FormalName}}">{{i.ConnectionType?.Title}} </strong>
+                </div>
+               
                 <strong *ngIf="i.PowerKW">{{i.PowerKW}} kW </strong>
-                <div *ngIf="i.CurrentTypeID">{{$any(i).CurrentType?.Title}} </div>
+                <div *ngIf="i.CurrentTypeID">{{i.CurrentType?.Title}} </div>
               </ion-note>
               <ion-note>
                 <span *ngIf="i.Amps">{{i.Amps}}A </span>
@@ -29,6 +28,19 @@
               </ion-note>
             </ion-col>
           </ion-row>
+          <ion-row>
+            <ion-col class="info">{{i.Reference}}</ion-col>
+            <ion-col class="info">{{i.Comments}}</ion-col>
+          </ion-row>
+        </ion-col>
+        <ion-col *ngIf="enableEdit">
+          <ion-button (click)="editConnection(i)" size="small" color="secondary">
+            <ion-icon name="create" slot="icon-only"></ion-icon>
+          </ion-button>
+          <br>
+          <ion-button (click)="deleteConnection(i)" size="small" color="danger">
+            <ion-icon name="trash" slot="icon-only"></ion-icon>
+          </ion-button>
         </ion-col>
       </ion-row>
 

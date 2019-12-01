@@ -8,6 +8,7 @@ import { POIManager } from '../../services/POIManager';
 import { PoiDetails } from '../../components/poi-details/poi-details';
 import { Mapping } from '../../services/mapping/Mapping';
 import { PoiLocationEditorComponent } from '../../components/poi-location-editor/poi-location-editor';
+import { PoiEquipmentEditorComponent } from '../../components/poi-equipment-editor/poi-equipment-editor';
 
 interface ValidationResult {
   isValid: boolean;
@@ -23,12 +24,11 @@ export class PoiEditorPage implements OnInit {
 
   id: number;
   item: POIDetails;
-  conn: ConnectionInfo;
 
   /*
    * The 'step' defines the granular part of the workflow we're at in the process
    */
-  step: 'location' | 'operator' | 'poi-nearby' | 'info';
+  step: 'location' | 'poi-nearby' | 'copy-equipment' | 'edit-equipment' | 'info';
 
   /**
    * Defines the overall UI grouping for our current step
@@ -57,18 +57,6 @@ export class PoiEditorPage implements OnInit {
 
   get operators(): Array<OperatorInfo> {
     return this.appManager.referenceDataManager.getNetworkOperators(this.useFilteredOperators);
-  }
-
-  get connectionTypes(): Array<ConnectionType> {
-    return this.appManager.referenceDataManager.getConnectionTypes(this.useFilteredConnectionTypes);
-  }
-
-  get currentTypes(): Array<ConnectionType> {
-    return this.appManager.referenceDataManager.getOutputCurrentTypes();
-  }
-
-  get statusTypes(): Array<StatusType> {
-    return this.appManager.referenceDataManager.getStatusTypes();
   }
 
   get countries(): Array<Country> {
@@ -195,10 +183,10 @@ export class PoiEditorPage implements OnInit {
 
     switch (this.step) {
       case 'info':
-        this.step = 'operator';
+        this.step = 'edit-equipment';
         break;
-      case 'operator':
-        this.step = 'poi-nearby';
+      case 'edit-equipment':
+        this.step = this.isAddMode ? 'copy-equipment' : 'location';
         break;
       case 'poi-nearby':
         this.step = 'location';
@@ -243,12 +231,15 @@ export class PoiEditorPage implements OnInit {
 
       switch (this.step) {
         case 'location':
-          this.step = 'poi-nearby';
+          this.step = this.isAddMode ? 'poi-nearby' : 'edit-equipment';
           break;
         case 'poi-nearby':
-          this.step = 'operator';
+          this.step = this.isAddMode ? 'copy-equipment' : 'edit-equipment';
           break;
-        case 'operator':
+        case 'copy-equipment':
+          this.step = 'edit-equipment';
+          break;
+        case 'edit-equipment':
           this.step = 'info';
           break;
       }
@@ -271,14 +262,14 @@ export class PoiEditorPage implements OnInit {
       if (siteNum == 0) {
         isNextDirection ? await this.next() : await this.previous();
       }
-    }
-
-    if (this.step == 'operator') {
+    } else if (this.step == 'location') {
+      this.selectedTab = 'location';
+    } else if (this.step == 'copy-equipment') {
       this.selectedTab = 'equipment';
       await this.refreshTemplateSites();
-    }
-
-    if (this.step == 'info') {
+    } else if (this.step == 'edit-equipment') {
+      this.selectedTab = 'equipment';
+    } else if (this.step == 'info') {
       this.selectedTab = 'info';
     }
   }
@@ -311,17 +302,54 @@ export class PoiEditorPage implements OnInit {
     }
   }
 
-  editConnection(id) {
-    const source = this.item.Connections.find(f => f.ID == id);
-    this.conn = Object.assign({}, source);
+  async editConnection(c: ConnectionInfo) {
+    const source = this.item.Connections.find(f => f.ID == c.ID);
+
+    const item = Object.assign({}, source);
+    const modal = await this.modalController.create({
+      component: PoiEquipmentEditorComponent,
+      componentProps: { conn: item }
+    });
+
+    modal.onWillDismiss().then((result:any)=>{
+      if (result && result.data.item){
+        this.updateConnection(result.data.item);
+      }
+    });
+
+    return await modal.present();
   }
 
-  cancelEditConnection() {
-    this.conn = null;
+  async deleteConnection(c: ConnectionInfo){
+    const source = this.item.Connections.find(f => f.ID == c.ID);
+
+    const alert = await this.alertController.create({
+      header: 'Confirm Delete',
+      message: 'Are you sure you want to delete this connection information?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+
+          }
+        }, {
+          text: 'Yes',
+          handler: () => {
+            // delete item
+            this.item.Connections = this.item.Connections.filter(f=>f.ID!=source.ID);
+            this.appManager.referenceDataManager.hydrateCompactPOI(this.item, true);
+          }
+        }
+      ]
+    });
+
+    alert.present();
   }
 
   async addConnection() {
-    this.conn = {
+    const item = {
       ID: -Utils.getRandomInt(10000),
       ConnectionTypeID: null,
       StatusTypeID: null,
@@ -329,7 +357,20 @@ export class PoiEditorPage implements OnInit {
       Quantity: 1
     };
 
-    this.refreshFilteredReferenceData();
+    const modal = await this.modalController.create({
+      component: PoiEquipmentEditorComponent,
+      componentProps: { conn: item }
+    });
+
+    modal.onWillDismiss().then((result:any)=>{
+      if (result && result.data.item){
+        this.updateConnection(result.data.item);
+      }
+    });
+
+    return await modal.present();
+
+    //this.refreshFilteredReferenceData();
   }
 
   refreshFilteredReferenceData() {
@@ -337,22 +378,20 @@ export class PoiEditorPage implements OnInit {
     this.appManager.referenceDataManager.refreshFilteredReferenceData(this.appManager.api, { CountryIds: [this.item.AddressInfo.CountryID] })
   }
 
-  updateConnection() {
+  updateConnection(conn: ConnectionInfo) {
     // once the current connection info item has been edited, add or update it in the list
-    if (this.conn) {
-      let update = this.item.Connections.find(f => f.ID == this.conn.ID);
+    if (conn) {
+      let update = this.item.Connections.find(f => f.ID == conn.ID);
       if (update) {
-        Object.assign(update, this.conn);
+        Object.assign(update, conn);
       } else {
         // add new
-        this.item.Connections.push(this.conn);
+        this.item.Connections.push(conn);
       }
-
-      this.conn = null;
     }
 
     // decorate object with expanded relationship properties
-    this.appManager.referenceDataManager.hydrateCompactPOI(this.item);
+    this.appManager.referenceDataManager.hydrateCompactPOI(this.item, true);
   }
 
   validate(step: string = 'all'): ValidationResult {
@@ -381,10 +420,6 @@ export class PoiEditorPage implements OnInit {
 
 
     if (step == 'all' || step == 'poi-nearby') {
-      if (!this.item.OperatorID) {
-        validationMsg = "Please confirm the charging network or equipment operator.";
-      }
-
       // poi's nearby
       if (this.nearbySites.length > 0 && !this.isNonDuplicateConfirmed) {
         validationMsg = "Please confirm that the site is not a duplicate";
@@ -392,6 +427,10 @@ export class PoiEditorPage implements OnInit {
     }
 
     if (step == 'all' || step == 'equipment') {
+
+      if (!this.item.OperatorID) {
+        validationMsg = "Please confirm the charging network or equipment operator.";
+      }
 
       if (this.item.Connections.length == 0) {
         validationMsg = "Equipment information is required";
@@ -514,6 +553,9 @@ export class PoiEditorPage implements OnInit {
   }
 
   async editExistingPOI(id: number) {
+
+    this.skipPOICopy = true;
+    this.isNonDuplicateConfirmed = true;
 
     await this.presentLoadingUI();
 

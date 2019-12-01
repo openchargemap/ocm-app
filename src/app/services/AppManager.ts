@@ -41,6 +41,7 @@ export class AppManager {
   public _isUserAuthenticated?: boolean = null;
 
   public isEmbeddedMode: boolean = false;
+  public isOffline: boolean = false;
 
   constructor(
     public http: HttpClient,
