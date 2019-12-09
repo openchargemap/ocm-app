@@ -48,7 +48,7 @@ export class MediaUploadPage {
         // let base64Image = 'data:image/jpeg;base64,' + imageData;
 
         let imgUrl = this.webview.convertFileSrc(imageData);
-        //this.logging.log("img load:" + imgUrl);
+        // this.logging.log("img load:" + imgUrl);
         const canvas = <HTMLCanvasElement>document.getElementById('img-upload-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -62,7 +62,7 @@ export class MediaUploadPage {
             canvas.width = img.width;
             canvas.height = img.height;
 
-            //TODO: resize source image before upload
+            // TODO: resize source image before upload
             ctx.fillStyle = 'rgb(0,0,0)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -80,12 +80,12 @@ export class MediaUploadPage {
         /*
                 if (!this.isBrowserMode()) {
                     this.logging.log("Native mode: fetching image");
-        
+
                     if (fromImageLibrary) {
                         this.camera.getPicture({ targetWidth: this.targetWidth, sourceType: this.camera.PictureSourceType.PHOTOLIBRARY }).then((imageData) => {
-        
+
                             this.processNativeImageSource(imageData);
-        
+
                         }, (err) => {
                             this.logging.log("Error processing getPicture (library):" + err, LogLevel.ERROR);
                         });
@@ -223,12 +223,12 @@ export class MediaUploadPage {
                 this.modalController.dismiss();
             });
 
-            this.appManager.analytics.appEvent("MediaUpload","Completed");
+            this.appManager.analytics.appEvent("MediaUpload", "Completed");
             // TODO: refresh this POI in background to see results with upload
         } catch (rejected) {
             await this.appManager.dismissLoadingProgress();
             await this.appManager.showToastNotification('Upload failed, please try again.');
-            this.appManager.analytics.appEvent("MediaUpload","Failed");
+            this.appManager.analytics.appEvent("MediaUpload", "Failed");
 
         }
 

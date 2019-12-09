@@ -11,7 +11,7 @@ import { Journey, JourneyStage, WayPoint, BookmarkedPOI, GeoLatLng, SyncItem, PO
 
 @Injectable({
     providedIn: 'root',
-  })
+})
 /**
  * Manage access to Journey information.
  * Journeys are a collection of journey Stages, each with multiple WayPoints. Each WayPoint has one or more optional Bookmarked POIs.
@@ -40,7 +40,7 @@ export class JourneyManager {
         // load POI Details
 
         if (this.journeys != null) {
-            for (var j of this.journeys) {
+            for (let j of this.journeys) {
                 // attempt to populate POI details of each journey waypoint
                 this.fetchAllJourneyPOIDetails(j);
             }
@@ -143,7 +143,7 @@ export class JourneyManager {
      */
     public addJourney(journey: Journey, waypoint?: WayPoint) {
 
-        var newStage: JourneyStage = new JourneyStage();
+        let newStage: JourneyStage = new JourneyStage();
         newStage.Title = "Stage 1";
         if (waypoint != null) {
             newStage.WayPoints.push(waypoint);
@@ -183,14 +183,14 @@ export class JourneyManager {
 
         if (stageIndex == null) {
             // create new journey stage, then add waypoint
-            var newStage: JourneyStage = new JourneyStage();
+            let newStage: JourneyStage = new JourneyStage();
             newStage.Title = "Stage " + (journey.Stages.length + 1);
             newStage.WayPoints.push(waypoint);
             journey.Stages.push(newStage);
         } else {
             // add to existing journey stage
             let stage = journey.Stages[stageIndex];
-            if (stage.WayPoints == null) stage.WayPoints = [];
+            if (stage.WayPoints == null) { stage.WayPoints = []; }
             stage.WayPoints.push(waypoint);
         }
     }
@@ -200,7 +200,7 @@ export class JourneyManager {
      */
     public addJourneyStage(journeyId: string, stage: JourneyStage): number {
         let journey = this.getJourney(journeyId);
-        var numStages = journey.Stages.push(stage);
+        let numStages = journey.Stages.push(stage);
         return numStages - 1;
     }
 

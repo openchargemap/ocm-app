@@ -10,11 +10,10 @@ export class NullableTranslatePipe extends TranslatePipe {
 
     }
     transform(query: string, ...args: any[]): any {
-        
-        var result = super.transform(query, ...args);
+
+        let result = super.transform(query, ...args);
         if (result == query) {
             if (args != null && args[0].default) {
-                //console.log(JSON.stringify(args[0].default));
                 return args[0].default;
             } else {
                 if (args[0].Title) {
@@ -22,7 +21,7 @@ export class NullableTranslatePipe extends TranslatePipe {
                 } else {
                     return result;
                 }
-                //return "..no value..";
+                // return "..no value..";
             }
 
         } else {

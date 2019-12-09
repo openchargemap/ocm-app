@@ -55,10 +55,10 @@ export class GoogleMapsNative implements IMapProvider {
         this.markerList = new Dictionary<number, Marker>();
     }
 
-    initAPI(){
+    initAPI() {
 
     }
-    
+
     /**
     * Performs one-time init of map object for this map provider
     * @param mapcanvasID  dom element for map canvas
@@ -70,7 +70,7 @@ export class GoogleMapsNative implements IMapProvider {
         this.logging.log("GoogleMapsNative: initMap");
         this.mapCanvasID = mapCanvasID;
 
-        var apiAvailable = true;
+        let apiAvailable = true;
         if (GoogleMaps) {
             apiAvailable = true;
 
@@ -120,7 +120,7 @@ export class GoogleMapsNative implements IMapProvider {
                     this.events.publish('ocm:mapping:ready');
                     this.setMapCenter(new GeoPosition(37.415328, -122.076575)); // native maps needs a map centre before anything is displayed
 
-                    //setup map manipulation events
+                    // setup map manipulation events
                     this.map.addEventListener(GoogleMapsEvent.CAMERA_MOVE_END).subscribe(() => {
                         this.events.publish('ocm:mapping:dragend');
                         this.events.publish('ocm:mapping:zoom');
@@ -144,7 +144,7 @@ export class GoogleMapsNative implements IMapProvider {
     */
     showPOIListOnMap(poiList: Array<any>, parentContext: any) {
 
-        var clearMarkersOnRefresh = false;
+        let clearMarkersOnRefresh = false;
 
         this.map.setVisible(true);
 
@@ -162,7 +162,7 @@ export class GoogleMapsNative implements IMapProvider {
             this.markerList.forEach((key, marker) => {
                 try {
                     marker.remove();
-                } catch{ }
+                } catch { }
             });
 
         }
@@ -176,7 +176,7 @@ export class GoogleMapsNative implements IMapProvider {
         let bounds = new LatLngBounds();
         let markersAdded = 0;
 
-        //clear existing markers (if enabled)
+        // clear existing markers (if enabled)
         if (clearMarkersOnRefresh == true) {
 
             this.clearMarkers();
@@ -185,7 +185,7 @@ export class GoogleMapsNative implements IMapProvider {
         let markersToAdd = [];
 
         if (poiList != null) {
-            //render poi markers
+            // render poi markers
             let poiCount = poiList.length;
             for (let i = 0; i < poiList.length; i++) {
                 let item = poiList[i];
@@ -299,7 +299,7 @@ export class GoogleMapsNative implements IMapProvider {
 
                     baseArray.mapAsync((poi: any, callback: (marker: Marker) => void) => {
 
-                        var poiLevel = Utils.getMaxLevelOfPOI(poi);
+                        let poiLevel = Utils.getMaxLevelOfPOI(poi);
 
 
                         /*  var iconURL = null;
@@ -320,10 +320,10 @@ export class GoogleMapsNative implements IMapProvider {
 
                         let iconName = MapIcons.getIconName(poi, poiLevel, false);
 
-                        var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
-                        if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
-                        if (poiLevel > 0) markerTooltip += " Level " + poiLevel;
-                        if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
+                        let markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
+                        if (poi.UsageType != null) { markerTooltip += " " + poi.UsageType.Title; }
+                        if (poiLevel > 0) { markerTooltip += " Level " + poiLevel; }
+                        if (poi.StatusType != null) { markerTooltip += " " + poi.StatusType.Title; }
 
                         let opt = {
                             position: { lat: poi.AddressInfo.Latitude, lng: poi.AddressInfo.Longitude },
@@ -390,9 +390,9 @@ export class GoogleMapsNative implements IMapProvider {
 
     getMapCenter(): Observable<GeoPosition> {
 
-        //wrap getCameraPosition in an observable
-        let obs = Observable.create(observer => {
-            var result = this.map.getCameraPosition();
+        // wrap getCameraPosition in an observable
+        let obs = new Observable<GeoPosition>((observer => {
+            let result = this.map.getCameraPosition();
             if (result) {
                 const geoPos = new GeoPosition(result.target.lat, result.target.lng);
                 observer.next(geoPos);
@@ -401,7 +401,7 @@ export class GoogleMapsNative implements IMapProvider {
                 // failed to get camera position
             }
 
-        });
+        }));
 
         return obs;
     }
@@ -414,7 +414,7 @@ export class GoogleMapsNative implements IMapProvider {
     getMapZoom(): Observable<number> {
 
         // wrap get zoom in an observable
-        let obs = Observable.create(observer => {
+        let obs = new Observable<number>(observer => {
             let zoom = this.map.getCameraZoom();
             observer.next(zoom);
             observer.complete();
@@ -432,12 +432,12 @@ export class GoogleMapsNative implements IMapProvider {
 
     getMapBounds(): Observable<Array<GeoLatLng>> {
 
-        let obs = Observable.create((observer) => {
+        let obs = new Observable<Array<GeoLatLng>>((observer) => {
 
             let mapBounds = this.map.getVisibleRegion();
 
             if (mapBounds != null) {
-                var bounds = new Array<GeoLatLng>();
+                let bounds = new Array<GeoLatLng>();
                 // this.logging.log(JSON.stringify(mapBounds));
 
                 bounds.push(new GeoLatLng(mapBounds.southwest.lat, mapBounds.southwest.lng));
@@ -469,8 +469,8 @@ export class GoogleMapsNative implements IMapProvider {
             this.logging.log("renderMap: skipping render, map not ready yet");
         }
 
-        if (this.map == null) this.logging.log("Native map not initialised");
-        if (this.mapCanvasID == null) this.logging.log("mapcanvasid not set!!");
+        if (this.map == null) { this.logging.log("Native map not initialised"); }
+        if (this.mapCanvasID == null) { this.logging.log("mapcanvasid not set!!"); }
 
         this.showPOIListOnMap(poiList, parentContext);
 
@@ -507,7 +507,7 @@ export class GoogleMapsNative implements IMapProvider {
 
     }
 
-    placeSearch(keyword: string): Promise<Array<PlaceSearchResult>>{
+    placeSearch(keyword: string): Promise<Array<PlaceSearchResult>> {
         // not implemented
         return null;
     }

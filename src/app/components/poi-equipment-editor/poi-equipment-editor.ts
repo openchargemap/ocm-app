@@ -3,7 +3,7 @@ import { ConnectionInfo } from '../../model/AppModels';
 import { ModalController } from '@ionic/angular';
 import { modalController } from '@ionic/core';
 import { ReferenceDataManager } from '../../services/ReferenceDataManager';
-import { ConnectionType, StatusType } from '../../model/CoreDataModel';
+import { ConnectionType, StatusType, CurrentType } from '../../model/CoreDataModel';
 
 @Component({
   selector: 'app-poi-equipment-editor',
@@ -28,12 +28,12 @@ export class PoiEquipmentEditorComponent implements OnInit {
     return this.referenceDataManager.getConnectionTypes(this.useFilteredConnectionTypes);
   }
 
-  get currentTypes(): Array<ConnectionType> {
+  get currentTypes(): Array<CurrentType> {
     return this.referenceDataManager.getOutputCurrentTypes();
   }
 
   get statusTypes(): Array<StatusType> {
-    return this.referenceDataManager.getStatusTypes();
+    return this.referenceDataManager.getStatusTypes().filter(s => s.IsUserSelectable == true);
   }
 
   ngOnInit() { }
@@ -41,7 +41,7 @@ export class PoiEquipmentEditorComponent implements OnInit {
   save() {
     this.modalController.dismiss({ item: this.conn });
   }
-  
+
   cancel() {
     this.modalController.dismiss();
   }

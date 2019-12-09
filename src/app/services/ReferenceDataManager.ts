@@ -7,7 +7,7 @@ import { Logging, LogLevel } from './Logging';
 import { Injectable } from '@angular/core';
 import { CoreReferenceData } from '../model/CoreReferenceData';
 import { HttpClient } from '@angular/common/http';
-import { OperatorInfo } from '../model/CoreDataModel';
+import { OperatorInfo, StatusType, UsageType, ConnectionType, Country, DataProvider, CheckinStatusType, CommentType, SubmissionStatusType, LevelType, CurrentType } from '../model/CoreDataModel';
 import { APIClient } from './APIClient';
 import { ReferenceDataFilters } from '../model/ReferenceDataFilters';
 
@@ -43,7 +43,7 @@ export class ReferenceDataManager {
         } catch (rejection) {
             this.logging.log('Error fetching core ref data:' + rejection);
             return false;
-        };
+        }
     }
 
     public refreshFilteredReferenceData(api: APIClient, filters: ReferenceDataFilters) {
@@ -78,7 +78,7 @@ export class ReferenceDataManager {
     /**
      * Get list of countries, optionally filtered to only those with data present
      * */
-    public getCountries(filtered: boolean = false): Array<any> {
+    public getCountries(filtered: boolean = false): Array<Country> {
 
         if (filtered == true) {
             return this.filteredReferenceData.Countries;
@@ -88,14 +88,14 @@ export class ReferenceDataManager {
 
     }
 
-    public getCountryByID(id: number): any {
+    public getCountryByID(id: number): Country {
         return this.getRefDataByID(this.referenceData.Countries, id);
     }
 
     /**
      * Get list of connection types optionally filtered to those in use or by country usage
      */
-    public getConnectionTypes(filtered: boolean = false): Array<any> {
+    public getConnectionTypes(filtered: boolean = false): Array<ConnectionType> {
         if (filtered == true) {
             return this.filteredReferenceData.ConnectionTypes;
         } else {
@@ -103,14 +103,14 @@ export class ReferenceDataManager {
         }
     }
 
-    public getConnectionTypeByID(id: number): any {
+    public getConnectionTypeByID(id: number): ConnectionType {
         return this.getRefDataByID(this.referenceData.ConnectionTypes, id);
     }
 
     /**
     * Get list of usage types optionally filtered to those in use or by country usage
     */
-    public getUsageTypes(filtered: boolean = false): Array<any> {
+    public getUsageTypes(filtered: boolean = false): Array<UsageType> {
         if (filtered == true) {
             return this.filteredReferenceData.UsageTypes;
         } else {
@@ -118,14 +118,14 @@ export class ReferenceDataManager {
         }
     }
 
-    public getUsageTypeByID(id: number): any {
+    public getUsageTypeByID(id: number): UsageType {
         return this.getRefDataByID(this.referenceData.UsageTypes, id);
     }
 
     /**
      * Get list of Status types optionally filtered to those in use or by country usage
      */
-    public getStatusTypes(filtered: boolean = false): Array<any> {
+    public getStatusTypes(filtered: boolean = false): Array<StatusType> {
         if (filtered == true) {
             return this.filteredReferenceData.StatusTypes;
         } else {
@@ -133,7 +133,7 @@ export class ReferenceDataManager {
         }
     }
 
-    public getStatusTypeByID(id: number): any {
+    public getStatusTypeByID(id: number): StatusType {
         return this.getRefDataByID(this.referenceData.StatusTypes, id);
     }
 
@@ -148,14 +148,14 @@ export class ReferenceDataManager {
         }
     }
 
-    public getNetworkOperatorByID(id: number): any {
+    public getNetworkOperatorByID(id: number): OperatorInfo {
         return this.getRefDataByID(this.referenceData.Operators, id);
     }
 
     /**
      * Get list of Data Providers optionally filtered to those in use or by country usage
      */
-    public getDataProviders(filtered: boolean = false): Array<any> {
+    public getDataProviders(filtered: boolean = false): Array<DataProvider> {
         if (filtered == true) {
             return this.filteredReferenceData.DataProviders;
         } else {
@@ -163,14 +163,14 @@ export class ReferenceDataManager {
         }
     }
 
-    public getDataProviderByID(id: number): any {
+    public getDataProviderByID(id: number): DataProvider {
         return this.getRefDataByID(this.referenceData.DataProviders, id);
     }
 
     /**
         * Get list of Data Providers optionally filtered to those in use or by country usage
         */
-    public getCheckinStatusTypes(filtered: boolean = false, userSelectable = true): Array<any> {
+    public getCheckinStatusTypes(filtered: boolean = false, userSelectable = true): Array<CheckinStatusType> {
         let results = null;
 
         if (filtered == true) {
@@ -186,14 +186,14 @@ export class ReferenceDataManager {
         return results;
     }
 
-    public getCheckinStatusTypeByID(id: number): any {
+    public getCheckinStatusTypeByID(id: number): CheckinStatusType {
         return this.getRefDataByID(this.referenceData.CheckinStatusTypes, id);
     }
 
     /**
     * Get list optionally filtered to those in use or by country usage
     */
-    public getCommentTypes(filtered: boolean = false, userSelectable: boolean = true): Array<any> {
+    public getCommentTypes(filtered: boolean = false, userSelectable: boolean = true): Array<CommentType> {
         let results;
 
         if (filtered == true) {
@@ -209,14 +209,14 @@ export class ReferenceDataManager {
         return results;
     }
 
-    public getCommentTypeByID(id: number): any {
+    public getCommentTypeByID(id: number): CommentType {
         return this.getRefDataByID(this.referenceData.UserCommentTypes, id);
     }
 
     /**
      * Get list optionally filtered to those in use or by country usage
      */
-    public getSubmissionStatusTypes(filtered: boolean = false): Array<any> {
+    public getSubmissionStatusTypes(filtered: boolean = false): Array<SubmissionStatusType> {
         if (filtered == true) {
             return this.filteredReferenceData.SubmissionStatusTypes;
         } else {
@@ -231,7 +231,7 @@ export class ReferenceDataManager {
     /**
    * Get list optionally filtered to those in use or by country usage
    */
-    public getChargingLevelTypes(filtered: boolean = false): Array<any> {
+    public getChargingLevelTypes(filtered: boolean = false): Array<LevelType> {
         if (filtered == true) {
             return this.filteredReferenceData.ChargerTypes;
         } else {
@@ -239,14 +239,14 @@ export class ReferenceDataManager {
         }
     }
 
-    public getChargingLevelTypeByID(id: number): any {
+    public getChargingLevelTypeByID(id: number): LevelType {
         return this.getRefDataByID(this.referenceData.ChargerTypes, id);
     }
 
     /**
   * Get list optionally filtered to those in use or by country usage
   */
-    public getOutputCurrentTypes(filtered: boolean = false): Array<any> {
+    public getOutputCurrentTypes(filtered: boolean = false): Array<CurrentType> {
         if (filtered) {
             return this.referenceData.CurrentTypes;
         } else {
@@ -254,7 +254,7 @@ export class ReferenceDataManager {
         }
     }
 
-    public getOutputCurrentTypeByID(id: number): any {
+    public getOutputCurrentTypeByID(id: number): CurrentType {
         return this.getRefDataByID(this.referenceData.CurrentTypes, id);
     }
     //////////////////////

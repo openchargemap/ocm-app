@@ -299,8 +299,6 @@ export class SearchPage implements OnInit, AfterViewInit {
       mapcentre = new GeoPosition(this.appManager.searchSettings.StartSearchPosition.latitude, this.appManager.searchSettings.StartSearchPosition.longitude);
       // clear start position after first search
       this.appManager.searchSettings.StartSearchPosition = null;
-    } else {
-      //mapcentre = await this.mapping.getMapCenter().toPromise();
     }
 
     if (mapcentre && mapcentre.coords.latitude == 0 && mapcentre.coords.longitude == 0) {
@@ -379,7 +377,7 @@ export class SearchPage implements OnInit, AfterViewInit {
     this.initialResultsShown = true;
 
     if (numResults >= params.maxResults) {
-      this.appManager.showToastNotification("A maximum of " + numResults + " results are returned per search. Zoom in for details.")
+      this.appManager.showToastNotification("A maximum of " + numResults + " results are returned per search. Zoom in for details.");
     }
 
   }
@@ -475,7 +473,7 @@ export class SearchPage implements OnInit, AfterViewInit {
   }
 
   search(ev) {
-    //alert(ev);
+    // alert(ev);
     this.placeSearchMapPOI.getPlacesAutoComplete(ev, 'poiSearch');
   }
 

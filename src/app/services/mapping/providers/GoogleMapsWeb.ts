@@ -35,11 +35,11 @@ export class GoogleMapsWeb implements IMapProvider {
         this.markerList = new Dictionary<number, google.maps.Marker>();
     }
 
-    
-    initAPI(){
+
+    initAPI() {
 
     }
-    
+
     /**
     * Performs one-time init of map object for this map provider
     * @param mapcanvasID  dom element for map canvas
@@ -49,7 +49,7 @@ export class GoogleMapsWeb implements IMapProvider {
     initMap(mapCanvasID, mapConfig: MapOptions, parentMapManager: IMapManager) {
         this.mapCanvasID = mapCanvasID;
 
-        var apiLoaded = true;
+        let apiLoaded = true;
         if (typeof google === 'undefined') {
             apiLoaded = false;
         } else if (typeof google.maps === 'undefined') {
@@ -58,7 +58,7 @@ export class GoogleMapsWeb implements IMapProvider {
 
         if (apiLoaded) {
             if (this.map == null) {
-                var mapCanvas = document.getElementById(mapCanvasID);
+                let mapCanvas = document.getElementById(mapCanvasID);
 
                 if (mapCanvas != null) {
                     (<any>google.maps).visualRefresh = true;
@@ -66,8 +66,8 @@ export class GoogleMapsWeb implements IMapProvider {
                     mapCanvas.style.width = '100%';
                     mapCanvas.style.height = Utils.getClientHeight().toString();
                     this.logging.log("Defaulted map height to " + Utils.getClientHeight());
-                    //create map
-                    var mapOptions = {
+                    // create map
+                    let mapOptions = {
                         zoom: 10,
                         minZoom: mapConfig.minZoomLevel,
                         mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -91,8 +91,8 @@ export class GoogleMapsWeb implements IMapProvider {
 
                     this.map = new google.maps.Map(mapCanvas, mapOptions);
 
-                    //TODO: events for map manipulation to perform search
-                    var mapProviderContext = this;
+                    // TODO: events for map manipulation to perform search
+                    let mapProviderContext = this;
                     google.maps.event.addListener(this.map, 'dragend', function () {
                         mapProviderContext.events.publish('ocm:mapping:dragend');
                     });
@@ -107,7 +107,7 @@ export class GoogleMapsWeb implements IMapProvider {
 
                     this.mapReady = true;
 
-                    //this.events.publish('ocm:mapping:ready');
+                    // this.events.publish('ocm:mapping:ready');
                 }
             }
         } else {
@@ -124,7 +124,7 @@ export class GoogleMapsWeb implements IMapProvider {
             this.markerList.forEach((key, marker) => {
                 try {
                     marker.setMap(null);
-                } catch{ }
+                } catch { }
             });
         }
 
@@ -137,24 +137,24 @@ export class GoogleMapsWeb implements IMapProvider {
     * @param parentContext  parent app context
     */
     showPOIListOnMap(poiList: Array<any>, parentContext: any) {
-        var clearMarkersOnRefresh: boolean = false;
-        var map = this.map;
-        var bounds = new google.maps.LatLngBounds();
-        var markersAdded = 0;
-        var mapProviderContext = this;
+        let clearMarkersOnRefresh: boolean = false;
+        let map = this.map;
+        let bounds = new google.maps.LatLngBounds();
+        let markersAdded = 0;
+        let mapProviderContext = this;
 
-        //clear existing markers (if enabled)
+        // clear existing markers (if enabled)
         if (clearMarkersOnRefresh) {
             this.clearMarkers();
         }
-        var mapzoom = map.getZoom();
+        let mapzoom = map.getZoom();
         if (poiList != null) {
-            //render poi markers
-            var poiCount = poiList.length;
-            for (var i = 0; i < poiList.length; i++) {
+            // render poi markers
+            let poiCount = poiList.length;
+            for (let i = 0; i < poiList.length; i++) {
                 if (poiList[i].AddressInfo != null) {
                     if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-                        var poi = poiList[i];
+                        let poi = poiList[i];
 
                         let addMarker = true;
                         if (!clearMarkersOnRefresh && this.markerList != null) {
@@ -171,10 +171,10 @@ export class GoogleMapsWeb implements IMapProvider {
                         if (addMarker) {
 
 
-                            var iconURL = null;
-                            var animation = null;
-                            var shadow = null;
-                            var markerImg = null;
+                            let iconURL = null;
+                            let animation = null;
+                            let shadow = null;
+                            let markerImg = null;
 
 
                             iconURL = Utils.getIconForPOI(poi);
@@ -188,12 +188,12 @@ export class GoogleMapsWeb implements IMapProvider {
 
                             };
 
-                            var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
-                            if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
+                            let markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
+                            if (poi.UsageType != null) { markerTooltip += " " + poi.UsageType.Title; }
 
-                            if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
+                            if (poi.StatusType != null) { markerTooltip += " " + poi.StatusType.Title; }
 
-                            var newMarker = <any>new google.maps.Marker({
+                            let newMarker = <any>new google.maps.Marker({
                                 position: new google.maps.LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude),
                                 map: map,
                                 icon: markerImg != null ? markerImg : iconURL,
@@ -204,7 +204,7 @@ export class GoogleMapsWeb implements IMapProvider {
 
                             google.maps.event.addListener(newMarker, 'click', function () {
                                 // broadcast details of selected POI
-                                if (console) console.log("POI clicked:" + this.poi.ID);
+                                if (console) { console.log("POI clicked:" + this.poi.ID); }
 
                                 mapProviderContext.events.publish('ocm:poi:selected', { poi: this.poi, poiId: this.poi.ID });
 
@@ -222,7 +222,7 @@ export class GoogleMapsWeb implements IMapProvider {
             this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.size());
         }
 
-        var uiContext = this;
+        let uiContext = this;
         // zoom to bounds of markers
         if (poiList != null && poiList.length > 0) {
             if (parentContext != null && !parentContext.appConfig.enableLiveMapQuerying) {
@@ -233,7 +233,7 @@ export class GoogleMapsWeb implements IMapProvider {
                 map.fitBounds(bounds);
 
                 // fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
-                var zoom = map.getZoom();
+                let zoom = map.getZoom();
                 map.setZoom(zoom < 6 ? 6 : zoom);
             } else {
                 if (map.getCenter() == undefined) {
@@ -265,9 +265,9 @@ export class GoogleMapsWeb implements IMapProvider {
     getMapCenter(): Observable<GeoPosition> {
 
         // wrap getCenter in an observable
-        let obs = Observable.create(observer => {
+        let obs = new Observable<GeoPosition>(observer => {
             if (this.map != null) {
-                var pos = this.map.getCenter();
+                let pos = this.map.getCenter();
                 if (pos != null) {
                     observer.next(new GeoPosition(pos.lat(), pos.lng()));
                     observer.complete();
@@ -285,7 +285,7 @@ export class GoogleMapsWeb implements IMapProvider {
     getMapZoom(): Observable<number> {
 
         // wrap getzoom in an observable
-        let obs = Observable.create(observer => {
+        let obs = new Observable<number>(observer => {
 
             let zoom = this.map.getZoom();
             observer.next(zoom);
@@ -305,11 +305,11 @@ export class GoogleMapsWeb implements IMapProvider {
 
     getMapBounds(): Observable<Array<GeoLatLng>> {
         // wrap getzoom in an observable
-        let obs = Observable.create(observer => {
+        let obs = new Observable<Array<GeoLatLng>>(observer => {
 
-            var bounds = new Array<GeoLatLng>();
+            let bounds = new Array<GeoLatLng>();
 
-            var mapBounds = this.map.getBounds();
+            let mapBounds = this.map.getBounds();
             bounds.push(new GeoLatLng(mapBounds.getNorthEast().lat(), mapBounds.getNorthEast().lng()));
             bounds.push(new GeoLatLng(mapBounds.getSouthWest().lat(), mapBounds.getSouthWest().lng()));
 
@@ -366,16 +366,16 @@ export class GoogleMapsWeb implements IMapProvider {
             this.polylinePath.setMap(null);
         }
     }
-    
+
     focusMap() {
         //
     }
-    
+
     unfocusMap() {
         //
     }
 
-    placeSearch(keyword: string): Promise<Array<PlaceSearchResult>>{
+    placeSearch(keyword: string): Promise<Array<PlaceSearchResult>> {
         // not implemented
         return null;
     }

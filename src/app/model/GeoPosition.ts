@@ -1,5 +1,5 @@
 export class GeoLatLng implements Coordinates {
-    //based on HTML Geolocation "Coordinates"
+    // based on HTML Geolocation "Coordinates"
     public altitudeAccuracy: number;
     public longitude: number;
     public latitude: number;
@@ -15,7 +15,7 @@ export class GeoLatLng implements Coordinates {
 }
 
 export class GeoPosition {
-    //based on HTML Geolocation "Position"
+    // based on HTML Geolocation "Position"
     public coords: GeoLatLng;
     public timestamp: number;
     public attribution: string;

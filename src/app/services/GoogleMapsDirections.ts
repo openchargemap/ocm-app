@@ -8,7 +8,6 @@ import { JourneyManager } from './JourneyManager';
 import { JourneyRoute, JourneyRouteLeg } from '../model/Journey';
 import { HttpClient } from '@angular/common/http';
 
-
 @Injectable({
     providedIn: 'root',
 })

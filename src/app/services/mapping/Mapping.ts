@@ -15,7 +15,7 @@ import { Observable } from 'rxjs/Observable';
 // import { LeafletMap } from './providers/LeafletMap';
 import { MapKitMapProvider } from './providers/MapKit';
 import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
-import { Events } from '@ionic/angular'; //TODO remove dependency on ionic here?
+import { Events } from '@ionic/angular'; // TODO remove dependency on ionic here?
 import { HttpClient } from '@angular/common/http';
 import { MapTilerMapProvider } from './providers/MapTiler';
 
@@ -28,8 +28,8 @@ import { MapTilerMapProvider } from './providers/MapTiler';
 export class Mapping implements IMapManager {
     public map: any;
     public mapCentreMarker: any;
-    public mapsInitialised: boolean; //initial map setup initiated
-    public mapAPIReady: boolean; //api loaded
+    public mapsInitialised: boolean; // initial map setup initiated
+    public mapAPIReady: boolean; // api loaded
     public mapOptions: MapOptions;
     public searchMarker: any;
     public errorMessage: string;
@@ -51,12 +51,12 @@ export class Mapping implements IMapManager {
 
         this.setMapAPI(this.mapOptions.mapAPI);
 
-        var mapManagerContext = this;
+        let mapManagerContext = this;
         this.debouncedMapPositionUpdate = Utils.debounce(() => {
             this.logging.log("signaling map position change:");
             if (mapManagerContext.mapProvider.mapReady) {
 
-                //create new latlng from map centre so that values get normalised to 180/-180
+                // create new latlng from map centre so that values get normalised to 180/-180
 
                 mapManagerContext.getMapCenter().subscribe((centerPos: GeoPosition) => {
                     if (centerPos != null) {
@@ -121,7 +121,7 @@ export class Mapping implements IMapManager {
      * @param mapcanvasID  dom element for map canvas
      */
     initMap(mapcanvasID: string) {
-        if (this.isMapReady()) return;
+        if (this.isMapReady()) { return; }
 
         if (this.mapProvider != null) {
             if (this.mapsInitialised) {
@@ -151,9 +151,9 @@ export class Mapping implements IMapManager {
     */
     mapManipulationPerformed(manipulationType: string) {
         this.logging.log("map manipulated:" + manipulationType);
-        var mapManagerContext = this;
+        let mapManagerContext = this;
         if (manipulationType == "drag" || manipulationType == "zoom") {
-            //after the center of the map centre has stopped changing, update search centre pos
+            // after the center of the map centre has stopped changing, update search centre pos
             this.debouncedMapPositionUpdate();
         }
     }
@@ -165,7 +165,7 @@ export class Mapping implements IMapManager {
     }
 
     updateMapCentrePos(lat: number, lng: number, moveMap: boolean, zoomLevel?: number) {
-        //update record of map centre so search results can optionally be refreshed
+        // update record of map centre so search results can optionally be refreshed
         if (moveMap) {
             if (this.mapProvider != null) {
                 this.mapProvider.setMapCenter(new GeoPosition(lat, lng), zoomLevel);
@@ -195,7 +195,7 @@ export class Mapping implements IMapManager {
     }
 
     setMapType(maptype: MapType) {
-        if (this.mapOptions.mapType == maptype) return;
+        if (this.mapOptions.mapType == maptype) { return; }
 
         this.mapOptions.mapType = maptype;
         this.logging.log("Changing map type:" + maptype);
@@ -223,7 +223,7 @@ export class Mapping implements IMapManager {
         return this.mapProvider.getMapBounds();
     }
     getMapZoom(): Observable<number> {
-        //TODO: normalize zoom between providers?
+        // TODO: normalize zoom between providers?
         return this.mapProvider.getMapZoom();
     }
     setMapZoom(zoom: number) {
@@ -234,19 +234,19 @@ export class Mapping implements IMapManager {
     }
 
     showPOIOnStaticMap(mapcanvasID: string, poi, includeMapLink: boolean = false, isRunningUnderCordova: boolean = false, mapWidth: number = 200, mapHeight: number = 200) {
-        var mapCanvas = document.getElementById(mapcanvasID);
+        let mapCanvas = document.getElementById(mapcanvasID);
         if (mapCanvas != null) {
-            var title = poi.AddressInfo.Title;
-            var lat = poi.AddressInfo.Latitude;
-            var lon = poi.AddressInfo.Longitude;
+            let title = poi.AddressInfo.Title;
+            let lat = poi.AddressInfo.Latitude;
+            let lon = poi.AddressInfo.Longitude;
 
-            if (mapWidth > 640) mapWidth = 640;
-            if (mapHeight > 640) mapHeight = 640;
-            var width = mapWidth;
-            var height = mapHeight;
+            if (mapWidth > 640) { mapWidth = 640; }
+            if (mapHeight > 640) { mapHeight = 640; }
+            let width = mapWidth;
+            let height = mapHeight;
 
-            var mapImageURL = "https://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + lon + "&zoom=14&size=" + width + "x" + height + "&maptype=roadmap&markers=color:blue%7Clabel:A%7C" + lat + "," + lon + "&sensor=false";
-            var mapHTML = "";
+            let mapImageURL = "https://maps.googleapis.com/maps/api/staticmap?center=" + lat + "," + lon + "&zoom=14&size=" + width + "x" + height + "&maptype=roadmap&markers=color:blue%7Clabel:A%7C" + lat + "," + lon + "&sensor=false";
+            let mapHTML = "";
             if (includeMapLink == true) {
                 mapHTML += "<div>" + Utils.formatMapLink(poi, "<div><img width=\"" + width + "\" height=\"" + height + "\" src=\"" + mapImageURL + "\" /></div>", isRunningUnderCordova) + "</div>";
             } else {

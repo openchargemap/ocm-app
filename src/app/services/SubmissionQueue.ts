@@ -9,7 +9,7 @@ import { SubmissionQueueItem, SubmissionType } from '../model/AppModels';
 
 @Injectable({
     providedIn: 'root',
-  })
+})
 
 export class SubmissionQueue {
 
@@ -24,14 +24,14 @@ export class SubmissionQueue {
 
     /** Add item to submission queue */
     add(type: SubmissionType, data: any) {
-        var q = this.getQueueItems();
+        let q = this.getQueueItems();
         q.push(new SubmissionQueueItem(type, data));
         this.saveQueueItems(q);
     }
 
     update(item: SubmissionQueueItem) {
-        var q = this.getQueueItems();
-        var newQueue = new Array<SubmissionQueueItem>();
+        let q = this.getQueueItems();
+        let newQueue = new Array<SubmissionQueueItem>();
         q.forEach(element => {
             if (element.ID == item.ID) {
                 newQueue.push(item);
@@ -46,7 +46,7 @@ export class SubmissionQueue {
      * Begin/continue processing items from the submission queue
      */
     processNextQueueItem() {
-        var queueItem: SubmissionQueueItem = this.getNextQueueItem();
+        let queueItem: SubmissionQueueItem = this.getNextQueueItem();
 
         if (queueItem != null) {
             if (this.appManager != null) {
@@ -62,8 +62,8 @@ export class SubmissionQueue {
     }
 
     getNextQueueItem(): SubmissionQueueItem {
-        var q = this.getQueueItems();
-        var nextItem: SubmissionQueueItem = null;
+        let q = this.getQueueItems();
+        let nextItem: SubmissionQueueItem = null;
         q.forEach(element => {
             if (nextItem == null) {
                 if (!element.IsCancelled && !element.IsInProgress && !element.IsSubmitted) {
@@ -76,8 +76,8 @@ export class SubmissionQueue {
     }
 
     hasPendingItems() {
-        var pendingItems = false;
-        var q = this.getQueueItems();
+        let pendingItems = false;
+        let q = this.getQueueItems();
         q.forEach(element => {
             if (!element.IsFailure && !element.IsCancelled && !element.IsSubmitted) {
                 pendingItems = true;
@@ -90,8 +90,8 @@ export class SubmissionQueue {
      * Check all jobs are done (or no longer required)
      */
     isCompleted(): boolean {
-        var q = this.getQueueItems();
-        var allItemsCompleted = true;
+        let q = this.getQueueItems();
+        let allItemsCompleted = true;
         q.forEach(element => {
             if (element.IsInProgress || element.IsFailure) {
                 allItemsCompleted = false;
@@ -104,9 +104,9 @@ export class SubmissionQueue {
      * Clear completed items from queue
      *  */
     clear(clearAll: boolean = false) {
-        var q = this.getQueueItems();
-        //if any queue items are still pending, keep them
-        var newQueue = new Array<SubmissionQueueItem>();
+        let q = this.getQueueItems();
+        // if any queue items are still pending, keep them
+        let newQueue = new Array<SubmissionQueueItem>();
         if (!clearAll) {
             q.forEach(element => {
                 if (element.IsInProgress || element.IsFailure) {
@@ -123,7 +123,7 @@ export class SubmissionQueue {
     }
 
     private getQueueItems(): Array<SubmissionQueueItem> {
-        var q = localStorage.getItem("submissionQueue");
+        let q = localStorage.getItem("submissionQueue");
         if (q != null) {
             return <Array<SubmissionQueueItem>>JSON.parse(q);
         } else {

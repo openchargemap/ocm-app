@@ -125,12 +125,12 @@ export class AppManager {
 
     if (this.getQueryVariable('mode')) {
       let mode = this.getQueryVariable('mode')[0];
-      
+
       if (mode == 'embedded') {
         this.isEmbeddedMode = true;
       }
     }
-    
+
     if (this.getQueryVariable('operatorid')) {
       let values = this.getQueryVariable('operatorid');
       for (let v of values) {
@@ -202,7 +202,7 @@ export class AppManager {
 
   public isUserAuthenticated(recheckAuth: boolean = false): boolean {
 
-    if (recheckAuth === false && this._isUserAuthenticated != null) return this._isUserAuthenticated;
+    if (recheckAuth === false && this._isUserAuthenticated != null) { return this._isUserAuthenticated; }
 
     this._isUserAuthenticated = false;
 

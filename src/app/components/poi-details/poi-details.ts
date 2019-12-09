@@ -77,13 +77,13 @@ export class PoiDetails implements OnInit {
         if (ratings.length > 0) {
           let sum = 0;
 
-          for (let r of ratings) sum += r.Rating;
+          for (let r of ratings) { sum += r.Rating; }
 
           this.avgRating = sum / ratings.length;
         } else {
           this.avgRating = null;
         }
-      } catch{ }
+      } catch { }
 
 
     } else {
@@ -91,7 +91,7 @@ export class PoiDetails implements OnInit {
     }
 
     if (this.poi.Connections && this.poi.Connections.length > 0) {
-      let summary = ""
+      let summary = "";
       for (let c of this.poi.Connections) {
         if (summary.indexOf(c.ConnectionType.Title) == -1) {
           summary += (summary != "" ? ", " : "") + c.ConnectionType.Title;

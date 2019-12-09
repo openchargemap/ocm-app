@@ -26,8 +26,8 @@ export class POISearchParams {
     public additionalParams: string = null;
     public includeComments: boolean = false;
     public compact: boolean = true;
-    public enableCaching: boolean = true; //FIXME: need way for user to override cached data
-    public levelOfDetail: number = 1; //if supplied, will return a random sample of matching results, higher number return less results
-    public polyline: string = null; //(lat,lng),(lat,lng),(lat,lng),(lat,lng) or encoded polyline
-    public boundingbox: string = null; //(lat,lng),(lat,lng),(lat,lng),(lat,lng)
+    public enableCaching: boolean = true; // FIXME: need way for user to override cached data
+    public levelOfDetail: number = 1; // if supplied, will return a random sample of matching results, higher number return less results
+    public polyline: string = null; // (lat,lng),(lat,lng),(lat,lng),(lat,lng) or encoded polyline
+    public boundingbox: string = null; // (lat,lng),(lat,lng),(lat,lng),(lat,lng)
 }

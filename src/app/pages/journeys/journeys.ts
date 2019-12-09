@@ -29,7 +29,7 @@ export class JourneysPage {
     // console.log(JSON.stringify(this.journeyManager.journeys, null, 4));
   }
 
-  dismiss(){
+  dismiss() {
     this.modalController.dismiss();
   }
 

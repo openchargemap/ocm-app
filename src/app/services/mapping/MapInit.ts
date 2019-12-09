@@ -28,7 +28,7 @@ function loadGoogleMaps() {
     }
 
     if (ocm_app.appState.isRunningUnderCordova) {
-        var mappingManager = ocm_app.mappingManager;
+        let mappingManager = ocm_app.mappingManager;
         return;
 
         /*if (mappingManager.mapOptions.mapAPI != MappingAPI.GOOGLE_NATIVE) {
@@ -49,9 +49,9 @@ function loadGoogleMaps() {
         }*/
     }
 
-    if (console) console.log("Starting load of Google Maps Web API");
+    if (console) { console.log("Starting load of Google Maps Web API"); }
 
-    var script = document.createElement('script');
+    let script = document.createElement('script');
     script.type = 'text/javascript';
 
     script.src = 'https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=' + new AppConfig().googleMapsAPIKey
@@ -59,8 +59,7 @@ function loadGoogleMaps() {
     document.body.appendChild(script);
 }
 
-if (Utils.isFeatureEnabled('GOOGLE_MAPS'))
-{
-    //if we are not running under cordova then we use Google Maps Web API, otherwise we still use API for distance etc
+if (Utils.isFeatureEnabled('GOOGLE_MAPS')) {
+    // if we are not running under cordova then we use Google Maps Web API, otherwise we still use API for distance etc
     window.onload = loadGoogleMaps;
 }

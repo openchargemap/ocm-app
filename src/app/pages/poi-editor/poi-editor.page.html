@@ -12,7 +12,6 @@
 
 <ion-content class="ion-padding">
 
-  <ion-label>{{selectedTab}} - {{step}}</ion-label>
   <ng-container>
 
     <ion-segment [ngModel]="selectedTab">
@@ -78,6 +77,8 @@
             <ion-label position="floating">Longitude</ion-label>
             <ion-input type="number" [(ngModel)]="item.AddressInfo.Longitude" placeholder="Longitude (if entering manually)"></ion-input>
           </ion-item>
+
+         
         </ion-list>
       </ng-container>
       <ng-container *ngIf="step=='poi-nearby'">
@@ -100,7 +101,7 @@
       <ng-container *ngIf="step=='copy-equipment'">
 
         <ng-container *ngIf="!skipPOICopy">
-          <p class="instruction">You can optionally copy the equipment settings from other sites operated by the same network operator:
+          <p class="instruction">You can copy the equipment settings from other sites operated by the same network operator or choose 'Next' to skip this step:
             <ion-button (click)="skipCopyingPOI()" color="light" size="small">Skip<ion-icon name="fastforward" slot="end"></ion-icon>
             </ion-button>
           </p>
@@ -137,8 +138,7 @@
             <ng-container *ngIf="!selectedTemplatePOI">
               <ng-container *ngIf="templateSites.length>0">
 
-                <h2>Similar Sites</h2>
-                <p>Copy the settings for a similar site, then adjust as required or select Advanced to provide more info:</p>
+                <h3>Similar Sites</h3>
                 <app-poi-list [enableCopyOption]='true' [poiList]='templateSites' (onCopy)='useTemplatePOI($event)'>
 
                 </app-poi-list>
@@ -167,6 +167,10 @@
 
         </ion-item>
 
+        <ion-item>
+          <ion-label position="floating">Number of Stations or Parking Bays</ion-label>
+          <ion-input type="text" [(ngModel)]="item.NumberOfPoints"></ion-input>
+        </ion-item>
 
         <h4>Equipment</h4>
 
@@ -180,7 +184,19 @@
       </ng-container>
     </ng-container>
     <ng-container *ngIf="selectedTab=='info'">
-
+      <p>Please provide any other facts related to this site. Additional comments (your charging experiences etc) can be added as check-in comments once the site is listed.</p>
+      <ion-item>
+        <ion-label position="floating">Operational Status (All Equipment))</ion-label>
+        <ion-select [(ngModel)]="item.StatusTypeID">
+          <ion-select-option *ngFor="let i of statusTypes" [value]="i.ID">{{i.Title}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Usage Type</ion-label>
+        <ion-select [(ngModel)]="item.UsageTypeID">
+          <ion-select-option *ngFor="let i of usageTypes" [value]="i.ID">{{i.Title}}</ion-select-option>
+        </ion-select>
+      </ion-item>
       <ion-item>
         <ion-label position="floating">Usage Cost</ion-label>
         <ion-input type="text" [(ngModel)]="item.UsageCost"></ion-input>
@@ -189,7 +205,24 @@
         <ion-label position="floating">General Comments</ion-label>
         <ion-input type="text" [(ngModel)]="item.GeneralComments"></ion-input>
       </ion-item>
-
+    
+      <ion-item>
+        <ion-label position="floating">Main Telephone Number </ion-label>
+        <ion-input type="tel" [(ngModel)]="item.AddressInfo.ContactTelephone1" placeholder=""></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Other Telephone Number </ion-label>
+        <ion-input type="tel" [(ngModel)]="item.AddressInfo.ContactTelephone2" placeholder=""></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Access Comments</ion-label>
+        <ion-input type="text" [(ngModel)]="item.AddressInfo.AccessComments" placeholder="Instructions for access or tips for finding charging location"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Related Website</ion-label>
+        <ion-input type="url" [(ngModel)]="item.AddressInfo.RelatedURL" placeholder="Website related to this site"></ion-input>
+      </ion-item>
+     
     </ng-container>
   </ng-container>
 

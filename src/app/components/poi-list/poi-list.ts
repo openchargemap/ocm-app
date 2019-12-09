@@ -41,9 +41,9 @@ export class PoiListComponent implements OnInit {
   getFormattedAddress(poi: ExtendedPOIDetails): string {
     let address = "";
     if (poi.AddressInfo.Title != poi.AddressInfo.AddressLine1) {
-      address + poi.AddressInfo.Title;
+      address += poi.AddressInfo.Title;
     } else {
-      address += poi.AddressInfo.Town
+      address += poi.AddressInfo.Town;
     }
     return address;
   }

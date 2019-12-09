@@ -24,10 +24,10 @@ export class POIManager {
 
   /**
    * Perform query and set poiList property to list of results
-   * @param searchParams 
+   * @param searchParams
    */
   public async refreshPOIList(searchParams: POISearchParams): Promise<number> {
-  
+
     try {
 
       this.poiList = await this.fetchPOIList(searchParams);
@@ -37,8 +37,7 @@ export class POIManager {
       this.analytics.appEvent('Search', 'Fetched Results');
 
       return this.poiList.length;
-    }
-    catch (rejected) {
+    } catch (rejected) {
       return 0;
     }
   }
@@ -53,12 +52,11 @@ export class POIManager {
 
       this.isRequestInProgress = false;
 
-      if (results && results.length) this.logging.log('fetched POI list [' + results.length + ']');
+      if (results && results.length) { this.logging.log('fetched POI list [' + results.length + ']'); }
 
       return results;
 
-    }
-    catch (rejected) {
+    } catch (rejected) {
       this.isRequestInProgress = false;
       return [];
     }

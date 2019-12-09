@@ -50,7 +50,7 @@ export class ProfilePage {
 
     }
 
-    close(){
+    close() {
         this.modalController.dismiss();
     }
 }

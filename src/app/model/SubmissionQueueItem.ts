@@ -24,7 +24,7 @@ export class SubmissionQueueItem {
         this.IsCancelled = false;
         this.IsFailure = false;
         this.Attempts = 0;
-        this.ID = new Date() + '_' + (Math.random() * 100); //simple id string
+        this.ID = new Date() + '_' + (Math.random() * 100); // simple id string
     }
 }
 

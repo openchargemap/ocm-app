@@ -25,11 +25,11 @@ export class SearchSettings {
     this.UsageTypeList = [];
     this.StatusTypeList = [];
     this.HasActiveFilters = false;
-    //TODO: reference data filtered by country (most popular for given country ids)
+    // TODO: reference data filtered by country (most popular for given country ids)
 
     this.FilterOptionsByCountryId = null;
     this.UseDistanceInKM = true;
-    this.MapType ='ROADMAP';
+    this.MapType = 'ROADMAP';
   }
 
   public LoadSettings() {

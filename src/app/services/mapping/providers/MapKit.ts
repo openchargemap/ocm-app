@@ -59,7 +59,7 @@ export class MapKitMapProvider implements IMapProvider {
   initMap(mapCanvasID, mapConfig: MapOptions, parentMapManager: IMapManager) {
     this.mapCanvasID = mapCanvasID;
 
-    var apiLoaded = true;
+    let apiLoaded = true;
     if (typeof mapkit === 'undefined') {
       apiLoaded = false;
     } else {
@@ -71,7 +71,7 @@ export class MapKitMapProvider implements IMapProvider {
       this.initAPI();
 
       if (this.map == null) {
-        var mapCanvas = document.getElementById(mapCanvasID);
+        let mapCanvas = document.getElementById(mapCanvasID);
 
 
         this.map = new mapkit.Map(mapCanvasID);
@@ -115,7 +115,7 @@ export class MapKitMapProvider implements IMapProvider {
       this.markerList.forEach((key, marker) => {
         try {
           this.map.removeAnnotation(marker);
-        } catch{ }
+        } catch { }
       });
     }
 
@@ -129,28 +129,28 @@ export class MapKitMapProvider implements IMapProvider {
   * @param parentContext  parent app context
   */
   showPOIListOnMap(poiList: Array<any>, parentContext: any) {
-    var clearMarkersOnRefresh: boolean = false;
-    var map = this.map;
-    var bounds = {};
-    var markersAdded = 0;
-    var mapProviderContext = this;
+    let clearMarkersOnRefresh: boolean = false;
+    let map = this.map;
+    let bounds = {};
+    let markersAdded = 0;
+    let mapProviderContext = this;
 
     let isFirstResultSet = this.markerList.size() == 0;
 
-    //clear existing markers (if enabled)
+    // clear existing markers (if enabled)
     if (clearMarkersOnRefresh) {
       this.clearMarkers();
     }
 
     if (poiList != null) {
-      //render poi markers
-      var poiCount = poiList.length;
+      // render poi markers
+      let poiCount = poiList.length;
       let newMarkers = [];
 
-      for (var i = 0; i < poiList.length; i++) {
+      for (let i = 0; i < poiList.length; i++) {
         if (poiList[i].AddressInfo != null) {
           if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-            var poi = poiList[i];
+            let poi = poiList[i];
 
             let addMarker = true;
             if (!clearMarkersOnRefresh && this.markerList != null) {
@@ -166,26 +166,26 @@ export class MapKitMapProvider implements IMapProvider {
 
             if (addMarker) {
 
-              var iconURL = null;
-              var animation = null;
-              var shadow = null;
-              var markerImg = null;
+              let iconURL = null;
+              let animation = null;
+              let shadow = null;
+              let markerImg = null;
 
               iconURL = Utils.getIconForPOI(poi);
 
               /* markerImg = {
                  url: iconURL,
                  size: new google.maps.Size(68, 100.0),
- 
+
                  anchor: new google.maps.Point(15, 45),
                  scaledSize: new google.maps.Size(34, 50)
- 
+
                };*/
 
-              var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
-              if (poi.UsageType != null) markerTooltip += " " + poi.UsageType.Title;
+              let markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
+              if (poi.UsageType != null) { markerTooltip += " " + poi.UsageType.Title; }
 
-              if (poi.StatusType != null) markerTooltip += " " + poi.StatusType.Title;
+              if (poi.StatusType != null) { markerTooltip += " " + poi.StatusType.Title; }
 
               const coordinates = new mapkit.Coordinate(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude);
 
@@ -241,9 +241,9 @@ export class MapKitMapProvider implements IMapProvider {
          this.logging.log("Fitting to marker bounds:" + bounds);
          map.setCenter(bounds.getCenter());
          this.logging.log("zoom before fit bounds:" + map.getZoom());
- 
+
          map.fitBounds(bounds);
- 
+
          // fix incorrect zoom level when fitBounds guesses a zooom level of 0 etc.
          var zoom = map.getZoom();
          map.setZoom(zoom < 6 ? 6 : zoom);
@@ -262,18 +262,18 @@ export class MapKitMapProvider implements IMapProvider {
 
       setTimeout(() => {
         this.logging.log("MapKit: refreshMapLayout", LogLevel.VERBOSE);
-        //this.map.resize();
+        // this.map.resize();
 
       }, 200);
 
     }
   }
 
-  setMapCenter(pos: GeoPosition, zoomLevel?:number) {
+  setMapCenter(pos: GeoPosition, zoomLevel?: number) {
     if (this.map) {
       this.map.setCenterAnimated(new mapkit.Coordinate(pos.coords.latitude, pos.coords.longitude), false);
 
-      if (zoomLevel){
+      if (zoomLevel) {
         this.setMapZoom(zoomLevel);
       }
     }
@@ -282,9 +282,9 @@ export class MapKitMapProvider implements IMapProvider {
   getMapCenter(): Observable<GeoPosition> {
 
     // wrap getCenter in an observable
-    let obs = Observable.create(observer => {
+    let obs = new Observable<GeoPosition>(observer => {
       if (this.map != null) {
-        var pos = this.map.center;
+        let pos = this.map.center;
         if (pos != null) {
           observer.next(new GeoPosition(pos.latitude, pos.longitude));
           observer.complete();
@@ -296,27 +296,27 @@ export class MapKitMapProvider implements IMapProvider {
   }
 
   setMapZoom(zoom: number) {
-    //this.logging.log("MapKit: setMapZoom not supported", LogLevel.VERBOSE);
+    // this.logging.log("MapKit: setMapZoom not supported", LogLevel.VERBOSE);
     // this.map.setZoom(zoomLevel);
 
     // use the zoom level to compute the region
 
-    //const currentZoomLevel = this.map._impl.zoomLevel;
+    // const currentZoomLevel = this.map._impl.zoomLevel;
 
     const zoomLevel = Math.min(zoom, 28);
 
     const delta = this.mapkitUtils.deltaFromZoomLevel(this.map, this.map.center, Math.round(zoomLevel));
-    // Create the CoordinateRegion from the delta latitude and 
+    // Create the CoordinateRegion from the delta latitude and
     // the delta longitude multiplied by 111 (1deg = 111km)
     const span = new mapkit.CoordinateSpan(delta.latitudeDelta * 111, delta.longitudeDelta * 111);
     const region = new mapkit.CoordinateRegion(this.map.center, span);
-    this.map.setRegionAnimated(region)
+    this.map.setRegionAnimated(region);
   }
 
   getMapZoom(): Observable<number> {
 
     // wrap getzoom in an observable
-    let obs = Observable.create(observer => {
+    let obs = new Observable<number>(observer => {
 
       this.logging.log("MapKit: getMapZoom not supported", LogLevel.VERBOSE);
       let zoom = this.map._impl.zoomLevel; // TODO: should not use internal property
@@ -338,11 +338,11 @@ export class MapKitMapProvider implements IMapProvider {
 
   getMapBounds(): Observable<Array<GeoLatLng>> {
     // wrap getzoom in an observable
-    let obs = Observable.create(observer => {
+    let obs = new Observable<Array<GeoLatLng>>(observer => {
 
-      var bounds = new Array<GeoLatLng>();
+      let bounds = new Array<GeoLatLng>();
 
-      var mapBounds = this.map.region.toBoundingRegion();
+      let mapBounds = this.map.region.toBoundingRegion();
       bounds.push(new GeoLatLng(mapBounds.southLatitude, mapBounds.westLongitude));
       bounds.push(new GeoLatLng(mapBounds.northLatitude, mapBounds.eastLongitude));
 
@@ -423,7 +423,7 @@ export class MapKitMapProvider implements IMapProvider {
           let placeResult = new PlaceSearchResult();
 
           placeResult.Title = place.name;
-          //placeResult.ReferenceID = (<any>place).place_id;
+          // placeResult.ReferenceID = (<any>place).place_id;
           placeResult.Address = place.formattedAddress;
           placeResult.Type = "place";
           placeResult.Location = new GeoLatLng(place.coordinate.latitude, place.coordinate.longitude);
@@ -500,6 +500,6 @@ class MapKitUtils {
     return {
       latitudeDelta,
       longitudeDelta
-    }
+    };
   }
 }

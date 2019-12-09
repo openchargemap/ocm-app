@@ -9,7 +9,7 @@ import { IMapProvider } from '../../services/mapping/interfaces/mapping';
 import { MapBoxMapProvider } from '../../services/mapping/providers/MapBox';
 import { HttpClient } from '@angular/common/http';
 
-//declare var google: any;
+// declare var google: any;
 
 declare var mapkit: any;
 
@@ -25,14 +25,14 @@ export class PlaceSearch implements OnInit {
 
     private placeSearchType: string;
     private placeList: Array<PlaceSearchResult>;
-    private searchInProgress: boolean = false;
+    private searchInProgress = false;
 
     @Input()
     searchKeyword: string;
 
     placeSearchFocused: boolean;
-    placeSearchActive: boolean = false;
-    placeAttribution: string = "";
+    placeSearchActive = false;
+    placeAttribution = "";
 
     @Output()
     selectedPlace: any;
@@ -64,10 +64,10 @@ export class PlaceSearch implements OnInit {
     }
 
     onSearchCancel() {
-        //hide search block
-        //this.placeSearchActive = false;
+        // hide search block
+        // this.placeSearchActive = false;
 
-        //this.appManager.isRequestInProgress = false;
+        // this.appManager.isRequestInProgress = false;
     }
 
     public async getPlacesAutoComplete($event, searchType) {
@@ -108,8 +108,7 @@ export class PlaceSearch implements OnInit {
                 if (this.placeList && this.placeList.length > 0) {
                     this.placeAttribution = this.placeList[0].Attribution;
                 }
-            }
-            catch (error) {
+            } catch (error) {
 
             }
 
@@ -125,7 +124,7 @@ export class PlaceSearch implements OnInit {
 
         let searchKeyword = item.Title;
 
-        //move map to selected place
+        // move map to selected place
 
         this.logging.log("Looking up place details:" + searchKeyword + "::" + item.ReferenceID);
 

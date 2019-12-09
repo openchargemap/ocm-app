@@ -50,10 +50,10 @@ export function createTranslateLoader(http: HttpClient) {
 export class AppMissingTranslationHandler implements MissingTranslationHandler {
   handle(params: MissingTranslationHandlerParams) {
     if (params.interpolateParams && (<any>params.interpolateParams).Title) {
-      //for lookup lists our standard reference data has a .Title member we can use if we're not translating a term
+      // for lookup lists our standard reference data has a .Title member we can use if we're not translating a term
       return (<any>params.interpolateParams).Title;
     } else {
-      //translation not handled
+      // translation not handled
       return '??' + params.key;
     }
   }
@@ -61,7 +61,8 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage, MediaUploadPage, FavouriteEditorPage, PoiEditorPage, PoiEquipmentEditorComponent], // , JourneysPage, MediaUploadPage, POIDetailsPage, ProfilePage, SettingsPage, SignInPage
+  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage, MediaUploadPage, FavouriteEditorPage, PoiEditorPage, PoiEquipmentEditorComponent],
+  // , JourneysPage, MediaUploadPage, POIDetailsPage, ProfilePage, SettingsPage, SignInPage
   imports: [
     BrowserModule,
     HttpClientModule,

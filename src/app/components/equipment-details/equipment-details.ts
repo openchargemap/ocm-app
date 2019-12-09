@@ -14,7 +14,7 @@ export class EquipmentDetailsComponent implements OnInit {
   public item: ExtendedPOIDetails;
 
   @Input()
-  public enableEdit: boolean = false;
+  public enableEdit = false;
 
   @Output()
   public onEdit = new EventEmitter<any>();

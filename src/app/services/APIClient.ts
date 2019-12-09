@@ -102,9 +102,7 @@ export class APIClient {
 
         let poiResults = this.refData.hydrateCompactPOIList(<Array<any>>result);
         return poiResults;
-      }
-
-      catch (error) {
+      } catch (error) {
         const errMsg = error.message || 'Could not fetch POI list from server.';
         this.logging.log('API Client: ' + JSON.stringify(error), LogLevel.ERROR);
         throw (errMsg);
@@ -117,15 +115,15 @@ export class APIClient {
 
   private getHttpRequestOptions(useJsonContentType: boolean = true): Object {
 
-    //attach auth header if we have auth info for client api        
+    // attach auth header if we have auth info for client api
     let headers = new HttpHeaders();
 
-    //set content type if required
+    // set content type if required
     if (useJsonContentType) {
       headers = headers.append('Content-Type', 'application/json');
     }
 
-    //set auth header (if required)
+    // set auth header (if required)
     if (this.authResponse && this.authResponse.Data && this.authResponse.Data.access_token) {
       headers = headers.append('Authorization', 'Bearer ' + this.authResponse.Data.access_token);
     }

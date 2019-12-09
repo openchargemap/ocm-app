@@ -24,7 +24,7 @@ export class FavouriteEditorPage {
     public appManager: AppManager,
     public navParams: NavParams,
     public journeyManager: JourneyManager,
-    private modalController:ModalController
+    private modalController: ModalController
   ) {
 
     this.poi = this.navParams.get('poi');

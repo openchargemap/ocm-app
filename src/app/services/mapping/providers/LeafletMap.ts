@@ -36,11 +36,10 @@ export class LeafletMap implements IMapProvider {
         this.markerList = new Dictionary<number, google.maps.Marker>();
     }
 
-    
-    initAPI(){
+    initAPI() {
 
     }
-    
+
     /**
     * Performs one-time init of map object for this map provider
     * @param mapcanvasID  dom element for map canvas
@@ -50,11 +49,11 @@ export class LeafletMap implements IMapProvider {
     initMap(mapCanvasID, mapConfig: MapOptions, parentMapManager: IMapManager) {
         this.mapCanvasID = mapCanvasID;
 
-        var apiLoaded = true;
+        let apiLoaded = true;
 
         if (apiLoaded) {
             if (this.map == null) {
-                var mapCanvas = document.getElementById(mapCanvasID);
+                let mapCanvas = document.getElementById(mapCanvasID);
 
                 if (mapCanvas != null) {
                     this.map = new Map(mapCanvasID).setView(new LatLng(51.505, -0.09), 13);
@@ -76,7 +75,7 @@ export class LeafletMap implements IMapProvider {
                     this.logging.log("Defaulted map height to " + Utils.getClientHeight());
 
                     // events for map manipulation to perform search
-                    var providerContext = this;
+                    let providerContext = this;
                     this.map.on('moveend', () => {
                         providerContext.events.publish('ocm:mapping:dragend');
                     });
@@ -105,7 +104,7 @@ export class LeafletMap implements IMapProvider {
             this.markerList.forEach((key, marker) => {
                 try {
                     marker.setMap(null);
-                } catch{ }
+                } catch { }
             });
         }
 
@@ -118,16 +117,16 @@ export class LeafletMap implements IMapProvider {
     */
     showPOIListOnMap(poiList: Array<any>, parentContext: any) {
 
-        var clearMarkersOnRefresh: boolean = false;
-        var map = this.map;
-        var markersAdded = 0;
-        var mapProviderContext = this;
+        let clearMarkersOnRefresh: boolean = false;
+        let map = this.map;
+        let markersAdded = 0;
+        let mapProviderContext = this;
 
         // clear existing markers (if enabled)
         if (clearMarkersOnRefresh) {
             this.clearMarkers();
         }
-        var mapzoom = map.getZoom();
+        let mapzoom = map.getZoom();
 
         if (poiList != null) {
             // render poi markers
@@ -135,12 +134,12 @@ export class LeafletMap implements IMapProvider {
 
 
             let poiCount = poiList.length;
-            for (var i = 0; i < poiList.length; i++) {
+            for (let i = 0; i < poiList.length; i++) {
                 if (poiList[i].AddressInfo != null) {
                     if (poiList[i].AddressInfo.Latitude != null && poiList[i].AddressInfo.Longitude != null) {
-                        var poi = poiList[i];
+                        let poi = poiList[i];
 
-                        var addMarker = true;
+                        let addMarker = true;
                         if (!clearMarkersOnRefresh && this.markerList != null) {
                             // find if this poi already exists in the marker list
                             if (this.markerList.containsKey(poi.ID)) {
@@ -153,12 +152,12 @@ export class LeafletMap implements IMapProvider {
                         }
 
                         if (addMarker) {
-                            var poiLevel = Utils.getMaxLevelOfPOI(poi);
+                            let poiLevel = Utils.getMaxLevelOfPOI(poi);
 
-                            var iconURL = null;
-                            var animation = null;
-                            var shadow = null;
-                            var markerImg = null;
+                            let iconURL = null;
+                            let animation = null;
+                            let shadow = null;
+                            let markerImg = null;
 
                             iconURL = "images/icons/map/level" + poiLevel;
                             if (poi.UsageType != null && poi.UsageType.Title.indexOf("Private") > -1) {
@@ -171,7 +170,7 @@ export class LeafletMap implements IMapProvider {
 
                             iconURL += "_icon.png";
 
-                            var defaultMarkerIcon = new Icon({
+                            let defaultMarkerIcon = new Icon({
                                 iconUrl: iconURL,
 
                                 iconSize: [34, 50], // size of the icon
@@ -179,12 +178,12 @@ export class LeafletMap implements IMapProvider {
                                 // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
                             });
 
-                            var markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
+                            let markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
                             if (poi.UsageType != null) { markerTooltip += " " + poi.UsageType.Title; }
                             if (poiLevel > 0) { markerTooltip += " Level " + poiLevel; }
                             if (poi.StatusType != null) { markerTooltip += " " + poi.StatusType.Title; }
 
-                            var marker = <any>new Marker(
+                            let marker = <any>new Marker(
                                 new LatLng(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude),
                                 <L.MarkerOptions>{
                                     icon: defaultMarkerIcon, title: markerTooltip, draggable: false, clickable: true
@@ -220,7 +219,7 @@ export class LeafletMap implements IMapProvider {
             this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.size());
         }
 
-        var uiContext = this;
+        let uiContext = this;
         // zoom to bounds of markers
         /*
                 if (poiList != null && poiList.length > 0) {
@@ -261,8 +260,8 @@ export class LeafletMap implements IMapProvider {
     getMapCenter(): Observable<GeoPosition> {
 
         // wrap getCenter in an observable
-        let obs = Observable.create(observer => {
-            var pos = this.map.getCenter();
+        let obs = new Observable<GeoPosition>(observer => {
+            let pos = this.map.getCenter();
             observer.next(new GeoPosition(pos.lat, pos.lng));
             observer.complete();
         });
@@ -280,7 +279,7 @@ export class LeafletMap implements IMapProvider {
     getMapZoom(): Observable<number> {
 
         // wrap getzoom in an observable
-        let obs = Observable.create(observer => {
+        let obs = new Observable<number>(observer => {
 
             let zoom = this.map.getZoom();
             observer.next(zoom);
@@ -300,11 +299,11 @@ export class LeafletMap implements IMapProvider {
 
     getMapBounds(): Observable<Array<GeoLatLng>> {
         // wrap getzoom in an observable
-        let obs = Observable.create(observer => {
+        let obs = new Observable<Array<GeoLatLng>>(observer => {
 
-            var bounds = new Array<GeoLatLng>();
+            let bounds = new Array<GeoLatLng>();
 
-            var mapBounds = this.map.getBounds();
+            let mapBounds = this.map.getBounds();
             bounds.push(new GeoLatLng(mapBounds.getNorthEast().lat, mapBounds.getNorthEast().lng));
             bounds.push(new GeoLatLng(mapBounds.getSouthWest().lat, mapBounds.getSouthWest().lng));
 
@@ -347,7 +346,7 @@ export class LeafletMap implements IMapProvider {
         //
     }
 
-    placeSearch(keyword: string): Promise<Array<PlaceSearchResult>>{
+    placeSearch(keyword: string): Promise<Array<PlaceSearchResult>> {
         // not implemented
         return null;
     }

@@ -17,7 +17,7 @@ export class Logging {
     constructor() {
         this.logLevel = LogLevel.VERBOSE;
 
-        if (environment.production){
+        if (environment.production) {
             this.logLevel = LogLevel.ERROR;
         }
     }

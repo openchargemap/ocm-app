@@ -59,7 +59,6 @@ export class SignInPage {
 
             // navigation to main app. TODO: navigate to last requested page (route guard)
             this.modalController.dismiss();
-            //this.router.navigateByUrl('/search');
 
             this.appManager.analytics.appEvent("Profile", "SignedIn");
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { POIDetails, OperatorInfo, ConnectionType, Country, ConnectionInfo, StatusType, ExtendedPOIDetails, ExtendedAddressInfo } from '../../model/CoreDataModel';
+import { POIDetails, OperatorInfo, ConnectionType, Country, ConnectionInfo, StatusType, ExtendedPOIDetails, ExtendedAddressInfo, UsageType } from '../../model/CoreDataModel';
 import { AppManager } from '../../services/AppManager';
 import { NavController, ModalController, Events, LoadingController, AlertController } from '@ionic/angular';
 import { GeoLatLng, GeoPosition, POISearchParams } from '../../model/AppModels';
@@ -63,6 +63,16 @@ export class PoiEditorPage implements OnInit {
     return this.appManager.referenceDataManager.getCountries();
   }
 
+  get usageTypes(): Array<UsageType> {
+    return this.appManager.referenceDataManager.getUsageTypes();
+  }
+
+  get statusTypes(): Array<StatusType> {
+    return this.appManager.referenceDataManager.getStatusTypes().filter(s => {
+      return s.IsUserSelectable == true;
+    });
+  }
+
   get isAddMode(): boolean {
 
     if (this.item.ID <= 0) {
@@ -93,11 +103,11 @@ export class PoiEditorPage implements OnInit {
       OperatorsReference: null,
       OperatorID: null,
       UsageCost: null,
-      UsageTypeID: null,
-      NumberOfPoints: null,
+      UsageTypeID: 4, // public - membership required
+      NumberOfPoints: 1,
       GeneralComments: null,
       DatePlanned: null,
-      StatusTypeID: null,
+      StatusTypeID: 50, // operational
       SubmissionStatusTypeID: null,
       Connections: [],
       MetadataValues: [],
@@ -134,7 +144,7 @@ export class PoiEditorPage implements OnInit {
   }
 
   async dismissLoadingUI() {
-    if (this.loading) await this.loading.dismiss();
+    if (this.loading) { await this.loading.dismiss(); }
   }
 
   ionViewDidEnter() {
@@ -143,14 +153,12 @@ export class PoiEditorPage implements OnInit {
 
       this.editExistingPOI(this.id);
 
-    }
-    else {
+    } else {
       // adding new POI
       let lastOperatorId = localStorage.getItem("_editor-operatorid");
       if (lastOperatorId) {
-        this.item.OperatorID = parseInt(lastOperatorId);
+        this.item.OperatorID = parseInt(lastOperatorId, 10);
       }
-
 
       if (this.startPos) {
         this.item.AddressInfo.Latitude = this.startPos.latitude;
@@ -165,13 +173,13 @@ export class PoiEditorPage implements OnInit {
               this.item.AddressInfo.Latitude = p.coords.latitude;
               this.item.AddressInfo.Longitude = p.coords.longitude;
 
-              //this.getAddressForCurrentLatLng();
+              // this.getAddressForCurrentLatLng();
 
             }
           });
         }
 
-        //this.mapService.setMapCenter(new GeoPosition(this.item.AddressInfo.Latitude, this.item.AddressInfo.Longitude));
+        // this.mapService.setMapCenter(new GeoPosition(this.item.AddressInfo.Latitude, this.item.AddressInfo.Longitude));
       }
     }
 
@@ -311,8 +319,8 @@ export class PoiEditorPage implements OnInit {
       componentProps: { conn: item }
     });
 
-    modal.onWillDismiss().then((result:any)=>{
-      if (result && result.data.item){
+    modal.onWillDismiss().then((result: any) => {
+      if (result && result.data.item) {
         this.updateConnection(result.data.item);
       }
     });
@@ -320,7 +328,7 @@ export class PoiEditorPage implements OnInit {
     return await modal.present();
   }
 
-  async deleteConnection(c: ConnectionInfo){
+  async deleteConnection(c: ConnectionInfo) {
     const source = this.item.Connections.find(f => f.ID == c.ID);
 
     const alert = await this.alertController.create({
@@ -338,7 +346,7 @@ export class PoiEditorPage implements OnInit {
           text: 'Yes',
           handler: () => {
             // delete item
-            this.item.Connections = this.item.Connections.filter(f=>f.ID!=source.ID);
+            this.item.Connections = this.item.Connections.filter(f => f.ID != source.ID);
             this.appManager.referenceDataManager.hydrateCompactPOI(this.item, true);
           }
         }
@@ -352,8 +360,8 @@ export class PoiEditorPage implements OnInit {
     const item = {
       ID: -Utils.getRandomInt(10000),
       ConnectionTypeID: null,
-      StatusTypeID: null,
-      PowerKW: 0,
+      StatusTypeID: 50, //  operational
+      PowerKW: null,
       Quantity: 1
     };
 
@@ -362,20 +370,20 @@ export class PoiEditorPage implements OnInit {
       componentProps: { conn: item }
     });
 
-    modal.onWillDismiss().then((result:any)=>{
-      if (result && result.data.item){
+    modal.onWillDismiss().then((result: any) => {
+      if (result && result.data.item) {
         this.updateConnection(result.data.item);
       }
     });
 
     return await modal.present();
 
-    //this.refreshFilteredReferenceData();
+    // this.refreshFilteredReferenceData();
   }
 
   refreshFilteredReferenceData() {
     // get filtered reference data based on current country selection
-    this.appManager.referenceDataManager.refreshFilteredReferenceData(this.appManager.api, { CountryIds: [this.item.AddressInfo.CountryID] })
+    this.appManager.referenceDataManager.refreshFilteredReferenceData(this.appManager.api, { CountryIds: [this.item.AddressInfo.CountryID] });
   }
 
   updateConnection(conn: ConnectionInfo) {
@@ -406,7 +414,7 @@ export class PoiEditorPage implements OnInit {
       }
 
       if (this.item.AddressInfo.Title == '') {
-        validationMsg = "A location title is required"
+        validationMsg = "A location title is required";
       }
 
       if (!this.item.AddressInfo.CountryID) {
@@ -506,7 +514,7 @@ export class PoiEditorPage implements OnInit {
   }
 
   /**
-   * Fetch list of POis dear the currently set location, return numbers of results  
+   * Fetch list of POis dear the currently set location, return numbers of results
    * */
   async refreshNearbySites(): Promise<number> {
 
@@ -579,7 +587,7 @@ export class PoiEditorPage implements OnInit {
 
     this.selectedTemplatePOI = source;
 
-    //copy equipment etc
+    // copy equipment etc
     Object.assign(this.item.Connections, source.Connections);
 
     // create new connect item IDs etc
