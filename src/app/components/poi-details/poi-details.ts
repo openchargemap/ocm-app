@@ -262,18 +262,41 @@ export class PoiDetails implements OnInit {
     this.appManager.launchWebPage(url);
   }
 
+  async continueEdit() {
+    const modal = await this.modalController.create({
+      component: PoiEditorPage, componentProps: { id: this.poi.ID }
+    });
+
+    modal.onDidDismiss().then(data => {
+      this.refresh();
+    });
+
+    return await modal.present();
+  }
+
   async edit() {
     if (Utils.isFeatureEnabled('EDIT_POI')) {
 
-      const modal = await this.modalController.create({
-        component: PoiEditorPage, componentProps: { id: this.poi.ID }
-      });
+      if (this.appManager.isUserAuthenticated(true)) {
 
-      modal.onDidDismiss().then(data => {
-        this.refresh();
-      });
+        await this.continueEdit();
 
-      await modal.present();
+      } else {
+        // user needs to sign in first
+        const modal = await this.modalController.create({
+          component: SignInPage
+        });
+
+        modal.onDidDismiss().then(async () => {
+          if (this.appManager.isUserAuthenticated(true)) {
+            await this.continueEdit();
+          }
+
+        });
+
+        await modal.present();
+      }
+
 
     } else {
       this.appManager.launchOCMWebPage('/poi/edit/' + this.poi.ID);

@@ -6,8 +6,8 @@ const routes: Routes = [
   { path: 'search', loadChildren: './pages/search/search.module#SearchPageModule' },
   { path: 'journeys', loadChildren: './pages/journeys/journeys.module#JourneysModule' },
   { path: 'signin', loadChildren: './pages/signin/signin.module#SignInModule' },
-  { path: 'poi-editor/:id', loadChildren: './pages/poi-editor/poi-editor.module#PoiEditorPageModule' }
-
+  { path: 'poi-editor/:id', loadChildren: './pages/poi-editor/poi-editor.module#PoiEditorPageModule' },
+  { path: 'about', loadChildren: './pages/about/about.module#AboutPageModule' }
 ];
 
 @NgModule({

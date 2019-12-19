@@ -1,0 +1,192 @@
+{
+  "_langTitle": "West Frisian/Frysk",
+  "_langCode": "fy",
+  "ocm": {
+    "general": {
+      "shortDescription": "it globale publike register fan oplaadlokaasjes foar elektryske weinen",
+      "linkWebApp": "Sykje nei Lokaasjes mei ús Web Tapassing",
+      "linkBrowsePOI": "Troch alle lokaasjes blêdzje",
+      "browsePOI": "Troch oplaadlokaasjes blêdzje",
+      "loadingProgress": "Lade...",
+      "addLocation": "Lokaasje taheakje",
+      "addItem": "Taheakje",
+      "favourites": "Favoriten",
+      "settings": "Ynstellingen",
+      "about": "Oer",
+      "signIn": "Ynlogge",
+      "signOut": "Útlogge"
+    },
+    "details": {
+      "sectionTitle": "Oplaadlokaasje",
+      "location": {
+        "sectionTitle": "Lokaasjeynformaasje",
+        "title": "Lokaasje titel",
+        "address": "Neistlizzende Adres",
+        "addressLine1": "Adresrigel 1",
+        "addressLine2": "Adresrigel 2",
+        "town": "Doarp/Stêd",
+        "stateOrProvince": "Steat/Provinsje",
+        "postcode": "Postkoade/ZIP-koade",
+        "country": "Lân",
+        "latitude": "Breedtegraad",
+        "longitude": "Lingtegraad",
+        "contactTelephone1": "Primêr tillefoannûmer",
+        "contactTelephone2": "Sekundêr tillefoannûmer",
+        "contactEmail": "E-post kontakt",
+        "map": "Map",
+        "streetView": "Strjitte Sicht (Street View)",
+        "addressRelatedURL": "Webside"
+      },
+      "generalComments": "Algemiene Ynformaasje",
+      "accessComments": "Tagongsynformaasje",
+      "advancedDetails": "Addisjonele ynformaasje",
+      "numberOfPoints": "Oantal Punten/Plakken",
+      "usageType": "Gebrûk",
+      "usageCost": "Gebrûkskosten",
+      "operationalStatus": "Operasjonele Steat",
+      "datePlanned": "Plande datum",
+      "dateLastConfirmed": "Lêstlyn befêstige datum",
+      "lastUpdated": "Lêstlyn Fernijd",
+      "refNumber": "OpenChargeMap Ref",
+      "dataQualityLevel": "Data kwaliteitslevel",
+      "importedDataNotice": "Opmerking: Dizze data is automatysk generearre, feroaringen moatte streekrjocht yntsjinne wurde by de gegevensoanbieder.",
+      "submissionStatus": "Steat fan Yntsjinje",
+      "placesNearby": {
+        "sectionTitle": "Plakken Tichtby"
+      },
+      "mediaItems": {
+        "sectionTitle": "Foto's",
+        "addPrompt": "Laad dyn eigen foto's op fan dizze lokaasje"
+      },
+      "metadataValues": {
+        "sectionTitle": "Oanfoljende Labels"
+      },
+      "commentsAndRatings": {
+        "sectionTitle": "Reaksjes en Wurdearringen",
+        "zeroComments": "Gjin brûkerreaksjes yntsjinne",
+        "addPrompt": "In reaksje of in rappe steatfernijïng taheakje"
+      },
+      "equipment": {
+        "sectionTitle": "Apparatuergegevens",
+        "connectionType": "Konneksjetype",
+        "powerKW": "Max Kinne (KW)",
+        "powerLevel": "Nivo",
+        "quantity": "Tal",
+        "supplyType": "Tafiertype",
+        "voltage": "Foltaazje",
+        "current": "Max Stream",
+        "comment": "Reaksjes",
+        "reference": "Referinsje"
+      },
+      "dataProvider": {
+        "sectionTitle": "Databoarne",
+        "website": "Webside",
+        "providersReference": "Providers Ref"
+      },
+      "operator": {
+        "sectionTitle": "Netwurk/Operator",
+        "operatorsReference": "Operator Ref"
+      }
+    },
+    "search": {
+      "sectionTitle": "Sykje",
+      "locationInput": "Lokaasje",
+      "useMyLocation": "Sykje yn myn buert",
+      "distance": "Ôfstân",
+      "chargingLevels": "Oplaadsnelheid",
+      "minPowerKW": "Min Kinne (KW)",
+      "connectionTypes": "Konneksjetype",
+      "networkOperators": "Netwurk/Operator",
+      "countries": "Lân",
+      "submissionStatus": "Steat fan Yntsjinje",
+      "usageTypes": "Gebrûk",
+      "operationalStatusTypes": "Steat",
+      "performSearch": "Sykje",
+      "progress": "Sykjen..."
+    },
+    "navigation": {
+      "home": "Thús",
+      "browse": {
+        "sectionTitle": "Blêdzje",
+        "allLocations": "Alle lokaasjes",
+        "byCountry": "Op lân",
+        "avaitingReview": "Wachtsje op skôging",
+        "recentActivity": "Resinte aktiviteit",
+        "webApp": "Webtapassing foar mobyl",
+        "statistics": "Statistiken",
+        "awaitingReviewImported": null,
+        "editqueue": null
+      },
+      "develop": {
+        "sectionTitle": "Ûntwikkeljen",
+        "api": "API",
+        "htmlWidgets": "HTML Widgets",
+        "examples": "Foarbylden",
+        "getInvolved": "Doch mei",
+        "code": "Toan de koade (op GitHub)",
+        "translate": "Helpe mei oersetten"
+      },
+      "discuss": "Diskusjearje",
+      "about": {
+        "termsPrivacy": "Betingsten & privacy",
+        "contact": "Kontakt",
+        "guidance": "Begelieding foar bydragers"
+      },
+      "profile": {
+        "sectionTitle": "Myn profyl",
+        "subscriptions": "Myn abonneminten",
+        "comments": "Myn reaksjes",
+        "uploads": "Myn oplaads"
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Gjin selektearre)",
+        "value_0": "Ûnbekend",
+        "value_10": "Op it stuit beskikber (automatisearre steat)",
+        "value_20": "Op dit stuit yn gebrûk (automatisearre steat)",
+        "value_30": "Op dit stuit net beskikber",
+        "value_50": "Operasjoneel",
+        "value_75": "Part operasjoneel",
+        "value_100": "Net operasjoneel",
+        "value_150": null,
+        "value_200": "Fuorthelle (út opdracht)"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Neat selektearre)",
+        "value_1": "(Netwurk/Operator ûnbekend)",
+        "value_44": null,
+        "value_45": null
+      },
+      "usageType": {
+        "value_minus1": "(Neat selektearre)",
+        "value_0": "(Ûnbekend)",
+        "value_1": "Iepenbier",
+        "value_2": "Privee - beheinde tagong",
+        "value_3": null,
+        "value_4": "Iepenbier - lidmaatskip nedich",
+        "value_5": "Iepenbier - betelje op lokaasje",
+        "value_6": null,
+        "value_7": null
+      },
+      "connectionType": {
+        "value_minus1": null,
+        "value_0": null
+      },
+      "levelType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null
+      },
+      "supplyType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_10": null,
+        "value_20": null,
+        "value_30": null
+      }
+    }
+  }
+}

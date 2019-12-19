@@ -1,0 +1,192 @@
+{
+  "_langTitle": "Greek/Ελληνική",
+  "_langCode": "el",
+  "ocm": {
+    "general": {
+      "shortDescription": "Παγκόσμιο δημόσιο μητρώο σημείων φόρτισης ηλεκτρικών οχημάτων",
+      "linkWebApp": "Αναζήτηση τοποθεσιών",
+      "linkBrowsePOI": "Αναζήτηση σε όλες τις τοποθεσίες",
+      "browsePOI": null,
+      "loadingProgress": "Φόρτωση...",
+      "addLocation": "Προσθέστε τοποθεσία",
+      "addItem": "Προσθέστε",
+      "favourites": "Αγαπημένα",
+      "settings": "Ρυθμίσεις",
+      "about": "Σχετικά με",
+      "signIn": "Εισέλθετε",
+      "signOut": "Εξέλθετε"
+    },
+    "details": {
+      "sectionTitle": "Τοποθεσία Φόρτισης",
+      "location": {
+        "sectionTitle": "Λεπτομέρειες τοποθεσίας",
+        "title": "Όνομα τοποθεσίας",
+        "address": "Πλησιέστερη διεύθυνση",
+        "addressLine1": "Διεύθυνση ΓΡΑΜΜΗ 1",
+        "addressLine2": "Διεύθυνση, γραμμή 2",
+        "town": "Πόλη/Κοινότητα",
+        "stateOrProvince": "Νομός/επαρχία",
+        "postcode": "Ταχυδρομικος Κωδικας",
+        "country": "Χώρα",
+        "latitude": null,
+        "longitude": null,
+        "contactTelephone1": "Κύριο τηλέφωνο επικοινωνίας",
+        "contactTelephone2": "Πρόσθετο τηλέφωνο επικοινωνίας",
+        "contactEmail": "Επικοινωνήστε μέσω Email",
+        "map": "Χάρτης",
+        "streetView": "Εικόνα από το δρόμο",
+        "addressRelatedURL": "Ιστοσελίδα"
+      },
+      "generalComments": "Γενικές πληροφορίες",
+      "accessComments": "Πρόσβαση σε πληροφορίες",
+      "advancedDetails": "Πρόσθετες πληροφορίες",
+      "numberOfPoints": "Αριθμός των σταθμών/σημείων",
+      "usageType": "Χρήση",
+      "usageCost": "Κόστος χρήσης",
+      "operationalStatus": "Κατάσταση λειτουργίας",
+      "datePlanned": "Ημερομηνία που έχει προγραμματιστεί",
+      "dateLastConfirmed": "Τελευταία ημερομηνία που έχει επιβεβαιωθεί",
+      "lastUpdated": "Τελευταία ενημέρωση",
+      "refNumber": "OpenChargeMap Ref",
+      "dataQualityLevel": "Επίπεδο Ποιότητας Δεδομένων",
+      "importedDataNotice": "Σημείωση: Αυτά τα δεδομένα παρέχονται αυτόματα και τυχόν αλλαγές θα πρέπει να υποβάλλονται απευθείας στον πάροχο των δεδομένων.",
+      "submissionStatus": "Υποβολή κατάστασης",
+      "placesNearby": {
+        "sectionTitle": "Κοντινά μέρη"
+      },
+      "mediaItems": {
+        "sectionTitle": "Φωτογραφίες",
+        "addPrompt": "Ανεβάστε τις φωτογραφίες σας για την τοποθεσία αυτή"
+      },
+      "metadataValues": {
+        "sectionTitle": "Πρόσθετες Ετικέτες"
+      },
+      "commentsAndRatings": {
+        "sectionTitle": "Σχόλια και οι αξιολογήσεις",
+        "zeroComments": "Δεν έχουν υποβληθεί σχόλια χρηστών",
+        "addPrompt": "Προσθέστε ένα σχόλιο ή μια σύντομη ενημέρωση της κατάτασης"
+      },
+      "equipment": {
+        "sectionTitle": "Λεπτομέρειες εξοπλισμού",
+        "connectionType": "Τύπος σύνδεσης",
+        "powerKW": "Μέγιστη ισχύς (KW)",
+        "powerLevel": "Επίπεδο",
+        "quantity": "Ποσότητα",
+        "supplyType": "Τύπος παροχής",
+        "voltage": "Τάση",
+        "current": "ΑΝΩΤΑΤΟ ρεύμα",
+        "comment": "Σχόλια",
+        "reference": "Αναφορά"
+      },
+      "dataProvider": {
+        "sectionTitle": "Πάροχος δεδομένων",
+        "website": "Ιστοσελίδα",
+        "providersReference": "Πάροχοι Ref"
+      },
+      "operator": {
+        "sectionTitle": "Δίκτυο/Διαχειριστής",
+        "operatorsReference": "Διαχειριστές Ref"
+      }
+    },
+    "search": {
+      "sectionTitle": "Αναζήτηση",
+      "locationInput": "Τοποθεσία",
+      "useMyLocation": "Αναζήτηση κοντά μου",
+      "distance": "Απόσταση",
+      "chargingLevels": "Επίπεδο Φόρτισης",
+      "minPowerKW": null,
+      "connectionTypes": "Τύποι σύνδεσης",
+      "networkOperators": "Δίκτυο/Διαχειριστής",
+      "countries": "Χώρα",
+      "submissionStatus": "Υποβολή κατάστασης",
+      "usageTypes": "Χρήση",
+      "operationalStatusTypes": "Κατάσταση",
+      "performSearch": "Αναζήτηση",
+      "progress": "Αναζήτηση..."
+    },
+    "navigation": {
+      "home": null,
+      "browse": {
+        "sectionTitle": null,
+        "allLocations": null,
+        "byCountry": null,
+        "avaitingReview": null,
+        "recentActivity": null,
+        "webApp": null,
+        "statistics": null,
+        "awaitingReviewImported": null,
+        "editqueue": null
+      },
+      "develop": {
+        "sectionTitle": null,
+        "api": null,
+        "htmlWidgets": null,
+        "examples": null,
+        "getInvolved": null,
+        "code": null,
+        "translate": null
+      },
+      "discuss": null,
+      "about": {
+        "termsPrivacy": null,
+        "contact": null,
+        "guidance": null
+      },
+      "profile": {
+        "sectionTitle": null,
+        "subscriptions": null,
+        "comments": null,
+        "uploads": null
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_10": null,
+        "value_20": null,
+        "value_30": null,
+        "value_50": null,
+        "value_75": null,
+        "value_100": null,
+        "value_150": null,
+        "value_200": null
+      },
+      "operatorInfo": {
+        "value_minus1": null,
+        "value_1": null,
+        "value_44": null,
+        "value_45": null
+      },
+      "usageType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null,
+        "value_4": null,
+        "value_5": null,
+        "value_6": null,
+        "value_7": null
+      },
+      "connectionType": {
+        "value_minus1": null,
+        "value_0": null
+      },
+      "levelType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null
+      },
+      "supplyType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_10": null,
+        "value_20": null,
+        "value_30": null
+      }
+    }
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "_langTitle": "Finnish/Suomi",
+  "_langCode": "fi",
+  "ocm": {
+    "general": {
+      "shortDescription": "sähköauton latauspisteiden maailmanlaajuinen julkinen rekisteri",
+      "linkWebApp": "Etsi sijainteja käyttäen Web sovellusta",
+      "linkBrowsePOI": "Selaa kaikkia sijainteja",
+      "browsePOI": "Selaa lataus sijainteja",
+      "loadingProgress": "Ladataan...",
+      "addLocation": "Lisää sijainti",
+      "addItem": "Lisää",
+      "favourites": "Suosikit",
+      "settings": "Asetukset",
+      "about": "Tietoja",
+      "signIn": "Kirjaudu sisään",
+      "signOut": "Kirjaudu ulos"
+    },
+    "details": {
+      "sectionTitle": "Latauspisteen sijainti",
+      "location": {
+        "sectionTitle": "Sijainnin tiedot",
+        "title": "Sijainnin nimi",
+        "address": "Lähin osoite",
+        "addressLine1": "Osoiterivi 1",
+        "addressLine2": "Osoiterivi 2",
+        "town": "Kaupunki/Kunta",
+        "stateOrProvince": "Maakunta",
+        "postcode": "Postinumero",
+        "country": "Maa",
+        "latitude": "Leveysaste",
+        "longitude": "Pituusaste",
+        "contactTelephone1": "Ensisijainen puhelinnumero",
+        "contactTelephone2": "Toissijainen puhelinnumero",
+        "contactEmail": "Sähköpostiosoite",
+        "map": "Kartta",
+        "streetView": "Katunäkymä",
+        "addressRelatedURL": "Verkkosivusto"
+      },
+      "generalComments": "Yleistä",
+      "accessComments": "Ohjeet",
+      "advancedDetails": "Lisätietoja",
+      "numberOfPoints": "Latauspaikkojen määrä",
+      "usageType": "Käyttö",
+      "usageCost": "Käyttökustannukset",
+      "operationalStatus": "Toiminallinen tila",
+      "datePlanned": "Suunniteltuna",
+      "dateLastConfirmed": "Viimeksi varmistettu",
+      "lastUpdated": "Viimeksi päivitetty",
+      "refNumber": "OpenChargeMap Ref",
+      "dataQualityLevel": "Tietojen laadun taso",
+      "importedDataNotice": "Huomautus: Nämä tiedot haetaan automaattisesti, muutokset tulisi tehdä suoraan datan tarjoajalle.",
+      "submissionStatus": "Lähetyksen tila",
+      "placesNearby": {
+        "sectionTitle": "Lähimmät paikat"
+      },
+      "mediaItems": {
+        "sectionTitle": "Valokuvat",
+        "addPrompt": "Lisää omia kuvia tastä sijainnista"
+      },
+      "metadataValues": {
+        "sectionTitle": "Tunnisteet"
+      },
+      "commentsAndRatings": {
+        "sectionTitle": "Kommentit ja arvostelut",
+        "zeroComments": "Ei käyttäjien huomautuksia",
+        "addPrompt": "Lisää kommentti tai tilan päivitys"
+      },
+      "equipment": {
+        "sectionTitle": "Laitteiden tiedot",
+        "connectionType": "Pistoke tyyppi",
+        "powerKW": "Max teho (KW)",
+        "powerLevel": "Tehon taso",
+        "quantity": "Määrä",
+        "supplyType": "Latauksen tyyppi",
+        "voltage": "Jännite",
+        "current": "Max Virta",
+        "comment": "Kommentit",
+        "reference": "Viittaus"
+      },
+      "dataProvider": {
+        "sectionTitle": "Tiedon tarjoaja",
+        "website": "Verkkosivusto",
+        "providersReference": "Tarjoajien Ref"
+      },
+      "operator": {
+        "sectionTitle": "Operaattori",
+        "operatorsReference": "Toimijoiden Ref"
+      }
+    },
+    "search": {
+      "sectionTitle": "Etsi",
+      "locationInput": "Sijainti",
+      "useMyLocation": "Etsi lähimmät",
+      "distance": "Etäisyys",
+      "chargingLevels": "Latauksen tehon taso",
+      "minPowerKW": "Minimi Teho (KW)",
+      "connectionTypes": "Liitäntä tyypit",
+      "networkOperators": "Latausoperaattori",
+      "countries": "Maa",
+      "submissionStatus": "Lähetyksen tila",
+      "usageTypes": "Käyttö",
+      "operationalStatusTypes": "Tila",
+      "performSearch": "Etsi",
+      "progress": "Etsitään…"
+    },
+    "navigation": {
+      "home": "Koti",
+      "browse": {
+        "sectionTitle": "Selaa",
+        "allLocations": "Kaikki Sijainnit",
+        "byCountry": "Maan mukaan",
+        "avaitingReview": "Odottaa hyväksyntää",
+        "recentActivity": "Viimeisin aktiivisuus",
+        "webApp": "Web sovellus mobiililaitteisiin",
+        "statistics": "Tilastot",
+        "awaitingReviewImported": null,
+        "editqueue": null
+      },
+      "develop": {
+        "sectionTitle": null,
+        "api": null,
+        "htmlWidgets": null,
+        "examples": "Esimerkit",
+        "getInvolved": "Osallistu",
+        "code": "Koodi (GitHub)",
+        "translate": "Auta kääntämisessä"
+      },
+      "discuss": "Keskustele",
+      "about": {
+        "termsPrivacy": null,
+        "contact": "Yhteystieto",
+        "guidance": null
+      },
+      "profile": {
+        "sectionTitle": "Oma profiili",
+        "subscriptions": null,
+        "comments": "Omat kommentit",
+        "uploads": "Omat lataukset"
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_10": null,
+        "value_20": null,
+        "value_30": null,
+        "value_50": null,
+        "value_75": null,
+        "value_100": null,
+        "value_150": null,
+        "value_200": null
+      },
+      "operatorInfo": {
+        "value_minus1": null,
+        "value_1": null,
+        "value_44": null,
+        "value_45": null
+      },
+      "usageType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null,
+        "value_4": null,
+        "value_5": null,
+        "value_6": null,
+        "value_7": null
+      },
+      "connectionType": {
+        "value_minus1": null,
+        "value_0": null
+      },
+      "levelType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null
+      },
+      "supplyType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_10": null,
+        "value_20": null,
+        "value_30": null
+      }
+    }
+  }
+}

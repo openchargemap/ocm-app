@@ -39,6 +39,10 @@ import { PoiEditorPage } from './pages/poi-editor/poi-editor.page';
 import { PoiEditorPageModule } from './pages/poi-editor/poi-editor.module';
 import { PoiEquipmentEditorComponent } from './components/poi-equipment-editor/poi-equipment-editor';
 
+import { Capacitor } from '@capacitor/core';
+import { AboutPage } from './pages/about/about.page';
+import { AboutPageModule } from './pages/about/about.module';
+
 export function tokenGetter() {
   return localStorage.getItem('access_token');
 }
@@ -61,7 +65,8 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage, MediaUploadPage, FavouriteEditorPage, PoiEditorPage, PoiEquipmentEditorComponent],
+  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage, 
+    MediaUploadPage, FavouriteEditorPage, PoiEditorPage, PoiEquipmentEditorComponent, AboutPage],
   // , JourneysPage, MediaUploadPage, POIDetailsPage, ProfilePage, SettingsPage, SignInPage
   imports: [
     BrowserModule,
@@ -89,7 +94,8 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     POIDetailsModule,
     PoiEditorPageModule,
     ProfileModule,
-    SettingsModule
+    SettingsModule,
+    AboutPageModule
   ],
   providers: [
     StatusBar,

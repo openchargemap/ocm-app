@@ -14,7 +14,7 @@
   </p>
   <ion-list>
     <ion-item *ngIf="isCountryFilterFeatureEnabled">
-      <ion-label>Filter By Country</ion-label>
+      <ion-label>{{'ocm.search.countries' | translate}}</ion-label>
       <ion-select [(ngModel)]="searchSettings.FilterOptionsByCountryId" multiple="false" cancelText="Cancel" okText="OK" (ionChange)="onCountryChange()">
         <ion-select value="">(All Countries)</ion-select>
         <ion-select-option *ngFor="let item of countries" [value]="item.ID">{{item.Title}}</ion-select-option>
@@ -54,38 +54,40 @@
     </ion-item>
 
     <ion-item>
-      <ion-label>Min/Max. Power (kW)</ion-label>
+      <ion-note>Min. Power (kW)</ion-note>
       <ion-range dualKnobs="true" min="1" max="500" pin="true" [(ngModel)]="powerRange" dark>
         <ion-icon slot="start" small name="flash"></ion-icon>
         <ion-icon slot="end" name="flash"></ion-icon>
       </ion-range>
+      <ion-note>Max. Power (kW)</ion-note>
     </ion-item>
   </ion-list>
   <h2>
     General Settings
   </h2>
-  <ion-item>
-    <ion-label>Show Distance in Kilometers</ion-label>
-    <ion-toggle [(ngModel)]="searchSettings.UseDistanceInKM"></ion-toggle>
-  </ion-item>
+
 
   <ion-item>
     <ion-label>Language</ion-label>
     <ion-select [(ngModel)]="searchSettings.Language" (ionChange)="onLanguageChange()" multiple="false">
-      <ion-select-option *ngFor="let item of languages" [value]="item">{{item}}</ion-select-option>
+      <ion-select-option *ngFor="let item of languages" [value]="item.code">{{item.title}}</ion-select-option>
 
     </ion-select>
   </ion-item>
 
   <ion-item>
-    <ion-label>Map Type</ion-label>
-    <ion-select [(ngModel)]="searchSettings.MapType"(ionChange)="onMapTypeChange()" multiple="false" cancelText="Cancel" okText="OK">
+    <ion-label>{{'ocm.details.location.map'| translate }}</ion-label>
+    <ion-select [(ngModel)]="searchSettings.MapType" (ionChange)="onMapTypeChange()" multiple="false" cancelText="Cancel" okText="OK">
       <ion-select-option value="ROADMAP">Road Map</ion-select-option>
       <ion-select-option value="SATELLITE">Satellite</ion-select-option>
     </ion-select>
   </ion-item>
-
-
+  <!--
+  <ion-item>
+      <ion-label>Show Distance in Kilometers</ion-label>
+      <ion-toggle [(ngModel)]="searchSettings.UseDistanceInKM"></ion-toggle>
+    </ion-item>
+-->
 </ion-content>
 <ion-footer>
   <ion-toolbar>

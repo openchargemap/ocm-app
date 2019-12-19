@@ -102,8 +102,7 @@
 
         <ng-container *ngIf="!skipPOICopy">
           <p class="instruction">You can copy the equipment settings from other sites operated by the same network operator or choose 'Next' to skip this step:
-            <ion-button (click)="skipCopyingPOI()" color="light" size="small">Skip<ion-icon name="fastforward" slot="end"></ion-icon>
-            </ion-button>
+       
           </p>
 
           <ion-item>
@@ -138,7 +137,7 @@
             <ng-container *ngIf="!selectedTemplatePOI">
               <ng-container *ngIf="templateSites.length>0">
 
-                <h3>Similar Sites</h3>
+                <h4>Similar Sites</h4>
                 <app-poi-list [enableCopyOption]='true' [poiList]='templateSites' (onCopy)='useTemplatePOI($event)'>
 
                 </app-poi-list>

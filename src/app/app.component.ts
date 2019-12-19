@@ -16,20 +16,13 @@ import { PoiEditorPage } from "./pages/poi-editor/poi-editor.page";
 import { Analytics } from "./services/Analytics";
 import { GeoLatLng } from "./model/AppModels";
 import { Utils } from "./core/Utils";
+import { AboutPage } from "./pages/about/about.page";
 
 @Component({
   selector: "app-root",
   templateUrl: "app.component.html"
 })
 export class AppComponent {
-  public appPages = [
-    {
-      title: "Search",
-      url: "/search",
-      icon: "home"
-    }
-
-  ];
 
   public enabledFeatures: string[];
 
@@ -71,11 +64,17 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+
+      this.translate.addLangs(this.appManager.getLanguages().map(l => l.code));
       // this language will be used as a fallback when a translation isn't found in the current language
       this.translate.setDefaultLang("en");
 
       // the lang to use, if the lang isn't available, it will use the current loader to get them
-      this.translate.use("en");
+      if (this.appManager.searchSettings.Language != null) {
+        this.translate.use(this.appManager.searchSettings.Language);
+      } else {
+        this.translate.use("en");
+      }
 
       this.translate
         .get("ocm.search.performSearch")
@@ -116,9 +115,7 @@ export class AppComponent {
     await modal.present();
   }
 
-  async add(pos?: GeoLatLng) {
-    this.mapping.unfocusMap();
-
+  async continueAdd(pos?: GeoLatLng) {
     const modal = await this.modalController.create({
       component: PoiEditorPage, componentProps: { startPos: pos }
     });
@@ -129,6 +126,30 @@ export class AppComponent {
     });
 
     await modal.present();
+  }
+
+  async add(pos?: GeoLatLng) {
+    this.mapping.unfocusMap();
+    if (this.appManager.isUserAuthenticated(true)) {
+
+      await this.continueAdd(pos);
+
+    } else {
+      const modal = await this.modalController.create({
+        component: SignInPage
+      });
+
+      modal.onDidDismiss().then(async data => {
+        // focus map again..
+        this.mapping.focusMap();
+        if (this.appManager.isUserAuthenticated(true)) {
+          await this.continueAdd(pos);
+        }
+      });
+
+      return await modal.present();
+    }
+
   }
 
   async signIn() {
@@ -144,7 +165,7 @@ export class AppComponent {
       this.appManager.isUserAuthenticated(true);
     });
 
-    await modal.present();
+    return await modal.present();
   }
 
   async signOut() {
@@ -181,5 +202,19 @@ export class AppComponent {
     await modal.present();
   }
 
+  async about() {
+    this.mapping.unfocusMap();
+
+    const modal = await this.modalController.create({
+      component: AboutPage
+    });
+
+    modal.onDidDismiss().then(data => {
+      // focus map again..
+      this.mapping.focusMap();
+    });
+
+    await modal.present();
+  }
 
 }

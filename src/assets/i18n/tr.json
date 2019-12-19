@@ -1,0 +1,242 @@
+{
+  "_langTitle": "Türkçe",
+  "_langCode": "tr",
+  "ocm": {
+    "general": {
+      "shortDescription": "elektrikli araçların şarj yerlerinin küresel genel kaydı",
+      "linkWebApp": "Bizim Web uygulaması kullanan arama konumları",
+      "linkBrowsePOI": "Tüm konumlara göz atınız",
+      "browsePOI": "Şarj edebilecek yerlere göz atınız",
+      "loadingProgress": "Yükleniyor...",
+      "addLocation": "Konum ekle",
+      "addItem": "Ekle",
+      "favourites": "Favoriler",
+      "settings": "Ayarlar",
+      "about": "Hakkımızda",
+      "signIn": "Oturum Aç",
+      "signOut": "Oturumu Kapat"
+    },
+    "details": {
+      "sectionTitle": "Şarj yeri",
+      "location": {
+        "sectionTitle": "Konum ayrıntıları",
+        "title": "Konumun başlığı",
+        "address": "En yakın adres",
+        "addressLine1": "Adres satırı 1",
+        "addressLine2": "Adres satırı 2",
+        "town": "İlçe/il",
+        "stateOrProvince": "İl",
+        "postcode": "Posta kodu",
+        "country": "Ülke",
+        "latitude": "Enlem",
+        "longitude": "Boylam",
+        "contactTelephone1": "Birincil ilgili kişi telefon",
+        "contactTelephone2": "İkincil ilgili kişi telefon",
+        "contactEmail": "İletişim e-posta",
+        "map": "Harita",
+        "streetView": "Sokak görünümü",
+        "addressRelatedURL": "Web sitesi"
+      },
+      "generalComments": "Genel bilgi",
+      "accessComments": "Erişim bilgileri",
+      "advancedDetails": "Ek bilgi",
+      "numberOfPoints": "İstasyon/yuva sayısı",
+      "usageType": "Kullanım",
+      "usageCost": "Kullanım maliyeti",
+      "operationalStatus": "Çalışma durumu",
+      "datePlanned": "Planlanan tarihi",
+      "dateLastConfirmed": "Son doğrulama tarihi",
+      "lastUpdated": "Son Güncellenme Tarihi",
+      "refNumber": "OpenChargeMap Referansı",
+      "dataQualityLevel": "Veri kalite düzeyi",
+      "importedDataNotice": "Not: Bu veri otomatik olarak kaynaklı, değişiklik veri sağlayıcısına doğrudan gönderilmelidir.",
+      "submissionStatus": "Teslim durumu",
+      "placesNearby": {
+        "sectionTitle": "Yakın yerler"
+      },
+      "mediaItems": {
+        "sectionTitle": "Fotoğraflar",
+        "addPrompt": "Bu konum için kendi fotoğraflarınızı yükleyin"
+      },
+      "metadataValues": {
+        "sectionTitle": "Ek Etiketler"
+      },
+      "commentsAndRatings": {
+        "sectionTitle": "Yorum ve derecelendirme",
+        "zeroComments": "Gönderilen kullanıcı yorum yok",
+        "addPrompt": "Bir yorum ya da hızlı durum güncelleştirme ekleme"
+      },
+      "equipment": {
+        "sectionTitle": "Ekipman detayları",
+        "connectionType": "Bağlantı türü",
+        "powerKW": "Max güç (KW)",
+        "powerLevel": "Düzey",
+        "quantity": "Miktar",
+        "supplyType": "Kaynağın türü",
+        "voltage": "Gerilim",
+        "current": "En büyük geçerli",
+        "comment": "Yorumlar",
+        "reference": "Referans"
+      },
+      "dataProvider": {
+        "sectionTitle": "Veri sağlayıcısı",
+        "website": "Web sitesi",
+        "providersReference": "Referans sağlayıcı"
+      },
+      "operator": {
+        "sectionTitle": "Ağ/operatör",
+        "operatorsReference": "Operatör Referansı"
+      }
+    },
+    "search": {
+      "sectionTitle": "Arama",
+      "locationInput": "Konumu",
+      "useMyLocation": "Yakınımdaki arama",
+      "distance": "Mesafe",
+      "chargingLevels": "Düzeyinde şarj oluyor",
+      "minPowerKW": "Min. güç kW",
+      "connectionTypes": "Bağlantı türleri",
+      "networkOperators": "Ağ/operatör",
+      "countries": "Ülke",
+      "submissionStatus": "Teslim durumu",
+      "usageTypes": "Kullanım",
+      "operationalStatusTypes": "Durumu",
+      "performSearch": "Arama",
+      "progress": "Aranıyor..."
+    },
+    "navigation": {
+      "home": "Ana sayfa",
+      "browse": {
+        "sectionTitle": "Gözat",
+        "allLocations": "Tüm konumlar",
+        "byCountry": "Ülkeye göre",
+        "avaitingReview": "Gözden geçirme bekliyor",
+        "recentActivity": "Son etkinlik",
+        "webApp": "Mobil cihazlar için Web Uygulaması",
+        "statistics": "İstatistik",
+        "awaitingReviewImported": "Alınan konumlar onay bekliyor",
+        "editqueue": "Onay bekleyen düzenlemeler"
+      },
+      "develop": {
+        "sectionTitle": "Geliştirmek",
+        "api": "Uygulama programlama arayüzü (API)",
+        "htmlWidgets": "HTML widget'ları",
+        "examples": "Örnekler",
+        "getInvolved": "Bize katılın",
+        "code": "Kodu gör (GitHub)",
+        "translate": "Çeviriye yardım et"
+      },
+      "discuss": "Tartışma",
+      "about": {
+        "termsPrivacy": "Şartlar ve gizlilik",
+        "contact": "İletişim",
+        "guidance": "Katkıda bulunanlar için Kılavuzu"
+      },
+      "profile": {
+        "sectionTitle": "Profilim",
+        "subscriptions": "Aboneliğim",
+        "comments": "Yorumlarım",
+        "uploads": "Yüklediklerim"
+      }
+    },
+    "infoText": {
+      "supplyData": {
+        "contactUs": "İletişim",
+        "getStarted": "başlamak için"
+      },
+      "stats": {
+        "locations": "Mekanlar",
+        "locationSummary": "{totalStations} {totalLocations} konumlar arasında şarj istasyonları."
+      },
+      "shortProjectSummary": "Açık ücret harita barındırılan ve işletmeler, bir topluluk tarafından desteklenen bir hizmettir ticari olmayan, kar amacı gütmeyen hayır kurumları, geliştiriciler ve dünyanın her yerinden ilgili taraflar.",
+      "getApp": "Uygulamaya sahip ol",
+      "tip": "İpucu:",
+      "searching": {
+        "quickWay": "Senin en yakın şarj bulmak için hızlı bir yol sadece ihtiyacın olursa yer sen-ebilmek da denemek bizim",
+        "webApp": "Web uygulaması",
+        "searchAppStore": "özellikle üstünde hareket eden aygıt. Aygıtınız App Store çevresinde taşıyabilir bir sürüm için de arama yapabilirsiniz."
+      },
+      "sponsors": "Finansman ve sponsorlar arıyoruz. Bize yardım edebilir misiniz? {link: daha fazla bilgi}.",
+      "termsNotice": "Bizim hizmet kullanarak veya açık ücret harita bilgileri gönderme Eğer bizim {link: Standart şartları, gizlilik politikası ve lisans} kabul.",
+      "about": {
+        "ourService": "Hizmetlerimiz",
+        "aim": {
+          "title": "Amacımız",
+          "p1": "Amacımız toplum ile geliştirmek ve yüksek kaliteli, ekipman yerleri genel olarak şarj kamu, ücretsiz, açık veritabanı sağlamak için çalışmaktır.",
+          "p2": "Kullanıcılarımız bağımsız konumu haritalar/Web siteleri/uygulamalar şarj çakışan yayılması önlemek için ve ekipman yer bilgisi şarj etmek için başvuru güvenilir tek bir noktadan (mümkün olduğunca) sağlamak için tasarlanmıştır. Diğer veri sağlayıcıları ile rekabet yerine işbirliği ve veri paylaşımı ve de-çoğaltma çabaları karşılığında onlara, hizmet sağlamak için nişan al."
+        },
+        "whyOCM": {
+          "title": "Neden OpenChargeMap kullanıyorsunuz?",
+          "content": "Açık ücret harita ve ilgili apps kullanarak kayıt defterindeki bilgileri sağlayan akran, düzenlemeleri, eklemeleri, Yorumlar, Fotoğraflar ve diğer kullanıcılara hizmet teşvik geliştirmek için yardımcı oluyor. OCM parası üzerinden diğerleri sağlayıcıları OCM'ın amacı açıkça bilgi paylaşmak, kendileri için (veya kendi App vb sınırları içinde) bilgilerini tutmak ticari satıcıları var ise ticari pazarlanabilir bir veri kümesi korumak için sipariş olduğunu."
+        },
+        "funding": {
+          "title": "Fonlar",
+          "p1": "Açık ücret harita geliştirilmiş ve gönüllüler tarafından işletilmektedir. Projeyi desteklemeye veya belirli iş lütfen fonuna fon sunabilir {link-contact: get temas}. Finansman ve Proje maliyeti hakkında daha fazla bilgi {link-funding: kullanılabilir}."
+        },
+        "developersContributors": {
+          "sectionTitle": "Geliştiriciler ve katkıda bulunanlar",
+          "p1": "Bizim {link_github:GitHub} projesi tartışmak ve sistemimiz ve planları etkisi dış teknik katkıda bulunanlar için bir kanal sağlar. {link_google_plus:Google+} topluluğumuzun fikir alışverişi ve ilgili taraflar geribildirim toplamak bizim birincil yoludur.",
+          "p2": "{link_code:code}, bizim ana katılımcılar listesini bir göz atabilirsiniz {link_translations:translations} ve {link_data:data}."
+        },
+        "projectStats": {
+          "sectionTitle": "Proje istatistikleri",
+          "general": "Genel istatistikler şarj harita aç {link: veri ve kullanım} için kullanılabilir."
+        },
+        "dataSources": {
+          "title": "Veri kaynakları",
+          "p1": "Açık ücret harita sistemi ve ilgili hizmetler kullanıma sunulan veri birçok konumlardan kaynaklanacağı ve genellikle doğrudan sağlanan (\"kalabalık kaynaklı\"), kullanıcılarımızın ve bu hizmetlerimizi kullanan uygulamalar tarafından.",
+          "p2": "Aşağıdaki sitelere katkılarından dolayı teşekkür ederiz:"
+        }
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Hiçbiri seçili değil)",
+        "value_0": "Bilinmeyen",
+        "value_10": "Şu anda kullanılabilir (otomatik durum)",
+        "value_20": "Şu anda kullanımda (durumu otomatik)",
+        "value_30": "Geçici olarak kullanılamıyor",
+        "value_50": "Operasyonel",
+        "value_75": "Kısmen operasyonel (karışık)",
+        "value_100": "Operasyonel değil",
+        "value_150": "Gelecek tarih için planlanan",
+        "value_200": "Kaldırıdı"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Hiçbiri seçili değil)",
+        "value_1": "(Bilinmeyen operatör)",
+        "value_44": "(Özel Konut/bireysel)",
+        "value_45": "(İşletme sahibi yeri)"
+      },
+      "usageType": {
+        "value_minus1": "(Hiçbiri seçili değil)",
+        "value_0": "(Bilinmeyen)",
+        "value_1": "Halka açık",
+        "value_2": "Özel - kısıtlı erişim",
+        "value_3": "Özel - bilgilendirme gerekli",
+        "value_4": "Halka açık - üyelik gerekiyor",
+        "value_5": "Halka açık - ödeme yeri",
+        "value_6": "Özel - personel, ziyaretçi ya da müşteriler için",
+        "value_7": "Halka açık - bilgilendirme gerekli"
+      },
+      "connectionType": {
+        "value_minus1": "(Hiçbiri seçili değil)",
+        "value_0": "(Bilinmeyen)"
+      },
+      "levelType": {
+        "value_minus1": "(Hiçbiri seçili değil)",
+        "value_0": "(Bilinmeyen)",
+        "value_1": "Düzey 1: Düşük (2kW altında)",
+        "value_2": "Düzey 2: Orta (2kW üzerinde)",
+        "value_3": "Düzey 3: Yüksek (40kW üzerinde)"
+      },
+      "supplyType": {
+        "value_minus1": "(Hiçbiri seçili değil)",
+        "value_0": "(Bilinmeyen)",
+        "value_10": "AA (Monofaz)",
+        "value_20": "AA (Trifaz)",
+        "value_30": "DA"
+      }
+    }
+  }
+}

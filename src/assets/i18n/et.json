@@ -1,0 +1,192 @@
+{
+  "_langTitle": "Estonian/Eesti",
+  "_langCode": "et",
+  "ocm": {
+    "general": {
+      "shortDescription": "ülemailmne avalik elektriauto laadijate register",
+      "linkWebApp": "Otsi Asukohti Kasutades Meie Veebi Appi",
+      "linkBrowsePOI": "Otsi laadijat",
+      "browsePOI": "Sirvi Laadijate Asukohti",
+      "loadingProgress": "Laadin...",
+      "addLocation": "Lisa laadija",
+      "addItem": "Lisa",
+      "favourites": "Lemmikud",
+      "settings": "Seaded",
+      "about": "Meist",
+      "signIn": "Logi Sisse",
+      "signOut": "Logi Välja"
+    },
+    "details": {
+      "sectionTitle": "Charging Location",
+      "location": {
+        "sectionTitle": "Asukoha Üksikasjad",
+        "title": "Nimetus",
+        "address": "Lähim Aadress",
+        "addressLine1": "Aadress 1",
+        "addressLine2": "Aadress 2",
+        "town": "Linn/Asula",
+        "stateOrProvince": "Maakond",
+        "postcode": "Postikood/ZIP",
+        "country": "Riik",
+        "latitude": "Laiuskraad",
+        "longitude": "Pikkuskraad",
+        "contactTelephone1": "Telefon 1",
+        "contactTelephone2": "Telefon 2",
+        "contactEmail": "E-post",
+        "map": "Kaart",
+        "streetView": "Google Street View",
+        "addressRelatedURL": "Veebileht"
+      },
+      "generalComments": "Üldine Info",
+      "accessComments": "Ligipääsu Info",
+      "advancedDetails": "Lisa Info",
+      "numberOfPoints": "Laadijate Arv",
+      "usageType": "Kasutusviis",
+      "usageCost": "Kasutamise maksumus",
+      "operationalStatus": "Seisukord",
+      "datePlanned": "Valmimise kuupäev",
+      "dateLastConfirmed": "Viimati kinnitatud",
+      "lastUpdated": "Viimati Uuendatud",
+      "refNumber": "OpenChargeMap Ref",
+      "dataQualityLevel": "Info usaldusväärsus",
+      "importedDataNotice": "Märkus: Andmed on hangitud automaatselt, muudatused tuleks saata andmepakkujale otse.",
+      "submissionStatus": "Submission Status",
+      "placesNearby": {
+        "sectionTitle": "Huvitavat Läheduses"
+      },
+      "mediaItems": {
+        "sectionTitle": "Fotod",
+        "addPrompt": "Lae üles oma pilt sellest asukohast"
+      },
+      "metadataValues": {
+        "sectionTitle": "Additional Tags"
+      },
+      "commentsAndRatings": {
+        "sectionTitle": "Arvustused ja Hinnangud",
+        "zeroComments": "Ühtegi arvamust pole veel postitatud",
+        "addPrompt": "Avalda arvamust või teata seisukorrast"
+      },
+      "equipment": {
+        "sectionTitle": "Laadijast Täpsemalt",
+        "connectionType": "Pistiku Tüüp",
+        "powerKW": "Max Võimsus (KW)",
+        "powerLevel": "Võimsus",
+        "quantity": "Kogus",
+        "supplyType": "Voolu Tüüp",
+        "voltage": "Max Vool (V)",
+        "current": "Max Võimsus (A)",
+        "comment": "Kommentaarid",
+        "reference": "Viide"
+      },
+      "dataProvider": {
+        "sectionTitle": "Andmepakkuja",
+        "website": "Veebileht",
+        "providersReference": "Pakkuja ID"
+      },
+      "operator": {
+        "sectionTitle": "Kett/Operaator",
+        "operatorsReference": "Operaatori ID"
+      }
+    },
+    "search": {
+      "sectionTitle": "Otsi",
+      "locationInput": "Asukoht",
+      "useMyLocation": "Otsi Minu Lähedalt",
+      "distance": "Kaugus",
+      "chargingLevels": "Laadija Võimsus",
+      "minPowerKW": "Min. Võimsus (kW)",
+      "connectionTypes": "Pistiku Tüübid",
+      "networkOperators": "Kett/Operaator",
+      "countries": "Riik",
+      "submissionStatus": "Submission Status",
+      "usageTypes": "Kasutus",
+      "operationalStatusTypes": "Olek",
+      "performSearch": "Otsi",
+      "progress": "Otsin..."
+    },
+    "navigation": {
+      "home": "Avaleht",
+      "browse": {
+        "sectionTitle": "Sirvi",
+        "allLocations": "Kõik asukohad",
+        "byCountry": "Riigi järgi",
+        "avaitingReview": "Ootab tagasisidet",
+        "recentActivity": "Viimased tegevused",
+        "webApp": "APP mobiilile",
+        "statistics": "Statistika",
+        "awaitingReviewImported": "Automaatsisestused, mis ootavad ülevaatamist",
+        "editqueue": "Muudatused ootavad ülevaatamist"
+      },
+      "develop": {
+        "sectionTitle": "Arenda",
+        "api": "API rakendused",
+        "htmlWidgets": "HTML lisad",
+        "examples": "Näited",
+        "getInvolved": "Löö kaasa!",
+        "code": "Vaata koodi (GitHub)",
+        "translate": "Aita tõlkida"
+      },
+      "discuss": "Arutle",
+      "about": {
+        "termsPrivacy": "Tingimused & privaatsus",
+        "contact": "Kontakt",
+        "guidance": "Juhend Kaastöötajale"
+      },
+      "profile": {
+        "sectionTitle": "Minu profiil",
+        "subscriptions": "Minu arvustused",
+        "comments": "Minu kommentaarid",
+        "uploads": "Minu üleslaadimised"
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Valimata)",
+        "value_0": "(Teadmata)",
+        "value_10": "Hetkel Vaba",
+        "value_20": "Hetkel Kasutuses",
+        "value_30": "Ajutiselt Mittetöötav",
+        "value_50": "Töökorras",
+        "value_75": "Osaliselt Töökorras",
+        "value_100": "Mittetöötav",
+        "value_150": "Tulevikus Avatav",
+        "value_200": "Likvideeritud"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Valimata)",
+        "value_1": "(Teenusepakkuja Teadmata)",
+        "value_44": "(Eravaldus/Järsku Jagab)",
+        "value_45": "(Klienditeenindaja kohapeal)"
+      },
+      "usageType": {
+        "value_minus1": "(Valimata)",
+        "value_0": "(Teadmata)",
+        "value_1": "Avalik",
+        "value_2": "Eravaldus - Ligipääsematu",
+        "value_3": "Eravaldus - Teavitus Vajalik",
+        "value_4": "Avalik - Kliendi Staatus Vajalik",
+        "value_5": "Avalik - Maksa Kohapeal",
+        "value_6": "Eravaldus - Külalistele ja Töötajatele",
+        "value_7": "Avalik - Teavitus Vajalik"
+      },
+      "connectionType": {
+        "value_minus1": "(Valimata)",
+        "value_0": "(Teadmata)"
+      },
+      "levelType": {
+        "value_minus1": "(Valimata)",
+        "value_0": "(Teadmata)",
+        "value_1": "Level 1: Aeglane (Alla 2kW)",
+        "value_2": "Level 2: Keskmine (Üle 2kW)",
+        "value_3": "Level3: Kiirlaadija (Üle 40kW)"
+      },
+      "supplyType": {
+        "value_minus1": "(Valimata)",
+        "value_0": "(Teadmata)",
+        "value_10": "AC(1-Faas)",
+        "value_20": "AC(3-Faasi)",
+        "value_30": "DC"
+      }
+    }
+  }
+}

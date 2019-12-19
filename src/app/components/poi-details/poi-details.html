@@ -9,7 +9,7 @@
       <div *ngIf="connectionSummary"><small>{{connectionSummary}}</small></div>
       <div *ngIf="poi.OperatorInfo"><small>{{poi.OperatorInfo.Title}}</small></div>
 
-      <ion-badge color="primary">{{avgRating | number:'1.1-1'}}</ion-badge>
+      <ion-badge color="primary" title="Average User Rating">{{avgRating | number:'1.1-1'}}</ion-badge>
     </div>
     <ion-fab vertical="top" horizontal="end" slot="fixed">
       <ion-fab-button>
@@ -265,9 +265,15 @@
 
           </p>
           <p *ngIf="item.Rating"><span class="label">Rating:</span> <span class="details">{{item.Rating}} out of 5</span></p>
-          <p *ngIf="item.CheckinStatusType" class="details">
-
-            {{item.CheckinStatusType.Title}}</p>
+          <p *ngIf="item.CheckinStatusType">
+            <ng-container *ngIf="item.CheckinStatusType.IsPositive===true">
+              <ion-icon name="checkmark-circle" color="success" style="font-size:2em;"></ion-icon>
+            </ng-container>
+            <ng-container *ngIf="item.CheckinStatusType.IsPositive===false">
+              <ion-icon name="close-circle" color="danger"></ion-icon>
+            </ng-container>
+            {{item.CheckinStatusType.Title}}
+          </p>
 
         </ion-card-content>
       </ion-card>

@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
 import { Events, NavController, Platform, ToastController, LoadingController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
-import { UserProfile, SubmissionType, SearchSettings, Journey, WayPoint, GeoLatLng } from '../model/AppModels';
+import { UserProfile, SubmissionType, SearchSettings, Journey, WayPoint, GeoLatLng, Language } from '../model/AppModels';
 import { SubmissionQueue } from './SubmissionQueue';
 import { ReferenceDataManager } from './ReferenceDataManager';
 import { JourneyManager } from './JourneyManager';
@@ -90,13 +90,14 @@ export class AppManager {
    */
   public loadSearchSettings() {
     if (localStorage.getItem('searchSettings') != null) {
+      this.searchSettings = new SearchSettings();
       try {
         let settings = JSON.parse(localStorage.getItem('searchSettings'));
 
         // clone settings into SearchSettings instance
-        Object.assign(new SearchSettings(), settings);
+        Object.assign(this.searchSettings, settings);
       } catch (ex) {
-        this.searchSettings = new SearchSettings();
+        // failed to load settings
       }
     }
   }
@@ -158,8 +159,31 @@ export class AppManager {
     localStorage.setItem('searchSettings', JSON.stringify(this.searchSettings));
   }
 
-  public getLanguages(): Array<string> {
-    return this.translateService.getLangs();
+  public getLanguages(): Array<Language> {
+    let languages = [
+      { 'code': 'ar', 'title': 'العربية / Arabic' },
+      { 'code': 'bg', 'title': 'Bulgarian / Български' },
+      { 'code': 'cs', 'title': 'Czech / Čeština' },
+      { 'code': 'de', 'title': 'German / Deutsch' },
+      { 'code': 'el', 'title': 'Greek / Ελληνική' },
+      { 'code': 'en', 'title': 'English' },
+      { 'code': 'es', 'title': 'Spanish / Español' },
+      { 'code': 'et', 'title': 'Estonian / Eesti' },
+      { 'code': 'fi', 'title': 'Finnish / Suomi' },
+      { 'code': 'fr', 'title': 'French / Français' },
+      { 'code': 'fy', 'title': 'West Frisian / Frysk' },
+      { 'code': 'hu', 'title': 'Hungarian / Magyar' },
+      { 'code': 'it', 'title': 'Italian / Italiano' },
+      { 'code': 'ja', 'title': 'Japanese / 日本語' },
+      { 'code': 'lt', 'title': 'Lithuanian / Lietuvių' },
+      { 'code': 'nl', 'title': 'Dutch / Nederlands' },
+      { 'code': 'pt', 'title': 'Portuguese / português' },
+      { 'code': 'ru', 'title': 'Russian / Pусский' },
+      { 'code': 'sk', 'title': 'Slovak / Slovenčina' },
+      { 'code': 'tr', 'title': 'Turkish / Türkçe' },
+      { 'code': 'zh', 'title': 'Chinese / 中国的' },
+    ];
+    return languages;
   }
 
   public setLanguage(languageCode: string) {

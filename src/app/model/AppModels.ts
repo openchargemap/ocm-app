@@ -11,3 +11,9 @@ export { CoreReferenceData } from './CoreReferenceData';
 export { ConnectionInfo } from './CoreDataModel';
 export { POISearchParams } from './POISearchParams';
 export { SyncItem } from './SyncItem';
+
+
+export interface Language {
+    code: string;
+    title: string;
+}

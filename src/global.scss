@@ -39,3 +39,16 @@ background-color:transparent;
   color: var(--ion-color-medium);
   font-size: 80%;
 }
+
+
+.alert-radio-label.sc-ion-alert-md, .alert-checkbox-label.sc-ion-alert-md {
+  padding-left: 52px;
+  padding-right: 26px;
+  padding-top: 13px;
+  padding-bottom: 13px;
+  flex: 1;
+  color: var(--ion-color-step-850, #262626);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: pre-line;
+}

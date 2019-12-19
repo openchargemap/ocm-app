@@ -105,7 +105,7 @@ export class Utils {
 
     /// Begin Standard data formatting methods ///
     static formatMapLinkFromPosition(poi, searchLatitude, searchLongitude, distance, distanceunit) {
-        return '<a href="http://maps.google.com/maps?saddr='
+        return '<a href="https://maps.google.com/maps?saddr='
             + searchLatitude + ',' + searchLongitude + '&daddr='
             + poi.AddressInfo.Latitude + ',' + poi.AddressInfo.Longitude + '">Map (' + Math.ceil(distance) + ' ' + distanceunit + ')</a>';
     }

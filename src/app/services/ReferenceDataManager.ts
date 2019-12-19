@@ -403,11 +403,11 @@ export class ReferenceDataManager {
         if (poi.UserComments != null) {
             for (let c = 0; c < poi.UserComments.length; c++) {
                 const comment = poi.UserComments[c];
-                if (comment.CommentTypeID != null && (refreshAll || comment.CommentType != null)) {
+                if (comment.CommentTypeID != null && (refreshAll || comment.CommentType == null)) {
                     comment.CommentType = refData.getCommentTypeByID(comment.CommentTypeID);
                 }
-                if (comment.CheckinStatusTypeID != null && (refreshAll || comment.CheckinStatusType != null)) {
-                    comment.CheckinStatusTypeID = refData.getCheckinStatusTypeByID(comment.CheckinStatusTypeID);
+                if (comment.CheckinStatusTypeID != null && (refreshAll || comment.CheckinStatusType == null)) {
+                    comment.CheckinStatusType = refData.getCheckinStatusTypeByID(comment.CheckinStatusTypeID);
                 }
                 poi.UserComments[c] = comment;
             }

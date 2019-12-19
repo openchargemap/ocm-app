@@ -221,7 +221,9 @@ export class SearchPage implements OnInit, AfterViewInit {
     });
 
     this.events.subscribe('ocm:poi:selected', (args) => {
-      this.viewPOIDetails(args);
+
+      let poi = this.getPOIByID(args.poiId);
+      this.viewPOIDetails(args, poi);
     });
 
 
@@ -382,41 +384,62 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   }
 
-  viewPOIDetails(data: any) {
+  viewPOIDetails(data: any, p: any) {
 
     this.logging.log('Viewing/fetching [' + this.poiViewMode + '] POI Details ' + data.poiId);
 
-    this.poiManager.getPOIById(data.poiId, true).then(poi => {
+    if (p != null) {
 
-      this.logging.log('Got POI Details ' + poi.ID);
+      this.mapping.unfocusMap();
 
-      if (this.poiViewMode === 'modal') {
-        this.searchOnDemand = false; // suspend interactive searches while modal dialog active
+      this.modalController.create({ component: POIDetailsPage, componentProps: { item: p } })
+        .then(m => {
 
-        this.modalController.create({ component: POIDetailsPage, componentProps: { item: poi } })
-          .then(m => {
-
-            m.onDidDismiss().then(() => {
-              // should focus map again..
-              this.logging.log('Dismissing POI Details.');
-              this.mapping.focusMap();
-              this.searchOnDemand = true;
-            });
-
-            m.present();
+          m.onDidDismiss().then(() => {
+            // should focus map again..
+            this.logging.log('Dismissing POI Details.');
+            this.mapping.focusMap();
+            this.searchOnDemand = true;
           });
 
-        this.mapping.unfocusMap();
-      }
+          m.present();
+        });
 
-      if (this.poiViewMode === 'side') {
-        this.selectedPOI = poi;
-      }
+    } else {
+      this.poiManager.getPOIById(data.poiId, true).then(poi => {
 
-    }, (err) => {
+        this.logging.log('Got POI Details ' + poi.ID);
 
-      this.appManager.showToastNotification('POI Details not available');
-    });
+        if (this.poiViewMode === 'modal') {
+          this.searchOnDemand = false; // suspend interactive searches while modal dialog active
+
+          this.modalController.create({ component: POIDetailsPage, componentProps: { item: poi } })
+            .then(m => {
+
+              m.onDidDismiss().then(() => {
+                // should focus map again..
+                this.logging.log('Dismissing POI Details.');
+                this.mapping.focusMap();
+                this.searchOnDemand = true;
+              });
+
+              m.present();
+            });
+
+          this.mapping.unfocusMap();
+        }
+
+        if (this.poiViewMode === 'side') {
+          this.selectedPOI = poi;
+        }
+
+      }, (err) => {
+
+        this.appManager.showToastNotification('POI Details not available');
+      });
+    }
+
+
   }
 
   closePOIDetails() {

@@ -215,7 +215,7 @@ export class MapBoxMapProvider implements IMapProvider {
             (<any>markerElement).poi = poi;
             markerElement.addEventListener('click', (el) => {
               const clickedPOI = (<any>el.currentTarget).poi;
-              this.events.publish('ocm:poi:selected', { poi: clickedPOI, poiId: clickedPOI.ID });
+              this.events.publish('ocm:poi:selected', { poiId: clickedPOI.ID });
             });
 
 
