@@ -33,6 +33,7 @@ export class SettingsPage implements OnInit {
     if (this.powerRange.upper == 0) { this.powerRange.upper = 500; }
 
     this.appManager.analytics.viewEvent('Settings');
+    
   }
 
   get useFilteredOptions(): boolean {

@@ -17,6 +17,7 @@ export class SearchSettings {
   Language: string;
   FilterOptionsByCountryId: number;
   MapType: MapType;
+  EnableAdvancedEditorFeatures: boolean;
 
   constructor() {
     this.OperatorList = [];
@@ -25,11 +26,11 @@ export class SearchSettings {
     this.UsageTypeList = [];
     this.StatusTypeList = [];
     this.HasActiveFilters = false;
-    // TODO: reference data filtered by country (most popular for given country ids)
 
     this.FilterOptionsByCountryId = null;
     this.UseDistanceInKM = true;
     this.MapType = 'ROADMAP';
+    this.EnableAdvancedEditorFeatures = false;
   }
 
   public LoadSettings() {
