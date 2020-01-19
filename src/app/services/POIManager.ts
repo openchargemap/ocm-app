@@ -82,7 +82,8 @@ export class POIManager {
     // still not found it, fetch via api
     const params = <POISearchParams>{
       poiIdList: [poiId],
-      enableCaching: !skipCached
+      enableCaching: !skipCached,
+      includeComments: true
     };
 
     const results = await this.api.fetchPOIListByParam(params);
