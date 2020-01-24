@@ -21,7 +21,7 @@ Feature toggles are defined by the `enabledFeatures` array, the app will check f
 3. To run in desktop browser: `ionic serve`
 
 ## Web production build:
-Run `ionic cordova build browser --prod` which will output html build to www folder
+Run `ionic build --prod` which will output html build to www folder. When updating live app, preserve web.config and favicon.
 
 ## Platform Specifics
 - Web uses a web/js mapping provider for the browser version

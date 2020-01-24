@@ -9,6 +9,7 @@ import { PoiDetails } from '../../components/poi-details/poi-details';
 import { Mapping } from '../../services/mapping/Mapping';
 import { PoiLocationEditorComponent } from '../../components/poi-location-editor/poi-location-editor';
 import { PoiEquipmentEditorComponent } from '../../components/poi-equipment-editor/poi-equipment-editor';
+import { StandardStatusTypes } from '../../model/StandardEnumTypes';
 
 interface ValidationResult {
   isValid: boolean;
@@ -38,7 +39,12 @@ export class PoiEditorPage implements OnInit {
 
   startPos: GeoLatLng;
   useFilteredConnectionTypes: boolean = true;
+
   useFilteredOperators: boolean = true;
+  operatorCache: OperatorInfo[] = [];
+  operatorSearchResults: OperatorInfo[] = [];
+  operatorSearchKeyword = "";
+  selectedOperator: OperatorInfo = null;
 
   templateSites: Array<ExtendedPOIDetails> = [];
   nearbySites: Array<ExtendedPOIDetails> = [];
@@ -101,7 +107,7 @@ export class PoiEditorPage implements OnInit {
       DataProviderID: 1,
       DataProvidersReference: null,
       OperatorsReference: null,
-      OperatorID: null,
+      OperatorID: 1,
       UsageCost: null,
       UsageTypeID: 4, // public - membership required
       NumberOfPoints: 1,
@@ -183,6 +189,10 @@ export class PoiEditorPage implements OnInit {
       }
     }
 
+    if (!this.operatorCache || this.operatorCache.length == 0) {
+      this.operatorCache = this.appManager.referenceDataManager.getNetworkOperators(false);
+    }
+
     this.refreshFilteredReferenceData();
 
   }
@@ -195,6 +205,9 @@ export class PoiEditorPage implements OnInit {
         break;
       case 'edit-equipment':
         this.step = this.isAddMode ? 'copy-equipment' : 'location';
+        break;
+      case 'copy-equipment':
+        this.step = 'location';
         break;
       case 'poi-nearby':
         this.step = 'location';
@@ -274,6 +287,9 @@ export class PoiEditorPage implements OnInit {
       this.selectedTab = 'location';
     } else if (this.step == 'copy-equipment') {
       this.selectedTab = 'equipment';
+
+      this.selectedOperator = this.operatorCache.find(o => o.ID == this.item.OperatorID);
+
       await this.refreshTemplateSites();
     } else if (this.step == 'edit-equipment') {
       this.selectedTab = 'equipment';
@@ -286,12 +302,44 @@ export class PoiEditorPage implements OnInit {
     this.refreshFilteredReferenceData();
   }
 
-  async onOperatorChange() {
-    await this.refreshTemplateSites();
+  searchOperators() {
+    this.operatorSearchResults = [];
 
-    if (this.item.OperatorID) {
-      // remember this as the most recently chosen operator
-      localStorage.setItem("_editor-operatorid", this.item.OperatorID.toString());
+    if (this.operatorSearchKeyword.length == 0) {
+      return;
+    }
+
+    if (this.appManager) {
+
+      this.operatorSearchResults = this.operatorCache.filter(o => o.Title.toLowerCase().startsWith(this.operatorSearchKeyword)).slice(0, 10);
+    } else {
+      this.operatorSearchResults = [];
+    }
+  }
+
+  async onOperatorChange(operatorInfo: OperatorInfo = null) {
+
+    if (operatorInfo == null && this.item.OperatorID) {
+      operatorInfo = this.operatorCache.find(o => o.ID == this.item.OperatorID);
+    }
+
+    if (operatorInfo != null) {
+      this.operatorSearchResults = [];
+      this.selectedOperator = operatorInfo;
+      this.item.OperatorID = operatorInfo.ID;
+    }
+
+    if (!this.item.OperatorID) {
+      // use full list of operators
+      this.useFilteredOperators = false;
+    } else {
+
+      await this.refreshTemplateSites();
+
+      if (this.item.OperatorID) {
+        // remember this as the most recently chosen operator
+        localStorage.setItem("_editor-operatorid", this.item.OperatorID.toString());
+      }
     }
   }
 
@@ -320,7 +368,7 @@ export class PoiEditorPage implements OnInit {
     });
 
     modal.onWillDismiss().then((result: any) => {
-      if (result && result.data.item) {
+      if (result && result.data && result.data.item) {
         this.updateConnection(result.data.item);
       }
     });
@@ -357,6 +405,9 @@ export class PoiEditorPage implements OnInit {
   }
 
   async addConnection() {
+
+    // TODO: depending on the country, there may be a good default e.g. Type 2 32 amp 230V AC.
+
     const item = {
       ID: -Utils.getRandomInt(10000),
       ConnectionTypeID: null,
@@ -371,7 +422,7 @@ export class PoiEditorPage implements OnInit {
     });
 
     modal.onWillDismiss().then((result: any) => {
-      if (result && result.data.item) {
+      if (result && result.data && result.data.item) {
         this.updateConnection(result.data.item);
       }
     });
@@ -595,7 +646,7 @@ export class PoiEditorPage implements OnInit {
       i.ID = -Utils.getRandomInt(10000);
       i.Reference = null;
       i.Comments = null;
-      i.StatusTypeID = null;
+      i.StatusTypeID = StandardStatusTypes.Operational;
     }
 
     this.item.UsageCost = source.UsageCost;

@@ -105,14 +105,51 @@
        
           </p>
 
-          <ion-item>
+          <ion-item *ngIf="useFilteredOperators && !selectedOperator">
             <ion-label position="floating">Network Operator</ion-label>
             <ion-select [(ngModel)]="item.OperatorID" (ionChange)="onOperatorChange()">
               <ion-select-option *ngFor="let i of operators" [value]="i.ID">{{i.Title}}</ion-select-option>
-              <ion-select-option value="-2">Other...</ion-select-option>
+              <ion-select-option value="" *ngIf="useFilteredOperators">Other...</ion-select-option>
             </ion-select>
           </ion-item>
+        
+          <ion-item *ngIf="!useFilteredOperators && !selectedOperator">
+            <ion-label>Network Operator</ion-label>
+            <ion-searchbar placeholder="Search by network name (in any country)" autocomplete="on" [(ngModel)]="operatorSearchKeyword" (ionChange)="searchOperators($event)"></ion-searchbar>
+          </ion-item>
 
+          <ng-container *ngIf="operatorSearchResults.length>0">
+            <ion-list>
+              <ion-item *ngFor="let item of operatorSearchResults" (click)="onOperatorChange(item)">
+          
+                <ion-avatar item-left>
+                  <ion-icon name="card"></ion-icon>
+                </ion-avatar>
+                <ion-label>
+                <p>{{item.Title}}</p>
+                <p>{{item.WebsiteURL}}</p>
+              </ion-label>
+              </ion-item>
+        
+            </ion-list>
+          </ng-container>
+
+          <ng-container *ngIf="selectedOperator!=null">
+            
+              <ion-item >
+          
+                <ion-avatar item-left>
+                  <ion-icon name="locate"></ion-icon>
+                </ion-avatar>
+                <ion-label>
+                <p>{{selectedOperator.Title}}</p>
+                <p>{{selectedOperator.WebsiteURL}}</p>
+                <ion-button (click)="selectedOperator=null">Change</ion-button>
+              </ion-label>
+              </ion-item>
+        
+         
+          </ng-container>
           <ng-container *ngIf="item.AddressInfo.CountryID && item.OperatorID">
             <ng-container *ngIf="selectedTemplatePOI">
               <p>Copied the equipment configuration from:</p>
@@ -145,7 +182,7 @@
 
               <ng-container *ngIf="templateSites.length==0">
                 <p>
-                  There are no suggested sites to copy for this network operator. Use Advanced to enter the full site details.
+                  There are no suggested sites to copy for this network operator. 
                 </p>
               </ng-container>
             </ng-container>
