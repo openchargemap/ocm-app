@@ -40,12 +40,6 @@ export class PoiEditorPage implements OnInit {
   startPos: GeoLatLng;
   useFilteredConnectionTypes: boolean = true;
 
-  useFilteredOperators: boolean = true;
-  operatorCache: OperatorInfo[] = [];
-  operatorSearchResults: OperatorInfo[] = [];
-  operatorSearchKeyword = "";
-  selectedOperator: OperatorInfo = null;
-
   templateSites: Array<ExtendedPOIDetails> = [];
   nearbySites: Array<ExtendedPOIDetails> = [];
   selectedTemplatePOI: ExtendedPOIDetails = null;
@@ -60,10 +54,6 @@ export class PoiEditorPage implements OnInit {
 
   @ViewChild(PoiLocationEditorComponent, { static: false })
   private editorMap: PoiLocationEditorComponent;
-
-  get operators(): Array<OperatorInfo> {
-    return this.appManager.referenceDataManager.getNetworkOperators(this.useFilteredOperators);
-  }
 
   get countries(): Array<Country> {
     return this.appManager.referenceDataManager.getCountries();
@@ -189,9 +179,9 @@ export class PoiEditorPage implements OnInit {
       }
     }
 
-    if (!this.operatorCache || this.operatorCache.length == 0) {
-      this.operatorCache = this.appManager.referenceDataManager.getNetworkOperators(false);
-    }
+    /* if (!this.operatorCache || this.operatorCache.length == 0) {
+       this.operatorCache = this.appManager.referenceDataManager.getNetworkOperators(false);
+     }*/
 
     this.refreshFilteredReferenceData();
 
@@ -288,7 +278,7 @@ export class PoiEditorPage implements OnInit {
     } else if (this.step == 'copy-equipment') {
       this.selectedTab = 'equipment';
 
-      this.selectedOperator = this.operatorCache.find(o => o.ID == this.item.OperatorID);
+     // this.selectedOperator = this.operatorCache.find(o => o.ID == this.item.OperatorID);
 
       await this.refreshTemplateSites();
     } else if (this.step == 'edit-equipment') {
@@ -302,45 +292,22 @@ export class PoiEditorPage implements OnInit {
     this.refreshFilteredReferenceData();
   }
 
-  searchOperators() {
-    this.operatorSearchResults = [];
 
-    if (this.operatorSearchKeyword.length == 0) {
-      return;
-    }
-
-    if (this.appManager) {
-
-      this.operatorSearchResults = this.operatorCache.filter(o => o.Title.toLowerCase().startsWith(this.operatorSearchKeyword)).slice(0, 10);
-    } else {
-      this.operatorSearchResults = [];
-    }
-  }
 
   async onOperatorChange(operatorInfo: OperatorInfo = null) {
 
-    if (operatorInfo == null && this.item.OperatorID) {
-      operatorInfo = this.operatorCache.find(o => o.ID == this.item.OperatorID);
-    }
-
     if (operatorInfo != null) {
-      this.operatorSearchResults = [];
-      this.selectedOperator = operatorInfo;
-      this.item.OperatorID = operatorInfo.ID;
-    }
+      if (this.item.OperatorID != operatorInfo.ID) {
 
-    if (!this.item.OperatorID) {
-      // use full list of operators
-      this.useFilteredOperators = false;
-    } else {
+        this.item.OperatorID = operatorInfo.ID;
 
-      await this.refreshTemplateSites();
-
-      if (this.item.OperatorID) {
         // remember this as the most recently chosen operator
         localStorage.setItem("_editor-operatorid", this.item.OperatorID.toString());
+
+        await this.refreshTemplateSites();
       }
     }
+
   }
 
   useSuggestedAddress($evt = null) {

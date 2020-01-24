@@ -11,6 +11,7 @@ import { EquipmentDetailsComponent } from './equipment-details/equipment-details
 import { PoiListComponent } from './poi-list/poi-list';
 import { PoiLocationEditorComponent } from './poi-location-editor/poi-location-editor';
 import { PoiEquipmentEditorComponent } from './poi-equipment-editor/poi-equipment-editor';
+import { OperatorLookupComponent } from './operator-lookup/operator-lookup.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { PoiEquipmentEditorComponent } from './poi-equipment-editor/poi-equipmen
         RoutePlanner,
         NullableTranslatePipe,
         PoiLocationEditorComponent,
-        PoiEquipmentEditorComponent
+        PoiEquipmentEditorComponent,
+        OperatorLookupComponent
     ],
     declarations: [
         PlaceSearch,
@@ -33,7 +35,8 @@ import { PoiEquipmentEditorComponent } from './poi-equipment-editor/poi-equipmen
         RoutePlanner,
         NullableTranslatePipe,
         PoiLocationEditorComponent,
-        PoiEquipmentEditorComponent
+        PoiEquipmentEditorComponent,
+        OperatorLookupComponent
     ],
     providers: [DecimalPipe],
 })
