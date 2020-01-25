@@ -45,6 +45,9 @@ export class AppComponent {
     this.initializeApp();
 
     this.enabledFeatures = environment.enabledFeatures;
+    if (appManager.searchSettings.EnableAdvancedEditorFeatures != true) {
+      this.enabledFeatures = this.enabledFeatures.filter(f => f != 'LAYERS');
+    }
   }
 
 
@@ -199,10 +202,10 @@ export class AppComponent {
       // focus map again..
       this.mapping.focusMap();
     });
-  
+
   }
 
-  async addLayer(){
+  async addLayer() {
     const modal = await this.modalController.create({
       component: LayerEditorPage
     });
@@ -210,7 +213,7 @@ export class AppComponent {
     await modal.present();
 
     const { data } = await modal.onWillDismiss();
-    if (data){
+    if (data) {
       this.mapping.addPOILayer(data);
     }
 

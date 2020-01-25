@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 
 declare var device: any;
 
-export type FeatureOption = 'MAP' | 'ADD_POI' | 'EDIT_POI' | 'ADD_COMMENT' | 'ADD_PHOTO' | 'FAVOURITES' | 'ROUTE_PLANNER' | 'FILTER_OPTIONS_BY_COUNTRY' | 'ROUTE_PLANNER' | 'GOOGLE_MAPS';
+export type FeatureOption = 'MAP' | 'ADD_POI' | 'EDIT_POI' | 'ADD_COMMENT' | 'ADD_PHOTO' | 'FAVOURITES' | 'ROUTE_PLANNER' | 'FILTER_OPTIONS_BY_COUNTRY' | 'ROUTE_PLANNER' | 'GOOGLE_MAPS' | 'LAYERS';
 
 export class Utils {
 

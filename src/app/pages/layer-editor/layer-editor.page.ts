@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { ReferenceDataManager } from '../../services/ReferenceDataManager';
 
 @Component({
   selector: 'app-layer-editor',
@@ -8,9 +9,9 @@ import { ModalController } from '@ionic/angular';
 })
 export class LayerEditorPage implements OnInit {
 
-  fileData: [];
+  fileData: any[];
 
-  constructor(private modalController: ModalController) { }
+  constructor(private modalController: ModalController, private refData: ReferenceDataManager) { }
 
   ngOnInit() {
   }
@@ -29,9 +30,15 @@ export class LayerEditorPage implements OnInit {
 
     reader.onload = () => {
       let dat = reader.result as string;
-      // populate POI markers
 
-      this.fileData = JSON.parse(dat);
+      let parsedList = JSON.parse(dat);
+
+      // make ID's unique to this layer
+      for (let p of parsedList) {
+        p.ID = "imp_" + p.ID;
+      }
+
+      this.fileData = this.refData.hydrateCompactPOIList(<Array<any>>parsedList);
 
       if (dismissOnLoad) {
         this.modalController.dismiss(this.fileData);
@@ -46,9 +53,9 @@ export class LayerEditorPage implements OnInit {
     reader.readAsText((<any>document.getElementById('file-upload')).files[0]);
   }
 
-  async add(){
-   
-      this.modalController.dismiss(this.fileData);
-    
+  async add() {
+
+    this.modalController.dismiss(this.fileData);
+
   }
 }
