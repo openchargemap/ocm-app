@@ -155,7 +155,7 @@ export class MapBoxMapProvider implements IMapProvider {
   * @param poiList  array of POI objects
   * @param parentContext  parent app context
   */
-  showPOIListOnMap(poiList: Array<any>, parentContext: any) {
+  showPOIListOnMap(poiList: Array<any>, parentContext: any, isNativePOI: boolean = true) {
     let clearMarkersOnRefresh: boolean = false;
     let map = this.map;
     let bounds = new mapboxgl.LngLatBounds();
@@ -187,18 +187,25 @@ export class MapBoxMapProvider implements IMapProvider {
 
           if (addMarker) {
 
-            let iconURL = Utils.getIconForPOI(poi);
+            let icon = null;
+            let color = null;
 
-            let icon = document.createElement("img");
-            icon.src = iconURL;
-            icon.width = 34;
-            icon.height = 50;
+            if (!isNativePOI) {
+              icon = null;
+              color = Utils.getColorForPOI(poi);
+            } else {
+              icon = document.createElement("img");
+              icon.src = Utils.getIconForPOI(poi);
+              icon.width = 34;
+              icon.height = 50;
+            }
 
             let markerOptions = {
-              element: icon
+              element: icon,
+              color: color
             };
 
-            let markerTooltip = "OCM-" + poi.ID + ": " + poi.AddressInfo.Title + ":";
+            let markerTooltip = (isNativePOI ? "OCM-" : "EXT-") + poi.ID + ": " + poi.AddressInfo.Title + ":";
             if (poi.UsageType != null) { markerTooltip += " " + poi.UsageType.Title; }
 
             if (poi.StatusType != null) { markerTooltip += " " + poi.StatusType.Title; }
@@ -207,7 +214,6 @@ export class MapBoxMapProvider implements IMapProvider {
               .setLngLat([poi.AddressInfo.Longitude, poi.AddressInfo.Latitude])
               .addTo(map);
 
-
             (<any>newMarker).poi = poi;
 
             let markerElement = newMarker.getElement();
@@ -215,9 +221,8 @@ export class MapBoxMapProvider implements IMapProvider {
             (<any>markerElement).poi = poi;
             markerElement.addEventListener('click', (el) => {
               const clickedPOI = (<any>el.currentTarget).poi;
-              this.events.publish('ocm:poi:selected', { poiId: clickedPOI.ID });
+              this.events.publish('ocm:poi:selected', { poiId: clickedPOI.ID, poi: clickedPOI });
             });
-
 
             bounds.extend(newMarker.getLngLat());
 
@@ -417,5 +422,10 @@ export class MapBoxMapProvider implements IMapProvider {
         resolve(placeList);
       });
     });
+  }
+
+  addPOILayer(data: any[]) {
+    this.logging.log("Add POI Layer not implemented in this provider.");
+    this.showPOIListOnMap(data, null, false);
   }
 }

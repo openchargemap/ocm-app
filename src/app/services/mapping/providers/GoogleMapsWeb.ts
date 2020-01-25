@@ -379,4 +379,8 @@ export class GoogleMapsWeb implements IMapProvider {
         // not implemented
         return null;
     }
+
+    addPOILayer(data: any[]) {
+        this.logging.log("Add POI Layer not implemented in this provider.");
+    }
 }

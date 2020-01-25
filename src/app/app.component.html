@@ -42,6 +42,14 @@
               </ion-label>
             </ion-item>
 
+            <ion-item (click)="addLayer()" *ngIf="enabledFeatures.includes('LAYERS')">
+              <ion-icon slot="start" name="albums"></ion-icon>
+              <ion-label>
+                Add Layer
+              </ion-label>
+            </ion-item>
+
+
             <ng-container *ngIf="!isUserAuthenticated()">
               <ion-item (click)="signIn()">
                 <ion-icon slot="start" name="person"></ion-icon>

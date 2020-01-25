@@ -26,6 +26,7 @@ import { MapTilerMapProvider } from './providers/MapTiler';
     providedIn: 'root',
 })
 export class Mapping implements IMapManager {
+
     public map: any;
     public mapCentreMarker: any;
     public mapsInitialised: boolean; // initial map setup initiated
@@ -269,4 +270,8 @@ export class Mapping implements IMapManager {
 
         this.mapProvider.clearMarkers();
     }
+
+    addPOILayer(data: any[]) {
+     this.mapProvider.addPOILayer(data);
+      }
 }

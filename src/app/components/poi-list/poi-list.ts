@@ -49,10 +49,16 @@ export class PoiListComponent implements OnInit {
   }
 
   getFormattedConnectorList(poi: ExtendedPOIDetails): string {
+
+    if (!poi.Connections) {
+      return;
+    }
     let list = [];
     for (let c of poi.Connections) {
-      if (!list.find(l => l == c.ConnectionType.Title)) {
-        list.push(c.ConnectionType.Title);
+      if (c.ConnectionType != null) {
+        if (!list.find(l => l == c.ConnectionType.Title)) {
+          list.push(c.ConnectionType.Title);
+        }
       }
     }
 

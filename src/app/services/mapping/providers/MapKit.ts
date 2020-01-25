@@ -436,6 +436,10 @@ export class MapKitMapProvider implements IMapProvider {
     });
 
   }
+
+  addPOILayer(data: any[]) {
+    this.logging.log("Add POI Layer not implemented in this provider.");
+  }
 }
 
 class MapKitUtils {
@@ -502,4 +506,5 @@ class MapKitUtils {
       longitudeDelta
     };
   }
+
 }

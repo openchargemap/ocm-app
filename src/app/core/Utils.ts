@@ -63,6 +63,25 @@ export class Utils {
         return iconURL;
     }
 
+    static getColorForPOI(poi): string {
+        const poiLevel = Utils.getMaxLevelOfPOI(poi);
+        let color = "#c0c0c0";
+
+        if (poi.UsageType != null && poi.UsageType.Title.indexOf('Private') > -1) {
+            color = "#FF0000";
+        } else if (poi.StatusType != null && poi.StatusType.IsOperational !== true) {
+            color = "#a0a0a0";
+        } else {
+            if (poiLevel == 2) {
+                color = "#72EB0D";
+            } else if (poiLevel == 3) {
+                color = "#EB800D";
+            }
+        }
+
+        return color;
+    }
+
     static getIconForConnector(id: number): string {
         let iconURL = 'assets/images/icons/connectors/';
         if (id === 1) {

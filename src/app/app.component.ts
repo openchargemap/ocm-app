@@ -17,6 +17,7 @@ import { Analytics } from "./services/Analytics";
 import { GeoLatLng } from "./model/AppModels";
 import { Utils } from "./core/Utils";
 import { AboutPage } from "./pages/about/about.page";
+import { LayerEditorPage } from "./pages/layer-editor/layer-editor.page";
 
 @Component({
   selector: "app-root",
@@ -198,8 +199,21 @@ export class AppComponent {
       // focus map again..
       this.mapping.focusMap();
     });
+  
+  }
+
+  async addLayer(){
+    const modal = await this.modalController.create({
+      component: LayerEditorPage
+    });
 
     await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data){
+      this.mapping.addPOILayer(data);
+    }
+
   }
 
   async about() {

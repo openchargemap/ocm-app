@@ -222,8 +222,15 @@ export class SearchPage implements OnInit, AfterViewInit {
 
     this.events.subscribe('ocm:poi:selected', (args) => {
 
-      let poi = this.getPOIByID(args.poiId);
-      this.viewPOIDetails(args, poi);
+      if (args.poi)
+      {
+        this.viewPOIDetails(args, args.poi);
+      } else {
+        let poi = this.getPOIByID(args.poiId);
+        this.viewPOIDetails(args, poi);
+      }
+     
+    
     });
 
 

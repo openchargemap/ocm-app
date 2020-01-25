@@ -7,7 +7,9 @@ const routes: Routes = [
   { path: 'journeys', loadChildren: './pages/journeys/journeys.module#JourneysModule' },
   { path: 'signin', loadChildren: './pages/signin/signin.module#SignInModule' },
   { path: 'poi-editor/:id', loadChildren: './pages/poi-editor/poi-editor.module#PoiEditorPageModule' },
-  { path: 'about', loadChildren: './pages/about/about.module#AboutPageModule' }
+  { path: 'about', loadChildren: './pages/about/about.module#AboutPageModule' },
+  { path: 'layer-editor', loadChildren: './pages/layer-editor/layer-editor.module#LayerEditorPageModule' }
+
 ];
 
 @NgModule({

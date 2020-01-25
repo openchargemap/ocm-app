@@ -292,8 +292,6 @@ export class PoiEditorPage implements OnInit {
     this.refreshFilteredReferenceData();
   }
 
-
-
   async onOperatorChange(operatorInfo: OperatorInfo = null) {
 
     if (operatorInfo != null) {

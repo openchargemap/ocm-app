@@ -15,6 +15,7 @@ export enum MappingAPI {
 export type MapType = 'ROADMAP' | 'SATELLITE';
 
 export interface IMapProvider {
+   
     mapAPIType: MappingAPI;
     mapReady: boolean;
     providerError: string;
@@ -36,6 +37,7 @@ export interface IMapProvider {
     focusMap();
     unfocusMap();
     placeSearch(keyword: string, latitude?: number, longitude?: number): Promise<Array<PlaceSearchResult>>;
+    addPOILayer(data: any[]);
 }
 
 export class MapOptions {
