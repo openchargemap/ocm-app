@@ -59,6 +59,7 @@ export class AppComponent {
   }
 
   configurePushNotifications() {
+    
     // Register with Apple / Google to receive push via APNS/FCM
     PushNotifications.register();
 
@@ -107,7 +108,7 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      // this.splashScreen.hide();
 
       this.translate.addLangs(this.appManager.getLanguages().map(l => l.code));
       // this language will be used as a fallback when a translation isn't found in the current language
@@ -142,7 +143,7 @@ export class AppComponent {
         }
       });
 
-      this.configurePushNotifications();
+      // this.configurePushNotifications();
     });
   }
 
