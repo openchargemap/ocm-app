@@ -18,6 +18,14 @@ import { GeoLatLng } from "./model/AppModels";
 import { Utils } from "./core/Utils";
 import { AboutPage } from "./pages/about/about.page";
 import { LayerEditorPage } from "./pages/layer-editor/layer-editor.page";
+import {
+  Plugins,
+  PushNotification,
+  PushNotificationToken,
+  PushNotificationActionPerformed
+} from '@capacitor/core';
+
+const { PushNotifications } = Plugins;
 
 @Component({
   selector: "app-root",
@@ -50,6 +58,38 @@ export class AppComponent {
     }
   }
 
+  configurePushNotifications() {
+    // Register with Apple / Google to receive push via APNS/FCM
+    PushNotifications.register();
+
+    // On success, we should be able to receive notifications
+    PushNotifications.addListener('registration',
+      (token: PushNotificationToken) => {
+        this.logger.log('Push registration success, token: ' + token.value);
+      }
+    );
+
+    // Some issue with our setup and push will not work
+    PushNotifications.addListener('registrationError',
+      (error: any) => {
+        this.logger.log('Error on registration: ' + JSON.stringify(error));
+      }
+    );
+
+    // Show us the notification payload if the app is open on our device
+    PushNotifications.addListener('pushNotificationReceived',
+      (notification: PushNotification) => {
+        this.logger.log('Push received: ' + JSON.stringify(notification));
+      }
+    );
+
+    // Method called when tapping on a notification
+    PushNotifications.addListener('pushNotificationActionPerformed',
+      (notification: PushNotificationActionPerformed) => {
+        this.logger.log('Push action performed: ' + JSON.stringify(notification));
+      }
+    );
+  }
 
   isUserAuthenticated() {
     return this.appManager.isUserAuthenticated();
@@ -101,6 +141,8 @@ export class AppComponent {
           this.add(pos);
         }
       });
+
+      this.configurePushNotifications();
     });
   }
 

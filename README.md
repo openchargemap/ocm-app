@@ -38,6 +38,15 @@ Run `ionic build --prod` which will output html build to www folder. When updati
         - ionic cordova platform add ios
         - platforms/ios/ pod deintegrate, pod install
         - ionic cordova prepare ios --prod
+    - using capacitor:
+        - Android:
+            - npx cap add android
+            - resolve ERR_CLEARTEXT_NOT_PERMITTED debug error: add `android:usesCleartextTraffic="true"` to AndroidManifest.xml
+            - Icons: Android Studio > Res > New Image Asset, browse to Icon, replace, scale 71% set background to #8BC43F
+            - Splashscreen: use apetools to generate 'splash.png' variants, remove unused existing default screens
+            - Push notifications: copy google-services.json to app
+            - build: `ionic build --prod`, `npx cap sync`, `npx cap open android`
+
 
 ## Type Docs
     `typedoc --options typedoc.json --exclude '**/*+(e2e|spec|index).ts' ./src/`

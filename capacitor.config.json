@@ -15,8 +15,5 @@
       "SplashScreen": "screen",
       "SplashScreenDelay": "3000"
     }
-  },
-  "server": {
-    "url": "http://wbp-desktop06:8100"
   }
 }
