@@ -197,11 +197,12 @@ export class Mapping implements IMapManager {
 
     setMapType(maptype: MapType) {
         if (this.mapOptions.mapType == maptype) { return; }
-
+        
         this.mapOptions.mapType = maptype;
-        this.logging.log("Changing map type:" + maptype);
 
         if (this.isMapReady() && this.mapProvider != null) {
+         
+            this.logging.log("Changing map type:" + maptype);
             this.mapProvider.setMapType(maptype);
         } else {
             this.logging.log("Map type set, maps not initialised yet.");
@@ -272,6 +273,6 @@ export class Mapping implements IMapManager {
     }
 
     addPOILayer(data: any[]) {
-     this.mapProvider.addPOILayer(data);
-      }
+        this.mapProvider.addPOILayer(data);
+    }
 }

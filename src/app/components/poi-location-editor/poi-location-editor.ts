@@ -48,6 +48,7 @@ export class PoiLocationEditorComponent implements OnInit, AfterContentInit, OnC
     this.mapService.initAPI();
 
     this.mapOptions = new MapOptions();
+    this.mapOptions.mapType = this.appManager.searchSettings.MapType;
 
     // listen for map centre moves and use the new position
     this.mapOptions.onMapMoveCompleted = () => {
@@ -74,6 +75,7 @@ export class PoiLocationEditorComponent implements OnInit, AfterContentInit, OnC
     if (this.isMapInitialised == false && this.mapService) {
       if (this.latitude != 0 && this.longitude != 0) {
         this.isMapInitialised = true;
+
         this.mapService.initMap("editor-map", this.mapOptions, null);
 
         this.mapService.setMapCenter(new GeoPosition(this.latitude, this.longitude));
