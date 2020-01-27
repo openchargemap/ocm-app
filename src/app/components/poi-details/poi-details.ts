@@ -304,14 +304,18 @@ export class PoiDetails implements OnInit {
 
   }
 
-  refresh() {
+  refresh($refreshEvent: any = null) {
     if (this.poi) {
+
       this.poiManager.getPOIById(this.poi.ID, true, true).then(p => {
         if (p) {
           this.poi = p;
           this.ngOnChanges(null);
         }
+
+        $refreshEvent.target.complete();
       });
+
     }
   }
 }

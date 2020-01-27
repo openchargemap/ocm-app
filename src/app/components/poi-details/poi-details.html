@@ -1,4 +1,5 @@
 <div *ngIf="poi!=null && poi.AddressInfo!=null">
+
   <div class="banner" [style.background-image]="backdropImage?'url(' + backdropImage + ')':''">
 
 
@@ -35,6 +36,12 @@
 
     </ion-fab>
   </div>
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown"
+    pullingText="Pull to refresh"
+    refreshingSpinner="circles"
+    refreshingText="Refreshing..."></ion-refresher-content>
+  </ion-refresher>
   <ion-toolbar>
     <ion-buttons slot="start">
 
