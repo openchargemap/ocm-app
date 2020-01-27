@@ -42,10 +42,11 @@ Run `ionic build --prod` which will output html build to www folder. When updati
         - Android:
             - npx cap add android
             - resolve ERR_CLEARTEXT_NOT_PERMITTED debug error: add `android:usesCleartextTraffic="true"` to AndroidManifest.xml
-            - Icons: Android Studio > Res > New Image Asset, browse to Icon, replace, scale 71% set background to #8BC43F
+            - Icons: Android Studio > Res > New Image Asset, browse to Icon,  scale 100%; trim yes; set background to #8BC43F
             - Splashscreen: use apetools to generate 'splash.png' variants, remove unused existing default screens
             - Push notifications: copy google-services.json to app
-            - build: `ionic build --prod`, `npx cap sync`, `npx cap open android`
+            - Set version in Android Studio: gradle default config  https://stackoverflow.com/a/26865465/1707154
+            - build: `ionic build --prod`, `npx cap sync`, `npx cap open android`, Build Signed APK in Android Studio
 
 
 ## Type Docs
