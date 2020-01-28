@@ -1,9 +1,9 @@
 import { AppManager } from './../../services/AppManager';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController } from '@ionic/angular';
-import { Camera } from '@ionic-native/camera/ngx';
-import { WebView } from '@ionic-native/ionic-webview/ngx';
+import { Plugins, CameraResultType } from '@capacitor/core';
 import { Logging, LogLevel } from '../../services/Logging';
+const { Camera } = Plugins;
 
 @Component({
     templateUrl: 'mediaupload.html',
@@ -26,9 +26,7 @@ export class MediaUploadPage {
         public appManager: AppManager,
         public nav: NavController,
         private modalController: ModalController,
-        private camera: Camera,
-        public logging: Logging,
-        private webview: WebView
+        public logging: Logging
     ) {
 
         this.processingQuality = 0.8;
@@ -47,7 +45,7 @@ export class MediaUploadPage {
         // If it's base64:
         // let base64Image = 'data:image/jpeg;base64,' + imageData;
 
-        let imgUrl = this.webview.convertFileSrc(imageData);
+        let imgUrl = imageData; // this.webview.convertFileSrc(imageData);
         // this.logging.log("img load:" + imgUrl);
         const canvas = <HTMLCanvasElement>document.getElementById('img-upload-canvas');
         const ctx = canvas.getContext('2d');

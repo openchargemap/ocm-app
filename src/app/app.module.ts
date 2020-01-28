@@ -5,19 +5,12 @@ import { SearchPageModule } from './pages/search/search.module';
 import { CommentPage } from './pages/comment/comment';
 import { SearchPage } from './pages/search/search';
 import { RoutePlannerPage } from './pages/route-planner/route-planner';
-import { Keyboard } from '@ionic-native/keyboard/ngx';
-import { Camera } from '@ionic-native/camera/ngx';
-import { WebView } from '@ionic-native/ionic-webview/ngx';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { RouterModule, RouteReuseStrategy, Routes } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { GoogleAnalytics } from '@ionic-native/google-analytics/ngx';
 import { TranslateModule, MissingTranslationHandler, MissingTranslationHandlerParams, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
@@ -101,13 +94,13 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     LayerEditorPageModule
   ],
   providers: [
-    StatusBar,
+    /*StatusBar,
     Keyboard,
     Camera,
     SplashScreen,
     WebView,
     InAppBrowser,
-    GoogleAnalytics,
+    GoogleAnalytics,*/
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

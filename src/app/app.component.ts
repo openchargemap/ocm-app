@@ -1,8 +1,5 @@
 import { Component } from "@angular/core";
-
 import { Platform, ModalController, Events } from "@ionic/angular";
-import { SplashScreen } from "@ionic-native/splash-screen/ngx";
-import { StatusBar } from "@ionic-native/status-bar/ngx";
 import { TranslateService } from "@ngx-translate/core";
 import { Mapping } from "./services/mapping/Mapping";
 import { RoutePlannerPage } from "./pages/route-planner/route-planner";
@@ -25,7 +22,7 @@ import {
   PushNotificationActionPerformed
 } from '@capacitor/core';
 
-const { PushNotifications } = Plugins;
+const { PushNotifications, SplashScreen, StatusBar } = Plugins;
 
 @Component({
   selector: "app-root",
@@ -37,8 +34,6 @@ export class AppComponent {
 
   constructor(
     private platform: Platform,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
     public translate: TranslateService,
     public mapping: Mapping,
     public modalController: ModalController,
@@ -107,8 +102,8 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      // this.splashScreen.hide();
+      StatusBar.show();
+      SplashScreen.hide();
 
       this.translate.addLangs(this.appManager.getLanguages().map(l => l.code));
       // this language will be used as a fallback when a translation isn't found in the current language
@@ -245,6 +240,8 @@ export class AppComponent {
       // focus map again..
       this.mapping.focusMap();
     });
+
+    await modal.present();
 
   }
 

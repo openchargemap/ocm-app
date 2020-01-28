@@ -2,7 +2,6 @@ import { environment } from './../../../environments/environment';
 import { AppConfig } from './../../core/AppConfig';
 import { SettingsPage } from './../settings/settings';
 import { TranslateService } from '@ngx-translate/core';
-import { Keyboard } from '@ionic-native/keyboard/ngx';
 import { RoutePlannerPage } from './../route-planner/route-planner';
 import { POIDetailsPage } from './../poi-details/poi-details';
 import { GeoLatLng, GeoPosition } from './../../model/GeoPosition';
@@ -19,6 +18,9 @@ import { PlaceSearch } from '../../components/place-search/place-search';
 import { PlaceSearchResult } from '../../model/AppModels';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
+import { Plugins } from '@capacitor/core';
+const { Keyboard, Geolocation } = Plugins;
+
 @Component({
   templateUrl: 'search.html',
   styleUrls: ['./search.scss']
@@ -66,7 +68,6 @@ export class SearchPage implements OnInit, AfterViewInit {
 
     public modalController: ModalController,
     private alertController: AlertController,
-    private keyboard: Keyboard,
     public logging: Logging
   ) {
 
@@ -222,15 +223,14 @@ export class SearchPage implements OnInit, AfterViewInit {
 
     this.events.subscribe('ocm:poi:selected', (args) => {
 
-      if (args.poi)
-      {
+      if (args.poi) {
         this.viewPOIDetails(args, args.poi);
       } else {
         let poi = this.getPOIByID(args.poiId);
         this.viewPOIDetails(args, poi);
       }
-     
-    
+
+
     });
 
 
@@ -527,22 +527,25 @@ export class SearchPage implements OnInit, AfterViewInit {
   async locateUser(): Promise<any> {
 
     try {
-      const geoPromise = await new Promise((resolve, reject) => {
 
-        this.logging.log('Attempting to locate user..');
-        navigator.geolocation.getCurrentPosition(resolve, reject);
+      this.logging.log('Attempting to locate user..');
 
-      }).then((position: any) => {
-        this.logging.log('Got user location.');
+      const position = await Geolocation.getCurrentPosition();
 
-        this.appManager.searchSettings.StartSearchPosition = new GeoLatLng(position.coords.latitude, position.coords.longitude);
+      if (!position) {
+        throw "Failed to get user location.";
+      }
+      
+      this.logging.log('Got user location.');
 
-        this.searchOnDemand = true;
+      this.appManager.searchSettings.StartSearchPosition = new GeoLatLng(position.coords.latitude, position.coords.longitude);
 
-        this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true, this.defaultMapZoom);
-        localStorage.setItem("_locationEnabled", "true");
-        return true;
-      });
+      this.searchOnDemand = true;
+
+      this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true, this.defaultMapZoom);
+      localStorage.setItem("_locationEnabled", "true");
+      return true;
+
     } catch (err) {
       /// no geolocation
       this.logging.log('Failed to get user location. Searching using default or last position.' + err);

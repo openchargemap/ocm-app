@@ -1,7 +1,6 @@
 import { Logging, LogLevel } from './Logging';
-import { GoogleAnalytics } from "@ionic-native/google-analytics/ngx";
+// import { GoogleAnalytics } from "@ionic-native/google-analytics/ngx";
 import { Injectable } from '@angular/core';
-import { logging } from 'selenium-webdriver';
 import { Platform } from '@ionic/angular';
 
 @Injectable({
@@ -9,8 +8,12 @@ import { Platform } from '@ionic/angular';
 })
 export class Analytics {
     isCordova: boolean = false;
-    constructor(private ga: GoogleAnalytics, private logger: Logging, private platform: Platform) {
-        if (platform.is("cordova")) {
+    ga: any = null;
+
+    constructor(private logger: Logging, private platform: Platform) {
+        //private ga: GoogleAnalytics, 
+
+        if (platform.is("cordova") || platform.is("capacitor")) {
             this.isCordova = true;
         } else {
             this.isCordova = false;
@@ -18,7 +21,7 @@ export class Analytics {
     }
 
     async init(analyticsId: string) {
-        if (this.isCordova) {
+        if (this.isCordova && this.ga) {
             await this.ga.startTrackerWithId(analyticsId);
         } else {
             this.logger.log("Could not initialise analytics");
@@ -26,7 +29,7 @@ export class Analytics {
     }
 
     async setAppVersion(version: string) {
-        if (this.isCordova) {
+        if (this.isCordova && this.ga) {
             return this.ga.setAppVersion(version);
         } else {
             this.logger.log(version);
@@ -34,7 +37,7 @@ export class Analytics {
     }
 
     async appEvent(category: string, evt: string) {
-        if (this.isCordova) {
+        if (this.isCordova && this.ga) {
             return this.ga.trackEvent(category, evt);
         } else {
             this.logger.log(evt);
@@ -42,7 +45,7 @@ export class Analytics {
     }
 
     async viewEvent(v: string) {
-        if (this.isCordova) {
+        if (this.isCordova && this.ga) {
             return this.ga.trackView(v);
         } else {
             this.logger.log(v);
