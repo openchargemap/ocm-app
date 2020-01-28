@@ -47,6 +47,13 @@ Run `ionic build --prod` which will output html build to www folder. When updati
             - Push notifications: copy google-services.json to app
             - Set version in Android Studio: gradle default config  https://stackoverflow.com/a/26865465/1707154
             - build: `ionic build --prod`, `npx cap sync`, `npx cap open android`, Build Signed APK in Android Studio
+            - double check icons and splashscreens
+        - iOS:
+            - npx cap add ios
+            - Update bundle id to org.openchargemap.app, version code
+            - Set Info.plist settings and permissions as required by Capacitor plugins: 
+                - Status Bar: UIViewControllerBasedStatusBarAppearance : Yes
+
 
 
 ## Type Docs
