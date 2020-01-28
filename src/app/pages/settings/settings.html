@@ -53,13 +53,18 @@
       </ion-select>
     </ion-item>
 
+    <ion-item lines="none">
+      <ion-note slot="start">Min. Power (kW)</ion-note>
+      
+      <ion-note slot="end">Max. Power (kW)</ion-note>
+    </ion-item>
     <ion-item>
-      <ion-note>Min. Power (kW)</ion-note>
-      <ion-range dualKnobs="true" min="1" max="500" pin="true" [(ngModel)]="powerRange" dark>
+  
+      <ion-range dualKnobs="true" min="1" max="650" pin="true" [(ngModel)]="powerRange" dark>
         <ion-icon slot="start" small name="flash"></ion-icon>
         <ion-icon slot="end" name="flash"></ion-icon>
       </ion-range>
-      <ion-note>Max. Power (kW)</ion-note>
+     
     </ion-item>
   </ion-list>
   <h2>

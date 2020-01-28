@@ -224,7 +224,7 @@ export class PoiEditorPage implements OnInit {
 
             }
           }, {
-            text: 'I Confirm',
+            text: 'Confirm',
             handler: () => {
               this.isNonDuplicateConfirmed = true;
               this.next();

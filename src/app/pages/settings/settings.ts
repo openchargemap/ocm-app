@@ -14,7 +14,9 @@ import { Mapping } from '../../services/mapping/Mapping';
 export class SettingsPage implements OnInit {
 
   searchSettings: SearchSettings;
-  powerRange = { lower: 0, upper: 500 };
+  maxPower = 650;
+
+  powerRange = { lower: 0, upper: this.maxPower };
 
   constructor(
     public appManager: AppManager,
@@ -30,7 +32,7 @@ export class SettingsPage implements OnInit {
   async ngOnInit() {
     if (this.searchSettings.MinPowerKW != null) { this.powerRange.lower = this.searchSettings.MinPowerKW; }
     if (this.searchSettings.MaxPowerKW != null) { this.powerRange.upper = this.searchSettings.MaxPowerKW; }
-    if (this.powerRange.upper == 0) { this.powerRange.upper = 500; }
+    if (this.powerRange.upper == 0) { this.powerRange.upper = this.maxPower; }
 
     this.appManager.analytics.viewEvent('Settings');
     
@@ -82,7 +84,7 @@ export class SettingsPage implements OnInit {
     this.searchSettings.MaxPowerKW = this.powerRange.upper;
 
     if (this.searchSettings.MinPowerKW == 1) { this.searchSettings.MinPowerKW = null; }
-    if (this.searchSettings.MaxPowerKW == 500) { this.searchSettings.MaxPowerKW = null; }
+    if (this.searchSettings.MaxPowerKW == this.maxPower) { this.searchSettings.MaxPowerKW = null; }
 
     // save search settings
     this.appManager.searchSettings = this.searchSettings;

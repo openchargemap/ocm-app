@@ -13,7 +13,7 @@ export enum LogLevel {
     providedIn: 'root',
 })
 export class Logging {
-    public logLevel: LogLevel;
+    private logLevel: LogLevel;
     constructor() {
         this.logLevel = LogLevel.VERBOSE;
 
@@ -22,7 +22,7 @@ export class Logging {
         }
     }
     public log(msg: string, level: LogLevel = LogLevel.VERBOSE) {
-        if (console && console.log && this.logLevel >= level) {
+        if (console && console.log && level >= this.logLevel) {
             console.log("[" + LogLevel[level] + "] {" + (new Date().toLocaleTimeString()) + "} " + msg);
         }
     }
