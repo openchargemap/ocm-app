@@ -2,9 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/chris/GIT/ocm-app/ios/App/Open Charge Map.xcodeproj">
+      location = "group:/Users/chris/GIT/ocm-app/ios/App/App.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:App.xcodeproj">
    </FileRef>
 </Workspace>

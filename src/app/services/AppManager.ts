@@ -102,6 +102,14 @@ export class AppManager {
     }
   }
 
+  savePushRegistration(token:string){
+    localStorage.setItem("_pushToken",token.toString());
+  }
+
+  getPushRegistration(){
+    localStorage.getItem("_pushToken");
+  }
+
   getQueryVariable(variable): Array<any> {
     let query = window.location.search.substring(1);
     let vars = query.split('&');

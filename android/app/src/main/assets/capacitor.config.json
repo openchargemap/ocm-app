@@ -1,5 +1,5 @@
 {
-  "appId": "org.openchargemap.app",
+  "appId": "com.webprofusion.openchargemap",
   "appName": "Open Charge Map",
   "bundledWebRuntime": false,
   "npmClient": "npm",

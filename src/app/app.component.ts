@@ -62,6 +62,7 @@ export class AppComponent {
     PushNotifications.addListener('registration',
       (token: PushNotificationToken) => {
         this.logger.log('Push registration success, token: ' + token.value);
+        this.appManager.savePushRegistration(token.value);
       }
     );
 
@@ -138,7 +139,7 @@ export class AppComponent {
         }
       });
 
-      // this.configurePushNotifications();
+      this.configurePushNotifications();
     });
   }
 
