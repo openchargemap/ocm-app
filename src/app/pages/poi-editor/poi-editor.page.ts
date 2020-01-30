@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { POIDetails, OperatorInfo, ConnectionType, Country, ConnectionInfo, StatusType, ExtendedPOIDetails, ExtendedAddressInfo, UsageType } from '../../model/CoreDataModel';
 import { AppManager } from '../../services/AppManager';
-import { NavController, ModalController, Events, LoadingController, AlertController } from '@ionic/angular';
+import { NavController, ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { GeoLatLng, GeoPosition, POISearchParams } from '../../model/AppModels';
 import { Utils } from '../../core/Utils';
 import { POIManager } from '../../services/POIManager';
@@ -10,6 +10,7 @@ import { Mapping } from '../../services/mapping/Mapping';
 import { PoiLocationEditorComponent } from '../../components/poi-location-editor/poi-location-editor';
 import { PoiEquipmentEditorComponent } from '../../components/poi-equipment-editor/poi-equipment-editor';
 import { StandardStatusTypes } from '../../model/StandardEnumTypes';
+import { Events } from '../../services/Events';
 
 interface ValidationResult {
   isValid: boolean;
@@ -130,11 +131,11 @@ export class PoiEditorPage implements OnInit {
   }
 
   async presentLoadingUI() {
-    if (!this.loading) {
+   // if (!this.loading) {
       this.loading = await this.loadingController.create({
         message: 'Please Wait..'
       });
-    }
+   // }
 
     await this.loading.present();
   }
@@ -491,7 +492,7 @@ export class PoiEditorPage implements OnInit {
     } catch (err) {
       await this.dismissLoadingUI();
       if (err.error) {
-        alert(err.error);
+        alert("Sorry, your submission could not be completed at this time. Please try again later.");
       }
     }
   }

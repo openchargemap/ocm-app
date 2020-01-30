@@ -101,6 +101,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     WebView,
     InAppBrowser,
     GoogleAnalytics,*/
+    
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

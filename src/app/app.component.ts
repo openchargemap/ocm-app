@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Platform, ModalController, Events } from "@ionic/angular";
+import { Platform, ModalController } from "@ionic/angular";
 import { TranslateService } from "@ngx-translate/core";
 import { Mapping } from "./services/mapping/Mapping";
 import { RoutePlannerPage } from "./pages/route-planner/route-planner";
@@ -21,6 +21,7 @@ import {
   PushNotificationToken,
   PushNotificationActionPerformed
 } from '@capacitor/core';
+import { Events } from "./services/Events";
 
 const { PushNotifications, SplashScreen, StatusBar } = Plugins;
 
@@ -54,7 +55,7 @@ export class AppComponent {
   }
 
   configurePushNotifications() {
-    
+
     // Register with Apple / Google to receive push via APNS/FCM
     PushNotifications.register();
 
@@ -103,8 +104,11 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      StatusBar.show();
-      SplashScreen.hide();
+
+      if (this.platform.is("capacitor")) {
+        StatusBar.show();
+        SplashScreen.hide();
+      }
 
       this.translate.addLangs(this.appManager.getLanguages().map(l => l.code));
       // this language will be used as a fallback when a translation isn't found in the current language
@@ -139,7 +143,9 @@ export class AppComponent {
         }
       });
 
-      this.configurePushNotifications();
+      if (this.platform.is("ios")) {
+        this.configurePushNotifications();
+      }
     });
   }
 

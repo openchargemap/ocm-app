@@ -15,9 +15,10 @@ import { Observable } from 'rxjs/Observable';
 // import { LeafletMap } from './providers/LeafletMap';
 import { MapKitMapProvider } from './providers/MapKit';
 import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
-import { Events } from '@ionic/angular'; // TODO remove dependency on ionic here?
+
 import { HttpClient } from '@angular/common/http';
 import { MapTilerMapProvider } from './providers/MapTiler';
+import { Events } from '../../services/Events';
 
 /** Mapping - provides a way to render to various mapping APIs
  * @module Mapping

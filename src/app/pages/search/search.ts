@@ -13,12 +13,13 @@ import { Mapping } from './../../services/mapping/Mapping';
 import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
 import { Component, OnInit, NgZone, ViewChild, AfterViewInit, HostListener } from '@angular/core';
-import { NavController, Events, Platform, ModalController, AlertController } from '@ionic/angular';
+import { NavController, Platform, ModalController, AlertController } from '@ionic/angular';
 import { PlaceSearch } from '../../components/place-search/place-search';
 import { PlaceSearchResult } from '../../model/AppModels';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
+import { Events } from '../../services/Events';
 const { Keyboard, Geolocation } = Plugins;
 
 @Component({

@@ -6,7 +6,7 @@
 
 import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, IMapManager } from '../interfaces/mapping';
-import { Events } from '@ionic/angular';
+import { Events } from '../../../services/Events';
 import { Observable } from 'rxjs/Observable';
 import { Dictionary } from 'typescript-collections';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';

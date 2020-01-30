@@ -4,7 +4,7 @@
 */
 import { AppManager } from './AppManager';
 import { Injectable } from '@angular/core';
-import { Events } from '@ionic/angular';
+import { Events } from './Events';
 import { SubmissionQueueItem, SubmissionType } from '../model/AppModels';
 
 @Injectable({

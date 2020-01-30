@@ -5,7 +5,7 @@ import { Logging, LogLevel } from './Logging';
 */
 import { APIClient } from './APIClient';
 import { Injectable } from '@angular/core';
-import { Events, NavController, Platform, ToastController, LoadingController } from '@ionic/angular';
+import { Platform, ToastController, LoadingController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 import { UserProfile, SubmissionType, SearchSettings, Journey, WayPoint, GeoLatLng, Language } from '../model/AppModels';
@@ -17,6 +17,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { Platforms } from '@ionic/core';
 import { Analytics } from './Analytics';
 import { environment } from '../../environments/environment';
+import { Events } from './Events';
 
 @Injectable({
   providedIn: 'root',

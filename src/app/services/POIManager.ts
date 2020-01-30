@@ -1,5 +1,7 @@
-import { Events } from '@ionic/angular';
+
 import { Logging, LogLevel } from './Logging';
+import { Events } from './Events';
+
 /**
 * @author Christopher Cook
 * @copyright Webprofusion Pty Ltd https://webprofusion.com

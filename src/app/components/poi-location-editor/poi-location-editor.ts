@@ -4,7 +4,7 @@ import { GeoLatLng, GeoPosition } from '../../model/AppModels';
 import { IMapProvider, MapOptions } from '../../services/mapping/interfaces/mapping';
 import { ExtendedAddressInfo } from '../../model/CoreDataModel';
 import { MapBoxMapProvider } from '../../services/mapping/providers/MapBox';
-import { Events } from '@ionic/angular';
+import { Events } from '../../services/Events';
 import { Logging } from '../../services/Logging';
 import { HttpClient } from '@angular/common/http';
 import { AppManager } from '../../services/AppManager';

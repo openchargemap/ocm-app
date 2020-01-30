@@ -6,7 +6,7 @@
 
 import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, IMapManager } from '../interfaces/mapping';
-import { Events } from '@ionic/angular';
+import { Events } from '../../../services/Events';
 import { Logging, LogLevel } from './../../Logging';
 
 import { Injectable } from '@angular/core';
