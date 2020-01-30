@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, ModalController } from '@ionic/angular';
-import { RoutePlanner } from '../../components/route-planner/route-planner';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   templateUrl: 'route-planner.html'

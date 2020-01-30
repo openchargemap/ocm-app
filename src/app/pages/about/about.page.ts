@@ -14,14 +14,14 @@ export class AboutPage implements OnInit {
   get appVersion(): string {
     return environment.version;
   }
-  
+
   get apiUrl(): string {
     return environment.apiBase;
   }
 
   ngOnInit() {
   }
-  
+
   close() {
     this.modalController.dismiss();
   }

@@ -2,13 +2,10 @@ import { MediaUploadModule } from './pages/mediaupload/mediaupload.module';
 import { POIDetailsModule } from './pages/poi-details/poi-details.module';
 import { CommentModule } from './pages/comment/comment.module';
 import { SearchPageModule } from './pages/search/search.module';
-import { CommentPage } from './pages/comment/comment';
-import { SearchPage } from './pages/search/search';
-import { RoutePlannerPage } from './pages/route-planner/route-planner';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { RouterModule, RouteReuseStrategy, Routes } from '@angular/router';
+import { RouteReuseStrategy } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { TranslateModule, MissingTranslationHandler, MissingTranslationHandlerParams, TranslateLoader } from '@ngx-translate/core';
@@ -16,26 +13,15 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { POIDetailsPage } from './pages/poi-details/poi-details';
 
 import { RoutePlannerPageModule } from './pages/route-planner/route-planner.module';
 import { SignInModule } from './pages/signin/signin.module';
-import { MediaUploadPage } from './pages/mediaupload/mediaupload';
-import { ProfilePage } from './pages/profile/profile';
-import { SettingsPage } from './pages/settings/settings';
 import { ProfileModule } from './pages/profile/profile.module';
 import { SettingsModule } from './pages/settings/settings.module';
 import { JourneysModule } from './pages/journeys/journeys.module';
-import { FavouriteEditorPage } from './pages/journeys/favourite-editor';
-import { NullableTranslatePipe } from './pipes/NullableTranslatePipe';
-import { PoiEditorPage } from './pages/poi-editor/poi-editor.page';
 import { PoiEditorPageModule } from './pages/poi-editor/poi-editor.module';
-import { PoiEquipmentEditorComponent } from './components/poi-equipment-editor/poi-equipment-editor';
 
-import { Capacitor } from '@capacitor/core';
-import { AboutPage } from './pages/about/about.page';
 import { AboutPageModule } from './pages/about/about.module';
-import { LayerEditorPage } from './pages/layer-editor/layer-editor.page';
 import { LayerEditorPageModule } from './pages/layer-editor/layer-editor.module';
 
 export function tokenGetter() {
@@ -60,9 +46,6 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [RoutePlannerPage, SearchPage, CommentPage, POIDetailsPage, 
-    MediaUploadPage, FavouriteEditorPage, PoiEditorPage, PoiEquipmentEditorComponent, AboutPage, LayerEditorPage],
-  // , JourneysPage, MediaUploadPage, POIDetailsPage, ProfilePage, SettingsPage, SignInPage
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -94,14 +77,6 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     LayerEditorPageModule
   ],
   providers: [
-    /*StatusBar,
-    Keyboard,
-    Camera,
-    SplashScreen,
-    WebView,
-    InAppBrowser,
-    GoogleAnalytics,*/
-    
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

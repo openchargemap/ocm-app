@@ -12,7 +12,7 @@ import { JourneyManager } from './../../services/JourneyManager';
 import { Mapping } from './../../services/mapping/Mapping';
 import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
-import { Component, OnInit, NgZone, ViewChild, AfterViewInit, HostListener } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, AfterViewInit } from '@angular/core';
 import { NavController, Platform, ModalController, AlertController } from '@ionic/angular';
 import { PlaceSearch } from '../../components/place-search/place-search';
 import { PlaceSearchResult } from '../../model/AppModels';
@@ -20,7 +20,7 @@ import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
 import { Events } from '../../services/Events';
-const { Keyboard, Geolocation } = Plugins;
+const { Geolocation } = Plugins;
 
 @Component({
   templateUrl: 'search.html',
@@ -536,7 +536,7 @@ export class SearchPage implements OnInit, AfterViewInit {
       if (!position) {
         throw "Failed to get user location.";
       }
-      
+
       this.logging.log('Got user location.');
 
       this.appManager.searchSettings.StartSearchPosition = new GeoLatLng(position.coords.latitude, position.coords.longitude);

@@ -1,16 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { POIDetails, OperatorInfo, ConnectionType, Country, ConnectionInfo, StatusType, ExtendedPOIDetails, ExtendedAddressInfo, UsageType } from '../../model/CoreDataModel';
 import { AppManager } from '../../services/AppManager';
-import { NavController, ModalController, LoadingController, AlertController } from '@ionic/angular';
-import { GeoLatLng, GeoPosition, POISearchParams } from '../../model/AppModels';
+import { ModalController, LoadingController, AlertController } from '@ionic/angular';
+import { GeoLatLng, POISearchParams } from '../../model/AppModels';
 import { Utils } from '../../core/Utils';
 import { POIManager } from '../../services/POIManager';
-import { PoiDetails } from '../../components/poi-details/poi-details';
 import { Mapping } from '../../services/mapping/Mapping';
 import { PoiLocationEditorComponent } from '../../components/poi-location-editor/poi-location-editor';
 import { PoiEquipmentEditorComponent } from '../../components/poi-equipment-editor/poi-equipment-editor';
 import { StandardStatusTypes } from '../../model/StandardEnumTypes';
-import { Events } from '../../services/Events';
 
 interface ValidationResult {
   isValid: boolean;

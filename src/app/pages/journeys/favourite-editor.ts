@@ -2,7 +2,7 @@ import { JourneyManager } from './../../services/JourneyManager';
 import { AppManager } from './../../services/AppManager';
 import { WayPoint, BookmarkedPOI, Journey } from './../../model/Journey';
 import { Component } from '@angular/core';
-import { NavParams, NavController, ModalController } from '@ionic/angular';
+import { NavParams, ModalController } from '@ionic/angular';
 
 @Component({
   templateUrl: 'favourite-editor.html',
