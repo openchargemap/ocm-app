@@ -313,7 +313,9 @@ export class PoiDetails implements OnInit {
           this.ngOnChanges(null);
         }
 
-        $refreshEvent.target.complete();
+        if ($refreshEvent) {
+          $refreshEvent.target.complete();
+        }
       });
 
     }

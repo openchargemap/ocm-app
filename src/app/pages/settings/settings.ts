@@ -1,12 +1,13 @@
 import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
-import { SearchSettings } from './../../model/SearchSettings';
+import { SearchSettings, MAX_POWER } from './../../model/SearchSettings';
 import { Component, OnInit } from '@angular/core';
-import { ModalController, Events } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { OperatorInfo, UsageType, StatusType, ConnectionType, Country } from '../../model/CoreDataModel';
 import { environment } from '../../../environments/environment';
 import { Utils } from '../../core/Utils';
 import { Mapping } from '../../services/mapping/Mapping';
+import { Events } from '../../services/Events';
 
 @Component({
   templateUrl: 'settings.html'
@@ -14,7 +15,7 @@ import { Mapping } from '../../services/mapping/Mapping';
 export class SettingsPage implements OnInit {
 
   searchSettings: SearchSettings;
-  maxPower = 650;
+  maxPower = MAX_POWER;
 
   public powerRange = { lower: 0, upper: this.maxPower };
 
@@ -35,7 +36,7 @@ export class SettingsPage implements OnInit {
     if (this.powerRange.upper == 0) { this.powerRange.upper = this.maxPower; }
 
     this.appManager.analytics.viewEvent('Settings');
-    
+
   }
 
   get useFilteredOptions(): boolean {
@@ -45,6 +46,13 @@ export class SettingsPage implements OnInit {
     } else {
       return false;
     }
+  }
+
+  clearFilters() {
+    this.searchSettings.ClearActiveFilters();
+    this.powerRange = { lower: 0, upper: this.maxPower };
+
+    this.searchSettings.CheckForActiveFilters();
   }
 
   get operators() {

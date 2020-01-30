@@ -10,7 +10,7 @@
   <h2>Search Filters</h2>
   <p>Note: Filters will remove usable charging locations from your search results if we do not have complete data (i.e Operator or Power Levels).</p>
   <p *ngIf="searchSettings.HasActiveFilters==true" danger>
-    <ion-icon name="alert"></ion-icon> One or more filters are currently being applied.
+    <ion-icon name="alert"></ion-icon> One or more filters are currently being applied. <ion-button size="small" color="light" (click)="clearFilters()"><ion-icon slot="start" name="close"></ion-icon> <ion-label>Clear</ion-label></ion-button>
   </p>
   <ion-list>
     <ion-item *ngIf="isCountryFilterFeatureEnabled">

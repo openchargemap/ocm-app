@@ -2,6 +2,8 @@ import { GeoLatLng } from './GeoPosition';
 import { MapType } from '../services/mapping/interfaces/mapping';
 
 
+export const MAX_POWER: number = 650;
+
 export class SearchSettings {
   OperatorList: Array<number>;
   ConnectionTypeList: Array<number>;
@@ -19,12 +21,15 @@ export class SearchSettings {
   MapType: MapType;
   EnableAdvancedEditorFeatures: boolean;
 
+
   constructor() {
     this.OperatorList = [];
     this.ConnectionTypeList = [];
     this.CountryList = [];
     this.UsageTypeList = [];
     this.StatusTypeList = [];
+    this.MaxPowerKW = null;
+    this.MinPowerKW = null;
     this.HasActiveFilters = false;
 
     this.FilterOptionsByCountryId = null;
@@ -41,6 +46,16 @@ export class SearchSettings {
 
   }
 
+  public ClearActiveFilters() {
+    this.OperatorList = [];
+    this.ConnectionTypeList = [];
+    this.CountryList = [];
+    this.UsageTypeList = [];
+    this.StatusTypeList = [];
+    this.MinPowerKW = null;
+    this.MaxPowerKW = null;
+  }
+
   public CheckForActiveFilters(): boolean {
     if (this.OperatorList.length > 0
       || this.ConnectionTypeList.length > 0
@@ -48,7 +63,7 @@ export class SearchSettings {
       || this.UsageTypeList.length > 0
       || this.StatusTypeList.length > 0
       || this.MinPowerKW > 0
-      || this.MaxPowerKW > 0
+      || (this.MaxPowerKW > 0 || (this.MaxPowerKW != null && this.MaxPowerKW < MAX_POWER))
     ) {
       this.HasActiveFilters = true;
     } else {
