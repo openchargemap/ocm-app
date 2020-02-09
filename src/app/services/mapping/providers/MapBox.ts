@@ -16,6 +16,7 @@ import { environment } from '../../../../environments/environment';
 import { PlaceSearchResult } from '../../../model/AppModels';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { POIDetails, ExtendedPOIDetails } from '../../../model/CoreDataModel';
 
 /**Map Provider for MapBox GL JS API
 * @module MapProviders
@@ -182,6 +183,15 @@ export class MapBoxMapProvider implements IMapProvider {
             // find if this poi already exists in the marker list
             if (this.markerList.containsKey(poi.ID)) {
               addMarker = false;
+
+              let existingMarker = this.markerList.getValue(poi.ID);
+              if (existingMarker && existingMarker.poi) {
+                if ((<ExtendedPOIDetails>existingMarker.poi).DateLastStatusUpdate != poi.DateLastStatusUpdate) {
+                  // data has changed, re-add marker
+                  existingMarker.remove();
+                  addMarker = true;
+                }
+              }
             }
           }
 

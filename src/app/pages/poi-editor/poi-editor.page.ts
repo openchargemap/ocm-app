@@ -8,7 +8,7 @@ import { POIManager } from '../../services/POIManager';
 import { Mapping } from '../../services/mapping/Mapping';
 import { PoiLocationEditorComponent } from '../../components/poi-location-editor/poi-location-editor';
 import { PoiEquipmentEditorComponent } from '../../components/poi-equipment-editor/poi-equipment-editor';
-import { StandardStatusTypes } from '../../model/StandardEnumTypes';
+import { StandardStatusTypes, StandardOperators } from '../../model/StandardEnumTypes';
 
 interface ValidationResult {
   isValid: boolean;
@@ -48,6 +48,8 @@ export class PoiEditorPage implements OnInit {
 
   isNonDuplicateConfirmed: boolean = false;
   skipPOICopy: boolean = false;
+
+  validationMsg: string = null;
 
   loading: any;
 
@@ -120,20 +122,22 @@ export class PoiEditorPage implements OnInit {
   }
 
   get isReadyToSubmit(): boolean {
+
     // true if basic validation has passed and we are at last step of workflow
     return this.validate().isValid && this.step == 'info';
   }
+
 
   ngOnInit() {
 
   }
 
   async presentLoadingUI() {
-   // if (!this.loading) {
-      this.loading = await this.loadingController.create({
-        message: 'Please Wait..'
-      });
-   // }
+    // if (!this.loading) {
+    this.loading = await this.loadingController.create({
+      message: 'Please Wait..'
+    });
+    // }
 
     await this.loading.present();
   }
@@ -277,7 +281,7 @@ export class PoiEditorPage implements OnInit {
     } else if (this.step == 'copy-equipment') {
       this.selectedTab = 'equipment';
 
-     // this.selectedOperator = this.operatorCache.find(o => o.ID == this.item.OperatorID);
+      // this.selectedOperator = this.operatorCache.find(o => o.ID == this.item.OperatorID);
 
       await this.refreshTemplateSites();
     } else if (this.step == 'edit-equipment') {
@@ -463,8 +467,10 @@ export class PoiEditorPage implements OnInit {
     // TODO: status, usage type, submission status
 
     if (validationMsg) {
+      this.validationMsg = validationMsg;
       return { isValid: false, msg: validationMsg };
     } else {
+      this.validationMsg = null;
       return { isValid: true, msg: null };
     }
   }
@@ -583,10 +589,12 @@ export class PoiEditorPage implements OnInit {
     await this.presentLoadingUI();
 
     // edit existing
-    this.poiManager.getPOIById(id, true).then(poi => {
+    this.poiManager.getPOIById(id, true, true).then(poi => {
       this.item = Object.assign({}, poi);
 
-
+      if (this.item.OperatorID == null) {
+        this.item.OperatorID = StandardOperators.UnknownOperator;
+      }
       this.refreshFilteredReferenceData();
 
       this.dismissLoadingUI();
