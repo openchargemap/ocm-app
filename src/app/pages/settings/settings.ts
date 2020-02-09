@@ -3,8 +3,6 @@ import { AppManager } from './../../services/AppManager';
 import { SearchSettings, MAX_POWER } from './../../model/SearchSettings';
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { OperatorInfo, UsageType, StatusType, ConnectionType, Country } from '../../model/CoreDataModel';
-import { environment } from '../../../environments/environment';
 import { Utils } from '../../core/Utils';
 import { Mapping } from '../../services/mapping/Mapping';
 import { Events } from '../../services/Events';

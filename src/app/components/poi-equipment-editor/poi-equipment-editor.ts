@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConnectionInfo } from '../../model/AppModels';
 import { ModalController } from '@ionic/angular';
-import { modalController } from '@ionic/core';
 import { ReferenceDataManager } from '../../services/ReferenceDataManager';
 import { ConnectionType, StatusType, CurrentType } from '../../model/CoreDataModel';
 

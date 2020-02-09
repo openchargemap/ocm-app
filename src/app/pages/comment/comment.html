@@ -21,7 +21,7 @@
     <ion-item>
       <ion-label position="stacked">Comment Type</ion-label>
       <ion-select [(ngModel)]="commentModel.CommentTypeID">
-        <ion-select-option *ngFor="let item of commentTypes" [value]="item.ID" [selected]="false">{{item.Title}}</ion-select-option>
+        <ion-select-option *ngFor="let item of commentTypes" [value]="item.ID">{{item.Title}}</ion-select-option>
       </ion-select>
 
     </ion-item>
@@ -35,7 +35,7 @@
     <ion-item>
       <ion-label position="stacked">Did You Successfully Charge?</ion-label>
       <ion-select [(ngModel)]="commentModel.CheckinStatusTypeID">
-        <ion-select-option *ngFor="let item of checkinTypes" [value]="item.ID" [selected]="false">{{item.Title}}</ion-select-option>
+        <ion-select-option *ngFor="let item of checkinTypes" [value]="item.ID">{{item.Title}}</ion-select-option>
       </ion-select>
 
     </ion-item>
@@ -51,7 +51,7 @@
         <ion-select-option value="3">3 - Average</ion-select-option>
         <ion-select-option value="2">2 - Not Good</ion-select-option>
         <ion-select-option value="1">1 - Bad</ion-select-option>
-        <ion-select-option value="" [selected]="true">Not Rated</ion-select-option>
+        <ion-select-option value="">Not Rated</ion-select-option>
       </ion-select>
     </ion-item>
   </ion-list>

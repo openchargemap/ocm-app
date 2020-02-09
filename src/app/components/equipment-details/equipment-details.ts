@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { ExtendedPOIDetails, ConnectionInfo } from '../../model/CoreDataModel';
-import { Util } from 'leaflet';
 import { Utils } from '../../core/Utils';
 
 @Component({

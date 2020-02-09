@@ -2,7 +2,7 @@ import { JourneyManager } from './../../services/JourneyManager';
 import { APIClient } from './../../services/APIClient';
 import { AppManager } from './../../services/AppManager';
 import { Component } from '@angular/core';
-import { ModalController, NavController, AlertController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { GeoLatLng } from '../../model/AppModels';
 
 import { POIDetailsPage } from '../poi-details/poi-details';

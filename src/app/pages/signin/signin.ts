@@ -3,9 +3,9 @@ import { Logging } from './../../services/Logging';
 import { AppManager } from './../../services/AppManager';
 import { TranslateService } from '@ngx-translate/core';
 
-import { Component, NgZone } from '@angular/core';
+import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-import { NavController, NavParams, AlertController, LoadingController, ModalController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 
 @Component({
     templateUrl: 'signin.html'

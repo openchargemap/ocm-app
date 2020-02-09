@@ -1,5 +1,4 @@
-﻿import { PoiDetails } from './../components/poi-details/poi-details';
-import { CoreReferenceData } from './../model/CoreReferenceData';
+﻿import { CoreReferenceData } from './../model/CoreReferenceData';
 /**
 * @author Christopher Cook
 * @copyright Webprofusion Pty Ltd https://webprofusion.com

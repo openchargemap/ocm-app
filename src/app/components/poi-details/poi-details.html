@@ -37,7 +37,7 @@
     </ion-fab>
   </div>
   <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
-    <ion-refresher-content pullingIcon="arrow-dropdown"
+    <ion-refresher-content pullingIcon="caret-down"
     pullingText="Pull to refresh"
     refreshingSpinner="circles"
     refreshingText="Refreshing..."></ion-refresher-content>
@@ -297,7 +297,7 @@
     <div *ngIf="poi._hasPhotos">
 
       <ion-card *ngFor="let item of poi.MediaItems">
-
+        <img src="{{item.ItemMediumURL}}" />
         <ion-item>
           <ion-avatar slot="start">
             <img *ngIf="item.User && item.User.ProfileImageURL" src="{{item.User?.ProfileImageURL}}" />
@@ -312,7 +312,7 @@
         </ion-item>
 
 
-        <img src="{{item.ItemMediumURL}}" />
+      
 
         <ion-card-content>
           <p>{{item.Comment}}</p>

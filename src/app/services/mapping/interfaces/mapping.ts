@@ -15,7 +15,7 @@ export enum MappingAPI {
 export type MapType = 'ROADMAP' | 'SATELLITE';
 
 export interface IMapProvider {
-   
+
     mapAPIType: MappingAPI;
     mapReady: boolean;
     providerError: string;

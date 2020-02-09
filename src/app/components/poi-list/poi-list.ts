@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { POIDetails, ExtendedPOIDetails } from '../../model/CoreDataModel';
+import { ExtendedPOIDetails } from '../../model/CoreDataModel';
 import { Utils } from '../../core/Utils';
 
 @Component({

@@ -16,15 +16,15 @@
 
     <ion-segment [ngModel]="selectedTab">
       <ion-segment-button value="location" [disabled]="true" layout='icon-start'>
-        <ion-icon *ngIf="selectedTab=='location'" name="arrow-dropright"></ion-icon>
+        <ion-icon *ngIf="selectedTab=='location'" name="caret-forward"></ion-icon>
         <ion-label>Location</ion-label>
       </ion-segment-button>
       <ion-segment-button value="equipment" [disabled]="true" layout='icon-start'>
-        <ion-icon *ngIf="selectedTab=='equipment'" name="arrow-dropright"></ion-icon>
+        <ion-icon *ngIf="selectedTab=='equipment'" name="caret-forward"></ion-icon>
         <ion-label>Equipment</ion-label>
       </ion-segment-button>
       <ion-segment-button value="info" [disabled]="true" layout='icon-start'>
-        <ion-icon *ngIf="selectedTab=='info'" name="arrow-dropright"></ion-icon>
+        <ion-icon *ngIf="selectedTab=='info'" name="caret-forward"></ion-icon>
         <ion-label>Info</ion-label>
       </ion-segment-button>
     </ion-segment>
@@ -170,7 +170,15 @@
       </ng-container>
     </ng-container>
     <ng-container *ngIf="selectedTab=='info'">
+      <p *ngIf="validationMsg" color="warning">
+        <strong>Your changes cannot be saved until the following issues are resolved:</strong>
+        <ion-label color="danger">  {{validationMsg}}</ion-label>
+      
+      </p>
+
       <p>Please provide any other facts related to this site. Additional comments (your charging experiences etc) can be added as check-in comments once the site is listed.</p>
+      
+
       <ion-item>
         <ion-label position="floating">Operational Status (All Equipment))</ion-label>
         <ion-select [(ngModel)]="item.StatusTypeID">
@@ -218,15 +226,15 @@
     <ion-buttons slot="start">
       <ion-button (click)="previous()" *ngIf="step!='location'">
         Previous
-        <ion-icon name="arrow-dropleft" slot="start"></ion-icon>
+        <ion-icon name="caret-back" slot="start"></ion-icon>
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
 
 
-      <ion-button (click)="next()" *ngIf="!isReadyToSubmit">
+      <ion-button (click)="next()" *ngIf="!isReadyToSubmit && step!='info'">
         Next
-        <ion-icon name="arrow-dropright" slot="end"></ion-icon>
+        <ion-icon name="caret-forward" slot="end"></ion-icon>
       </ion-button>
       <ion-button (click)="save()" *ngIf="isReadyToSubmit" color="success">
         Submit

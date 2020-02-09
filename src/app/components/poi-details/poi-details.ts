@@ -9,11 +9,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../../core/AppConfig';
 import { POIManager } from '../../services/POIManager';
 import { SignInPage } from '../../pages/signin/signin';
-import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { PoiEditorPage } from '../../pages/poi-editor/poi-editor.page';
 import { Utils } from '../../core/Utils';
-
 
 @Component({
   selector: 'poi-details',

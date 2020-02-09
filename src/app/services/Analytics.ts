@@ -11,7 +11,7 @@ export class Analytics {
     ga: any = null;
 
     constructor(private logger: Logging, private platform: Platform) {
-        //private ga: GoogleAnalytics, 
+        // private ga: GoogleAnalytics, 
 
         if (platform.is("cordova") || platform.is("capacitor")) {
             this.isCordova = true;

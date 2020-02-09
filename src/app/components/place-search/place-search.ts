@@ -1,9 +1,6 @@
 import { Logging } from './../../services/Logging';
 import { PlaceSearchResult } from './../../model/PlaceSearchResult';
 import { Component, Input, Output, ChangeDetectorRef, EventEmitter, OnInit } from '@angular/core';
-import { MapKitMapProvider } from '../../services/mapping/providers/MapKit';
-import { GeoLatLng } from '../../model/AppModels';
-import { environment } from '../../../environments/environment';
 import { Platform } from '@ionic/angular';
 import { IMapProvider } from '../../services/mapping/interfaces/mapping';
 import { MapBoxMapProvider } from '../../services/mapping/providers/MapBox';
