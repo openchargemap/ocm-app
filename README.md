@@ -40,13 +40,14 @@ Run `ionic build --prod` which will output html build to www folder. When updati
         - ionic cordova prepare ios --prod
     - using capacitor:
         - Android:
+            - Update bundle id to com.webprofusion.openchargemap (including capacitor.config.json), version code in /app/build.gradle
             - npx cap add android
-            - resolve ERR_CLEARTEXT_NOT_PERMITTED debug error: add `android:usesCleartextTraffic="true"` to AndroidManifest.xml
+            - // resolve ERR_CLEARTEXT_NOT_PERMITTED debug error: add `android:usesCleartextTraffic="true"` to AndroidManifest.xml
             - Icons: Android Studio > Res > New Image Asset, browse to Icon,  scale 100%; trim yes; set background to #8BC43F
             - Splashscreen: use apetools to generate 'splash.png' variants, remove unused existing default screens
             - Push notifications: copy google-services.json to app
             - Set version in Android Studio: gradle default config  https://stackoverflow.com/a/26865465/1707154
-            - build: `ionic build --prod`, `npx cap sync`, `npx cap open android`, Build Signed APK in Android Studio
+            - build: `ionic build --prod`, `npx cap sync android`, `npx cap open android`, Build Signed APK in Android Studio
             - double check icons and splashscreens
         - iOS:
             - npx cap add ios

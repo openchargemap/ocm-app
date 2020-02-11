@@ -18,7 +18,7 @@ export class Logging {
         this.logLevel = LogLevel.VERBOSE;
 
         if (environment.production) {
-            this.logLevel = LogLevel.ERROR;
+            this.logLevel = LogLevel.INFO;
         }
     }
     public log(msg: string, level: LogLevel = LogLevel.VERBOSE) {

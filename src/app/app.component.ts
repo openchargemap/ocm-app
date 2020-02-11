@@ -7,7 +7,7 @@ import { SignInPage } from "./pages/signin/signin";
 import { JourneysPage } from "./pages/journeys/journeys";
 import { AppManager } from "./services/AppManager";
 import { ProfilePage } from "./pages/profile/profile";
-import { Logging } from "./services/Logging";
+import { Logging, LogLevel } from "./services/Logging";
 import { environment } from "../environments/environment";
 import { PoiEditorPage } from "./pages/poi-editor/poi-editor.page";
 import { Analytics } from "./services/Analytics";
@@ -77,7 +77,7 @@ export class AppComponent {
     // Show us the notification payload if the app is open on our device
     PushNotifications.addListener('pushNotificationReceived',
       (notification: PushNotification) => {
-        this.logger.log('Push received: ' + JSON.stringify(notification));
+        this.logger.log('Push received: ' + JSON.stringify(notification), LogLevel.INFO);
       }
     );
 
@@ -143,7 +143,7 @@ export class AppComponent {
         }
       });
 
-      if (this.platform.is("ios")) {
+      if (this.platform.is("ios") || this.platform.is("android")) {
         this.configurePushNotifications();
       }
     });
