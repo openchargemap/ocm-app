@@ -6,8 +6,8 @@ android {
         applicationId "com.webprofusion.openchargemap"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 70350
-        versionName '7.3.5'
+        versionCode 70430
+        versionName '7.4.3'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
