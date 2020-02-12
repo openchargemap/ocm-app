@@ -19,6 +19,8 @@ import { PlaceSearchResult } from '../../model/AppModels';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { Events } from '../../services/Events';
+import { Plugins, GeolocationPosition, GeolocationOptions } from '@capacitor/core';
+const { Geolocation } = Plugins;
 
 @Component({
   templateUrl: 'search.html',
@@ -531,9 +533,17 @@ export class SearchPage implements OnInit, AfterViewInit {
     this.mapping.updateMapCentrePos(searchPos.latitude, searchPos.longitude, true, this.defaultMapZoom);
   }
 
-  private async getPosition(options = null): Promise<any> {
-    return new Promise(function (resolve, reject) {
-      navigator.geolocation.getCurrentPosition(resolve, reject, options);
+
+  private async getPosition(options: GeolocationOptions = {}): Promise<GeolocationPosition>  {
+    return new Promise<GeolocationPosition>((resolve, reject) => {
+      const id = Geolocation.watchPosition(options, (position, err) => {
+        Geolocation.clearWatch({id});
+        if(err) {
+          reject(err);
+          return;
+        }
+        resolve(position);
+      });
     });
   }
 
