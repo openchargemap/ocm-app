@@ -18,9 +18,7 @@ import { PlaceSearch } from '../../components/place-search/place-search';
 import { PlaceSearchResult } from '../../model/AppModels';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { Plugins } from '@capacitor/core';
 import { Events } from '../../services/Events';
-const { Geolocation } = Plugins;
 
 @Component({
   templateUrl: 'search.html',
@@ -154,7 +152,7 @@ export class SearchPage implements OnInit, AfterViewInit {
       if (this.mapping) {
         this.mapping.updateMapSize();
       }
-      
+
       if (!this.initialResultsShown) {
 
         // if start position already set, use that for first search
@@ -533,13 +531,19 @@ export class SearchPage implements OnInit, AfterViewInit {
     this.mapping.updateMapCentrePos(searchPos.latitude, searchPos.longitude, true, this.defaultMapZoom);
   }
 
+  private async getPosition(options = null): Promise<any> {
+    return new Promise(function (resolve, reject) {
+      navigator.geolocation.getCurrentPosition(resolve, reject, options);
+    });
+  }
+
   async locateUser(): Promise<any> {
 
     try {
 
       this.logging.log('Attempting to locate user..');
 
-      const position = await Geolocation.getCurrentPosition();
+      const position = await this.getPosition();
 
       if (!position) {
         throw "Failed to get user location.";
