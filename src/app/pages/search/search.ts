@@ -151,6 +151,10 @@ export class SearchPage implements OnInit, AfterViewInit {
       this.logging.log("init map: mapping ready");
       // on map ready, perform an initial search either a a preset position or the users location
 
+      if (this.mapping) {
+        this.mapping.updateMapSize();
+      }
+      
       if (!this.initialResultsShown) {
 
         // if start position already set, use that for first search
@@ -199,6 +203,10 @@ export class SearchPage implements OnInit, AfterViewInit {
           } else {
             // attempt to geolocate user and perform search
             await this.locateUser();
+
+            if (this.mapping) {
+              this.mapping.updateMapSize();
+            }
           }
         }
 

@@ -51,11 +51,12 @@ Run `ionic build --prod` which will output html build to www folder. When updati
             - double check icons and splashscreens
         - iOS:
             - npx cap add ios
-            - Update bundle id to org.openchargemap.app (including capacitor.config.json), version code
+            - Update bundle id to org.openchargemap.app (including capacitor.config.json), version code, ste Display Name to 'Open Charge' (for length)
             - Set Info.plist settings and permissions as required by Capacitor plugins: 
                 - Status Bar: UIViewControllerBasedStatusBarAppearance : Yes
                 - Privacy Location Text (important for validation): 'Your location information will be used to find charging stations near you.'
                 - Add Push Notifications capability
+            - set splashscreen and icons: replace Assets with resources/Assets
 
 
 
