@@ -54,6 +54,8 @@ export class AppComponent {
     }
   }
 
+
+
   configurePushNotifications() {
 
     // Register with Apple / Google to receive push via APNS/FCM
@@ -145,8 +147,22 @@ export class AppComponent {
 
       if (this.platform.is("ios") || this.platform.is("android")) {
         this.configurePushNotifications();
+
+        this.checkForAppOpenUrl();
       }
     });
+  }
+
+  async checkForAppOpenUrl() {
+    // app opened via url while app already open
+    Plugins.App.addListener('appUrlOpen', (data: any) => {
+      alert('App (re)opened with URL: ' + data.url);
+    });
+
+    let ret = await Plugins.App.getLaunchUrl();
+    if (ret && ret.url) {
+      alert('App opened with URL: ' + ret.url);
+    }
   }
 
   async openRoutePlannerModal() {
