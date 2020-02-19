@@ -1,0 +1,192 @@
+{
+  "_langTitle": "Hungarian/Magyar",
+  "_langCode": "hu",
+  "ocm": {
+    "general": {
+      "shortDescription": "EV töltőpontok publikus globális nyilvántartása",
+      "linkWebApp": "Keress töltőpontot a webes alkalmazásunk segítségével!",
+      "linkBrowsePOI": "Összes helyszín böngészése",
+      "browsePOI": "Töltőpontok listázása",
+      "loadingProgress": "Betöltés...",
+      "addLocation": "Hely hozzáadása",
+      "addItem": "Hozzáadás",
+      "favourites": "Kedvencek",
+      "settings": "Beállítások",
+      "about": "Névjegy",
+      "signIn": "Belépés",
+      "signOut": "Kilépés"
+    },
+    "details": {
+      "sectionTitle": "Töltő hely",
+      "location": {
+        "sectionTitle": "Helyszín leírása",
+        "title": "Helyszín megnevezése",
+        "address": "Legközelebbi cím",
+        "addressLine1": "Cím első sora",
+        "addressLine2": "Cím második sora",
+        "town": "Város",
+        "stateOrProvince": "Állam/megye",
+        "postcode": "Irányítószám",
+        "country": "Ország",
+        "latitude": "Földrajzi szélesség",
+        "longitude": "Földrajzi hosszúság",
+        "contactTelephone1": "Elsődleges telefonszám",
+        "contactTelephone2": "Másodlagos telefonszám",
+        "contactEmail": "E-mail cím",
+        "map": "Térkép",
+        "streetView": "Utcanézet",
+        "addressRelatedURL": "Honlap"
+      },
+      "generalComments": "Általános információk",
+      "accessComments": "Megközelítési információ",
+      "advancedDetails": "További információk",
+      "numberOfPoints": "Állomások/parkolók száma",
+      "usageType": "Elérhetőség",
+      "usageCost": "Használati díj",
+      "operationalStatus": "Működési állapot",
+      "datePlanned": "Tervezett időpont",
+      "dateLastConfirmed": "Utolsó megerősítés ideje",
+      "lastUpdated": "Legutolsó frissítés",
+      "refNumber": "OpenChargeMap Ref",
+      "dataQualityLevel": "Adatminőség szintje",
+      "importedDataNotice": "Megjegyzés: Az adatok más forrásból, automatikusan lettek átemelve. A változásokat az adatszolgáltatóhoz közvetlenül kell benyújtani.",
+      "submissionStatus": "Adatpont státusza",
+      "placesNearby": {
+        "sectionTitle": "Közeli helyek"
+      },
+      "mediaItems": {
+        "sectionTitle": "Fotók",
+        "addPrompt": "Tölts fel saját fényképet ehhez a helyhez"
+      },
+      "metadataValues": {
+        "sectionTitle": "További címkék"
+      },
+      "commentsAndRatings": {
+        "sectionTitle": "Észrevételek és minősítések",
+        "zeroComments": "Nincs beküldött felhasználói észrevétel",
+        "addPrompt": "Rögzítsd az észrevételeidet vagy az állapotot!"
+      },
+      "equipment": {
+        "sectionTitle": "Berendezés adatai",
+        "connectionType": "Csatlakozó típusa",
+        "powerKW": "Max teljesítmény (KW)",
+        "powerLevel": "Sebesség",
+        "quantity": "Mennyiség",
+        "supplyType": "Áramforrás típusa",
+        "voltage": "Feszültség",
+        "current": "Max áram",
+        "comment": "Észrevételek",
+        "reference": "Referencia"
+      },
+      "dataProvider": {
+        "sectionTitle": "Adatszolgáltató",
+        "website": "Honlap",
+        "providersReference": "Adatszolgáltató Ref"
+      },
+      "operator": {
+        "sectionTitle": "Hálózat/üzemeltető",
+        "operatorsReference": "Üzemeltető Ref"
+      }
+    },
+    "search": {
+      "sectionTitle": "Keresés",
+      "locationInput": "Hely",
+      "useMyLocation": "Keresés a közelemben",
+      "distance": "Távolság",
+      "chargingLevels": "Töltési sebesség",
+      "minPowerKW": "Min. teljesítmény kW",
+      "connectionTypes": "Csatlakozó típusa",
+      "networkOperators": "Hálózat/üzemeltető",
+      "countries": "Ország",
+      "submissionStatus": "Beküldés állapota",
+      "usageTypes": "Használat",
+      "operationalStatusTypes": "Állapot",
+      "performSearch": "Keresés",
+      "progress": "Keresés..."
+    },
+    "navigation": {
+      "home": "Kezdőlap",
+      "browse": {
+        "sectionTitle": "Böngészés",
+        "allLocations": "Minden helyszín",
+        "byCountry": "Országonként",
+        "avaitingReview": "Jóváhagyásra vár",
+        "recentActivity": "Legutóbbi tevékenységek",
+        "webApp": "Webes alkalmazás mobilra",
+        "statistics": "Statisztikák",
+        "awaitingReviewImported": "Jóváhagyásra váró importált helyszínek",
+        "editqueue": "Jóváhagyásra váró módosítások"
+      },
+      "develop": {
+        "sectionTitle": "Fejlesztés",
+        "api": "API",
+        "htmlWidgets": "HTML widgetek",
+        "examples": "Példák",
+        "getInvolved": "Csatlakozz!",
+        "code": "Nézd meg a kódot! (GitHub-on)",
+        "translate": "Segíts lefordítani!"
+      },
+      "discuss": "Beszéljük meg!",
+      "about": {
+        "termsPrivacy": "Feltételek és adatvédelem",
+        "contact": "Kapcsolat",
+        "guidance": "Útmutató közreműködőknek"
+      },
+      "profile": {
+        "sectionTitle": "Saját profil",
+        "subscriptions": "Feliratkozásaim",
+        "comments": "Észrevételeim",
+        "uploads": "Feltöltéseim"
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Nincs kiválasztva)",
+        "value_0": "Ismeretlen",
+        "value_10": "Jelenleg elérhető (automatikus státusz)",
+        "value_20": "Jelenleg használatban (automatikus státusz)",
+        "value_30": "Átmenetileg nem elérhető",
+        "value_50": "Működik",
+        "value_75": "Részben működik",
+        "value_100": "Nem működik",
+        "value_150": "Tervezett",
+        "value_200": "Nincs már ott (leszerelve)"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Nincs kiválasztva)",
+        "value_1": "(Ismeretlen üzemeltető)",
+        "value_44": "(Magánterület)",
+        "value_45": "(Vállalkozás a helyszínen)"
+      },
+      "usageType": {
+        "value_minus1": "(Nincs kiválasztva)",
+        "value_0": "(Ismeretlen)",
+        "value_1": "Nyilvános",
+        "value_2": "Magán - korlátozott hozzáférés",
+        "value_3": "Magán - bejelentkezés szükséges",
+        "value_4": "Nyilvános - tagság szükséges",
+        "value_5": "Nyilvános - fizetés a helyszínen",
+        "value_6": "Magán - dolgozók és látogatók részére",
+        "value_7": "Nyilvános - bejelentkezés szükséges"
+      },
+      "connectionType": {
+        "value_minus1": "(Nincs kiválasztva)",
+        "value_0": "(Ismeretlen)"
+      },
+      "levelType": {
+        "value_minus1": "(Nincs kiválasztva)",
+        "value_0": "(Ismeretlen)",
+        "value_1": "Level 1: alacsony (2 kW alatt)",
+        "value_2": "Level 2: közepes (2 kW felett)",
+        "value_3": "Level 3: magas (40 kW felett)"
+      },
+      "supplyType": {
+        "value_minus1": "(Nincs kiválasztva)",
+        "value_0": "(Ismetelten)",
+        "value_10": "AC (egy fázis)",
+        "value_20": "AC (három fázis)",
+        "value_30": "DC"
+      }
+    }
+  }
+}

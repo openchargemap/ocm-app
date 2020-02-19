@@ -1,0 +1,192 @@
+{
+  "_langTitle": "Italiano",
+  "_langCode": "it",
+  "ocm": {
+    "general": {
+      "shortDescription": "Il data base pubblico globale delle colonnine di ricarica",
+      "linkWebApp": "Cerca le colonnine utilizzando la nostra Web App",
+      "linkBrowsePOI": "Elenca tutte le colonnine",
+      "browsePOI": "Ricerca le colonnine di ricarica",
+      "loadingProgress": "caricamento in corso...",
+      "addLocation": "Aggiungi colonnina",
+      "addItem": "Aggiungi",
+      "favourites": "Preferite",
+      "settings": "Impostazioni",
+      "about": "Chi siamo",
+      "signIn": "Login",
+      "signOut": "Logout"
+    },
+    "details": {
+      "sectionTitle": "Posizione della colonnina",
+      "location": {
+        "sectionTitle": "Dettagli della posizione",
+        "title": "Nome della Colonnina",
+        "address": "Indirizzo più vicino",
+        "addressLine1": "Indirizzo - Riga 1",
+        "addressLine2": "Indirizzo - Riga 2",
+        "town": "Città / Comune",
+        "stateOrProvince": "Provincia",
+        "postcode": "CAP",
+        "country": "Nazione",
+        "latitude": "Latitudine",
+        "longitude": "Longitudine",
+        "contactTelephone1": "Numero di telefono principale",
+        "contactTelephone2": "Numero di telefono alternativo o fax",
+        "contactEmail": "Contatto e-mail",
+        "map": "Mappa",
+        "streetView": "Vista da Street View",
+        "addressRelatedURL": "Sito Web"
+      },
+      "generalComments": "Info generali",
+      "accessComments": "Come ci arrivo",
+      "advancedDetails": "Informazioni aggiuntive",
+      "numberOfPoints": "Numero di posti auto o moto",
+      "usageType": "Possibilità di utilizzo",
+      "usageCost": "Costo di utilizzo",
+      "operationalStatus": "Operatività",
+      "datePlanned": "Data programmata",
+      "dateLastConfirmed": "Ultima data confermata",
+      "lastUpdated": "Ultimo aggiornamento",
+      "refNumber": "Rif: OpenChargeMap",
+      "dataQualityLevel": "Livello di affidabilità dei dati",
+      "importedDataNotice": "N.B. questi dati sono inseriti automaticamente e derivano dal sito del gestore della colonnina per cui eventuali modifiche dovrebbero essere effettuate direttamente su tale sito.",
+      "submissionStatus": "Stato di Approvazione",
+      "placesNearby": {
+        "sectionTitle": "Luoghi di interesse nelle vicinanze"
+      },
+      "mediaItems": {
+        "sectionTitle": "Foto",
+        "addPrompt": "Carica le tue foto per questa colonnina"
+      },
+      "metadataValues": {
+        "sectionTitle": "Tag aggiuntivi"
+      },
+      "commentsAndRatings": {
+        "sectionTitle": "Commenti e Valutazioni",
+        "zeroComments": "Nessun utente ha ancora inserito un commento",
+        "addPrompt": "Aggiungi un commento o un aggiornamento rapido sullo stato della colonnina"
+      },
+      "equipment": {
+        "sectionTitle": "Informazioni di dettaglio sulle prese disponibili",
+        "connectionType": "Tipo di presa",
+        "powerKW": "Potenza massima (kW)",
+        "powerLevel": "Livello di potenza",
+        "quantity": "Numero di prese",
+        "supplyType": "Tipo di alimentazione",
+        "voltage": "Tensione [V]",
+        "current": "Corrente massima [A]",
+        "comment": "Commenti",
+        "reference": "Riferimento"
+      },
+      "dataProvider": {
+        "sectionTitle": "Info fornite da",
+        "website": "Sito Web",
+        "providersReference": "Riferimenti del fornitore dei dati"
+      },
+      "operator": {
+        "sectionTitle": "Gestore",
+        "operatorsReference": "Riferimenti del gestore"
+      }
+    },
+    "search": {
+      "sectionTitle": "Ricerca",
+      "locationInput": "Posizione",
+      "useMyLocation": "Cerca nelle vicinanze",
+      "distance": "Distanza",
+      "chargingLevels": "Livello della di potenza di ricarica",
+      "minPowerKW": "Potenza minima [kW]",
+      "connectionTypes": "Tipo di presa disponibile",
+      "networkOperators": "Gestore del servizio",
+      "countries": "Paese",
+      "submissionStatus": "Fase di Approvazione",
+      "usageTypes": "Modalità d'uso",
+      "operationalStatusTypes": "Stato",
+      "performSearch": "Cerca",
+      "progress": "sto cercando..."
+    },
+    "navigation": {
+      "home": "Home",
+      "browse": {
+        "sectionTitle": "Cerca",
+        "allLocations": "Tutte le colonnine",
+        "byCountry": "Per nazione",
+        "avaitingReview": "In corso di verifica",
+        "recentActivity": "Ultimi aggiornamenti",
+        "webApp": "Web App per cellulare",
+        "statistics": "Statistiche",
+        "awaitingReviewImported": "Colonnine di ricarica importate in attesa di approvazione.",
+        "editqueue": "Modifiche in attesa di approvazione."
+      },
+      "develop": {
+        "sectionTitle": "Collabora al progetto",
+        "api": "API",
+        "htmlWidgets": "HTML Widgets",
+        "examples": "Esempi",
+        "getInvolved": "Collabora",
+        "code": "Accedi al codice sorgente (su GitHub)",
+        "translate": "Aiutaci a tradurre"
+      },
+      "discuss": "Forum OCM",
+      "about": {
+        "termsPrivacy": "Termini di utilizzo e norme sulla privacy",
+        "contact": "Contatti",
+        "guidance": "Linee guida per collaborare"
+      },
+      "profile": {
+        "sectionTitle": "Il mio profilo",
+        "subscriptions": "Le mie notifiche",
+        "comments": "I miei commenti",
+        "uploads": "Le mie foto"
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "Non selezionato",
+        "value_0": "Ignoto",
+        "value_10": "Attualmente disponibile",
+        "value_20": "Attualmente in uso",
+        "value_30": "Temporaneamente non disponibile",
+        "value_50": "Funzionante",
+        "value_75": "Funzionante solo in parte",
+        "value_100": "Non Funzionante",
+        "value_150": "In costruzione o Pianificata ",
+        "value_200": "Rimossa"
+      },
+      "operatorInfo": {
+        "value_minus1": "Non Selezionato o Non Presente nella lista",
+        "value_1": "Operatore non Conosciuto",
+        "value_44": "Abitazione Privata",
+        "value_45": "Attività Imprenditoriale"
+      },
+      "usageType": {
+        "value_minus1": "Non Selezionato",
+        "value_0": "Non Conosciuto",
+        "value_1": "Pubblico",
+        "value_2": "Privato - Accesso limitato",
+        "value_3": "Privato - È richiesto un preavviso",
+        "value_4": "Pubblico - È necessaria una registrazione o tessera",
+        "value_5": "Pubblico - Pagamento sul posto",
+        "value_6": "Privato - Utilizzabile dal personale e dai clienti",
+        "value_7": "Pubblico - È richiesto un preavviso"
+      },
+      "connectionType": {
+        "value_minus1": "Non selezionato",
+        "value_0": "Non conosciuto o non presente nella lista"
+      },
+      "levelType": {
+        "value_minus1": "Non selezionato",
+        "value_0": "Non conosciuto",
+        "value_1": "Basso (fino a 2kW)",
+        "value_2": "Medio (da 2kW fino a 40kW)",
+        "value_3": "Alto (più di 40kW)"
+      },
+      "supplyType": {
+        "value_minus1": "Non selezionata",
+        "value_0": "Non Conosciuta",
+        "value_10": "CA - Corrente Alternata Monofase",
+        "value_20": "CA - Corrente Alternata Trifase",
+        "value_30": "CC - Corrente Continua"
+      }
+    }
+  }
+}

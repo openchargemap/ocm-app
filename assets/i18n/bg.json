@@ -1,0 +1,192 @@
+{
+  "_langTitle": "Български",
+  "_langCode": "bg",
+  "ocm": {
+    "general": {
+      "shortDescription": null,
+      "linkWebApp": null,
+      "linkBrowsePOI": null,
+      "browsePOI": "Търси точки за зареждане",
+      "loadingProgress": "Зареждане...",
+      "addLocation": "Добави местоположение",
+      "addItem": "Добави",
+      "favourites": "Фаворити",
+      "settings": "Настройки",
+      "about": "За нас",
+      "signIn": "Вход",
+      "signOut": "Изход"
+    },
+    "details": {
+      "sectionTitle": "Място за зареждане",
+      "location": {
+        "sectionTitle": "Детайли на местоположението",
+        "title": "Име на мястото",
+        "address": "Най-близкия адрес",
+        "addressLine1": "Адрес 1",
+        "addressLine2": "Адрес 2",
+        "town": "Град",
+        "stateOrProvince": "Област",
+        "postcode": "Пощенски код",
+        "country": "Държава",
+        "latitude": null,
+        "longitude": null,
+        "contactTelephone1": "Телефон за контакт",
+        "contactTelephone2": "Допълнителен телефон",
+        "contactEmail": "Ел. поща",
+        "map": "Карта",
+        "streetView": null,
+        "addressRelatedURL": "Сайт"
+      },
+      "generalComments": null,
+      "accessComments": "Информация за достъп/активиране",
+      "advancedDetails": "Допълнителна информация",
+      "numberOfPoints": "Брой станции/розетки",
+      "usageType": "Състояние",
+      "usageCost": "Цена",
+      "operationalStatus": "Статус",
+      "datePlanned": null,
+      "dateLastConfirmed": null,
+      "lastUpdated": "Последно обновено",
+      "refNumber": "OCM Номер",
+      "dataQualityLevel": null,
+      "importedDataNotice": "Забележка: Тези данни се получават автоматично, промените ще бъдат изпратени автоматично на доставчика им",
+      "submissionStatus": null,
+      "placesNearby": {
+        "sectionTitle": "Места близо до теб"
+      },
+      "mediaItems": {
+        "sectionTitle": "Снимки",
+        "addPrompt": "Качете ваши снимки за точката"
+      },
+      "metadataValues": {
+        "sectionTitle": null
+      },
+      "commentsAndRatings": {
+        "sectionTitle": "Коментари и Рейтинг",
+        "zeroComments": "Няма направени коментари от потребители",
+        "addPrompt": null
+      },
+      "equipment": {
+        "sectionTitle": null,
+        "connectionType": null,
+        "powerKW": "Максимална мощност (KW)",
+        "powerLevel": "Ниво",
+        "quantity": "Количество",
+        "supplyType": "Вид на точката",
+        "voltage": "Напрежение",
+        "current": "Максимално Текущи",
+        "comment": "Коментари",
+        "reference": "Референция"
+      },
+      "dataProvider": {
+        "sectionTitle": "Доставчик на данни",
+        "website": "Уебсайт",
+        "providersReference": null
+      },
+      "operator": {
+        "sectionTitle": "Мрежа/Оператор",
+        "operatorsReference": null
+      }
+    },
+    "search": {
+      "sectionTitle": null,
+      "locationInput": "Местоположение",
+      "useMyLocation": "Намери близо до мен",
+      "distance": "Разстояние",
+      "chargingLevels": "Ниво на заряд",
+      "minPowerKW": null,
+      "connectionTypes": null,
+      "networkOperators": "Мрежа/Оператор",
+      "countries": "Държава",
+      "submissionStatus": null,
+      "usageTypes": null,
+      "operationalStatusTypes": "Статус",
+      "performSearch": "Търси",
+      "progress": "Търсене..."
+    },
+    "navigation": {
+      "home": "Начало",
+      "browse": {
+        "sectionTitle": "Преглед",
+        "allLocations": "Всички локации",
+        "byCountry": "По Държава",
+        "avaitingReview": "Изчаква одобрение",
+        "recentActivity": "Текуща активност",
+        "webApp": null,
+        "statistics": "Статистика",
+        "awaitingReviewImported": null,
+        "editqueue": null
+      },
+      "develop": {
+        "sectionTitle": null,
+        "api": null,
+        "htmlWidgets": null,
+        "examples": null,
+        "getInvolved": null,
+        "code": null,
+        "translate": null
+      },
+      "discuss": null,
+      "about": {
+        "termsPrivacy": null,
+        "contact": null,
+        "guidance": null
+      },
+      "profile": {
+        "sectionTitle": null,
+        "subscriptions": null,
+        "comments": null,
+        "uploads": null
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_10": null,
+        "value_20": null,
+        "value_30": null,
+        "value_50": null,
+        "value_75": null,
+        "value_100": null,
+        "value_150": null,
+        "value_200": null
+      },
+      "operatorInfo": {
+        "value_minus1": null,
+        "value_1": null,
+        "value_44": null,
+        "value_45": null
+      },
+      "usageType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null,
+        "value_4": null,
+        "value_5": null,
+        "value_6": null,
+        "value_7": null
+      },
+      "connectionType": {
+        "value_minus1": null,
+        "value_0": null
+      },
+      "levelType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_1": null,
+        "value_2": null,
+        "value_3": null
+      },
+      "supplyType": {
+        "value_minus1": null,
+        "value_0": null,
+        "value_10": null,
+        "value_20": null,
+        "value_30": null
+      }
+    }
+  }
+}

@@ -1,0 +1,192 @@
+{
+  "_langTitle": "English",
+  "_langCode": "en",
+  "ocm": {
+    "general": {
+      "shortDescription": "the global public registry of electric vehicle charging locations",
+      "linkWebApp": "Map of Charging Locations",
+      "linkBrowsePOI": "Browse All Locations",
+      "browsePOI": "Browse Charging Locations",
+      "loadingProgress": "Loading...",
+      "addLocation": "Add Location",
+      "addItem": "Add",
+      "favourites": "Favourites",
+      "settings": "Settings",
+      "about": "About",
+      "signIn": "Sign In",
+      "signOut": "Sign Out"
+    },
+    "details": {
+      "sectionTitle": "Charging Location",
+      "location": {
+        "sectionTitle": "Location Details",
+        "title": "Location Title",
+        "address": "Nearest Address",
+        "addressLine1": "Address Line 1",
+        "addressLine2": "Address Line 2",
+        "town": "Town/City",
+        "stateOrProvince": "State/Province",
+        "postcode": "Postal/Zip Code",
+        "country": "Country",
+        "latitude": "Latitude",
+        "longitude": "Longitude",
+        "contactTelephone1": "Primary Contact Phone",
+        "contactTelephone2": "Secondary Contact Phone",
+        "contactEmail": "Contact Email",
+        "map": "Map",
+        "streetView": "Street View",
+        "addressRelatedURL": "Website"
+      },
+      "generalComments": "General Information",
+      "accessComments": "Access Information",
+      "advancedDetails": "Additional Information",
+      "numberOfPoints": "Number Of Stations/Bays",
+      "usageType": "Usage",
+      "usageCost": "Usage Cost",
+      "operationalStatus": "Operational Status",
+      "datePlanned": "Date Planned",
+      "dateLastConfirmed": "Date Last Confirmed",
+      "lastUpdated": "Last Updated",
+      "refNumber": "OpenChargeMap Ref",
+      "dataQualityLevel": "Data Quality Level",
+      "importedDataNotice": "Note: This data is sourced automatically, changes should be submitted to the data provider directly.",
+      "submissionStatus": "Submission Status",
+      "placesNearby": {
+        "sectionTitle": "Places Nearby"
+      },
+      "mediaItems": {
+        "sectionTitle": "Photos",
+        "addPrompt": "Upload your own photos for this location"
+      },
+      "metadataValues": {
+        "sectionTitle": "Additional Tags"
+      },
+      "commentsAndRatings": {
+        "sectionTitle": "Comments and Ratings",
+        "zeroComments": "No user comments submitted",
+        "addPrompt": "Add a comment or quick status update"
+      },
+      "equipment": {
+        "sectionTitle": "Equipment Details",
+        "connectionType": "Connection Type",
+        "powerKW": "Max Power (KW)",
+        "powerLevel": "Level",
+        "quantity": "Quantity",
+        "supplyType": "Supply Type",
+        "voltage": "Voltage",
+        "current": "Max Current",
+        "comment": "Comments",
+        "reference": "Reference"
+      },
+      "dataProvider": {
+        "sectionTitle": "Data Provider",
+        "website": "Website",
+        "providersReference": "Providers Ref"
+      },
+      "operator": {
+        "sectionTitle": "Network/Operator",
+        "operatorsReference": "Operators Ref"
+      }
+    },
+    "search": {
+      "sectionTitle": "Search",
+      "locationInput": "Location",
+      "useMyLocation": "Search Near Me",
+      "distance": "Distance",
+      "chargingLevels": "Charging Level",
+      "minPowerKW": "Min. Power kW",
+      "connectionTypes": "Connection Types",
+      "networkOperators": "Network/Operator",
+      "countries": "Country",
+      "submissionStatus": "Submission Status",
+      "usageTypes": "Usage",
+      "operationalStatusTypes": "Status",
+      "performSearch": "Search",
+      "progress": "Searching.."
+    },
+    "navigation": {
+      "home": "Home",
+      "browse": {
+        "sectionTitle": "Browse",
+        "allLocations": "All Locations",
+        "byCountry": "By Country",
+        "avaitingReview": "Awaiting Review",
+        "recentActivity": "Recent Activity",
+        "webApp": "Browse Map",
+        "statistics": "Statistics",
+        "awaitingReviewImported": "Imported locations awaiting approval",
+        "editqueue": "Edits awaiting approval"
+      },
+      "develop": {
+        "sectionTitle": "Develop",
+        "api": "API",
+        "htmlWidgets": "HTML Widgets",
+        "examples": "Examples",
+        "getInvolved": "Get Involved",
+        "code": "See the Code (on GitHub)",
+        "translate": "Help Translate"
+      },
+      "discuss": "Discuss",
+      "about": {
+        "termsPrivacy": "Terms & Privacy",
+        "contact": "Contact",
+        "guidance": "Guidance for Contributors"
+      },
+      "profile": {
+        "sectionTitle": "My Profile",
+        "subscriptions": "My Subscriptions",
+        "comments": "My Comments",
+        "uploads": "My uploads"
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(None Selected)",
+        "value_0": "Unknown",
+        "value_10": "Currently Available (Automated Status)",
+        "value_20": "Currently In Use (Automated Status)",
+        "value_30": "Temporarily Unavailable",
+        "value_50": "Operational",
+        "value_75": "Partly Operational (Mixed)",
+        "value_100": "Not Operational",
+        "value_150": "Planned For Future Date",
+        "value_200": "Removed (Decomissioned)"
+      },
+      "operatorInfo": {
+        "value_minus1": "(None Selected)",
+        "value_1": "(Unknown Operator)",
+        "value_44": "(Private Residence/Individual)",
+        "value_45": "(Business Owner at Location)"
+      },
+      "usageType": {
+        "value_minus1": "(None Selected)",
+        "value_0": "(Unknown)",
+        "value_1": "Public",
+        "value_2": "Private - Restricted Access",
+        "value_3": "Privately Owned - Notice Required",
+        "value_4": "Public - Membership Required",
+        "value_5": "Public - Pay At Location",
+        "value_6": "Private - For Staff, Visitors or Customers",
+        "value_7": "Public - Notice Required"
+      },
+      "connectionType": {
+        "value_minus1": "(None Selected)",
+        "value_0": "(Unknown)"
+      },
+      "levelType": {
+        "value_minus1": "(None Selected)",
+        "value_0": "(Unknown)",
+        "value_1": "Level 1 : Low (Under 2kW)",
+        "value_2": "Level 2 : Medium (Over 2kW)",
+        "value_3": "Level 3:  High (Over 40kW)"
+      },
+      "supplyType": {
+        "value_minus1": "(None Selected)",
+        "value_0": "(Unknown)",
+        "value_10": "AC (Single-Phase)",
+        "value_20": "AC (Three-Phase)",
+        "value_30": "DC"
+      }
+    }
+  }
+}
