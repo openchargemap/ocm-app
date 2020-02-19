@@ -1,7 +1,0 @@
-{
-  "name": "io.openchargemap.app",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}
