@@ -17,10 +17,13 @@ import { PlaceSearchResult } from '../../../model/AppModels';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { POIDetails, ExtendedPOIDetails } from '../../../model/CoreDataModel';
+import { debounceTime } from 'rxjs/internal/operators/debounceTime';
+import { debounce } from 'rxjs/operators';
 
 /**Map Provider for MapBox GL JS API
 * @module MapProviders
 */
+let _this = null;
 
 @Injectable()
 export class MapBoxMapProvider implements IMapProvider {
@@ -32,6 +35,7 @@ export class MapBoxMapProvider implements IMapProvider {
   private map: mapboxgl.Map;
   private markerList: Dictionary<number, any>;
   private polylinePath: any;
+  private _isMapAnimating: boolean = false;
 
   private searchMarker: mapboxgl.Marker;
 
@@ -57,6 +61,19 @@ export class MapBoxMapProvider implements IMapProvider {
       return 'mapbox://styles/mapbox/satellite-streets-v11?optimize=true';
     } else {
       return 'mapbox://styles/mapbox/streets-v11?optimize=true';
+    }
+  }
+
+  flyAroundPoint(timestamp) {
+
+    if (this._isMapAnimating) {
+      // clamp the rotation between 0 -360 degrees
+      // Divide timestamp by 100 to slow rotation to ~10 degrees / sec
+      this.map.rotateTo((timestamp / 100) % 360, { duration: 0 });
+
+      // Request the next frame of the animation.
+      const _context = this;
+      requestAnimationFrame(function (t) { _context.flyAroundPoint(t); });
     }
   }
 
@@ -99,19 +116,76 @@ export class MapBoxMapProvider implements IMapProvider {
         this.mapReady = true;
 
 
+        this.map.getCanvas().focus();
+
+        // pixels the map pans when the up or down arrow is clicked
+        let deltaDistance = 100;
+
+        // degrees the map rotates when the left or right arrow is clicked
+        let deltaDegrees = 25;
+
+        function easing(t) {
+          return t * (2 - t);
+        }
+
+        this.map.getCanvas().addEventListener(
+          'keydown',
+          (e) => {
+            e.preventDefault();
+            if (e.which === 38) {
+              // up
+              this.map.panBy([0, -deltaDistance], {
+                easing: easing
+              });
+            } else if (e.which === 40) {
+              // down
+              this.map.panBy([0, deltaDistance], {
+                easing: easing
+              });
+            } else if (e.which === 37) {
+              // left
+              this.map.easeTo({
+                bearing: this.map.getBearing() - deltaDegrees,
+                easing: easing
+              });
+            } else if (e.which === 39) {
+              // right
+              this.map.easeTo({
+                bearing: this.map.getBearing() + deltaDegrees,
+                easing: easing
+              });
+            } else if (e.which === 32) {
+              // fly around
+              if (!this._isMapAnimating) {
+                this._isMapAnimating = true;
+                this.flyAroundPoint(0);
+              } else {
+                this._isMapAnimating = false;
+              }
+            }
+          },
+          true
+        );
+
+        //  this.flyAroundPoint(0);
+
         this.map.on('load', () => {
 
           this.events.publish('ocm:mapping:ready');
         });
 
+        let updateSearchMarker = Utils.debounce(() => {
+          this.getMapCenter().subscribe(pos => {
+            this.searchMarker.setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
+          });
+        }, 500, false);
+
         this.map.on('move', () => {
 
-          // if search maerk enabled, move marker to map centre
-          if (this.searchMarker) {
-            this.getMapCenter().subscribe(pos => {
-              this.searchMarker.setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
-            });
 
+          // if search marker enabled, move marker to map centre
+          if (this.searchMarker) {
+            updateSearchMarker();
           }
 
         });
@@ -137,6 +211,7 @@ export class MapBoxMapProvider implements IMapProvider {
       return false;
     }
   }
+
 
   clearMarkers() {
     if (this.markerList != null) {
