@@ -60,7 +60,7 @@ Run `ionic build --prod` which will output html build to www folder. When updati
             - Release build:
                 - `ionic build --prod`, `npx cap sync ios`
                 - Update Version and Build ID in xcode
-                - Product > Archive, Distribute App > App Store Connect
+                - Target Generic iOS device, Product > Archive, Distribute App > App Store Connect
 
 
 
