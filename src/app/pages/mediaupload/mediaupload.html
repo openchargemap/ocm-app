@@ -15,19 +15,15 @@
     </div>
     <p>You can upload a photo from your device or take a new photo:
     </p>
-    <div>
-
-      <label  class="upload">
-     
-          <ion-button>
-            <ion-icon name="camera" aria-label="camera" slot="start"></ion-icon>
-            <ion-label>Choose Photo..</ion-label>
-          </ion-button>
-          <input type="file" required id="img-upload-media" (change)="loadCameraOrLibraryImage()" />
-
-     
-        </label>
+    
+    <div class="upload">
+      <ion-button (click)="inputFile.click()">
+        <ion-icon name="camera" aria-label="camera" slot="start"></ion-icon>
+        <ion-label>Choose Photo..</ion-label>
+      </ion-button>
+      <input type="file" #inputFile required id="img-upload-media" (change)="loadCameraOrLibraryImage()" />
     </div>
+
     <canvas id="img-upload-canvas" style="display:none;width:500;height:500;border:1px solid red;"></canvas>
     <ion-card *ngIf="imgData!=null">
       <ion-toolbar>

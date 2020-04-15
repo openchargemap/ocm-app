@@ -57,3 +57,8 @@ ion-refresher {
   text-overflow: ellipsis;
   white-space: pre-line;
 }
+
+.alert-radio-label.sc-ion-alert-ios, .alert-checkbox-label.sc-ion-alert-ios {
+  white-space: pre-line;
+  font-size: 14px;
+}

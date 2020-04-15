@@ -22,13 +22,12 @@ Feature toggles are defined by the `enabledFeatures` array, the app will check f
 
 ## Web production build:
 Run `ionic build --prod` which will output html build to www folder. When updating live app, preserve web.config and favicon.
+Copy `www` output to gh-pages branch and commit to publish. When updating live app, preserve CNAME and favicon.
 
 ## Platform Specifics
 - Web uses a web/js mapping provider for the browser version
-    - ionic cordova plugin remove cordova-plugin-inappbrowser
-    - ionic cordova build browser --prod
+    - ionic build --prod
 - Android and iOS
-    - ionic cordova plugin add cordova-plugin-inappbrowser
     - iOS and Android versions historically have different bundle ids.
     - iOS fresh setup: install and update latest cocoapods version, then  /platforms/ios/ pod deintegrate, pod install
         - change bundle id to org.openchargemap.app and name to Open Charge (Open Charge Map is too long)
@@ -46,8 +45,8 @@ Run `ionic build --prod` which will output html build to www folder. When updati
             - Icons: Android Studio > Res > New Image Asset, browse to Icon,  scale 100%; trim yes; set background to #8BC43F
             - Splashscreen: use apetools to generate 'splash.png' variants, remove unused existing default screens
             - Push notifications: copy google-services.json to app
-            - Set version in Android Studio: gradle default config  https://stackoverflow.com/a/26865465/1707154
-            - build: `ionic build --prod`, `npx cap sync android`, `npx cap open android`, Build Signed APK in Android Studio
+            - Set version in Android Studio: app:build.gradle default config  https://stackoverflow.com/a/26865465/1707154
+            - build: `ionic build --prod`, `npx cap sync android`, `npx cap open android`, Generate Signed APK in Android Studio
             - double check icons and splashscreens
         - iOS:
             - npx cap add ios
