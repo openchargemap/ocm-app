@@ -35,17 +35,21 @@ export class SettingsPage implements OnInit {
 
     this.appManager.analytics.viewEvent('Settings');
 
+    if (this.useFilteredOptions)
+    {
+      await this.onCountryChange();
+    }
   }
 
   get useFilteredOptions(): boolean {
 
-    if (this.searchSettings.FilterOptionsByCountryId) {
+    if (this.searchSettings.FilterOptionsByCountryId>0) {
       return true;
     } else {
       return false;
     }
   }
-
+  
   clearFilters() {
     this.searchSettings.ClearActiveFilters();
     this.powerRange = { lower: 0, upper: this.maxPower };
