@@ -1,5 +1,4 @@
 import { GeoLatLng } from './GeoPosition';
-import { AddressInfo } from 'net';
 import { ExtendedAddressInfo } from './CoreDataModel';
 
 export class PlaceSearchResult {

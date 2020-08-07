@@ -16,9 +16,7 @@ import { environment } from '../../../../environments/environment';
 import { PlaceSearchResult } from '../../../model/AppModels';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { POIDetails, ExtendedPOIDetails } from '../../../model/CoreDataModel';
-import { debounceTime } from 'rxjs/internal/operators/debounceTime';
-import { debounce } from 'rxjs/operators';
+import { ExtendedPOIDetails } from '../../../model/CoreDataModel';
 
 /**Map Provider for MapBox GL JS API
 * @module MapProviders
@@ -223,7 +221,7 @@ export class MapBoxMapProvider implements IMapProvider {
       });
     }
 
-    this.markerList = new Dictionary<number, google.maps.Marker>();
+    this.markerList = new Dictionary<number, any>();
   }
 
   /**
@@ -451,17 +449,17 @@ export class MapBoxMapProvider implements IMapProvider {
 
   renderPolyline(polyline: string) {
     this.clearPolyline();
-
-    this.polylinePath = new google.maps.Polyline({
+/*
+    this.polylinePath = {
       path: <any>google.maps.geometry.encoding.decodePath(polyline),
       geodesic: true,
       strokeColor: '#0000FF',
       strokeOpacity: 0.8,
       strokeWeight: 4
-    });
+    };
 
     this.polylinePath.setMap(this.map);
-
+*/
   }
 
   clearPolyline() {

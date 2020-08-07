@@ -3,6 +3,8 @@
 * @copyright Webprofusion Pty Ltd https://webprofusion.com
 */
 
+declare var google: any;
+
 import { Injectable } from '@angular/core';
 import { JourneyManager } from './JourneyManager';
 import { JourneyRoute, JourneyRouteLeg } from '../model/Journey';

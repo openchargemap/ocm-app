@@ -119,7 +119,7 @@ export class MapKitMapProvider implements IMapProvider {
       });
     }
 
-    this.markerList = new Dictionary<number, google.maps.Marker>();
+    this.markerList = new Dictionary<number, any>();
 
   }
 
@@ -377,15 +377,7 @@ export class MapKitMapProvider implements IMapProvider {
   renderPolyline(polyline: string) {
     this.clearPolyline();
 
-    this.polylinePath = new google.maps.Polyline({
-      path: <any>google.maps.geometry.encoding.decodePath(polyline),
-      geodesic: true,
-      strokeColor: '#0000FF',
-      strokeOpacity: 0.8,
-      strokeWeight: 4
-    });
-
-    this.polylinePath.setMap(this.map);
+    // not implemented
 
   }
 
