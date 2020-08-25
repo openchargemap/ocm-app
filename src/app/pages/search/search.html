@@ -5,7 +5,7 @@
 		<ion-buttons slot="start">
 			<ion-menu-button></ion-menu-button>
 		</ion-buttons>
-		<ion-searchbar autocomplete="on" [(ngModel)]="searchKeyword" (ionInput)="search($event)"
+		<ion-searchbar autocapitalize="on" autocomplete="on" [(ngModel)]="searchKeyword" (ionInput)="search($event)"
 					   [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500">
 		</ion-searchbar>
 		<ion-buttons slot="end">

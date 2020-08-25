@@ -40,19 +40,19 @@
         <ion-list>
           <ion-item>
             <ion-label position="floating">Location Name</ion-label>
-            <ion-input type="text" [(ngModel)]="item.AddressInfo.Title" placeholder="A title for this location"></ion-input>
+            <ion-input type="text" [(ngModel)]="item.AddressInfo.Title" autocapitalize="words" placeholder="A title for this location"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Address Line 1</ion-label>
-            <ion-input type="text" [(ngModel)]="item.AddressInfo.AddressLine1" placeholder="The nearest street address"></ion-input>
+            <ion-input type="text" [(ngModel)]="item.AddressInfo.AddressLine1" autocapitalize="words" placeholder="The nearest street address"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Address Line 2</ion-label>
-            <ion-input type="text" [(ngModel)]="item.AddressInfo.AddressLine2" placeholder="Optional"></ion-input>
+            <ion-input type="text" [(ngModel)]="item.AddressInfo.AddressLine2" autocapitalize="words"  placeholder="Optional"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Town</ion-label>
-            <ion-input type="text" [(ngModel)]="item.AddressInfo.Town" placeholder="Town or City"></ion-input>
+            <ion-input type="text" [(ngModel)]="item.AddressInfo.Town" autocapitalize="words" placeholder="Town or City"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">State or Province</ion-label>
@@ -60,7 +60,7 @@
           </ion-item>
           <ion-item>
             <ion-label position="floating">Postal Code</ion-label>
-            <ion-input type="text" [(ngModel)]="item.AddressInfo.Postcode" placeholder="Optional Postal Code"></ion-input>
+            <ion-input type="text" [(ngModel)]="item.AddressInfo.Postcode" autocapitalize="words"  placeholder="Optional Postal Code"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Country</ion-label>
@@ -197,7 +197,7 @@
       </ion-item>
       <ion-item>
         <ion-label position="floating">General Comments</ion-label>
-        <ion-input type="text" [(ngModel)]="item.GeneralComments"></ion-input>
+        <ion-input type="text" [(ngModel)]="item.GeneralComments" autocapitalize="sentences" ></ion-input>
       </ion-item>
     
       <ion-item>
@@ -210,7 +210,7 @@
       </ion-item>
       <ion-item>
         <ion-label position="floating">Access Comments</ion-label>
-        <ion-input type="text" [(ngModel)]="item.AddressInfo.AccessComments" placeholder="Instructions for access or tips for finding charging location"></ion-input>
+        <ion-input type="text" [(ngModel)]="item.AddressInfo.AccessComments" autocapitalize="sentences"  placeholder="Instructions for access or tips for finding charging location"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label position="floating">Related Website</ion-label>
