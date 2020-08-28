@@ -10,6 +10,8 @@ import { JourneyManager } from './JourneyManager';
 import { JourneyRoute, JourneyRouteLeg } from '../model/Journey';
 import { HttpClient } from '@angular/common/http';
 
+declare var google: any;
+
 @Injectable({
     providedIn: 'root',
 })

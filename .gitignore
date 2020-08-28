@@ -39,3 +39,5 @@ dist/
 docs/
 
 android/app/google-services.json
+
+package-lock.json
