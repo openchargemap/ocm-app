@@ -7,7 +7,7 @@
 import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, IMapManager, MapType } from '../interfaces/mapping';
 import { Events } from '../../../services/Events';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Dictionary } from 'typescript-collections';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
 import { Logging, LogLevel } from './../../Logging';

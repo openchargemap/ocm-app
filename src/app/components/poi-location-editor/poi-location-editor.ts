@@ -8,7 +8,7 @@ import { Events } from '../../services/Events';
 import { Logging } from '../../services/Logging';
 import { HttpClient } from '@angular/common/http';
 import { AppManager } from '../../services/AppManager';
-
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-poi-location-editor',
   templateUrl: './poi-location-editor.html',
@@ -52,7 +52,11 @@ export class PoiLocationEditorComponent implements OnInit, AfterContentInit, OnC
 
     // listen for map centre moves and use the new position
     this.mapOptions.onMapMoveCompleted = () => {
-      this.mapService.getMapCenter().subscribe((pos) => {
+      let c: Observable<GeoPosition>;
+      
+     c = this.mapService.getMapCenter();
+     
+     c.subscribe((pos) => {
         if (pos) {
           this.latitude = pos.coords.latitude;
           this.longitude = pos.coords.longitude;

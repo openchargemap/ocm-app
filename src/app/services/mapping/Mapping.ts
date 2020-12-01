@@ -9,7 +9,7 @@ import { Logging, LogLevel } from './../Logging';
 */
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 // import { GoogleMapsNative } from './providers/GoogleMapsNative';
 // import { GoogleMapsWeb } from './providers/GoogleMapsWeb';
 // import { LeafletMap } from './providers/LeafletMap';

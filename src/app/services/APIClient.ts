@@ -1,4 +1,4 @@
-﻿import { CoreReferenceData } from './../model/CoreReferenceData';
+import { CoreReferenceData } from './../model/CoreReferenceData';
 /**
 * @author Christopher Cook
 * @copyright Webprofusion Pty Ltd https://webprofusion.com
@@ -8,7 +8,7 @@ import { Logging, LogLevel } from './Logging';
 import { ReferenceDataManager } from './ReferenceDataManager';
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { POISearchParams, SubmissionType, GeoLatLng, PlaceSearchResult } from '../model/AppModels';
 

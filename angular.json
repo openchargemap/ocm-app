@@ -20,6 +20,9 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
+            "allowedCommonJsDependencies": [
+              "rxjs-compat"
+           ],
             "assets": [
               {
                 "glob": "**/*",

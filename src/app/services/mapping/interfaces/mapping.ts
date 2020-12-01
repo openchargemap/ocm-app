@@ -1,7 +1,7 @@
 import { environment } from './../../../../environments/environment';
 
 import { GeoPosition, GeoLatLng, GeoBounds, PlaceSearchResult } from "../../../model/AppModels";
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 export enum MappingAPI {
     GOOGLE_WEB = 1,
