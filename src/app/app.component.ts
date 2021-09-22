@@ -124,7 +124,9 @@ export class AppComponent {
       if (this.appManager.searchSettings.Language != null) {
         this.translate.use(this.appManager.searchSettings.Language);
       } else {
-        this.translate.use("en");
+        if (!this.translate.currentLang) {
+          this.translate.use("en");
+        }
       }
 
       this.translate
