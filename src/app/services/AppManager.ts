@@ -159,6 +159,10 @@ export class AppManager {
     if (this.getQueryVariable('title')) {
       this.title = this.getQueryVariable('title')[0];
     }
+
+    if (this.getQueryVariable('languagecode')) {
+      this.setLanguage(this.getQueryVariable('languagecode')[0])
+    }
   }
   /**
    * Save search settings to local storage
@@ -199,7 +203,7 @@ export class AppManager {
     if (languageCode == null || languageCode == "") {
       languageCode = "en";
     }
-    
+
     this.logging.log('Changing language: ' + languageCode);
     this.translateService.use(languageCode);
   }
