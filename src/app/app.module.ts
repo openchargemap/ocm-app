@@ -28,8 +28,8 @@ export function tokenGetter() {
   return localStorage.getItem('access_token');
 }
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+export function TranslateHttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, "/assets/i18n/", ".json");
 }
 
 export class AppMissingTranslationHandler implements MissingTranslationHandler {
@@ -52,7 +52,7 @@ export class AppMissingTranslationHandler implements MissingTranslationHandler {
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
+        useFactory: TranslateHttpLoaderFactory,
         deps: [HttpClient]
       }
     }),

@@ -13,8 +13,8 @@ Feature toggles are defined by the `enabledFeatures` array, the app will check f
 
 ## Build Requirements (Windows/mac OS)
 
-1. Install Ionic CLI & Cordova:
-`npm install -g cordova ionic`
+1. Install Ionic CLI
+`npm install -g @ionic/cli`
 
 2. Install npm modules: `npm install`
 

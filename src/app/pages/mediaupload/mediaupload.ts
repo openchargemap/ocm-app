@@ -1,9 +1,7 @@
 import { AppManager } from './../../services/AppManager';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController } from '@ionic/angular';
-import { Plugins, CameraResultType } from '@capacitor/core';
 import { Logging, LogLevel } from '../../services/Logging';
-const { Camera } = Plugins;
 
 @Component({
     templateUrl: 'mediaupload.html',

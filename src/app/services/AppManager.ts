@@ -103,11 +103,11 @@ export class AppManager {
     }
   }
 
-  savePushRegistration(token:string){
-    localStorage.setItem("_pushToken",token.toString());
+  savePushRegistration(token: string) {
+    localStorage.setItem("_pushToken", token.toString());
   }
 
-  getPushRegistration(){
+  getPushRegistration() {
     localStorage.getItem("_pushToken");
   }
 
@@ -196,6 +196,10 @@ export class AppManager {
   }
 
   public setLanguage(languageCode: string) {
+    if (languageCode == null || languageCode == "") {
+      languageCode = "en";
+    }
+    
     this.logging.log('Changing language: ' + languageCode);
     this.translateService.use(languageCode);
   }

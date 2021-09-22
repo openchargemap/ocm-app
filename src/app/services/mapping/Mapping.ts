@@ -276,4 +276,5 @@ export class Mapping implements IMapManager {
     addPOILayer(data: any[]) {
         this.mapProvider.addPOILayer(data);
     }
+
 }

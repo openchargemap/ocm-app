@@ -1,4 +1,4 @@
-export class GeoLatLng implements Coordinates {
+export class GeoLatLng implements GeolocationCoordinates {
     // based on HTML Geolocation "Coordinates"
     public altitudeAccuracy: number;
     public longitude: number;
@@ -26,7 +26,7 @@ export class GeoPosition {
         this.coords.longitude = lng;
     }
 
-    static fromPosition(pos: Position): GeoPosition {
+    static fromPosition(pos: GeolocationPosition): GeoPosition {
         return new GeoPosition(pos.coords.latitude, pos.coords.longitude);
     }
 }

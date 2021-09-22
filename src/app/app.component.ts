@@ -15,15 +15,19 @@ import { GeoLatLng } from "./model/AppModels";
 import { Utils } from "./core/Utils";
 import { AboutPage } from "./pages/about/about.page";
 import { LayerEditorPage } from "./pages/layer-editor/layer-editor.page";
-import {
-  Plugins,
-  PushNotification,
-  PushNotificationToken,
-  PushNotificationActionPerformed
-} from '@capacitor/core';
-import { Events } from "./services/Events";
 
-const { PushNotifications, SplashScreen, StatusBar } = Plugins;
+import {
+  PushNotifications,
+  PushNotificationSchema,
+  Token,
+  ActionPerformed
+} from '@capacitor/push-notifications';
+import { StatusBar } from "@capacitor/status-bar";
+import { Events } from "./services/Events";
+import { SplashScreen } from "@capacitor/splash-screen";
+import { App } from "@capacitor/app";
+
+//const { PushNotifications, SplashScreen, StatusBar } = Plugins;
 
 @Component({
   selector: "app-root",
@@ -63,7 +67,7 @@ export class AppComponent {
 
     // On success, we should be able to receive notifications
     PushNotifications.addListener('registration',
-      (token: PushNotificationToken) => {
+      (token: Token) => {
         this.logger.log('Push registration success, token: ' + token.value);
         this.appManager.savePushRegistration(token.value);
       }
@@ -78,14 +82,14 @@ export class AppComponent {
 
     // Show us the notification payload if the app is open on our device
     PushNotifications.addListener('pushNotificationReceived',
-      (notification: PushNotification) => {
+      (notification: PushNotificationSchema) => {
         this.logger.log('Push received: ' + JSON.stringify(notification), LogLevel.INFO);
       }
     );
 
     // Method called when tapping on a notification
     PushNotifications.addListener('pushNotificationActionPerformed',
-      (notification: PushNotificationActionPerformed) => {
+      (notification: ActionPerformed) => {
         this.logger.log('Push action performed: ' + JSON.stringify(notification));
       }
     );
@@ -155,11 +159,11 @@ export class AppComponent {
 
   async checkForAppOpenUrl() {
     // app opened via url while app already open
-    Plugins.App.addListener('appUrlOpen', (data: any) => {
+    App.addListener('appUrlOpen', (data: any) => {
       alert('App (re)opened with URL: ' + data.url);
     });
 
-    let ret = await Plugins.App.getLaunchUrl();
+    let ret = await App.getLaunchUrl();
     if (ret && ret.url) {
       alert('App opened with URL: ' + ret.url);
     }

@@ -35,21 +35,20 @@ export class SettingsPage implements OnInit {
 
     this.appManager.analytics.viewEvent('Settings');
 
-    if (this.useFilteredOptions)
-    {
+    if (this.useFilteredOptions) {
       await this.onCountryChange();
     }
   }
 
   get useFilteredOptions(): boolean {
 
-    if (this.searchSettings.FilterOptionsByCountryId>0) {
+    if (this.searchSettings.FilterOptionsByCountryId > 0) {
       return true;
     } else {
       return false;
     }
   }
-  
+
   clearFilters() {
     this.searchSettings.ClearActiveFilters();
     this.powerRange = { lower: 0, upper: this.maxPower };
@@ -81,8 +80,14 @@ export class SettingsPage implements OnInit {
     return Utils.isFeatureEnabled('FILTER_OPTIONS_BY_COUNTRY');
   }
 
+  _languages = [];
   get languages() {
-    return this.appManager.getLanguages();
+    if (this._languages.length > 0) {
+      return this._languages;
+    } else {
+      this._languages = this.appManager.getLanguages();
+    }
+    return this._languages;
   }
 
   ionViewWillLeave() {
@@ -106,8 +111,11 @@ export class SettingsPage implements OnInit {
   }
 
   onLanguageChange() {
+
     // update UI language
-    this.appManager.setLanguage(this.searchSettings.Language);
+    if (this.searchSettings.Language != null && this.searchSettings.Language != "") {
+      this.appManager.setLanguage(this.searchSettings.Language);
+    }
   }
 
   async onCountryChange() {
