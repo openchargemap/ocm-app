@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkio_openchargemap_app=self.webpackChunkio_openchargemap_app||[]).push([[8962],{8962:function(e,n,p){p.r(n),p.d(n,{SplashScreenWeb:function(){return c}});var r=p(8239),a=p(8384);class c extends a.Uw{show(e){return(0,r.Z)(function*(){})()}hide(e){return(0,r.Z)(function*(){})()}}}}]);
