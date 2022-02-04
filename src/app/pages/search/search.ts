@@ -551,11 +551,14 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   async locateUser(): Promise<any> {
 
+    // ensure we start with a real position even if user does not make a geolocation choice
+    this.useFallbackPosition();
+
     try {
 
       this.logging.log('Attempting to locate user..');
 
-      const position = await this.getPosition();
+      const position = await this.getPosition({timeout:10000});
 
       if (!position) {
         throw "Failed to get user location.";
