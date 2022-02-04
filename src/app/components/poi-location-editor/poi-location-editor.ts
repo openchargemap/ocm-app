@@ -75,6 +75,11 @@ export class PoiLocationEditorComponent implements OnInit, AfterContentInit, OnC
     this.focusMap();
   }
 
+  
+  ngOnDestroy(){
+   this.mapService.disposeMap();
+  }
+
   focusMap() {
     if (this.isMapInitialised == false && this.mapService) {
       if (this.latitude != 0 && this.longitude != 0) {

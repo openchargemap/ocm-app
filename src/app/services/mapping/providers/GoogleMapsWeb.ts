@@ -40,6 +40,10 @@ export class GoogleMapsWeb implements IMapProvider {
 
     }
 
+    disposeMap() {
+      
+    }
+
     /**
     * Performs one-time init of map object for this map provider
     * @param mapcanvasID  dom element for map canvas

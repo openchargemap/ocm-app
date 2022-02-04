@@ -54,6 +54,14 @@ export class MapBoxMapProvider implements IMapProvider {
     }
   }
 
+  disposeMap() {
+    // clean up map resources
+    if (this.map) {
+      this.logging.log("Disposing map", LogLevel.ERROR);
+      this.map.remove();
+    }
+  }
+
   private getCurrentMapTileSet(mapType: MapType): string {
     if (mapType == 'SATELLITE') {
       return 'mapbox://styles/mapbox/satellite-streets-v11?optimize=true';

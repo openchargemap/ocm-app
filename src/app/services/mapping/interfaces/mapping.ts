@@ -38,6 +38,7 @@ export interface IMapProvider {
     unfocusMap();
     placeSearch(keyword: string, latitude?: number, longitude?: number): Promise<Array<PlaceSearchResult>>;
     addPOILayer(data: any[]);
+    disposeMap();
 }
 
 export class MapOptions {
