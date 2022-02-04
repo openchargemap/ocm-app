@@ -22,7 +22,7 @@ export class POISearchParams {
 
     public submissionStatusTypeIdList: Array<number> = null;
 
-    public maxResults: number = 250;
+    public maxResults: number = 500;
     public additionalParams: string = null;
     public includeComments: boolean = false;
     public compact: boolean = true;
