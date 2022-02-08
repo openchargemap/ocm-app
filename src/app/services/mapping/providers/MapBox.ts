@@ -57,7 +57,7 @@ export class MapBoxMapProvider implements IMapProvider {
   disposeMap() {
     // clean up map resources
     if (this.map) {
-      this.logging.log("Disposing map", LogLevel.ERROR);
+      this.logging.log("Disposing map", LogLevel.INFO);
       this.map.remove();
     }
   }
