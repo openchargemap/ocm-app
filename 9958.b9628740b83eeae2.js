@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkapp=self.webpackChunkapp||[]).push([[9958],{9958:(f,E,_)=>{_.r(E),_.d(E,{ion_ripple_effect:()=>s.R});var s=_(5893);_(9533),_(7639)}}]);
