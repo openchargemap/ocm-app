@@ -6,14 +6,12 @@
 import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, IMapManager } from '../interfaces/mapping';
 import { Events } from '../../../services/Events';
-import { Observable } from 'rxjs/Observable';
-import { Dictionary } from 'typescript-collections';
+import { Observable } from 'rxjs';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
 import { Logging, LogLevel } from './../../Logging';
 
-import { Icon, Map, LatLng, Marker, TileLayer, LatLngBounds } from 'leaflet';
+import { Icon, Map as LMap, LatLng, Marker, TileLayer, LatLngBounds } from 'leaflet';
 import { PlaceSearchResult } from '../../../model/AppModels';
-
 
 /**Map Provider for Leaflet API
 * @module MapProviders
@@ -25,7 +23,7 @@ export class LeafletMap implements IMapProvider {
     mapCanvasID: string;
 
     private map: L.Map;
-    private markerList: Dictionary<number, any>;
+    private markerList: Map<number, any>;
 
 
     /** @constructor */
@@ -33,7 +31,7 @@ export class LeafletMap implements IMapProvider {
         this.events = events;
         this.mapAPIType = MappingAPI.LEAFLET;
         this.mapReady = false;
-        this.markerList = new Dictionary<number, google.maps.Marker>();
+        this.markerList = new Map<number, any>();
     }
 
     initAPI() {
@@ -59,7 +57,7 @@ export class LeafletMap implements IMapProvider {
                 let mapCanvas = document.getElementById(mapCanvasID);
 
                 if (mapCanvas != null) {
-                    this.map = new Map(mapCanvasID).setView(new LatLng(51.505, -0.09), 13);
+                    this.map = new LMap(mapCanvasID).setView(new LatLng(51.505, -0.09), 13);
 
                     /*var t = new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                         attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -103,16 +101,14 @@ export class LeafletMap implements IMapProvider {
     clearMarkers() {
 
         if (this.markerList != null) {
-
-            this.markerList.forEach((key, marker) => {
-                try {
-                    marker.setMap(null);
-                } catch { }
+            this.markerList.forEach((value: any, key: number) => {
+              value.setMap(null);
             });
-        }
+          }
 
-        this.markerList = new Dictionary<number, any>();
+        this.markerList = new Map<number, any>();
     }
+
     /**
     * Renders the given array of POIs as map markers
     * @param poiList  array of POI objects
@@ -145,7 +141,7 @@ export class LeafletMap implements IMapProvider {
                         let addMarker = true;
                         if (!clearMarkersOnRefresh && this.markerList != null) {
                             // find if this poi already exists in the marker list
-                            if (this.markerList.containsKey(poi.ID)) {
+                            if (this.markerList.has(poi.ID)) {
                                 addMarker = false;
 
                                 // set marker scale based on zoom?
@@ -212,14 +208,14 @@ export class LeafletMap implements IMapProvider {
 
                             // markerClusterGroup.addLayer(marker);
                             marker.addTo(this.map);
-                            this.markerList.setValue(poi.ID, marker);
+                            this.markerList.set(poi.ID, marker);
                             markersAdded++;
                         }
                     }
                 }
             }
 
-            this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.size());
+            this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.size);
         }
 
         let uiContext = this;

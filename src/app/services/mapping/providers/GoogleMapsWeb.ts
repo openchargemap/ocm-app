@@ -7,8 +7,7 @@
 import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, IMapManager } from '../interfaces/mapping';
 import { Events } from '../../../services/Events';
-import { Observable } from 'rxjs/Observable';
-import { Dictionary } from 'typescript-collections';
+import { Observable } from 'rxjs';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
 import { Logging, LogLevel } from './../../Logging';
 import { PlaceSearchResult } from '../../../model/AppModels';
@@ -23,7 +22,7 @@ export class GoogleMapsWeb implements IMapProvider {
     mapCanvasID: string;
 
     private map: google.maps.Map;
-    private markerList: Dictionary<number, google.maps.Marker>;
+    private markerList: Map<number, google.maps.Marker>;
 
     private polylinePath: google.maps.Polyline;
 
@@ -32,7 +31,7 @@ export class GoogleMapsWeb implements IMapProvider {
         this.events = events;
         this.mapAPIType = MappingAPI.GOOGLE_WEB;
         this.mapReady = false;
-        this.markerList = new Dictionary<number, google.maps.Marker>();
+        this.markerList = new Map<number, google.maps.Marker>();
     }
 
 
@@ -83,7 +82,7 @@ export class GoogleMapsWeb implements IMapProvider {
                         },
                         zoomControl: true,
                         zoomControlOptions: {
-                            style: google.maps.ZoomControlStyle.DEFAULT,
+                            //style: google.maps.ControlPosition.ZoomControlStyle.DEFAULT,
                             position: google.maps.ControlPosition.BOTTOM_LEFT
                         },
 
@@ -124,15 +123,12 @@ export class GoogleMapsWeb implements IMapProvider {
 
     clearMarkers() {
         if (this.markerList != null) {
-
-            this.markerList.forEach((key, marker) => {
-                try {
-                    marker.setMap(null);
-                } catch { }
+            this.markerList.forEach((value: any, key: number) => {
+              value.remove();
             });
-        }
+          }
 
-        this.markerList = new Dictionary<number, google.maps.Marker>();
+        this.markerList = new Map<number, google.maps.Marker>();
     }
 
     /**
@@ -163,7 +159,7 @@ export class GoogleMapsWeb implements IMapProvider {
                         let addMarker = true;
                         if (!clearMarkersOnRefresh && this.markerList != null) {
                             // find if this poi already exists in the marker list
-                            if (this.markerList.containsKey(poi.ID)) {
+                            if (this.markerList.has(poi.ID)) {
                                 addMarker = false;
 
                                 // set marker scale based on zoom?
@@ -216,14 +212,14 @@ export class GoogleMapsWeb implements IMapProvider {
 
                             bounds.extend(newMarker.getPosition());
 
-                            this.markerList.setValue(poi.ID, newMarker);
+                            this.markerList.set(poi.ID, newMarker);
                             markersAdded++;
                         }
                     }
                 }
             }
 
-            this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.size());
+            this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.size);
         }
 
         let uiContext = this;

@@ -4,12 +4,9 @@
 * @copyright Webprofusion Pty Ltd https://webprofusion.com
 */
 
-
-import { Observable } from 'rxjs/Observable';
 import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, IMapManager } from '../interfaces/mapping';
 import { Events } from '../../../services/Events';
-import { Dictionary } from 'typescript-collections';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
 import { Logging, LogLevel } from './../../Logging';
 import {
@@ -29,6 +26,7 @@ import {
 import { environment } from '../../../../environments/environment';
 import { MapIcons } from '../Icons';
 import { PlaceSearchResult } from '../../../model/AppModels';
+import { Observable } from 'rxjs';
 
 /**Map Provider for Google Maps Native API (Cordova Plugin)
  * @module Mapping
@@ -41,7 +39,7 @@ export class GoogleMapsNative implements IMapProvider {
     mapCanvasID: string;
 
     private map: GoogleMap;
-    private markerList: Dictionary<number, Marker>;
+    private markerList: Map<number, Marker>;
     private maxMarkers: number = 200;
     private markerAllocCount: number = 0;
     private polylinePath: any;
@@ -52,7 +50,7 @@ export class GoogleMapsNative implements IMapProvider {
         this.mapAPIType = MappingAPI.GOOGLE_NATIVE;
         this.mapReady = false;
         this.mapCanvasID = "map-view";
-        this.markerList = new Dictionary<number, Marker>();
+        this.markerList = new Map<number, Marker>();
     }
 
     initAPI() {
@@ -163,15 +161,12 @@ export class GoogleMapsNative implements IMapProvider {
     clearMarkers() {
 
         if (this.markerList != null) {
-            this.markerList.forEach((key, marker) => {
-                try {
-                    marker.remove();
-                } catch { }
+            this.markerList.forEach((value: any, key: number) => {
+              value.remove();
             });
+          }
 
-        }
-
-        this.markerList = new Dictionary<number, Marker>();
+        this.markerList = new Map<number, Marker>();
     }
 
     renderPOIMarkers(clearMarkersOnRefresh: boolean, poiList: Array<any>) {
@@ -194,7 +189,7 @@ export class GoogleMapsNative implements IMapProvider {
             for (let i = 0; i < poiList.length; i++) {
                 let item = poiList[i];
                 if (item.AddressInfo != null && item.AddressInfo.Latitude != null && item.AddressInfo.Longitude != null) {
-                    if (!this.markerList.containsKey(item.ID)) {
+                    if (!this.markerList.has(item.ID)) {
                         markersToAdd.push(item);
                     }
                 }
@@ -343,7 +338,7 @@ export class GoogleMapsNative implements IMapProvider {
 
                         map.addMarker(opt).then((m => {
 
-                            this.markerList.setValue(poi.ID, m);
+                            this.markerList.set(poi.ID, m);
 
                             m.poi = poi;
                             m.on(GoogleMapsEvent.MARKER_CLICK).subscribe((poiClicked) => {

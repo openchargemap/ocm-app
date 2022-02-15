@@ -8,7 +8,6 @@ import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, IMapManager } from '../interfaces/mapping';
 import { Events } from '../../../services/Events';
 import { Observable } from 'rxjs';
-import { Dictionary } from 'typescript-collections';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
 import { Logging, LogLevel } from './../../Logging';
 import { environment } from '../../../../environments/environment';
@@ -27,7 +26,7 @@ export class MapKitMapProvider implements IMapProvider {
   mapCanvasID: string;
 
   private map: any;
-  private markerList: Dictionary<number, any>;
+  private markerList: Map<number, any>;
   private polylinePath: any;
   private mapkitUtils: MapKitUtils;
 
@@ -36,7 +35,7 @@ export class MapKitMapProvider implements IMapProvider {
     this.events = events;
     this.mapAPIType = MappingAPI.MAPKIT_JS;
     this.mapReady = false;
-    this.markerList = new Dictionary<number, any>();
+    this.markerList = new Map<number, any>();
     this.mapkitUtils = new MapKitUtils();
   }
 
@@ -123,7 +122,7 @@ export class MapKitMapProvider implements IMapProvider {
       });
     }
 
-    this.markerList = new Dictionary<number, any>();
+    this.markerList = new Map<number, any>();
 
   }
 
@@ -139,7 +138,7 @@ export class MapKitMapProvider implements IMapProvider {
     let markersAdded = 0;
     let mapProviderContext = this;
 
-    let isFirstResultSet = this.markerList.size() == 0;
+    let isFirstResultSet = this.markerList.size == 0;
 
     // clear existing markers (if enabled)
     if (clearMarkersOnRefresh) {
@@ -159,7 +158,7 @@ export class MapKitMapProvider implements IMapProvider {
             let addMarker = true;
             if (!clearMarkersOnRefresh && this.markerList != null) {
               // find if this poi already exists in the marker list
-              if (this.markerList.containsKey(poi.ID)) {
+              if (this.markerList.has(poi.ID)) {
                 addMarker = false;
 
                 // set marker scale based on zoom?
@@ -208,7 +207,7 @@ export class MapKitMapProvider implements IMapProvider {
                 this.events.publish('ocm:poi:selected', { poi: clickedPOI, poiId: clickedPOI.ID });
               });
 
-              this.markerList.setValue(poi.ID, marker);
+              this.markerList.set(poi.ID, marker);
 
               newMarkers.push(marker);
 
@@ -236,7 +235,7 @@ export class MapKitMapProvider implements IMapProvider {
       }
 
 
-      this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.size());
+      this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.size);
     }
 
     // zoom to bounds of markers

@@ -8,7 +8,6 @@ import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, IMapManager, MapType } from '../interfaces/mapping';
 import { Events } from '../../../services/Events';
 import { Observable } from 'rxjs';
-import { Dictionary } from 'typescript-collections';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
 import { Logging, LogLevel } from './../../Logging';
 import * as mapboxgl from 'mapbox-gl';
@@ -31,7 +30,7 @@ export class MapBoxMapProvider implements IMapProvider {
   mapCanvasID: string;
 
   private map: mapboxgl.Map;
-  private markerList: Dictionary<number, any>;
+  private markerList: Map<number, any>;
   private polylinePath: any;
   private _isMapAnimating: boolean = false;
 
@@ -45,7 +44,7 @@ export class MapBoxMapProvider implements IMapProvider {
     this.mapAPIType = MappingAPI.MAPBOX;
 
     this.mapReady = false;
-    this.markerList = new Dictionary<number, any>();
+    this.markerList = new Map<number, any>();
   }
 
   initAPI() {
@@ -221,15 +220,12 @@ export class MapBoxMapProvider implements IMapProvider {
 
   clearMarkers() {
     if (this.markerList != null) {
-
-      this.markerList.forEach((key, marker) => {
-        try {
-          marker.remove();
-        } catch { }
+      this.markerList.forEach((value: any, key: number) => {
+        value.remove();
       });
     }
 
-    this.markerList = new Dictionary<number, any>();
+    this.markerList = new Map<number, any>();
   }
 
   /**
@@ -262,10 +258,10 @@ export class MapBoxMapProvider implements IMapProvider {
           let addMarker = true;
           if (!clearMarkersOnRefresh && this.markerList != null) {
             // find if this poi already exists in the marker list
-            if (this.markerList.containsKey(poi.ID)) {
+            if (this.markerList.has(poi.ID)) {
               addMarker = false;
 
-              let existingMarker = this.markerList.getValue(poi.ID);
+              let existingMarker = this.markerList.get(poi.ID);
               if (existingMarker && existingMarker.poi) {
                 if ((<ExtendedPOIDetails>existingMarker.poi).DateLastStatusUpdate != poi.DateLastStatusUpdate) {
                   // data has changed, re-add marker
@@ -317,14 +313,14 @@ export class MapBoxMapProvider implements IMapProvider {
 
             bounds.extend(newMarker.getLngLat());
 
-            this.markerList.setValue(poi.ID, newMarker);
+            this.markerList.set(poi.ID, newMarker);
             markersAdded++;
           }
 
         }
       }
 
-      this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.size());
+      this.logging.log(markersAdded + " new map markers added out of a total " + this.markerList.size);
     }
 
     let uiContext = this;
@@ -457,17 +453,17 @@ export class MapBoxMapProvider implements IMapProvider {
 
   renderPolyline(polyline: string) {
     this.clearPolyline();
-/*
-    this.polylinePath = {
-      path: <any>google.maps.geometry.encoding.decodePath(polyline),
-      geodesic: true,
-      strokeColor: '#0000FF',
-      strokeOpacity: 0.8,
-      strokeWeight: 4
-    };
-
-    this.polylinePath.setMap(this.map);
-*/
+    /*
+        this.polylinePath = {
+          path: <any>google.maps.geometry.encoding.decodePath(polyline),
+          geodesic: true,
+          strokeColor: '#0000FF',
+          strokeOpacity: 0.8,
+          strokeWeight: 4
+        };
+    
+        this.polylinePath.setMap(this.map);
+    */
   }
 
   clearPolyline() {
