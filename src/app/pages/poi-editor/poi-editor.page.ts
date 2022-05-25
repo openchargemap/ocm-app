@@ -436,6 +436,10 @@ export class PoiEditorPage implements OnInit {
         validationMsg = "A location title is required";
       }
 
+      if (!this.item.AddressInfo.AddressLine1 && !this.item.AddressInfo.AddressLine2) {
+        validationMsg = "An approximate address is required.";
+      }
+
       if (!this.item.AddressInfo.CountryID) {
         validationMsg = "A country selection is required";
       }
@@ -444,7 +448,6 @@ export class PoiEditorPage implements OnInit {
         validationMsg = "A location latitude and longitude is required";
       }
     }
-
 
     if (step == 'all' || step == 'poi-nearby') {
       // poi's nearby
