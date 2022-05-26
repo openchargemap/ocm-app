@@ -37,7 +37,7 @@
     "@capacitor/status-bar": "^1.0.8",
     "@ionic-native/core": "5.36.0",
     "@ionic-native/google-maps": "^5.5.0",
-    "@ionic/angular": "6.1.5",
+    "@ionic/angular": "6.1.6",
     "@ngx-translate/core": "14.0.0",
     "@ngx-translate/http-loader": "7.0.0",
     "@types/leaflet": "1.7.10",
