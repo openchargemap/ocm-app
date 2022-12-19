@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [18.x]
 
     steps:
     - uses: actions/checkout@v1
@@ -20,6 +20,6 @@ jobs:
     - name: npm install, build, and test
       run: |
         npm install -g ionic
-        npm install
+        npm install --legacy-peer-deps
         ionic build
  
