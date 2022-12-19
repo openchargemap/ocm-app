@@ -2,11 +2,11 @@ import { MappingAPI } from "../app/services/mapping/interfaces/mapping";
 
 export const environment = {
   name: 'prod',
-  version: '8.2.0',
+  version: '8.3.0',
   production: true,
   analyticsId: '',
   googleMapsKey: '',
-  mapBoxToken: '',
+  mapBoxToken: 'pk.eyJ1Ijoid2VicHJvZnVzaW9uIiwiYSI6ImNrdHZlc2N5dTI5Zjcydm8zYWFwc2JnbTMifQ.M7b5SOzbPcg_8XAHCOeP0w',
   mapKitToken: '',
   enableStaticMaps: false,
   defaultMapProvider: 4, // 1: GM native 4: MapBox // 5:MappingAPI.MAPKIT_JS  //6: mapbox GL with Maptiler,
