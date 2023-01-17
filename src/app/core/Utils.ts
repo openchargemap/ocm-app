@@ -96,6 +96,8 @@ export class Utils {
             iconURL += 'Type2_CCS.svg';
         } else if (id === 1036) {
             iconURL += 'Type2_tethered.svg';  
+        } else if (id === 26) {
+            iconURL += 'Type3c.svg';
         } else if (id === 28) {
             iconURL += 'schuko.svg';
         } else {
