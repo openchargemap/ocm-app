@@ -21,7 +21,6 @@ export class BookmarkedPOI extends JourneyBaseItem implements ISyncItem {
     public Type: string;
     public Poi: any;
     public Photos: any;
-    public _sync: SyncItem;
 }
 
 export class WayPoint extends JourneyBaseItem {

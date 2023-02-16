@@ -63,9 +63,9 @@ export class MapBoxMapProvider implements IMapProvider {
 
   private getCurrentMapTileSet(mapType: MapType): string {
     if (mapType == 'SATELLITE') {
-      return 'mapbox://styles/mapbox/satellite-streets-v11?optimize=true';
+      return 'mapbox://styles/mapbox/satellite-streets-v12?optimize=true';
     } else {
-      return 'mapbox://styles/mapbox/streets-v11?optimize=true';
+      return 'mapbox://styles/mapbox/streets-v12?optimize=true';
     }
   }
 
