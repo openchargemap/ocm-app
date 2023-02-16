@@ -289,7 +289,8 @@ export class MapBoxMapProvider implements IMapProvider {
 
             let markerOptions = {
               element: icon,
-              color: color
+              color: color,
+              anchor: 'bottom'
             };
 
             let markerTooltip = (isNativePOI ? "OCM-" : "EXT-") + poi.ID + ": " + poi.AddressInfo.Title + ":";
@@ -363,7 +364,7 @@ export class MapBoxMapProvider implements IMapProvider {
       this.map.setCenter(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
 
       if (!this.searchMarker) {
-        this.searchMarker = new mapboxgl.Marker({ color: '#99ccff', anchor: 'top' })
+        this.searchMarker = new mapboxgl.Marker({ color: '#99ccff', anchor: 'bottom' })
           .setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude))
           .addTo(this.map);
 
