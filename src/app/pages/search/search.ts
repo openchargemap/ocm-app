@@ -538,7 +538,9 @@ export class SearchPage implements OnInit, AfterViewInit {
     return new Promise<GeolocationPosition>((resolve, reject) => {
       this._watchId = Geolocation.watchPosition(options, (position, err) => {
 
-        Geolocation.clearWatch({ id: this._watchId });
+        if (this._watchId) {
+          Geolocation.clearWatch({ id: this._watchId });
+        }
 
         if (err) {
           reject(err);
@@ -558,7 +560,7 @@ export class SearchPage implements OnInit, AfterViewInit {
 
       this.logging.log('Attempting to locate user..');
 
-      const position = await this.getPosition({timeout:10000});
+      const position = await this.getPosition({ timeout: 10000 });
 
       if (!position) {
         throw "Failed to get user location.";

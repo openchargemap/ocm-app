@@ -41,8 +41,9 @@ Copy `www` output to gh-pages branch and commit to publish. When updating live a
         - Android:
             - Update bundle id to com.webprofusion.openchargemap (including capacitor.config.json), version code in /app/build.gradle
             - npx cap add android
+            - set required permissions per plugin in AndroidManifest.xml
             - // resolve ERR_CLEARTEXT_NOT_PERMITTED debug error: add `android:usesCleartextTraffic="true"` to AndroidManifest.xml
-            - Icons: Android Studio > Res > New Image Asset, browse to Icon,  scale 100%; trim yes; set background to #8BC43F
+            - Icons: Android Studio > Tools > Resource Manager > + New Image Asset, browse to Icon,  scale 100%; trim yes; set background layer colour to #8BC43F
             - Splashscreen: use apetools to generate 'splash.png' variants, remove unused existing default screens
             - Push notifications: copy google-services.json to app
             - Set version in Android Studio: app:build.gradle default config  https://stackoverflow.com/a/26865465/1707154
