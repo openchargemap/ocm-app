@@ -34,8 +34,14 @@ export class LayerEditorPage implements OnInit {
       let parsedList = JSON.parse(dat);
 
       // make ID's unique to this layer
+      let surrogateID = 5000000;
       for (let p of parsedList) {
+
+        if (p.ID == null || p.ID == "") p.ID = surrogateID.toString();
+
         p.ID = "imp_" + p.ID;
+
+        surrogateID++;
       }
 
       this.fileData = this.refData.hydrateCompactPOIList(<Array<any>>parsedList);
