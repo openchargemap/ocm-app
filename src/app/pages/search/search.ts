@@ -109,8 +109,6 @@ export class SearchPage implements OnInit, AfterViewInit {
   enforceMapHeight(size: any) {
     this.logging.log('Would resize map:' + size.width + ' ' + size.height, LogLevel.VERBOSE);
 
-    this.checkViewportMode();
-
     const preferredContentHeight = this.getPreferredMapHeight(size[0]);
 
     if (document.getElementById(this.mapCanvasID).offsetHeight !== preferredContentHeight) {
@@ -120,23 +118,6 @@ export class SearchPage implements OnInit, AfterViewInit {
       this.logging.log('Map height:' + preferredContentHeight, LogLevel.VERBOSE);
       this.mapping.updateMapSize();
     }
-  }
-
-  checkViewportMode() {
-    /*this.logging.log('Checking viewport mode:' + this.appManager.clientWidth);
-    if (this.appManager.clientWidth > 1000) {
-        this.sideViewAvailable = true;
-    } else {
-        this.sideViewAvailable = false;
-    }
-
-    if (this.sideViewAvailable && this.poiViewMode != 'side') {
-        this.poiViewMode = 'side'; //switch to side panel view mode for poi details
-    }
-
-    if (!this.sideViewAvailable && this.poiViewMode == 'side') {
-        this.poiViewMode = 'modal'; //switch to modal view mode for poi details
-    }*/
   }
 
   async initialiseMapping() {
@@ -157,13 +138,11 @@ export class SearchPage implements OnInit, AfterViewInit {
       if (!this.initialResultsShown) {
 
         // if start position already set, use that for first search
-        if (this.appManager.searchSettings.StartSearchPosition) {
+        if (this.appManager.searchSettings.StartSearchPosition && !this.appManager.searchSettings.StartViewPoiId) {
 
           this.searchOnDemand = true;
 
           this.mapping.updateMapCentrePos(this.appManager.searchSettings.StartSearchPosition.latitude, this.appManager.searchSettings.StartSearchPosition.longitude, true, this.defaultMapZoom);
-
-          //          this.debouncedRefreshMapResults();
 
         } else {
 
@@ -241,18 +220,11 @@ export class SearchPage implements OnInit, AfterViewInit {
 
     });
 
-
-    // switch app to to side view mode if display wide enough
-    this.checkViewportMode();
-
-
     // if this is cordova, map init can't happen until after platform ready
     // platform ready
     this.mapping.initMap(this.mapCanvasID);
 
   }
-
-
 
   async ngAfterViewInit() {
     await this.initialiseMapping();
@@ -312,6 +284,19 @@ export class SearchPage implements OnInit, AfterViewInit {
     const params = new POISearchParams();
     let mapcentre: GeoPosition = null;
 
+    if (this.appManager.searchSettings.StartViewPoiId) {
+      // get details of given POI, centre map on it and view the POI
+      let id = this.appManager.searchSettings.StartViewPoiId;
+      this.appManager.searchSettings.StartViewPoiId = null;
+
+      let poi = await this.poiManager.getPOIById(id)
+      if (poi) {
+        this.events.publish('ocm:poi:selected', { poiId: poi.ID, poi: poi });
+        this.mapping.updateMapCentrePos(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, true, this.defaultMapZoom);
+      }
+
+    }
+
     if (this.appManager.searchSettings.StartSearchPosition) {
       mapcentre = new GeoPosition(this.appManager.searchSettings.StartSearchPosition.latitude, this.appManager.searchSettings.StartSearchPosition.longitude);
       // clear start position after first search
@@ -370,8 +355,13 @@ export class SearchPage implements OnInit, AfterViewInit {
       if (this.appManager.searchSettings.MinPowerKW != null && this.appManager.searchSettings.MinPowerKW > 0) {
         params.minPowerKW = this.appManager.searchSettings.MinPowerKW;
       }
+
       if (this.appManager.searchSettings.MaxPowerKW != null && this.appManager.searchSettings.MaxPowerKW > 0) {
         params.maxPowerKW = this.appManager.searchSettings.MaxPowerKW;
+      }
+
+      if (this.appManager.searchSettings.MaxResults != null && this.appManager.searchSettings.MaxResults > 0 && this.appManager.searchSettings.MaxResults <= 10000) {
+        params.maxResults = this.appManager.searchSettings.MaxResults;
       }
 
       if (this.journeyManager.getRoutePolyline() != null) {

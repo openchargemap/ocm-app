@@ -93,12 +93,12 @@
     <ion-label>Enable Advanced Editor Options</ion-label>
     <ion-toggle [(ngModel)]="searchSettings.EnableAdvancedEditorFeatures"></ion-toggle>
   </ion-item>
-  <!--
+  
   <ion-item>
-      <ion-label>Show Distance in Kilometers</ion-label>
-      <ion-toggle [(ngModel)]="searchSettings.UseDistanceInKM"></ion-toggle>
-    </ion-item>
--->
+    <ion-label>Max Results</ion-label>
+    <ion-input type="number" placeholder="500" [(ngModel)]="searchSettings.MaxResults" min="100" max="10000"></ion-input>
+  </ion-item>
+
 </ion-content>
 <ion-footer>
   <ion-toolbar>

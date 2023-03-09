@@ -16,10 +16,12 @@ export class SearchSettings {
   HasActiveFilters: boolean;
   LastSearchPosition: GeoLatLng;
   StartSearchPosition: GeoLatLng;
+  StartViewPoiId: number;
   Language: string;
   FilterOptionsByCountryId: number;
   MapType: MapType;
   EnableAdvancedEditorFeatures: boolean;
+  MaxResults: number;
 
 
   constructor() {
@@ -36,6 +38,7 @@ export class SearchSettings {
     this.UseDistanceInKM = true;
     this.MapType = 'ROADMAP';
     this.EnableAdvancedEditorFeatures = false;
+    this.MaxResults = 500;
   }
 
   public LoadSettings() {

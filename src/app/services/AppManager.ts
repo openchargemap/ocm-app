@@ -163,6 +163,11 @@ export class AppManager {
     if (this.getQueryVariable('languagecode')) {
       this.setLanguage(this.getQueryVariable('languagecode')[0])
     }
+
+    if (this.getQueryVariable('id')) {
+      // load POI for view/edit
+      this.searchSettings.StartViewPoiId = this.getQueryVariable('id')[0];
+    }
   }
   /**
    * Save search settings to local storage
