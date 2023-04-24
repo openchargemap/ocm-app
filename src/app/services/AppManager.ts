@@ -196,6 +196,7 @@ export class AppManager {
       { 'code': 'lt', 'title': 'Lithuanian / Lietuvių' },
       { 'code': 'nl', 'title': 'Dutch / Nederlands' },
       { 'code': 'pt', 'title': 'Portuguese / português' },
+      { 'code': 'ro', 'title': 'Romanian / Română' },
       { 'code': 'ru', 'title': 'Russian / Pусский' },
       { 'code': 'sk', 'title': 'Slovak / Slovenčina' },
       { 'code': 'tr', 'title': 'Turkish / Türkçe' },
