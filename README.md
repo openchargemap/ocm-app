@@ -25,29 +25,24 @@ Run `ionic build --prod` which will output html build to www folder. When updati
 Copy `www` output to gh-pages branch and commit to publish. When updating live app, preserve CNAME and favicon.
 
 ## Platform Specifics
-- Web uses a web/js mapping provider for the browser version
-    - ionic build --prod
-- Android and iOS
+
+- Android and iOS, using Capacitor
+
+    - Build app: `ionic build --prod`
+    - Sync app content to platform: `npx cap sync`
+
     - iOS and Android versions historically have different bundle ids.
-    - iOS fresh setup: install and update latest cocoapods version, then  /platforms/ios/ pod deintegrate, pod install
-        - change bundle id to org.openchargemap.app and name to Open Charge (Open Charge Map is too long)
-        - Use square icon for iOS
-        - File> Workspace> Legacy Build
-        - ionic cordova platform remove ios
-        - ionic cordova platform add ios
-        - platforms/ios/ pod deintegrate, pod install
-        - ionic cordova prepare ios --prod
-    - using capacitor:
+
         - Android:
             - Update bundle id to com.webprofusion.openchargemap (including capacitor.config.json), version code in /app/build.gradle
             - npx cap add android
-            - set required permissions per plugin in AndroidManifest.xml
+            - set required permissions per plugin in AndroidManifest.xml/ Gelocation
             - // resolve ERR_CLEARTEXT_NOT_PERMITTED debug error: add `android:usesCleartextTraffic="true"` to AndroidManifest.xml
-            - Icons: Android Studio > Tools > Resource Manager > + New Image Asset, browse to Icon,  scale 100%; trim yes; set background layer colour to #8BC43F
-            - Splashscreen: use apetools to generate 'splash.png' variants, remove unused existing default screens
+            - Icons: Android Studio > Tools > Resource Manager > + New Image Asset, browse to Icon as SVG, scale 113%; trim yes; set background layer colour to #8BC43F
+            - Splashscreen: open Tools > resource Manager and drag splashscreen image in to replace existing
             - Push notifications: copy google-services.json to app
             - Set version in Android Studio: app:build.gradle default config  https://stackoverflow.com/a/26865465/1707154
-            - build: `ionic build --prod`, `npx cap sync android`, `npx cap open android`, Generate Signed APK in Android Studio
+            - build: `ionic build --prod`, `npx cap sync android`, `npx cap open android`, Generate Signed APK in Android Studio using private keystore
             - double check icons and splashscreens
         - iOS:
             - npx cap add ios
