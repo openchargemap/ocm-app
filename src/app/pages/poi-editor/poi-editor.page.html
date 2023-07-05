@@ -70,12 +70,12 @@
 
           </ion-item>
           <ion-item>
-            <ion-label position="floating">Latitude</ion-label>
-            <ion-input type="number" [(ngModel)]="item.AddressInfo.Latitude" placeholder="Latitude (if entering manually)"></ion-input>
+
+            <ion-input label="Latitude" labelPlacement="floating" type="number" [(ngModel)]="item.AddressInfo.Latitude" placeholder="Latitude (if entering manually)"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating">Longitude</ion-label>
-            <ion-input type="number" [(ngModel)]="item.AddressInfo.Longitude" placeholder="Longitude (if entering manually)"></ion-input>
+       
+            <ion-input label="Longitude" labelPlacement="floating" type="number" [(ngModel)]="item.AddressInfo.Longitude" placeholder="Longitude (if entering manually)"></ion-input>
           </ion-item>
 
          
@@ -154,8 +154,8 @@
         <app-operator-lookup [operatorId]="item.OperatorID" (operatorChanged)="onOperatorChange($event)" [useFilteredOperators]="false"></app-operator-lookup>
 
         <ion-item>
-          <ion-label position="floating">Number of Stations or Parking Bays</ion-label>
-          <ion-input type="text" [(ngModel)]="item.NumberOfPoints"></ion-input>
+
+          <ion-input label="Number of Stations or Parking Bays" labelPlacement="floating" min="1" type="number" [(ngModel)]="item.NumberOfPoints"></ion-input>
         </ion-item>
 
         <h4>Equipment</h4>

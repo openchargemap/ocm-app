@@ -38,7 +38,18 @@ export class PoiEquipmentEditorComponent implements OnInit {
   ngOnInit() { }
 
   save() {
-    this.modalController.dismiss({ item: this.conn });
+    // validate
+    var valid = true;
+
+    if (this.conn.Quantity != null && (this.conn.Quantity < 0 || this.conn.Quantity > 100 || !Number.isInteger(this.conn.Quantity))) {
+      alert("Quantity must be a whole number, or leave it blank.");
+      valid = false;
+    }
+ 
+    if (valid) {
+      // return to caller
+      this.modalController.dismiss({ item: this.conn });
+    }
   }
 
   cancel() {
