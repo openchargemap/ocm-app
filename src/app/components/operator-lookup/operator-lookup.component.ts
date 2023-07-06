@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { OperatorInfo } from '../../model/CoreDataModel';
 import { ReferenceDataManager } from '../../services/ReferenceDataManager';
 
@@ -13,9 +13,16 @@ export class OperatorLookupComponent implements OnInit {
   operatorId: number = null;
 
   @Input()
+  operatorList: number[] = null;
+
+  @Input()
+  mode: string = "single";
+
+  @Input()
   useFilteredOperators: boolean = null;
 
   @Output() operatorChanged = new EventEmitter();
+  @Output() operatorRemoved = new EventEmitter();
 
   operatorCache: OperatorInfo[] = [];
   operatorSearchResults: OperatorInfo[] = [];
@@ -26,7 +33,7 @@ export class OperatorLookupComponent implements OnInit {
     return this.referenceDataManager.getNetworkOperators(this.useFilteredOperators);
   }
 
-  constructor(private referenceDataManager: ReferenceDataManager) { }
+  constructor(private referenceDataManager: ReferenceDataManager, public changeDetector: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.operatorCache = this.referenceDataManager.getNetworkOperators(false);
@@ -49,8 +56,16 @@ export class OperatorLookupComponent implements OnInit {
         ||
         o.Title.toLowerCase().startsWith("(" + this.operatorSearchKeyword.toLowerCase())
       ).slice(0, 10);
+
+
     } else {
       this.operatorSearchResults = [];
+    }
+  }
+
+  getOperatorInfo(operatorId: number): OperatorInfo {
+    if (this.operatorCache) {
+      return this.operatorCache.find(o => o.ID == operatorId);
     }
   }
 
@@ -72,8 +87,17 @@ export class OperatorLookupComponent implements OnInit {
     } else {
 
       this.operatorChanged.emit(this.selectedOperator);
-      // await this.refreshTemplateSites();
+
+      if (this.mode != 'single') {
+        this.selectedOperator = null;
+        this.operatorSearchKeyword = '';
+      }
     }
+  }
+
+  async removeOperator(operatorId: number) {
+    this.operatorId = null;
+    this.operatorRemoved.emit(operatorId);
   }
 
   cancelOperatorLookup() {

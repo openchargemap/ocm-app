@@ -6,6 +6,7 @@ import { ModalController } from '@ionic/angular';
 import { Utils } from '../../core/Utils';
 import { Mapping } from '../../services/mapping/Mapping';
 import { Events } from '../../services/Events';
+import { OperatorInfo } from '../../model/CoreDataModel';
 
 @Component({
   templateUrl: 'settings.html'
@@ -124,6 +125,20 @@ export class SettingsPage implements OnInit {
 
   async onMapTypeChange() {
     this.mapping.setMapType(this.searchSettings.MapType);
+  }
+
+  async onOperatorSelected(operatorInfo: OperatorInfo = null) {
+
+    if (operatorInfo != null) {
+      if (!this.searchSettings.OperatorList.find(f => f == operatorInfo.ID)) {
+        this.searchSettings.OperatorList.push(operatorInfo.ID);
+      }
+    }
+
+  }
+
+  async onOperatorRemoved(operatorId: number) {
+    this.searchSettings.OperatorList = this.searchSettings.OperatorList.filter(f => f != operatorId);
   }
 
   close() {
