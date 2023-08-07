@@ -6,236 +6,186 @@
       "shortDescription": "التسجيل العامة العالمية للمركبات الكهربائية تقاضي المواقع",
       "linkWebApp": "مواقع البحث باستخدام \"التطبيق ويب\" لدينا",
       "linkBrowsePOI": "تصفح جميع المواقع",
-      "browsePOI": null,
-      "loadingProgress": null,
-      "addLocation": null,
-      "addItem": null,
-      "favourites": null,
-      "settings": null,
-      "about": null,
-      "signIn": null,
-      "signOut": null
+      "browsePOI": "تصفح مواقع الشحن",
+      "loadingProgress": "تحميل...",
+      "addLocation": "أضف الموقع",
+      "addItem": "يضيف",
+      "favourites": "المفضلة",
+      "settings": "إعدادات",
+      "about": "عن",
+      "signIn": "تسجيل الدخول",
+      "signOut": "خروج"
     },
     "details": {
-      "sectionTitle": "شحن الموقع",
+      "sectionTitle": "موقع الشحن",
       "location": {
         "sectionTitle": "تفاصيل الموقع",
         "title": "عنوان الموقع",
-        "address": "عنوان أقرب",
-        "addressLine1": "سطر العنوان 1",
-        "addressLine2": "سطر العنوان 2",
-        "town": "بلده/مدينة",
-        "stateOrProvince": "الولاية/المقاطعة",
-        "postcode": "الرمز البريدي/الرمز البريدي",
-        "country": "البلد",
-        "latitude": null,
-        "longitude": null,
+        "address": "أقرب عنوان",
+        "addressLine1": "خط عنوان 1",
+        "addressLine2": "خط عنوان 2",
+        "town": "البلدة / المدينة",
+        "stateOrProvince": "الولاية / المقاطعة",
+        "postcode": "الرمز البريدي",
+        "country": "دولة",
+        "latitude": "خط العرض",
+        "longitude": "خط الطول",
         "contactTelephone1": "هاتف جهة الاتصال الأساسية",
         "contactTelephone2": "هاتف جهة الاتصال الثانوية",
-        "contactEmail": "الاتصال بالبريد الإلكتروني",
+        "contactEmail": "تواصل بالبريد الاكتروني",
         "map": "خريطة",
-        "streetView": "إطلالة على الشارع.",
-        "addressRelatedURL": "موقع على شبكة الإنترنت"
+        "streetView": "منظر الشارع",
+        "addressRelatedURL": "موقع إلكتروني"
       },
       "generalComments": "معلومات عامة",
-      "accessComments": "معلومات الوصول",
+      "accessComments": "معلومات الدخول",
       "advancedDetails": "معلومات إضافية",
-      "numberOfPoints": "عدد من محطات/الخلجان",
-      "usageType": "الاستخدام",
+      "numberOfPoints": "عدد المحطات / الخلجان",
+      "usageType": "إستعمال",
       "usageCost": "تكلفة الاستخدام",
-      "operationalStatus": "حالة التشغيل",
-      "datePlanned": "التاريخ المقرر",
-      "dateLastConfirmed": "تاريخ آخر أكد",
+      "operationalStatus": "حالة استنفار",
+      "datePlanned": "التاريخ المخطط",
+      "dateLastConfirmed": "تاريخ آخر تأكيد",
       "lastUpdated": "آخر تحديث",
-      "refNumber": "المرجع أوبينتشارجيماب",
+      "refNumber": "مرجع OpenChargeMap",
       "dataQualityLevel": "مستوى جودة البيانات",
-      "importedDataNotice": "ملاحظة: هذه البيانات المصدر تلقائياً، وينبغي أن تقدم التغييرات إلى موفر البيانات مباشرة.",
-      "submissionStatus": "مركز تقديم",
+      "importedDataNotice": "ملاحظة: يتم الحصول على هذه البيانات تلقائيًا ، ويجب إرسال التغييرات إلى مزود البيانات مباشرةً.",
+      "submissionStatus": "حالة تقديم",
       "placesNearby": {
-        "sectionTitle": "الأماكن القريبة"
+        "sectionTitle": "الأماكن المجاورة"
       },
       "mediaItems": {
-        "sectionTitle": "صور",
+        "sectionTitle": "الصور",
         "addPrompt": "تحميل الصور الخاصة بك لهذا الموقع"
       },
       "metadataValues": {
         "sectionTitle": "علامات إضافية"
       },
       "commentsAndRatings": {
-        "sectionTitle": "تعليقات وتقييمات",
-        "zeroComments": "لا توجد تعليقات المستخدم المقدمة",
-        "addPrompt": "إضافة تعليق أو تحديث حالة سريعة"
+        "sectionTitle": "التعليقات والتقييمات",
+        "zeroComments": "لم يتم إرسال تعليقات المستخدم",
+        "addPrompt": "أضف تعليقًا أو تحديثًا سريعًا للحالة"
       },
       "equipment": {
         "sectionTitle": "تفاصيل المعدات",
         "connectionType": "نوع الاتصال",
-        "powerKW": "ماكس السلطة (كيلوواط)",
+        "powerKW": "أقصى قوة (KW)",
         "powerLevel": "مستوى",
-        "quantity": "الكمية",
-        "supplyType": "نوع العرض",
-        "voltage": "الجهد الكهربي",
-        "current": "الحالي ماكس",
+        "quantity": "كمية",
+        "supplyType": "نوع التوريد",
+        "voltage": "الجهد االكهربى",
+        "current": "الحد الأقصى الحالي",
         "comment": "تعليقات",
         "reference": "مرجع"
       },
       "dataProvider": {
-        "sectionTitle": "موفر البيانات",
-        "website": "موقع على شبكة الإنترنت",
-        "providersReference": "Ref مقدمي الخدمات"
+        "sectionTitle": "مزود البيانات",
+        "website": "موقع إلكتروني",
+        "providersReference": "مقدمي المرجع"
       },
       "operator": {
-        "sectionTitle": "مشغل الشبكة/",
-        "operatorsReference": "Ref المشغلين"
+        "sectionTitle": "مشغل الشبكة",
+        "operatorsReference": "المشغلين المرجع"
       }
     },
     "search": {
-      "sectionTitle": "البحث",
+      "sectionTitle": "يبحث",
       "locationInput": "موقع",
       "useMyLocation": "البحث بالقرب مني",
-      "distance": "المسافة",
-      "chargingLevels": "شحن الصعيد",
-      "minPowerKW": null,
+      "distance": "مسافة",
+      "chargingLevels": "مستوى الشحن",
+      "minPowerKW": "دقيقة. قوة كيلوواط",
       "connectionTypes": "أنواع الاتصال",
-      "networkOperators": "مشغل الشبكة/",
-      "countries": "البلد",
-      "submissionStatus": "مركز تقديم",
-      "usageTypes": "الاستخدام",
-      "operationalStatusTypes": "مركز",
-      "performSearch": "البحث",
-      "progress": "البحث..."
+      "networkOperators": "مشغل الشبكة",
+      "countries": "دولة",
+      "submissionStatus": "حالة تقديم",
+      "usageTypes": "إستعمال",
+      "operationalStatusTypes": "حالة",
+      "performSearch": "يبحث",
+      "progress": "يبحث.."
     },
     "navigation": {
-      "home": null,
+      "home": "الصفحة الرئيسية",
       "browse": {
-        "sectionTitle": null,
-        "allLocations": null,
-        "byCountry": null,
-        "avaitingReview": null,
-        "recentActivity": null,
-        "webApp": null,
-        "statistics": null,
-        "awaitingReviewImported": null,
-        "editqueue": null
+        "sectionTitle": "تصفح",
+        "allLocations": "جميع المواقع",
+        "byCountry": "حسب الدولة",
+        "avaitingReview": "في انتظار المراجعة",
+        "recentActivity": "النشاط الأخير",
+        "webApp": "تصفح الخريطة",
+        "statistics": "إحصائيات",
+        "awaitingReviewImported": "المواقع المستوردة بانتظار الموافقة",
+        "editqueue": "عمليات التحرير في انتظار الموافقة"
       },
       "develop": {
-        "sectionTitle": null,
-        "api": null,
-        "htmlWidgets": null,
-        "examples": null,
-        "getInvolved": null,
-        "code": null,
-        "translate": null
+        "sectionTitle": "يطور",
+        "api": "API",
+        "htmlWidgets": "أدوات HTML",
+        "examples": "أمثلة",
+        "getInvolved": "شارك",
+        "code": "انظر الكود (على جيثب)",
+        "translate": "مساعدة الترجمة"
       },
-      "discuss": null,
+      "discuss": "يناقش",
       "about": {
-        "termsPrivacy": null,
-        "contact": null,
-        "guidance": null
+        "termsPrivacy": "الشروط والخصوصية",
+        "contact": "اتصال",
+        "guidance": "إرشادات للمساهمين"
       },
       "profile": {
-        "sectionTitle": null,
-        "subscriptions": null,
-        "comments": null,
-        "uploads": null
-      }
-    },
-    "infoText": {
-      "supplyData": {
-        "contactUs": null,
-        "getStarted": null
-      },
-      "stats": {
-        "locations": null,
-        "locationSummary": null
-      },
-      "shortProjectSummary": null,
-      "getApp": null,
-      "tip": null,
-      "searching": {
-        "quickWay": null,
-        "webApp": null,
-        "searchAppStore": null
-      },
-      "sponsors": null,
-      "termsNotice": null,
-      "about": {
-        "ourService": null,
-        "aim": {
-          "title": null,
-          "p1": null,
-          "p2": null
-        },
-        "whyOCM": {
-          "title": null,
-          "content": null
-        },
-        "funding": {
-          "title": null,
-          "p1": null
-        },
-        "developersContributors": {
-          "sectionTitle": null,
-          "p1": null,
-          "p2": null
-        },
-        "projectStats": {
-          "sectionTitle": null,
-          "general": null
-        },
-        "dataSources": {
-          "title": null,
-          "p1": null,
-          "p2": null
-        }
+        "sectionTitle": "ملفي الشخصي",
+        "subscriptions": "اشتراكاتي",
+        "comments": "تعليقاتي",
+        "uploads": "تحميلاتي"
       }
     },
     "reference": {
       "statusType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_10": null,
-        "value_20": null,
-        "value_30": null,
-        "value_50": null,
-        "value_75": null,
-        "value_100": null,
-        "value_150": null,
-        "value_200": null
+        "value_minus1": "(لم يتم التحديد)",
+        "value_0": "مجهول",
+        "value_10": "متاح حاليا (الوضع الآلي)",
+        "value_20": "قيد الاستخدام حاليًا (الوضع الآلي)",
+        "value_30": "غير متاح مؤقتا",
+        "value_50": "التشغيل",
+        "value_75": "تشغيلي جزئيًا (مختلط)",
+        "value_100": "لا يعمل",
+        "value_150": "مخطط للتاريخ المستقبلي",
+        "value_200": "تمت إزالته (مفصول)"
       },
       "operatorInfo": {
-        "value_minus1": null,
-        "value_1": null,
-        "value_44": null,
-        "value_45": null
+        "value_minus1": "(لم يتم التحديد)",
+        "value_1": "(عامل غير معروف)",
+        "value_44": "(سكن خاص / فرد)",
+        "value_45": "(صاحب العمل في الموقع)"
       },
       "usageType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_1": null,
-        "value_2": null,
-        "value_3": null,
-        "value_4": null,
-        "value_5": null,
-        "value_6": null,
-        "value_7": null
+        "value_minus1": "(لم يتم التحديد)",
+        "value_0": "(مجهول)",
+        "value_1": "عام",
+        "value_2": "خاص - وصول مقيد",
+        "value_3": "مملوكة ملكية خاصة - الإشعار مطلوب",
+        "value_4": "عام - مطلوب عضوية",
+        "value_5": "عام - الدفع في الموقع",
+        "value_6": "خاص - للموظفين أو الزوار أو العملاء",
+        "value_7": "عام - مطلوب إشعار"
       },
       "connectionType": {
-        "value_minus1": null,
-        "value_0": null
+        "value_minus1": "(لم يتم التحديد)",
+        "value_0": "(مجهول)"
       },
       "levelType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_1": null,
-        "value_2": null,
-        "value_3": null
+        "value_minus1": "(لم يتم التحديد)",
+        "value_0": "(مجهول)",
+        "value_1": "المستوى 1: منخفض (أقل من 2 كيلو واط)",
+        "value_2": "المستوى 2: متوسط ​​(أكثر من 2 كيلو وات)",
+        "value_3": "المستوى 3: مرتفع (أكثر من 40 كيلو واط)"
       },
       "supplyType": {
-        "value_minus1": null,
-        "value_0": null,
-        "value_10": null,
-        "value_20": null,
-        "value_30": null
+        "value_minus1": "(لم يتم التحديد)",
+        "value_0": "(مجهول)",
+        "value_10": "AC (أحادي الطور)",
+        "value_20": "AC (ثلاث مراحل)",
+        "value_30": "DC"
       }
     }
   }
