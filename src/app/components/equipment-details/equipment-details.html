@@ -5,7 +5,6 @@
       <ion-row>
         <ion-col size="3">
 
-
           <img [src]="getConnectorTypeIcon(i.ConnectionTypeID)" style="max-width: 64px">
           <ion-badge color="primary" *ngIf="i.Quantity">{{i.Quantity}} x</ion-badge>
           <div class="info">{{i.StatusType?.Title}}</div>
@@ -16,11 +15,13 @@
             <ion-col>
               <ion-note>
                 <div>
-                  <strong title="{{i.ConnectionType?.FormalName}}">{{i.ConnectionType?.Title}} </strong>
+                  <strong title="{{i.ConnectionType?.FormalName}}">{{i.ConnectionType?.Title}}
+                  </strong>
                 </div>
-               
+
                 <strong *ngIf="i.PowerKW">{{i.PowerKW}} kW </strong>
-                <div *ngIf="i.CurrentTypeID">{{i.CurrentType?.Title}} </div>
+                <div *ngIf="i.CurrentTypeID">{{i.CurrentType?.Title}}
+                </div>
               </ion-note>
               <ion-note>
                 <span *ngIf="i.Amps">{{i.Amps}}A </span>

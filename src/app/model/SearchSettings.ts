@@ -41,9 +41,9 @@ export class SearchSettings {
     this.MaxResults = 500;
   }
 
-  public LoadSettings() {}
+  public LoadSettings() { }
 
-  public SaveSettings() {}
+  public SaveSettings() { }
 
   public ClearActiveFilters() {
     this.OperatorList = [];

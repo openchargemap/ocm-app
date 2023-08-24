@@ -40,7 +40,7 @@ export class GoogleMapsWeb implements IMapProvider {
     }
 
     disposeMap() {
-      
+
     }
 
     /**
@@ -124,9 +124,9 @@ export class GoogleMapsWeb implements IMapProvider {
     clearMarkers() {
         if (this.markerList != null) {
             this.markerList.forEach((value: any, key: number) => {
-              value.remove();
+                value.remove();
             });
-          }
+        }
 
         this.markerList = new Map<number, google.maps.Marker>();
     }

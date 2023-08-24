@@ -1,5 +1,5 @@
-import {GeoLatLng} from './GeoPosition';
-import {SyncItem} from './SyncItem';
+import { GeoLatLng } from './GeoPosition';
+import { SyncItem } from './SyncItem';
 
 
 export interface ISyncItem {

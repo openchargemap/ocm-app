@@ -1,4 +1,4 @@
-import {GeoLatLng} from './GeoPosition';
+import { GeoLatLng } from './GeoPosition';
 
 export interface SearchFilters {
     CountryIds: Array<number>;

@@ -36,7 +36,6 @@
                                  [(longitude)]="item.AddressInfo.Longitude"
                                  (onUseSuggestedAddress)="useSuggestedAddress($event)"></app-poi-location-editor>
 
-
         <ion-list>
           <ion-item>
             <ion-label position="floating">Location Name</ion-label>
@@ -74,24 +73,24 @@
             <ion-input label="Latitude" labelPlacement="floating" type="number" [(ngModel)]="item.AddressInfo.Latitude" placeholder="Latitude (if entering manually)"></ion-input>
           </ion-item>
           <ion-item>
-       
+
             <ion-input label="Longitude" labelPlacement="floating" type="number" [(ngModel)]="item.AddressInfo.Longitude" placeholder="Longitude (if entering manually)"></ion-input>
           </ion-item>
 
-         
         </ion-list>
       </ng-container>
       <ng-container *ngIf="step=='poi-nearby'">
 
         <h3>Locations Nearby</h3>
-        <p><strong>The following locations already exist nearby.</strong></p>
+        <p>
+          <strong>The following locations already exist nearby.</strong>
+        </p>
         <div class="instruction">
           <p>Ensure you are not adding a duplicate site unless it is for different equipment from another network operator.</p>
           <p>You can edit any of these listings if required instead:</p>
         </div>
 
-        <app-poi-list [poiList]='nearbySites' [enableEditOption]='true' (onEdit)='editPOI($event)'>
-        </app-poi-list>
+        <app-poi-list [poiList]='nearbySites' [enableEditOption]='true' (onEdit)='editPOI($event)'></app-poi-list>
 
       </ng-container>
 
@@ -105,7 +104,7 @@
        
           </p>
 
-        <app-operator-lookup [operatorId]="item.OperatorID" (operatorChanged)="onOperatorChange($event)"></app-operator-lookup>
+          <app-operator-lookup [operatorId]="item.OperatorID" (operatorChanged)="onOperatorChange($event)"></app-operator-lookup>
 
           <ng-container *ngIf="item.AddressInfo.CountryID && item.OperatorID">
             <ng-container *ngIf="selectedTemplatePOI">
@@ -132,9 +131,7 @@
               <ng-container *ngIf="templateSites.length>0">
 
                 <h4>Similar Sites</h4>
-                <app-poi-list [enableCopyOption]='true' [poiList]='templateSites' (onCopy)='useTemplatePOI($event)'>
-
-                </app-poi-list>
+                <app-poi-list [enableCopyOption]='true' [poiList]='templateSites' (onCopy)='useTemplatePOI($event)'></app-poi-list>
               </ng-container>
 
               <ng-container *ngIf="templateSites.length==0">
@@ -143,7 +140,6 @@
                 </p>
               </ng-container>
             </ng-container>
-
 
           </ng-container>
         </ng-container>
@@ -166,18 +162,17 @@
 
         <app-equipment-details [item]="item" [enableEdit]="true" (onEdit)="editConnection($event)" (onDelete)="deleteConnection($event)"></app-equipment-details>
 
-
       </ng-container>
     </ng-container>
     <ng-container *ngIf="selectedTab=='info'">
       <p *ngIf="validationMsg" color="warning">
         <strong>Your changes cannot be saved until the following issues are resolved:</strong>
-        <ion-label color="danger">  {{validationMsg}}</ion-label>
-      
+        <ion-label color="danger">
+          {{validationMsg}}</ion-label>
+
       </p>
 
       <p>Please provide any other facts related to this site. Additional comments (your charging experiences etc) can be added as check-in comments once the site is listed.</p>
-      
 
       <ion-item>
         <ion-label position="floating">Operational Status (All Equipment))</ion-label>
@@ -199,7 +194,7 @@
         <ion-label position="floating">General Comments</ion-label>
         <ion-input type="text" [(ngModel)]="item.GeneralComments" autocapitalize="sentences" ></ion-input>
       </ion-item>
-    
+
       <ion-item>
         <ion-label position="floating">Main Telephone Number </ion-label>
         <ion-input type="tel" [(ngModel)]="item.AddressInfo.ContactTelephone1" placeholder=""></ion-input>
@@ -216,7 +211,7 @@
         <ion-label position="floating">Related Website</ion-label>
         <ion-input type="url" [(ngModel)]="item.AddressInfo.RelatedURL" placeholder="Website related to this site"></ion-input>
       </ion-item>
-     
+
     </ng-container>
   </ng-container>
 
@@ -230,7 +225,6 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-
 
       <ion-button (click)="next()" *ngIf="!isReadyToSubmit && step!='info'">
         Next

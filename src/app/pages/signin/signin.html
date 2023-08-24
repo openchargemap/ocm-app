@@ -8,9 +8,8 @@
 
 <ion-content class="signin-page ion-padding">
 
-
     <ion-avatar item-left>
-        <img src="assets/images/icons/branding/AppIcon_128x128.png" />
+        <img src="assets/images/icons/branding/AppIcon_128x128.png"/>
     </ion-avatar>
     <p class="ion-padding">
         Sign in using your Open Charge Map account.
@@ -28,19 +27,23 @@
 
     </ion-list>
 
-<p>or <a (click)="appManager.launchWebPage('https://openchargemap.org/site/loginprovider/register')">Register as New User</a>
-    or <a (click)="appManager.launchWebPage('https://openchargemap.org/site/loginprovider/passwordreset')">Reset your password</a></p>
+    <p>or <a (click)="appManager.launchWebPage('https://openchargemap.org/site/loginprovider/register')">Register as New User</a>
+    or <a (click)="appManager.launchWebPage('https://openchargemap.org/site/loginprovider/passwordreset')">Reset your password</a>
+    </p>
 
 </ion-content>
 <ion-footer>
     <ion-toolbar>
         <ion-buttons slot="secondary">
-            <ion-button (click)="cancelSignIn()"> <ion-icon name="close" slot="start"></ion-icon> Cancel</ion-button>
+            <ion-button (click)="cancelSignIn()">
+                <ion-icon name="close" slot="start"></ion-icon> Cancel</ion-button>
 
         </ion-buttons>
         <ion-buttons slot="primary">
 
-            <ion-button (click)="performSignIn()" type="submit" color="primary"><ion-icon name="log-in" slot="start"></ion-icon> {{'ocm.general.signIn' | translate}}</ion-button>
+            <ion-button (click)="performSignIn()" type="submit" color="primary">
+                <ion-icon name="log-in" slot="start"></ion-icon>
+                {{'ocm.general.signIn' | translate}}</ion-button>
 
         </ion-buttons>
 

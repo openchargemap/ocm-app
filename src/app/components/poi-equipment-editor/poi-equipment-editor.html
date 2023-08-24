@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>{{isAddMode?'Add Equipment':'Edit Equipment'}}</ion-title>
-    
+
   </ion-toolbar>
 </ion-header>
 
@@ -56,12 +56,12 @@
 </ion-content>
 <ion-footer>
   <ion-toolbar>
-      <ion-buttons slot="start">
-          <ion-button (click)="cancel()">
-            <ion-icon name="close" slot="start"></ion-icon>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">
+        <ion-icon name="close" slot="start"></ion-icon>
             Cancel
           </ion-button>
-        </ion-buttons>
+    </ion-buttons>
     <ion-buttons slot="end">
       <ion-button (click)="save()" color="success">
         OK

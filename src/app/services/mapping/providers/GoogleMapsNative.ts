@@ -58,7 +58,7 @@ export class GoogleMapsNative implements IMapProvider {
     }
 
     disposeMap() {
-      
+
     }
 
     /**
@@ -162,9 +162,9 @@ export class GoogleMapsNative implements IMapProvider {
 
         if (this.markerList != null) {
             this.markerList.forEach((value: any, key: number) => {
-              value.remove();
+                value.remove();
             });
-          }
+        }
 
         this.markerList = new Map<number, Marker>();
     }

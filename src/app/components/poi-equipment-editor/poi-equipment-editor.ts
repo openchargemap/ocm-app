@@ -45,7 +45,7 @@ export class PoiEquipmentEditorComponent implements OnInit {
       alert("Quantity must be a whole number, or leave it blank.");
       valid = false;
     }
- 
+
     if (valid) {
       // return to caller
       this.modalController.dismiss({ item: this.conn });

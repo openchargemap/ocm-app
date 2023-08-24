@@ -50,7 +50,7 @@ export class MapKitMapProvider implements IMapProvider {
   }
 
   disposeMap() {
-      
+
   }
 
   /**

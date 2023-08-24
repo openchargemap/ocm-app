@@ -198,11 +198,11 @@ export class Mapping implements IMapManager {
 
     setMapType(maptype: MapType) {
         if (this.mapOptions.mapType == maptype) { return; }
-        
+
         this.mapOptions.mapType = maptype;
 
         if (this.isMapReady() && this.mapProvider != null) {
-         
+
             this.logging.log("Changing map type:" + maptype);
             this.mapProvider.setMapType(maptype);
         } else {

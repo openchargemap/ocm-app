@@ -53,10 +53,10 @@ export class PoiLocationEditorComponent implements OnInit, AfterContentInit, OnC
     // listen for map centre moves and use the new position
     this.mapOptions.onMapMoveCompleted = () => {
       let c: Observable<GeoPosition>;
-      
-     c = this.mapService.getMapCenter();
-     
-     c.subscribe((pos) => {
+
+      c = this.mapService.getMapCenter();
+
+      c.subscribe((pos) => {
         if (pos) {
           this.latitude = pos.coords.latitude;
           this.longitude = pos.coords.longitude;
@@ -75,9 +75,9 @@ export class PoiLocationEditorComponent implements OnInit, AfterContentInit, OnC
     this.focusMap();
   }
 
-  
-  ngOnDestroy(){
-   this.mapService.disposeMap();
+
+  ngOnDestroy() {
+    this.mapService.disposeMap();
   }
 
   focusMap() {

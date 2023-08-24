@@ -378,7 +378,7 @@ export class SearchPage implements OnInit, AfterViewInit {
 
     // if user has recently edited a POI or enabled pending POIs, show pending listings
     if (this.appManager.searchSettings.EnablePOIPendingApproval) {
-      params.submissionStatusTypeIdList =[1,100,200];
+      params.submissionStatusTypeIdList = [1, 100, 200];
     }
 
     this.appManager.isRequestInProgress = true;

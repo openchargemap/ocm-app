@@ -39,7 +39,7 @@ export class LeafletMap implements IMapProvider {
     }
 
     disposeMap() {
-      
+
     }
     /**
     * Performs one-time init of map object for this map provider
@@ -102,9 +102,9 @@ export class LeafletMap implements IMapProvider {
 
         if (this.markerList != null) {
             this.markerList.forEach((value: any, key: number) => {
-              value.setMap(null);
+                value.setMap(null);
             });
-          }
+        }
 
         this.markerList = new Map<number, any>();
     }

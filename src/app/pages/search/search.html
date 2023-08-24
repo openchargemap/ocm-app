@@ -1,13 +1,11 @@
 <ion-header>
 
-
 	<ion-toolbar>
 		<ion-buttons slot="start">
 			<ion-menu-button></ion-menu-button>
 		</ion-buttons>
 		<ion-searchbar autocapitalize="on" autocomplete="on" [(ngModel)]="searchKeyword" (ionInput)="search($event)"
-					   [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500">
-		</ion-searchbar>
+					   [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500"></ion-searchbar>
 		<ion-buttons slot="end">
 			<ion-button (click)="locateUser()">
 				<ion-icon *ngIf="!appManager.isRequestInProgress" name="locate" slot="start"></ion-icon>

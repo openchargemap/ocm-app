@@ -1,57 +1,49 @@
+.left-col {
+  float: left;
+  width: 50%;
+  overflow: auto;
+}
+.right-col {
+  float: right;
+  width: 50%;
+  overflow: auto;
+}
 
-    .left-col{
-        float:left;
-        width:50%;
-        overflow: auto;
-    }
-    .right-col{
-    float:right;
-        width:50%;
-        overflow: auto;
-    }
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+  overflow: auto;
+}
+.row {
+  margin-bottom: 1em;
+}
 
-    .row:after {
-    content: "";
-    display: table;
-    clear: both;
-    overflow: auto;
+.subtle {
+  color: #c0c0c0;
+}
 
-    }
-    .row {
+@media screen and (max-width: 768px) {
+  .left-col {
+    float: none;
+    width: 100%;
+  }
+  .right-col {
+    margin-top: 1em;
+    float: none;
+    width: 100%;
+  }
+}
+.address-details ion-card img {
+  max-height: 200px;
+  width: auto;
+}
 
-        margin-bottom:1em;
-
-    }
-
-    .subtle {
-        color: #c0c0c0;
-    }
-
-    @media screen and (max-width: 768px) {
-        .left-col{
-
-        float:none;
-    width:100%;
-        }
-        .right-col{
-            margin-top:1em;
-        float:none;
-            width:100%;
-
-        }
-    }
-     .address-details ion-card img {
-         max-height: 200px;
-         width: auto;
-     }
-
-     ion-label {
-         overflow: inherit;
-        /*  white-space: pre-line;*/
-     }
-
-
+ion-label {
+  overflow: inherit;
+  /*  white-space: pre-line;*/
+}
 
 ion-title > small {
-    color:rgba(255,255,255,0.75);
+  color: rgba(255, 255, 255, 0.75);
 }

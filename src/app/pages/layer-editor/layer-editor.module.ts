@@ -19,4 +19,4 @@ import { UIComponentsModule } from '../../components/ui-components.module';
   ],
   declarations: [LayerEditorPage]
 })
-export class LayerEditorPageModule {}
+export class LayerEditorPageModule { }

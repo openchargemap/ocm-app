@@ -6,7 +6,6 @@
         <ion-label>Plan Your Journey</ion-label>
       </ion-list-header>
 
-
       <ion-item *ngIf="routeStartPlace==null">
         <ion-icon name="ionic" item-left></ion-icon>
         <ion-searchbar [(ngModel)]="routeStart" (ionInput)="placeSearchRouteStart.getPlacesAutoComplete($event,'routeStart')" (ionCancel)="onPlaceSearchCancel($event)"
@@ -23,7 +22,6 @@
         <ion-icon name="pin" item-left></ion-icon>
         <ion-searchbar [(ngModel)]="routeDestination" (ionInput)="placeSearchRouteDestination.getPlacesAutoComplete($event,'routeDestination')"
           (ionCancel)="onPlaceSearchCancel($event)" placeholder="Destination" [debounce]="500"></ion-searchbar>
-
 
       </ion-item>
       <ion-item *ngIf="routeDestinationPlace!=null" (click)="clearRouteDestination()">
@@ -87,7 +85,6 @@
       <ion-item>
         <ion-label position="stacked">Energy Efficiency (kWh Per km)</ion-label>
         <ion-input type="number" min="0.1" max="1" [(ngModel)]="kWhPerKM"></ion-input>
-
 
       </ion-item>
     </ion-list>

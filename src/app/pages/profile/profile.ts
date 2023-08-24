@@ -38,7 +38,7 @@ export class ProfilePage {
 
     showSignInModal() {
         // show sign in page
-        this.modalController.create({ component: SignInPage, componentProps: { Profile: this.userProfile }})
+        this.modalController.create({ component: SignInPage, componentProps: { Profile: this.userProfile } })
             .then(m => {
                 m.onDidDismiss().then(() => {
                     // may have an updated user profile

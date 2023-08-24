@@ -19,4 +19,4 @@ import { TranslateModule } from '@ngx-translate/core';
   ],
   declarations: [AboutPage]
 })
-export class AboutPageModule {}
+export class AboutPageModule { }

@@ -27,4 +27,4 @@ const routes: Routes = [
   ],
   declarations: [PoiEditorPage]
 })
-export class PoiEditorPageModule {}
+export class PoiEditorPageModule { }
