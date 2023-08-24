@@ -88,12 +88,16 @@
   </ion-item>
 
   <ion-item>
-    <ion-toggle label="Enable Advanced Editor Options" [(ngModel)]="searchSettings.EnableAdvancedEditorFeatures"></ion-toggle>
+    <ion-toggle [(ngModel)]="searchSettings.EnableAdvancedEditorFeatures">Enable Advanced Editor Options</ion-toggle>
+  </ion-item>
+    <ion-item>
+    <ion-toggle [(ngModel)]="searchSettings.EnablePOIPendingApproval">Show New POIs Pending Approval</ion-toggle>
   </ion-item>
 
   <ion-item>
     <ion-input label="Max Results" type="number" placeholder="500" [(ngModel)]="searchSettings.MaxResults" min="100" max="10000"></ion-input>
   </ion-item>
+
 
 </ion-content>
 <ion-footer>

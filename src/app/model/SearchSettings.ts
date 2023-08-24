@@ -1,6 +1,5 @@
-import { GeoLatLng } from './GeoPosition';
-import { MapType } from '../services/mapping/interfaces/mapping';
-
+import { GeoLatLng } from "./GeoPosition";
+import { MapType } from "../services/mapping/interfaces/mapping";
 
 export const MAX_POWER: number = 650;
 
@@ -21,8 +20,8 @@ export class SearchSettings {
   FilterOptionsByCountryId: number;
   MapType: MapType;
   EnableAdvancedEditorFeatures: boolean;
+  EnablePOIPendingApproval: boolean;
   MaxResults: number;
-
 
   constructor() {
     this.OperatorList = [];
@@ -36,18 +35,15 @@ export class SearchSettings {
 
     this.FilterOptionsByCountryId = null;
     this.UseDistanceInKM = true;
-    this.MapType = 'ROADMAP';
+    this.MapType = "ROADMAP";
     this.EnableAdvancedEditorFeatures = false;
+    this.EnablePOIPendingApproval = false;
     this.MaxResults = 500;
   }
 
-  public LoadSettings() {
+  public LoadSettings() {}
 
-  }
-
-  public SaveSettings() {
-
-  }
+  public SaveSettings() {}
 
   public ClearActiveFilters() {
     this.OperatorList = [];
@@ -60,13 +56,15 @@ export class SearchSettings {
   }
 
   public CheckForActiveFilters(): boolean {
-    if (this.OperatorList.length > 0
-      || this.ConnectionTypeList.length > 0
-      || this.CountryList.length > 0
-      || this.UsageTypeList.length > 0
-      || this.StatusTypeList.length > 0
-      || this.MinPowerKW > 0
-      || (this.MaxPowerKW > 0 || (this.MaxPowerKW != null && this.MaxPowerKW < MAX_POWER))
+    if (
+      this.OperatorList.length > 0 ||
+      this.ConnectionTypeList.length > 0 ||
+      this.CountryList.length > 0 ||
+      this.UsageTypeList.length > 0 ||
+      this.StatusTypeList.length > 0 ||
+      this.MinPowerKW > 0 ||
+      this.MaxPowerKW > 0 ||
+      (this.MaxPowerKW != null && this.MaxPowerKW < MAX_POWER)
     ) {
       this.HasActiveFilters = true;
     } else {
@@ -74,5 +72,4 @@ export class SearchSettings {
     }
     return this.HasActiveFilters;
   }
-
 }
