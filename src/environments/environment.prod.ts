@@ -2,7 +2,7 @@ import { MappingAPI } from "../app/services/mapping/interfaces/mapping";
 
 export const environment = {
   name: 'prod',
-  version: '8.5.6',
+  version: '8.5.7',
   production: true,
   analyticsId: '',
   googleMapsKey: '',
