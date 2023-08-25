@@ -51,14 +51,13 @@ Copy `www` output to gh-pages branch and commit to publish. When updating live a
       - npx cap add ios
       - Update bundle id to org.openchargemap.app (including capacitor.config.json), version code, set Display Name to 'Open Charge' (for length)
       - Set Info.plist settings and permissions as required by Capacitor plugins:
-        - Status Bar: UIViewControllerBasedStatusBarAppearance : Yes
-        - Privacy Location Text (important for validation): 'Your location information will be used to find charging stations near you.'
-        - Add Push Notifications capability
-      - set splashscreen and icons: replace Assets with resources/Assets
+        - Privacy Location Text (important for validation): 'Your location information will be used to find charging stations near you.' See https://capacitorjs.com/docs/apis/geolocation
+        - [unused] Add Push Notifications capability
+      - set splashscreen and icons: replace /ios/App/App/Assets with resources/ios/Assets
       - Release build:
         - `ionic build --prod`, `npx cap sync ios`
         - Update Version and Build ID in xcode
-        - Target Generic iOS device, Product > Archive, Distribute App > App Store Connect
+        - Target Generic iOS device, Product > Archive. Then Organizer > Distribute App > App Store Connect
 
 ## Type Docs
 
