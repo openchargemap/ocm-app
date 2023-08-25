@@ -45,7 +45,7 @@ Copy `www` output to gh-pages branch and commit to publish. When updating live a
       - Splashscreen: open Tools > resource Manager and drag splashscreen image in to replace existing
       - Push notifications: copy google-services.json to app
       - Set version in Android Studio: app:build.gradle default config https://stackoverflow.com/a/26865465/1707154
-      - build: `ionic build --prod`, `npx cap sync android`, `npx cap open android`, Generate Signed APK in Android Studio using private keystore
+      - build: `ionic build --prod`, `npx cap sync android`, `npx cap open android`, Build > Generate Signed BUndle in Android Studio using private keystore. Publish to play console in releases dashboard.
       - double check icons and splashscreens
     - iOS:
       - npx cap add ios
