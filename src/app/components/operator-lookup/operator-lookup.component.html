@@ -11,9 +11,9 @@
 </ion-item>
 
 <ion-item *ngIf="!useFilteredOperators && !selectedOperator">
-  <ion-label>Network Operator</ion-label>
+
   <ion-searchbar
-    placeholder="Search by network name (in any country)"
+    placeholder="Search network operators"
     showCancelButton="focus"
     (ionCancel)="cancelOperatorLookup()"
     autocomplete="on"

@@ -1,7 +1,7 @@
 import { GeoLatLng } from "./GeoPosition";
 import { MapType } from "../services/mapping/interfaces/mapping";
 
-export const MAX_POWER: number = 650;
+export const MAX_POWER: number = 1000;
 
 export class SearchSettings {
   OperatorList: Array<number>;

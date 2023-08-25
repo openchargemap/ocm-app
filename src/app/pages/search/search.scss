@@ -1,4 +1,5 @@
 .search-page {
+
   #map-canvas {
     width: 100%;
     height: 98%;
@@ -10,16 +11,7 @@
     z-index: 100;
     width: 100%;
   }
-  ion-content {
-  }
-  ion-buttons {
-    flex: 0.4;
-  }
-  ion-grid,
-  ion-row,
-  ion-col {
-    padding: 0;
-  }
+  
   scroll-content {
     overflow-y: hidden;
   }
@@ -37,22 +29,4 @@
     );
     /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   }
-  /*
-    .route {
-    
-        color: white;
-        .item {
-            background-color: transparent;
-        }
-        .route-places {
-            background-color: #8fb767;
-            ion-icon,
-            ion-list-header,
-            .item,
-            .item-input ion-label {
-                color: white;
-            }
-        }
-    }
-    */
 }
