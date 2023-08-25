@@ -46,10 +46,8 @@
     </ion-fab>
   </div>
   <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
-    <ion-refresher-content pullingIcon="caret-down"
-    pullingText="Pull to refresh"
-    refreshingSpinner="circles"
-    refreshingText="Refreshing..."></ion-refresher-content>
+    <ion-refresher-content pullingIcon="caret-down" pullingText="Pull to refresh" refreshingSpinner="circles"
+      refreshingText="Refreshing..."></ion-refresher-content>
   </ion-refresher>
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -59,7 +57,7 @@
           <ion-icon name="star" slot="start"></ion-icon>
           <ion-label>Favourite</ion-label>
         </ion-button>
-        <ion-button (click)="edit()" title="Submit an Edit">
+        <ion-button size="small" (click)="edit()" title="Submit an Edit">
           <ion-icon name="create" slot="start"></ion-icon>
           <ion-label>Edit</ion-label>
         </ion-button>
@@ -69,7 +67,7 @@
     <ion-buttons slot="end">
 
       <ng-container *ngIf="selectedTab=='location'">
-        <ion-button (click)="launchNavigation()">
+        <ion-button size="small" (click)="launchNavigation()" title="Navigate to this location">
           <ion-icon name="navigate" slot="start"></ion-icon>
           <ion-label>Navigate</ion-label>
         </ion-button>
@@ -91,31 +89,32 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <div class="ion-padding">
-    <ion-segment [(ngModel)]="selectedTab">
-      <ion-segment-button value="location" selected>
-        <ion-label>
-          Details
-        </ion-label>
-      </ion-segment-button>
 
-      <ion-segment-button value="comments">
-        <ion-label>Comments ({{poi.UserComments?poi.UserComments.length:0}})</ion-label>
+  <ion-segment [(ngModel)]="selectedTab">
+    <ion-segment-button value="location" selected>
+      <ion-label>
+        Details
+      </ion-label>
+    </ion-segment-button>
 
-      </ion-segment-button>
-      <ion-segment-button value="media">
-        <ion-label> Photos ({{poi.MediaItems?poi.MediaItems.length:0}})</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </div>
+    <ion-segment-button value="comments">
+      <ion-label>Comments ({{poi.UserComments?poi.UserComments.length:0}})</ion-label>
 
-  <div *ngIf="selectedTab=='location'" class="address-details">
+    </ion-segment-button>
+    <ion-segment-button value="media">
+      <ion-label> Photos ({{poi.MediaItems?poi.MediaItems.length:0}})</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+
+  <div *ngIf="selectedTab=='location'">
 
     <ion-card *ngIf="poi.AddressInfo">
 
       <ion-card-header>
-        <ion-icon name="map"></ion-icon>
-        {{ 'ocm.details.location.sectionTitle' | translate }}
+        <ion-card-subtitle>
+          {{ 'ocm.details.location.sectionTitle' | translate }}
+        </ion-card-subtitle>
 
       </ion-card-header>
       <ion-card-content>
@@ -124,7 +123,7 @@
           <ion-row>
             <ion-col>
 
-              <ion-label class="label">
+              <ion-label>
                 {{ 'ocm.details.location.address' | translate }}</ion-label>
               <div class="details">
                 <div *ngIf="poi.AddressInfo.AddressLine1">
@@ -172,11 +171,9 @@
           <ion-row>
             <ion-col>
 
-              <ion-icon name="pin"></ion-icon>
-
               <ion-label class="details-minor">
-                {{poi.AddressInfo.Latitude | number:'1.1-13'}}
-                , {{poi.AddressInfo.Longitude | number:'1.1-13'}}
+                Lat/Long: {{poi.AddressInfo.Latitude | number:'1.1-6'}}
+                , {{poi.AddressInfo.Longitude | number:'1.1-6'}}
               </ion-label>
 
             </ion-col>
@@ -189,8 +186,9 @@
 
     <ion-card>
       <ion-card-header>
-        <ion-icon name="battery-charging"></ion-icon>
-        {{ 'ocm.details.equipment.sectionTitle' | translate }}
+        <ion-card-subtitle>
+          {{ 'ocm.details.equipment.sectionTitle' | translate }}
+        </ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
 
@@ -206,7 +204,7 @@
 
     <ion-card>
       <ion-card-header>
-        <ion-icon name="book"></ion-icon> Usage Restrictions
+        <ion-card-subtitle>Usage Restrictions</ion-card-subtitle>
       </ion-card-header>
       <ion-card-content>
         <p *ngIf="poi.StatusType!=null">
@@ -217,21 +215,25 @@
         </p>
         <p *ngIf="poi.UsageType!=null">
           <span class="label">{{ 'ocm.details.usageType' | translate }}:</span>
-          <span class="details">{{poi.UsageType.Title}}</span></p>
+          <span class="details">{{poi.UsageType.Title}}</span>
+        </p>
         <p *ngIf="poi.UsageCost!=null">
           <span class="label">{{ 'ocm.details.usageCost' | translate }}:</span>
           <span class="details">
-            {{poi.UsageCost}}</span></p>
+            {{poi.UsageCost}}</span>
+        </p>
         <p *ngIf="poi.GeneralComments!=null"><br>{{ 'ocm.details.generalComments' | translate }}: <br>
-          <span class="details">{{poi.GeneralComments}}</span></p>
+          <span class="details">{{poi.GeneralComments}}</span>
+        </p>
 
       </ion-card-content>
     </ion-card>
 
     <ion-card *ngIf="poi.OperatorInfo">
       <ion-card-header>
-        <ion-icon name="help-circle"></ion-icon>
-        {{ 'ocm.details.operator.sectionTitle' | translate }}
+        <ion-card-subtitle>
+          {{ 'ocm.details.operator.sectionTitle' | translate }}
+        </ion-card-subtitle>
 
       </ion-card-header>
       <ion-card-content>
@@ -247,7 +249,8 @@
             <ion-icon name="mail"></ion-icon>
             {{poi.OperatorInfo.ContactEmail}}
           </p>
-          <p *ngIf="poi.OperatorInfo.FaultReportEmail!=null && poi.OperatorInfo.FaultReportEmail!=poi.OperatorInfo.ContactEmail">
+          <p
+            *ngIf="poi.OperatorInfo.FaultReportEmail!=null && poi.OperatorInfo.FaultReportEmail!=poi.OperatorInfo.ContactEmail">
             <ion-icon name="mail"></ion-icon>
             {{poi.OperatorInfo.FaultReportEmail}}
           </p>
@@ -257,7 +260,7 @@
 
     <ion-card>
       <ion-card-header>
-        <ion-icon name="information-circle"></ion-icon>
+
         {{ 'ocm.details.advancedDetails' | translate }}
       </ion-card-header>
       <ion-card-content>
@@ -268,7 +271,8 @@
           </h3>
 
           <p>{{poi.DataProvider?.Title}}</p>
-          <a *ngIf="poi.DataProvider.WebsiteURL" (click)="launchURL(poi.DataProvider.WebsiteURL)" href="javascript:void(0)">{{poi.DataProvider.WebsiteURL}}</a>
+          <a *ngIf="poi.DataProvider.WebsiteURL" (click)="launchURL(poi.DataProvider.WebsiteURL)"
+            href="javascript:void(0)">{{poi.DataProvider.WebsiteURL}}</a>
 
           <p>{{poi.DataProvider?.License}}</p>
         </div>
@@ -283,7 +287,7 @@
       <ion-card *ngFor="let item of poi.UserComments">
         <ion-item>
           <ion-avatar slot="start">
-            <img *ngIf="item.User && item.User.ProfileImageURL" src="{{item.User?.ProfileImageURL}}"/>
+            <img *ngIf="item.User && item.User.ProfileImageURL" src="{{item.User?.ProfileImageURL}}" />
           </ion-avatar>
           <ion-label>
             <span *ngIf="item.User">{{item.User.Username}}</span>
@@ -303,7 +307,8 @@
           </p>
           <p *ngIf="item.Rating">
             <span class="label">Rating:</span>
-            <span class="details">{{item.Rating}} out of 5</span></p>
+            <span class="details">{{item.Rating}} out of 5</span>
+          </p>
           <p *ngIf="item.CheckinStatusType">
             <ng-container *ngIf="item.CheckinStatusType.IsPositive===true">
               <ion-icon name="checkmark-circle" color="success" style="font-size:2em;"></ion-icon>
@@ -318,9 +323,18 @@
       </ion-card>
     </ng-container>
 
-    <p *ngIf="poi._hasComments==false" class="ion-padding">
-      {{ 'ocm.details.commentsAndRatings.zeroComments' | translate }}
-    </p>
+    <ng-container *ngIf="poi._hasComments==false">
+      <ion-card>
+        <ion-card-content>
+
+          <p>
+            {{ 'ocm.details.commentsAndRatings.addPrompt' | translate }}
+          </p>
+
+
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
 
   </div>
   <div *ngIf="selectedTab=='media'">
@@ -328,10 +342,10 @@
     <div *ngIf="poi._hasPhotos">
 
       <ion-card *ngFor="let item of poi.MediaItems">
-        <img src="{{item.ItemMediumURL}}"/>
+        <img src="{{item.ItemMediumURL}}" />
         <ion-item>
           <ion-avatar slot="start">
-            <img *ngIf="item.User && item.User.ProfileImageURL" src="{{item.User?.ProfileImageURL}}"/>
+            <img *ngIf="item.User && item.User.ProfileImageURL" src="{{item.User?.ProfileImageURL}}" />
           </ion-avatar>
           <ion-label>
             <span *ngIf="item.User">{{item.User.Username}}</span>
@@ -349,10 +363,16 @@
       </ion-card>
     </div>
 
-    <div *ngIf="!poi._hasPhotos" class="ion-padding">
-      <p class='subtle'>
-        {{ 'ocm.details.mediaItems.addPrompt' | translate }}</p>
-    </div>
+    <ng-container *ngIf="poi._hasPhotos==false">
+      <ion-card>
+        <ion-card-content>
+          <p>
+            {{ 'ocm.details.mediaItems.addPrompt' | translate }}
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+
   </div>
   <p *ngIf="appManager.isDebugMode==true" style="white-space: pre-wrap;">
     {{json}}</p>
