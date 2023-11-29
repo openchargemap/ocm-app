@@ -49,7 +49,8 @@ export class MapBoxMapProvider implements IMapProvider {
 
   initAPI() {
     if (mapboxgl) {
-      (<any>mapboxgl).accessToken = environment.mapBoxToken;
+      //(<any>mapboxgl).accessToken = environment.mapBoxToken;
+      Object.getOwnPropertyDescriptor(mapboxgl, "accessToken").set(environment.mapBoxToken);
     }
   }
 
