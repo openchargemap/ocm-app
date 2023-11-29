@@ -13,9 +13,11 @@ import { AlertController, LoadingController, ModalController } from '@ionic/angu
 export class SignInPage {
     email: string;
     password: string;
-    username: string;
 
-    mode: string = 'register';
+    username: string;
+    confirmpassword: string;
+
+    mode: string = 'signin';
 
     constructor(
         public appManager: AppManager,
@@ -40,8 +42,18 @@ export class SignInPage {
     }
 
     async performRegister() {
+
+        if (this.password != this.confirmpassword) {   
+            alert("Your password and the confirmed password do not match, please try again.");
+            return;
+        }
+        if (this.password.length < 6) {
+            alert("Your password should be at least 6 characters.");
+            return;
+        }
+
         const loading = await this.loadingController.create({
-            message: 'Signing In..'
+            message: 'Registering ..'
         });
         await loading.present();
 
