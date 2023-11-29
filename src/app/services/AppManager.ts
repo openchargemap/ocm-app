@@ -235,7 +235,7 @@ export class AppManager {
 
     if (jwtString != null) {
       let jwt = JSON.parse(jwtString);
-      if (jwt.Data != null && jwt.Data.access_token != null) {
+      if (jwt?.Data != null && jwt?.Data?.access_token != null) {
         const decodedToken = this.jwtHelper.decodeToken(jwt.Data.access_token);
         if (this.jwtHelper.isTokenExpired(jwt.Data.access_token)) {
           localStorage.removeItem('authResponse');
@@ -243,6 +243,9 @@ export class AppManager {
           this.api.authResponse = jwt;
           this.logging.log('User has valid auth token in local storage', LogLevel.VERBOSE);
         }
+      } else {
+        this.logging.log('User has invalid auth token in local storage', LogLevel.VERBOSE);
+        localStorage.removeItem('authResponse');
       }
     }
   }

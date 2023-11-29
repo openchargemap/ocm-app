@@ -8,7 +8,7 @@ import { Logging, LogLevel } from './Logging';
 import { ReferenceDataManager } from './ReferenceDataManager';
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { Observable, lastValueFrom } from 'rxjs';
 
 import { POISearchParams, SubmissionType, GeoLatLng, PlaceSearchResult } from '../model/AppModels';
 
@@ -21,7 +21,7 @@ import { ReferenceDataFilters } from '../model/ReferenceDataFilters';
 })
 export class APIClient {
   public serviceBase: string = 'https://api.openchargemap.io';
-  public serviceBaseURL: string = this.serviceBase + '/v3';
+  public serviceBaseURL: string = this.serviceBase + '/v4';
   public hasAuthorizationError: boolean = false;
 
   public ATTRIBUTION_METADATAFIELDID = 4;
@@ -150,11 +150,28 @@ export class APIClient {
     return this.http.get<CoreReferenceData>(serviceURL, this.getHttpRequestOptions());
   }
 
-  performSignIn(username: string, password: string): Promise<any> {
+  performSignIn(email: string, password: string): Promise<any> {
 
     const serviceURL = this.serviceBaseURL + '/profile/authenticate/';
 
-    const data = { 'emailaddress': username, 'password': password };
+    const data = { 'emailaddress': email, 'password': password };
+
+    // observable result is wrapper in a Promise for API consumer to handle result/rejection etc
+
+    return this.http.post(serviceURL, JSON.stringify(data), this.getHttpRequestOptions())
+      .toPromise()
+      .then(response => {
+        this.authResponse = response;
+        return this.authResponse;
+      });
+  }
+
+  
+  performRegister(username: string, email:string, password: string): Promise<any> {
+
+    const serviceURL = this.serviceBaseURL + '/profile/register/';
+
+    const data = {'username':username, 'emailaddress': email, 'password': password };
 
     // observable result is wrapper in a Promise for API consumer to handle result/rejection etc
 

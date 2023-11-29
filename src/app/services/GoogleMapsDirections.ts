@@ -42,7 +42,7 @@ export class GoogleMapsDirections {
         });
     }
 
-    public analyseRoutes(routeResults: google.maps.DirectionsResult, kWhPerKM: number): Array<JourneyRoute> {
+    public analyseRoutes(routeResults: any, kWhPerKM: number): Array<JourneyRoute> {
         const journeyRoutes = new Array<JourneyRoute>();
 
         // analyse power consumption of the routes and summarise the route

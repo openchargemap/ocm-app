@@ -108,7 +108,7 @@ export class RoutePlanner {
                 this.routeStartPlace.Location.latitude + ',' + this.routeStartPlace.Location.longitude,
                 this.routeDestinationPlace.Location.latitude + ',' +
                 this.routeDestinationPlace.Location.longitude)
-                .then((result: google.maps.DirectionsResult) => {
+                .then((result: any) => {
                     if (result.routes != null && result.routes.length > 0) {
                         this.logging.log('Got route directions, analysing..');
                         this.routePolyline = (<any>result.routes[0]).overview_polyline;
