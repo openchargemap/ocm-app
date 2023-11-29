@@ -47,9 +47,8 @@
 /***************************************************************************************************
  * Zone JS is required by Angular itself.
  */
-import 'zone.js/dist/zone';  // Included with Angular CLI.
+import 'zone.js';  // Included with Angular CLI.
 
-import 'zone.js/dist/webapis-media-query';
 /**
  * Prevents Angular change detection from
  * running with certain Web Component callbacks
