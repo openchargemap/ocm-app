@@ -11,26 +11,63 @@
     <ion-avatar item-left>
         <img src="assets/images/icons/branding/AppIcon_128x128.png"/>
     </ion-avatar>
-    <p class="ion-padding">
+
+    <ion-segment [(ngModel)]="mode">
+        <ion-segment-button value="signin">
+            <ion-label>Sign In</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="register">
+            <ion-label>Create Account</ion-label>
+        </ion-segment-button>
+    </ion-segment>
+
+    <ng-container *ngIf="mode=='signin'">
+        <p class="ion-padding">
         Sign in using your Open Charge Map account.
     </p>
-    <ion-list>
-        <ion-item>
-            <ion-label position="floating">Email</ion-label>
-            <ion-input type="text" [(ngModel)]="email"></ion-input>
-        </ion-item>
+        <ion-list>
+            <ion-item>
+                <ion-label position="floating">Email</ion-label>
+                <ion-input type="text" [(ngModel)]="email"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="floating">Name or Nickname</ion-label>
+                <ion-input type="text" [(ngModel)]="username"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="floating">Password</ion-label>
+                <ion-input type="password" [(ngModel)]="password"></ion-input>
+            </ion-item>
 
-        <ion-item>
-            <ion-label position="floating">Password</ion-label>
-            <ion-input type="password" [(ngModel)]="password"></ion-input>
-        </ion-item>
+        </ion-list>
 
-    </ion-list>
+        <p>
+            <a (click)="appManager.launchWebPage('https://openchargemap.org/site/loginprovider/passwordreset')">Reset your password</a>
+        </p>
 
-    <p>or <a (click)="appManager.launchWebPage('https://openchargemap.org/site/loginprovider/register')">Register as New User</a>
-    or <a (click)="appManager.launchWebPage('https://openchargemap.org/site/loginprovider/passwordreset')">Reset your password</a>
+    </ng-container>
+    <ng-container *ngIf="mode=='register'">
+        <p class="ion-padding">
+        Create a new Open Charge Map account.
     </p>
+        <ion-list>
+            <ion-item>
+                <ion-label position="floating">Email</ion-label>
+                <ion-input type="text" [(ngModel)]="email"></ion-input>
+            </ion-item>
 
+            <ion-item>
+                <ion-label position="floating">Password</ion-label>
+                <ion-input type="password" [(ngModel)]="password"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label position="floating">Confirm Password</ion-label>
+                <ion-input type="password" [(ngModel)]="password"></ion-input>
+            </ion-item>
+
+        </ion-list>
+
+    </ng-container>
 </ion-content>
 <ion-footer>
     <ion-toolbar>
