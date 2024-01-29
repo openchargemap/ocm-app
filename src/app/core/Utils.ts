@@ -34,6 +34,11 @@ export class Utils {
     static getMaxLevelOfPOI(poi) {
         let level = 0;
 
+        if (poi.StatusTypeID==150){
+            // planned for future date
+            return 0;
+        }
+        
         if (poi.Connections != null) {
             for (let c = 0; c < poi.Connections.length; c++) {
                 if (poi.Connections[c].Level != null && poi.Connections[c].Level.ID > level) {
