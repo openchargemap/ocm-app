@@ -6,6 +6,7 @@ import { IMapProvider } from '../../services/mapping/interfaces/mapping';
 import { MapBoxMapProvider } from '../../services/mapping/providers/MapBox';
 import { HttpClient } from '@angular/common/http';
 import { Events } from '../../services/Events';
+import { GeoLatLng } from 'src/app/model/GeoPosition';
 
 // declare var google: any;
 
@@ -106,6 +107,13 @@ export class PlaceSearch implements OnInit {
                 if (this.placeList && this.placeList.length > 0) {
                     this.placeAttribution = this.placeList[0].Attribution;
                 }
+
+                let keywordToLatLngResult = await this.detectAlternativeSearchResultType(keywordForSearch);
+
+                if (keywordToLatLngResult) {
+                    this.placeList.unshift(keywordToLatLngResult);
+                }
+
             } catch (error) {
 
             }
@@ -115,6 +123,73 @@ export class PlaceSearch implements OnInit {
         } else {
             this.searchInProgress = false;
             this.placeSearchActive = false;
+        }
+    }
+
+    ConvertDMSToDD(degrees, minutes, seconds, direction) {
+        var dd = Number(degrees) + Number(minutes) / 60 + Number(seconds) / (60 * 60);
+
+        if (direction == "S" || direction == "W") {
+            dd = dd * -1;
+        }
+
+        return dd;
+    }
+
+    ParseDMS(input) {
+        // https://stackoverflow.com/questions/1140189/converting-latitude-and-longitude-to-decimal-values
+        try {
+            var parts = input.split(/[^\d\w\.]+/);
+            var lat = this.ConvertDMSToDD(parts[0], parts[1], parts[2], parts[3]);
+            var lng = this.ConvertDMSToDD(parts[4], parts[5], parts[6], parts[7]);
+            return new GeoLatLng(lat, lng);
+        } catch {
+            return null;
+        }
+    }
+
+    public async detectAlternativeSearchResultType(input: string): Promise<PlaceSearchResult> {
+
+        input = input.trim();
+
+        if (input.startsWith("OCM-")) {
+            input = input.replace("OCM-", "");
+        }
+
+        if (Number.isInteger(Number(input))) {
+            // assume OCM ID
+            let searchResult = new PlaceSearchResult();
+            searchResult.Title = "Go to OCM ID";
+            searchResult.Address = "OCM-" + input;
+            searchResult.ReferenceID = "OCM-" + input;
+            return searchResult;
+        }
+
+        // check if item is a lat/long pair
+        let validation = input.match(/^\s*((lat|latitude)(:)?)?\s*((\-)?[0-9]+\.[0-9]+)\s*(,?)\s*((lng|lon|longitude)(:)?)?\s*((\-)?[0-9]+\.[0-9]+)\s*$/gi);
+        if (validation && validation.length > 0) {
+            // item may be a lat/long pair
+            let result = input.match(/((\-)?[0-9]+\.[0-9]+)+/g);
+            const latLngArray = ('' + result).split(",");
+            let searchResult = new PlaceSearchResult();
+
+            searchResult.Title = "Go to Lat/Lng";
+            searchResult.Address = "Lat:" + latLngArray[0] + ", Lng:" + latLngArray[1];
+            searchResult.Location = new GeoLatLng(parseFloat(latLngArray[0]), parseFloat(latLngArray[1]));
+            return searchResult;
+        } else {
+
+            // check if item is a Degrees Minutes Second coordinate pair
+            var converted = this.ParseDMS(input);
+            if (converted && !isNaN(converted.latitude) && !isNaN(converted.longitude)) {
+                let searchResult = new PlaceSearchResult();
+                searchResult.Title = "Go to Lat/Lng";
+                searchResult.Address = "Lat:" + converted.latitude + ", Lng:" + converted.longitude;
+                searchResult.Location = converted;
+                return searchResult;
+            } else {
+                return null;
+            }
         }
     }
 

@@ -160,7 +160,7 @@ export class SearchPage implements OnInit, AfterViewInit {
                   text: 'Cancel',
                   role: 'cancel',
                   cssClass: 'secondary',
-                  handler: async (blah) => {
+                  handler: async () => {
                     // denied
                     await this.useFallbackPosition();
                   }
@@ -175,8 +175,6 @@ export class SearchPage implements OnInit, AfterViewInit {
             });
 
             await alert.present();
-
-
 
           } else {
             // attempt to geolocate user and perform search
@@ -213,11 +211,9 @@ export class SearchPage implements OnInit, AfterViewInit {
       if (args.poi) {
         this.viewPOIDetails(args, args.poi);
       } else {
-        let poi = this.getPOIByID(args.poiId);
-        this.viewPOIDetails(args, poi);
+        // perform lookup for POI then open details and recenter map
+          this.viewPOIDetails(args, null, true); 
       }
-
-
     });
 
     // if this is cordova, map init can't happen until after platform ready
@@ -289,7 +285,7 @@ export class SearchPage implements OnInit, AfterViewInit {
       let id = this.appManager.searchSettings.StartViewPoiId;
       this.appManager.searchSettings.StartViewPoiId = null;
 
-      let poi = await this.poiManager.getPOIById(id)
+      let poi = await this.poiManager.getPOIById(id, true);
       if (poi) {
         this.events.publish('ocm:poi:selected', { poiId: poi.ID, poi: poi });
         this.mapping.updateMapCentrePos(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, true, this.defaultMapZoom);
@@ -394,7 +390,7 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   }
 
-  viewPOIDetails(data: any, p: any) {
+  viewPOIDetails(data: any, p: any, recenterMap: boolean = false) {
 
     this.logging.log('Viewing/fetching [' + this.poiViewMode + '] POI Details ' + data.poiId);
 
@@ -415,6 +411,9 @@ export class SearchPage implements OnInit, AfterViewInit {
           m.present();
         });
 
+        if (recenterMap){
+          this.mapping.updateMapCentrePos(p.AddressInfo.Latitude, p.AddressInfo.Longitude, true, this.defaultMapZoom);
+        }
     } else {
       this.poiManager.getPOIById(data.poiId, true).then(poi => {
 
@@ -437,6 +436,9 @@ export class SearchPage implements OnInit, AfterViewInit {
             });
 
           this.mapping.unfocusMap();
+          if (recenterMap){
+            this.mapping.updateMapCentrePos(poi.AddressInfo.Latitude, poi.AddressInfo.Longitude, true, this.defaultMapZoom);
+          }
         }
 
         if (this.poiViewMode === 'side') {
@@ -589,7 +591,13 @@ export class SearchPage implements OnInit, AfterViewInit {
     // give map back the input focus (mainly for native map)
     this.mapping.focusMap();
 
-    this.mapping.updateMapCentrePos(place.Location.latitude, place.Location.longitude, true);
+    if (place.Location != null) {
+      this.mapping.updateMapCentrePos(place.Location.latitude, place.Location.longitude, true);
+    } else if (place.ReferenceID != null && place.ReferenceID.startsWith("OCM-")) {
+      // OCM ID
+      let poiID = place.ReferenceID.replace("OCM-", "");
+      this.events.publish('ocm:poi:selected', { poiId: poiID, poi: null });
+    }
 
     this.debouncedRefreshMapResults();
 

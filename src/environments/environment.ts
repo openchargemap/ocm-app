@@ -6,7 +6,7 @@ import { MappingAPI } from "../app/services/mapping/interfaces/mapping";
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 export const environment = {
   name: 'dev',
-  version: '8.5.7-dev',
+  version: '8.6.0-dev',
   production: false,
   analyticsId: '',
   googleMapsKey: '',
