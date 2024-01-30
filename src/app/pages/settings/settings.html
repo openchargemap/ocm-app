@@ -21,7 +21,7 @@
     <ion-item *ngIf="isCountryFilterFeatureEnabled">
 
       <ion-select [label]="'ocm.search.countries' | translate" [(ngModel)]="searchSettings.FilterOptionsByCountryId"
-        multiple="false" cancelText="Cancel" okText="OK" (ionChange)="onCountryChange()">
+        multiple="false" cancelText="Cancel" okText="OK" (ionChange)="onCountryChange()" placeholder="All">
         <ion-select value="">(All Countries)</ion-select>
         <ion-select-option *ngFor="let item of countries" [value]="item.ID">{{item.Title}}</ion-select-option>
 
@@ -34,7 +34,7 @@
     <ion-item>
 
       <ion-select [label]="'ocm.search.usageTypes' | translate" [(ngModel)]="searchSettings.UsageTypeList"
-        multiple="true" cancelText="Cancel" okText="OK">
+        multiple="true" cancelText="Cancel" okText="OK" placeholder="All">
         <ion-select-option *ngFor="let item of usageTypes" [value]="item.ID">{{'ocm.reference.usageType.value_'+item.ID
           | nullableTranslate:item}}</ion-select-option>
 
@@ -43,7 +43,7 @@
 
     <ion-item>
       <ion-select [label]="'ocm.search.operationalStatusTypes' | translate" [(ngModel)]="searchSettings.StatusTypeList"
-        multiple="true" cancelText="Cancel" okText="OK">
+        multiple="true" cancelText="Cancel" okText="OK" placeholder="All">
         <ion-select-option *ngFor="let item of statusTypes"
           [value]="item.ID">{{'ocm.reference.statusType.value_'+item.ID | nullableTranslate:item }}</ion-select-option>
 
@@ -52,71 +52,68 @@
 
     <ion-item>
       <ion-select [label]="'ocm.search.connectionTypes'| translate" [(ngModel)]="searchSettings.ConnectionTypeList"
-        multiple="true" cancelText="Cancel" okText="OK">
+        multiple="true" cancelText="Cancel" okText="OK" placeholder="All">
         <ion-select-option *ngFor="let item of connectionTypes"
           [value]="item.ID">{{'ocm.reference.connectionType.value_'+item.ID | nullableTranslate:item
           }}</ion-select-option>
       </ion-select>
     </ion-item>
-
-    <ion-item lines="none">
-
-      <ion-range dualKnobs="true" min="0" max="650" pin="true" [(ngModel)]="powerRange" [ticks]="true" [snaps]="true" [min]="powerRange.lower" [max]="powerRange.upper">
+    <ion-item>
+      <ion-range labelPlacement="start" label="Power (kW)" dualKnobs="true" pin="true" [(ngModel)]="powerRange" [ticks]="false" [snaps]="false" [min]="0" [max]="maxPower">
         <ion-icon slot="start" size="small" name="flash">0</ion-icon>
         <ion-icon slot="end" name="flash"></ion-icon>
       </ion-range>
-
     </ion-item>
-
     <ion-item lines="none">
-      <ion-note slot="start" style="padding-top:0;">Min. Power (kW)<br><input type="number"
-          [(ngModel)]="powerRange.lower" min="0" [max]="powerRange.upper" style="width: 3em;border:none;"></ion-note>
-      <ion-note slot="end" style="padding-top:0;">Max. Power (kW)<br><input type="number" [(ngModel)]="powerRange.upper"
-          [max]="maxPower" [min]="powerRange.lower" style="width: 3em;border:none;"></ion-note>
-    </ion-item>
+    <ion-input slot="start" type="number" labelPlacement="stacked"
+          label="Min. kW" [(ngModel)]="powerRange.lower" min="0" [max]="powerRange.upper"></ion-input>
+    <ion-input slot="end" type="number" labelPlacement="stacked"
+          label="Max. kW" [(ngModel)]="powerRange.upper" [min]="powerRange.lower" [max]="maxPower" ></ion-input>
 
-  </ion-list>
-  <h2>
+  </ion-item>
+
+</ion-list>
+<h2>
     General Settings
   </h2>
 
-  <ion-item>
-    <ion-select label="Language" [(ngModel)]="searchSettings.Language" (ionChange)="onLanguageChange()"
-      multiple="false">
-      <ion-select-option *ngFor="let item of languages" [value]="item.code">{{item.title}}</ion-select-option>
-    </ion-select>
-  </ion-item>
+<ion-item>
+  <ion-select label="Language" [(ngModel)]="searchSettings.Language" (ionChange)="onLanguageChange()"
+      multiple="false" placeholder="Select">
+    <ion-select-option *ngFor="let item of languages" [value]="item.code">{{item.title}}</ion-select-option>
+  </ion-select>
+</ion-item>
 
-  <ion-item>
+<ion-item>
 
-    <ion-select [label]="'ocm.details.location.map'| translate" [(ngModel)]="searchSettings.MapType"
-      (ionChange)="onMapTypeChange()" multiple="false" cancelText="Cancel" okText="OK">
-      <ion-select-option value="ROADMAP">Road Map</ion-select-option>
-      <ion-select-option value="SATELLITE">Satellite</ion-select-option>
-    </ion-select>
-  </ion-item>
+  <ion-select [label]="'ocm.details.location.map'| translate" [(ngModel)]="searchSettings.MapType"
+      (ionChange)="onMapTypeChange()" multiple="false" cancelText="Cancel" okText="OK" placeholder="Select">
+    <ion-select-option value="ROADMAP">Road Map</ion-select-option>
+    <ion-select-option value="SATELLITE">Satellite</ion-select-option>
+  </ion-select>
+</ion-item>
 
-  <ion-item>
-    <ion-toggle [(ngModel)]="searchSettings.EnableAdvancedEditorFeatures">Enable Advanced Editor Options</ion-toggle>
-  </ion-item>
-  <ion-item>
-    <ion-toggle [(ngModel)]="searchSettings.EnablePOIPendingApproval">Show POIs Pending Approval</ion-toggle>
-  </ion-item>
+<ion-item>
+  <ion-toggle [(ngModel)]="searchSettings.EnableAdvancedEditorFeatures">Enable Advanced Editor Options</ion-toggle>
+</ion-item>
+<ion-item>
+  <ion-toggle [(ngModel)]="searchSettings.EnablePOIPendingApproval">Show POIs Pending Approval</ion-toggle>
+</ion-item>
 
-  <ion-item>
-    <ion-input label="Max Results" type="number" placeholder="500" [(ngModel)]="searchSettings.MaxResults" min="100"
+<ion-item>
+  <ion-input label="Max Results" type="number" placeholder="500" [(ngModel)]="searchSettings.MaxResults" min="100"
       max="10000"></ion-input>
-  </ion-item>
+</ion-item>
 
 </ion-content>
 <ion-footer>
-  <ion-toolbar>
-    <ion-buttons slot="end">
-      <ion-button (click)="close()">
-        <ion-icon name="close" slot="start"></ion-icon>
+<ion-toolbar>
+  <ion-buttons slot="end">
+    <ion-button (click)="close()">
+      <ion-icon name="close" slot="start"></ion-icon>
         Close
       </ion-button>
-    </ion-buttons>
+  </ion-buttons>
 
-  </ion-toolbar>
+</ion-toolbar>
 </ion-footer>

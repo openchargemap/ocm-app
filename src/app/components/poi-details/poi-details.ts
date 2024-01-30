@@ -318,4 +318,8 @@ export class PoiDetails implements OnInit {
 
     }
   }
+
+  close(){
+    this.modalController.dismiss();
+  }
 }

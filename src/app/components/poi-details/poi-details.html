@@ -21,8 +21,13 @@
 
       <ion-badge color="primary" title="Average User Rating">{{avgRating | number:'1.1-1'}}</ion-badge>
     </div>
+     <ion-fab vertical="top" horizontal="start" slot="fixed">
+      <ion-fab-button  size="small" color="medium" (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </ion-fab-button>
+      </ion-fab>
     <ion-fab vertical="top" horizontal="end" slot="fixed">
-      <ion-fab-button>
+      <ion-fab-button size="small" color="success">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
       <ion-fab-list side="bottom">

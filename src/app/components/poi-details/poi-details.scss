@@ -1,7 +1,7 @@
 .banner {
   background-color: #4f712f;
   color: rgba(255, 255, 255, 0.925);
-  padding: 1em;
+  padding: 1em 3em 1em 6em;
   text-shadow: #000 1px 1px 1px;
   min-height: 180px;
   background-size: cover;
@@ -14,26 +14,6 @@
   padding-right: 48px;
 }
 
-h3 {
-  font-weight: bold;
-}
-
-.label {
-  color: black;
-  font-weight: bold;
-  font-size: 12px;
-}
-
-.details {
-  color: #707d61;
-  margin-left: 1em;
-  font-size: 12px;
-}
-
-.details-minor {
-  color: #707d61;
-  font-size: 12px;
-}
 
 p {
   display: block;
