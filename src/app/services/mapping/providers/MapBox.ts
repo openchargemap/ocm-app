@@ -106,7 +106,7 @@ export class MapBoxMapProvider implements IMapProvider {
 
         this.map = new mapboxgl.Map({
           container: mapCanvasID,
-          style: this.getCurrentMapTileSet(mapConfig.mapType),
+          //style: this.getCurrentMapTileSet(mapConfig.mapType),
           zoom: 15,
           attributionControl: false
         });
@@ -288,7 +288,7 @@ export class MapBoxMapProvider implements IMapProvider {
               icon.height = 50;
             }
 
-            let markerOptions = {
+            let markerOptions: mapboxgl.MarkerOptions = {
               element: icon,
               color: color,
               anchor: 'bottom'

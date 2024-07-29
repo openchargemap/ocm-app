@@ -8,6 +8,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "importHelpers": true,
     "target": "ES2022",
     "typeRoots": ["node_modules/@types"],
