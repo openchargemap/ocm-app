@@ -6,7 +6,7 @@ import { MappingAPI } from "../app/services/mapping/interfaces/mapping";
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 export const environment = {
   name: 'dev',
-  version: '8.6.1-dev',
+  version: '8.7.0-dev',
   production: false,
   analyticsId: '',
   googleMapsKey: '',
@@ -16,7 +16,7 @@ export const environment = {
   defaultMapProvider: 4, // 1: GM native 4: MapBox // 5:MappingAPI.MAPKIT_JS  //6: mapbox GL with Maptiler,
   apiBase: 'https://api-01.openchargemap.io',
   apiKey: '1d192491-c085-4563-9dbb-b1f09a2e9c66',
-  enabledFeatures: ['MAP', 'ADD_COMMENT', 'ADD_PHOTO', 'FAVOURITES', 'FILTER_OPTIONS_BY_COUNTRY', 'ADD_POI', 'EDIT_POI','LAYERS']
+  enabledFeatures: ['MAP', 'ADD_COMMENT', 'ADD_PHOTO', 'FAVOURITES', 'FILTER_OPTIONS_BY_COUNTRY', 'ADD_POI', 'EDIT_POI', 'LAYERS']
 };
 
 /*

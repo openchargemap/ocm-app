@@ -9,49 +9,40 @@
 
   <p>Please provide as much information as you can about the equipment. If you don't know then leave the field blank. At a minimum you should include the Connection Type and approximate Power kW (max).</p>
   <ion-item>
-    <ion-label position="floating">Connection Type</ion-label>
-    <ion-select [(ngModel)]="conn.ConnectionTypeID">
+    <ion-select label="Connection Type" label-placement="floating" [(ngModel)]="conn.ConnectionTypeID">
       <ion-select-option value="0">Unknown</ion-select-option>
       <ion-select-option *ngFor="let t of connectionTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
     </ion-select>
   </ion-item>
 
   <ion-item>
-    <ion-label position="floating">Supply Type</ion-label>
-    <ion-select [(ngModel)]="conn.CurrentTypeID">
+    <ion-select label="Supply Type" label-placement="floating" [(ngModel)]="conn.CurrentTypeID">
       <ion-select-option value="0">Unknown</ion-select-option>
       <ion-select-option *ngFor="let t of currentTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
     </ion-select>
   </ion-item>
   <ion-item>
-    <ion-label position="floating">Power (kW)</ion-label>
-    <ion-input type="number" [(ngModel)]="conn.PowerKW"></ion-input>
+    <ion-input label="Power (kW)" label-placement="floating" type="number" [(ngModel)]="conn.PowerKW"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label position="floating">Amps</ion-label>
-    <ion-input type="number" [(ngModel)]="conn.Amps"></ion-input>
+    <ion-input label="Amps" label-placement="floating" type="number" [(ngModel)]="conn.Amps"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label position="floating">Voltage</ion-label>
-    <ion-input type="number" [(ngModel)]="conn.Voltage"></ion-input>
+    <ion-input label="Voltage" label-placement="floating" type="number" [(ngModel)]="conn.Voltage"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label position="floating">Status</ion-label>
-    <ion-select [(ngModel)]="conn.StatusTypeID">
+    <ion-select label="Status" label-placement="floating" [(ngModel)]="conn.StatusTypeID">
       <ion-select-option *ngFor="let t of statusTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
     </ion-select>
   </ion-item>
   <ion-item>
-    <ion-label position="floating">Quantity Available</ion-label>
-    <ion-input type="number" [(ngModel)]="conn.Quantity"></ion-input>
+    <ion-input label="Quantity Available" label-placement="floating" type="number" [(ngModel)]="conn.Quantity"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label position="floating">Comment</ion-label>
-    <ion-input type="text" [(ngModel)]="conn.Comments" placeholder="(optional) other comments"></ion-input>
+    <ion-input label="Comment" label-placement="floating" type="text" [(ngModel)]="conn.Comments" placeholder="(optional) other comments"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label position="floating">Operators Reference</ion-label>
-    <ion-input type="text" [(ngModel)]="conn.Reference"></ion-input>
+    <ion-input label="Operators Reference" label-placement="floating" type="text" [(ngModel)]="conn.Reference" placeholder="(optional)"></ion-input>
   </ion-item>
 </ion-content>
 <ion-footer>

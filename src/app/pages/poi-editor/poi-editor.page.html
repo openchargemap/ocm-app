@@ -38,42 +38,32 @@
 
         <ion-list>
           <ion-item>
-            <ion-label position="floating">Location Name</ion-label>
-            <ion-input type="text" [(ngModel)]="item.AddressInfo.Title" autocapitalize="words" placeholder="A title for this location"></ion-input>
+            <ion-input label="Location Name" label-placement="floating" type="text" [(ngModel)]="item.AddressInfo.Title" autocapitalize="words" placeholder="A title for this location"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating">Address Line 1</ion-label>
-            <ion-input type="text" [(ngModel)]="item.AddressInfo.AddressLine1" autocapitalize="words" placeholder="The nearest street address"></ion-input>
+            <ion-input label="Address Line 1" label-placement="floating" type="text" [(ngModel)]="item.AddressInfo.AddressLine1" autocapitalize="words" placeholder="The nearest street address"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating">Address Line 2</ion-label>
-            <ion-input type="text" [(ngModel)]="item.AddressInfo.AddressLine2" autocapitalize="words"  placeholder="Optional"></ion-input>
+            <ion-input label="Address Line 2" label-placement="floating" type="text" [(ngModel)]="item.AddressInfo.AddressLine2" autocapitalize="words"  placeholder="Optional"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating">Town</ion-label>
-            <ion-input type="text" [(ngModel)]="item.AddressInfo.Town" autocapitalize="words" placeholder="Town or City"></ion-input>
+            <ion-input label="Town" label-placement="floating" type="text" [(ngModel)]="item.AddressInfo.Town" autocapitalize="words" placeholder="Town or City"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating">State or Province</ion-label>
-            <ion-input type="text" [(ngModel)]="item.AddressInfo.StateOrProvince"></ion-input>
+            <ion-input label="State or Province" label-placement="floating" type="text" [(ngModel)]="item.AddressInfo.StateOrProvince"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating">Postal Code</ion-label>
-            <ion-input type="text" [(ngModel)]="item.AddressInfo.Postcode" autocapitalize="words"  placeholder="Optional Postal Code"></ion-input>
+            <ion-input label="Postal Code" label-placement="floating" type="text" [(ngModel)]="item.AddressInfo.Postcode" autocapitalize="words"  placeholder="Optional Postal Code"></ion-input>
           </ion-item>
           <ion-item>
-            <ion-label position="floating">Country</ion-label>
-            <ion-select [(ngModel)]="item.AddressInfo.CountryID" (ionChange)="onCountryChange()">
+            <ion-select label="Country" label-placement="floating" [(ngModel)]="item.AddressInfo.CountryID" (ionChange)="onCountryChange()">
               <ion-select-option *ngFor="let c of countries" [value]="c.ID">{{c.Title}}</ion-select-option>
             </ion-select>
-
           </ion-item>
           <ion-item>
-
             <ion-input label="Latitude" labelPlacement="floating" type="number" [(ngModel)]="item.AddressInfo.Latitude" placeholder="Latitude (if entering manually)"></ion-input>
           </ion-item>
           <ion-item>
-
             <ion-input label="Longitude" labelPlacement="floating" type="number" [(ngModel)]="item.AddressInfo.Longitude" placeholder="Longitude (if entering manually)"></ion-input>
           </ion-item>
 
@@ -175,41 +165,32 @@
       <p>Please provide any other facts related to this site. Additional comments (your charging experiences etc) can be added as check-in comments once the site is listed.</p>
 
       <ion-item>
-        <ion-label position="floating">Operational Status (All Equipment))</ion-label>
-        <ion-select [(ngModel)]="item.StatusTypeID">
+        <ion-select label="Operational Status (All Equipment)" label-placement="floating" [(ngModel)]="item.StatusTypeID">
           <ion-select-option *ngFor="let i of statusTypes" [value]="i.ID">{{i.Title}}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">Usage Type</ion-label>
-        <ion-select [(ngModel)]="item.UsageTypeID">
+        <ion-select label="Usage Type" label-placement="floating" [(ngModel)]="item.UsageTypeID">
           <ion-select-option *ngFor="let i of usageTypes" [value]="i.ID">{{i.Title}}</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">Usage Cost</ion-label>
-        <ion-input type="text" [(ngModel)]="item.UsageCost"></ion-input>
+        <ion-input label="Usage Cost" label-placement="floating" type="text" [(ngModel)]="item.UsageCost"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">General Comments</ion-label>
-        <ion-input type="text" [(ngModel)]="item.GeneralComments" autocapitalize="sentences" ></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Main Telephone Number </ion-label>
-        <ion-input type="tel" [(ngModel)]="item.AddressInfo.ContactTelephone1" placeholder=""></ion-input>
+        <ion-input label="General Comments" label-placement="floating" type="text" [(ngModel)]="item.GeneralComments" autocapitalize="sentences" ></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">Other Telephone Number </ion-label>
-        <ion-input type="tel" [(ngModel)]="item.AddressInfo.ContactTelephone2" placeholder=""></ion-input>
+        <ion-input label="Main Telephone Number" label-placement="floating" type="tel" [(ngModel)]="item.AddressInfo.ContactTelephone1" placeholder=""></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">Access Comments</ion-label>
-        <ion-input type="text" [(ngModel)]="item.AddressInfo.AccessComments" autocapitalize="sentences"  placeholder="Instructions for access or tips for finding charging location"></ion-input>
+        <ion-input label="Other Telephone Number" label-placement="floating"  type="tel" [(ngModel)]="item.AddressInfo.ContactTelephone2" placeholder=""></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating">Related Website</ion-label>
-        <ion-input type="url" [(ngModel)]="item.AddressInfo.RelatedURL" placeholder="Website related to this site"></ion-input>
+        <ion-input label="Access Comments" label-placement="floating"  type="text" [(ngModel)]="item.AddressInfo.AccessComments" autocapitalize="sentences"  placeholder="Instructions for access or tips for finding charging location"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input label="Related Website" label-placement="floating" type="url" [(ngModel)]="item.AddressInfo.RelatedURL" placeholder="Website related to this site"></ion-input>
       </ion-item>
 
     </ng-container>
