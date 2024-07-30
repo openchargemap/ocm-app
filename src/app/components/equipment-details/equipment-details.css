@@ -1,0 +1,10 @@
+.connector-icon {
+    mask-size: 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    width: 64px;
+    height: 64px;
+    background-color: currentColor;
+    mask-image: none;
+}

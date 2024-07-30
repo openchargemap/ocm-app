@@ -5,7 +5,7 @@
       <ion-row>
         <ion-col size="3">
 
-          <img [src]="getConnectorTypeIcon(i.ConnectionTypeID)" style="max-width: 64px;background-color:#ffffffad">
+          <div class="connector-icon" [style.mask-image]="'url(' + getConnectorTypeIcon(i.ConnectionTypeID) +')'"></div>
           <ion-badge color="primary" *ngIf="i.Quantity">{{i.Quantity}} x</ion-badge>
           <div class="info">{{i.StatusType?.Title}}</div>
         </ion-col>
