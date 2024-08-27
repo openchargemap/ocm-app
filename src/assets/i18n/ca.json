@@ -1,0 +1,192 @@
+{
+  "_langTitle": "Catalan/Català",
+  "_langCode": "ca",
+  "ocm": {
+    "general": {
+      "shortDescription": "el registre públic global de punts de recàrrega de vehicles elèctrics",
+      "linkWebApp": "Mapa de punts de recàrrega",
+      "linkBrowsePOI": "Explora tots els punts",
+      "browsePOI": "Explora punts de recàrrega",
+      "loadingProgress": "S'està carregant...",
+      "addLocation": "Afegeix-hi un punt",
+      "addItem": "Afegeix",
+      "favourites": "Preferits",
+      "settings": "Configuració",
+      "about": "Quant a",
+      "signIn": "Inicia la sessió",
+      "signOut": "Tanca la sessió"
+    },
+    "details": {
+      "sectionTitle": "Punt de recàrrega",
+      "location": {
+        "sectionTitle": "Detalls del punt",
+        "title": "Títol del punt",
+        "address": "Adreça més propera",
+        "addressLine1": "Línia 1 de l'adreça",
+        "addressLine2": "Línia 2 de l'adreça",
+        "town": "Municipi",
+        "stateOrProvince": "Estat/Província",
+        "postcode": "Codi postal",
+        "country": "País",
+        "latitude": "Latitud",
+        "longitude": "Longitud",
+        "contactTelephone1": "Telèfon de contacte principal",
+        "contactTelephone2": "Telèfon de contacte secundari",
+        "contactEmail": "Adreça electrònica de contacte",
+        "map": "Mapa",
+        "streetView": "Vista de carrer",
+        "addressRelatedURL": "Lloc web"
+      },
+      "generalComments": "Informació general",
+      "accessComments": "Informació d'accés",
+      "advancedDetails": "Informació addicional",
+      "numberOfPoints": "Nombre d'estacions o places",
+      "usageType": "Ús",
+      "usageCost": "Cost d'ús",
+      "operationalStatus": "Estat operatiu",
+      "datePlanned": "Data prevista",
+      "dateLastConfirmed": "Data de la darrera confirmació",
+      "lastUpdated": "Darrera actualització",
+      "refNumber": "Ref. OpenChargeMap",
+      "dataQualityLevel": "Nivell de qualitat de les dades",
+      "importedDataNotice": "Nota: aquestes dades s'obtenen automàticament, els canvis s'han de comunicar directament al proveïdor de dades.",
+      "submissionStatus": "Estat de l'enviament",
+      "placesNearby": {
+        "sectionTitle": "Llocs propers"
+      },
+      "mediaItems": {
+        "sectionTitle": "Fotos",
+        "addPrompt": "Puja fotos per a aquest punt"
+      },
+      "metadataValues": {
+        "sectionTitle": "Etiquetes addicionals"
+      },
+      "commentsAndRatings": {
+        "sectionTitle": "Comentaris i valoracions",
+        "zeroComments": "No hi ha comentaris d'usuaris enviats",
+        "addPrompt": "Afegeix un comentari o una actualització ràpida d'estat"
+      },
+      "equipment": {
+        "sectionTitle": "Detalls de l'equipament",
+        "connectionType": "Tipus de connexió",
+        "powerKW": "Potència màxima (KW)",
+        "powerLevel": "Nivell",
+        "quantity": "Quantitat",
+        "supplyType": "Tipus de subministrament",
+        "voltage": "Voltatge",
+        "current": "Corrent màxim",
+        "comment": "Comentaris",
+        "reference": "Referència"
+      },
+      "dataProvider": {
+        "sectionTitle": "Proveïdor de dades",
+        "website": "Lloc web",
+        "providersReference": "Ref. del proveïdor"
+      },
+      "operator": {
+        "sectionTitle": "Xarxa o operador",
+        "operatorsReference": "Ref. de l'operador"
+      }
+    },
+    "search": {
+      "sectionTitle": "Cerca",
+      "locationInput": "Ubicació",
+      "useMyLocation": "Cerca prop de mi",
+      "distance": "Distància",
+      "chargingLevels": "Nivell de recàrrega",
+      "minPowerKW": "Potència min. (kW)",
+      "connectionTypes": "Tipus de connexions",
+      "networkOperators": "Xarxa o operador",
+      "countries": "País",
+      "submissionStatus": "Estat de l'enviament",
+      "usageTypes": "Ús",
+      "operationalStatusTypes": "Estat",
+      "performSearch": "Cerca",
+      "progress": "S'està cercant..."
+    },
+    "navigation": {
+      "home": "Inici",
+      "browse": {
+        "sectionTitle": "Explora",
+        "allLocations": "Tots els punts",
+        "byCountry": "Per país",
+        "avaitingReview": "Pendent de revisió",
+        "recentActivity": "Activitat recent",
+        "webApp": "Explora el mapa",
+        "statistics": "Estadístiques",
+        "awaitingReviewImported": "Punts importats pendents d'aprovació",
+        "editqueue": "Edicions pendents d'aprovació"
+      },
+      "develop": {
+        "sectionTitle": "Desenvolupament",
+        "api": "API",
+        "htmlWidgets": "Ginys HTML",
+        "examples": "Exemples",
+        "getInvolved": "Participa-hi",
+        "code": "Consulta el codi (a GitHub)",
+        "translate": "Ajuda'ns a traduir"
+      },
+      "discuss": "Discuteix",
+      "about": {
+        "termsPrivacy": "Termes i privacitat",
+        "contact": "Contacte",
+        "guidance": "Guia per als col·laboradors"
+      },
+      "profile": {
+        "sectionTitle": "El meu perfil",
+        "subscriptions": "Les meves subscripcions",
+        "comments": "Els meus comentaris",
+        "uploads": "Les meves pujades"
+      }
+    },
+    "reference": {
+      "statusType": {
+        "value_minus1": "(Cap seleccionat)",
+        "value_0": "Desconegut",
+        "value_10": "Actualment disponible (estat automàtic)",
+        "value_20": "Actualment en ús (estat automàtic)",
+        "value_30": "Temporalment no disponible",
+        "value_50": "Operatiu",
+        "value_75": "Parcialment operatiu (mixt)",
+        "value_100": "No operatiu",
+        "value_150": "Previst per a una data futura",
+        "value_200": "Eliminat (desmantellat)"
+      },
+      "operatorInfo": {
+        "value_minus1": "(Cap seleccionat)",
+        "value_1": "(Operador desconegut)",
+        "value_44": "(Residència privada o individual)",
+        "value_45": "(Propietari del negoci en la ubicació)"
+      },
+      "usageType": {
+        "value_minus1": "(Cap seleccionat)",
+        "value_0": "(desconegut)",
+        "value_1": "Públic",
+        "value_2": "Privat - accés restringit",
+        "value_3": "Privat - cal avís previ",
+        "value_4": "Públic - cal ser-ne membre",
+        "value_5": "Públic - pagament al lloc",
+        "value_6": "Privat - només per a personal, visitants o clients",
+        "value_7": "Públic - cal avís previ"
+      },
+      "connectionType": {
+        "value_minus1": "(cap seleccionat)",
+        "value_0": "(desconegut)"
+      },
+      "levelType": {
+        "value_minus1": "(Cap seleccionat)",
+        "value_0": "(Desconegut)",
+        "value_1": "Nivell 1: baix (menys de 2kW)",
+        "value_2": "Nivell 2: mitjà (més de 2kW)",
+        "value_3": "Nivell 3: alt (més de 40kW)"
+      },
+      "supplyType": {
+        "value_minus1": "(Cap seleccionat)",
+        "value_0": "(desconegut)",
+        "value_10": "CA (monofàsic)",
+        "value_20": "CA (trifàsic)",
+        "value_30": "CC"
+      }
+    }
+  }
+}
