@@ -15,7 +15,8 @@ declare var google;
 */
 @Component({
     selector: 'route-planner',
-    templateUrl: 'route-planner.html'
+    templateUrl: 'route-planner.html',
+    standalone: false
 })
 export class RoutePlanner {
 

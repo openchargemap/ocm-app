@@ -5,7 +5,8 @@ import { Component } from '@angular/core';
 import { NavParams, ModalController } from '@ionic/angular';
 
 @Component({
-  templateUrl: 'favourite-editor.html',
+    templateUrl: 'favourite-editor.html',
+    standalone: false
 })
 
 /**

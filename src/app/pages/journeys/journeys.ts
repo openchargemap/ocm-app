@@ -8,7 +8,8 @@ import { GeoLatLng } from '../../model/AppModels';
 import { POIDetailsPage } from '../poi-details/poi-details';
 
 @Component({
-  templateUrl: 'journeys.html',
+    templateUrl: 'journeys.html',
+    standalone: false
 })
 
 /**

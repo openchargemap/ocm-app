@@ -10,9 +10,10 @@ import { HttpClient } from '@angular/common/http';
 import { AppManager } from '../../services/AppManager';
 import { Observable } from 'rxjs';
 @Component({
-  selector: 'app-poi-location-editor',
-  templateUrl: './poi-location-editor.html',
-  styleUrls: ['./poi-location-editor.css'],
+    selector: 'app-poi-location-editor',
+    templateUrl: './poi-location-editor.html',
+    styleUrls: ['./poi-location-editor.css'],
+    standalone: false
 })
 export class PoiLocationEditorComponent implements OnInit, AfterContentInit, OnChanges {
 

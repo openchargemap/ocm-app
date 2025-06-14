@@ -22,8 +22,9 @@ import { Events } from '../../services/Events';
 import { Geolocation, PositionOptions } from '@capacitor/geolocation';
 
 @Component({
-  templateUrl: 'search.html',
-  styleUrls: ['./search.scss']
+    templateUrl: 'search.html',
+    styleUrls: ['./search.scss'],
+    standalone: false
 })
 
 export class SearchPage implements OnInit, AfterViewInit {

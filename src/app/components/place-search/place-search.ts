@@ -18,7 +18,8 @@ declare var mapkit: any;
 @Component({
     selector: 'place-search',
     templateUrl: 'place-search.html',
-    styleUrls: ['./place-search.scss']
+    styleUrls: ['./place-search.scss'],
+    standalone: false
 })
 export class PlaceSearch implements OnInit {
 

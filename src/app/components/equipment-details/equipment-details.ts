@@ -3,9 +3,10 @@ import { ExtendedPOIDetails, ConnectionInfo } from '../../model/CoreDataModel';
 import { Utils } from '../../core/Utils';
 
 @Component({
-  selector: 'app-equipment-details',
-  templateUrl: './equipment-details.html',
-  styleUrls: ['./equipment-details.css'],
+    selector: 'app-equipment-details',
+    templateUrl: './equipment-details.html',
+    styleUrls: ['./equipment-details.css'],
+    standalone: false
 })
 export class EquipmentDetailsComponent implements OnInit {
 

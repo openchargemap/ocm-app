@@ -3,7 +3,10 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 // tslint:disable-next-line:use-pipe-transform-interface
 @Injectable()
-@Pipe({ name: 'nullableTranslate' })
+@Pipe({
+    name: 'nullableTranslate',
+    standalone: false
+})
 export class NullableTranslatePipe extends TranslatePipe {
     constructor(translate: TranslateService, _ref: ChangeDetectorRef) {
         super(translate, _ref);

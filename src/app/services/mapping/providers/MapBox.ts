@@ -10,7 +10,7 @@ import { Events } from '../../../services/Events';
 import { Observable } from 'rxjs';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
 import { Logging, LogLevel } from './../../Logging';
-import * as mapboxgl from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 import { environment } from '../../../../environments/environment';
 import { PlaceSearchResult } from '../../../model/AppModels';
 import { Injectable } from '@angular/core';
@@ -49,8 +49,7 @@ export class MapBoxMapProvider implements IMapProvider {
 
   initAPI() {
     if (mapboxgl) {
-      //(<any>mapboxgl).accessToken = environment.mapBoxToken;
-      Object.getOwnPropertyDescriptor(mapboxgl, "accessToken").set(environment.mapBoxToken);
+      mapboxgl.accessToken = environment.mapBoxToken;
     }
   }
 

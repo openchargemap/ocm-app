@@ -5,7 +5,8 @@ import { Logging, LogLevel } from '../../services/Logging';
 
 @Component({
     templateUrl: 'mediaupload.html',
-    styleUrls: ['./mediaupload.scss']
+    styleUrls: ['./mediaupload.scss'],
+    standalone: false
 })
 export class MediaUploadPage {
 

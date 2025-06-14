@@ -5,8 +5,13 @@
   text-shadow: #000 1px 1px 1px;
   min-height: 180px;
   background-size: cover;
+
   h2 {
     margin: 0;
+  }
+
+  ion-badge {
+    color: unset;
   }
 }
 

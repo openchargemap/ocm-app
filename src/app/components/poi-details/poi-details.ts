@@ -14,9 +14,10 @@ import { PoiEditorPage } from '../../pages/poi-editor/poi-editor.page';
 import { Utils } from '../../core/Utils';
 
 @Component({
-  selector: 'poi-details',
-  templateUrl: 'poi-details.html',
-  styleUrls: ['./poi-details.scss']
+    selector: 'poi-details',
+    templateUrl: 'poi-details.html',
+    styleUrls: ['./poi-details.scss'],
+    standalone: false
 })
 
 export class PoiDetails implements OnInit {

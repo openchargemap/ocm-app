@@ -5,9 +5,10 @@ import { ReferenceDataManager } from '../../services/ReferenceDataManager';
 import { ConnectionType, StatusType, CurrentType } from '../../model/CoreDataModel';
 
 @Component({
-  selector: 'app-poi-equipment-editor',
-  templateUrl: './poi-equipment-editor.html',
-  styleUrls: ['./poi-equipment-editor.css'],
+    selector: 'app-poi-equipment-editor',
+    templateUrl: './poi-equipment-editor.html',
+    styleUrls: ['./poi-equipment-editor.css'],
+    standalone: false
 })
 export class PoiEquipmentEditorComponent implements OnInit {
 

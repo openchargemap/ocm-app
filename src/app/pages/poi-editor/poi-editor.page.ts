@@ -16,9 +16,10 @@ interface ValidationResult {
 }
 
 @Component({
-  selector: 'app-poi-editor',
-  templateUrl: './poi-editor.page.html',
-  styleUrls: ['./poi-editor.page.scss'],
+    selector: 'app-poi-editor',
+    templateUrl: './poi-editor.page.html',
+    styleUrls: ['./poi-editor.page.scss'],
+    standalone: false
 })
 export class PoiEditorPage implements OnInit {
 
