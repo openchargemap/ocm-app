@@ -1,1 +1,0 @@
-import{u as p,y as f}from"./chunk-5QRI42ZV.js";import{Bb as n,Fb as d,ea as e,i as r,oa as i,sa as m,t}from"./chunk-5FAA4U7I.js";var l=[{path:"",component:p}],j=(()=>{class o{static \u0275fac=function(u){return new(u||o)};static \u0275mod=t({type:o});static \u0275inj=r({imports:[e,i,n,d,f,m.forChild(l)]})}return o})();export{j as a};
