@@ -1,4 +1,3 @@
-import { MapBoxMapProvider } from './providers/MapBox';
 import { IMapManager, MapOptions, IMapProvider, MappingAPI, MapType } from './interfaces/mapping';
 import { Utils } from './../../core/Utils';
 import { Logging, LogLevel } from './../Logging';
@@ -14,11 +13,14 @@ import { Observable } from 'rxjs';
 // import { GoogleMapsWeb } from './providers/GoogleMapsWeb';
 // import { LeafletMap } from './providers/LeafletMap';
 import { MapKitMapProvider } from './providers/MapKit';
-import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
+import { MapBoxMapProvider } from './providers/MapBox';
+import { MapLibreMapProvider } from './providers/MapLibre';
 
+import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
 import { HttpClient } from '@angular/common/http';
 import { MapTilerMapProvider } from './providers/MapTiler';
 import { Events } from '../../services/Events';
+
 
 /** Mapping - provides a way to render to various mapping APIs
  * @module Mapping
@@ -102,6 +104,10 @@ export class Mapping implements IMapManager {
 
         if (this.mapOptions.mapAPI == MappingAPI.MAPTILER) {
             this.mapProvider = new MapTilerMapProvider(this.events, this.logging, this.http);
+        }
+
+        if (this.mapOptions.mapAPI == MappingAPI.MAPLIBRE) {
+            this.mapProvider = new MapLibreMapProvider(this.events, this.logging, this.http);
         }
     }
 

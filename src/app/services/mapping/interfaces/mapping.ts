@@ -9,7 +9,8 @@ export enum MappingAPI {
     LEAFLET = 3,
     MAPBOX = 4,
     MAPKIT_JS = 5,
-    MAPTILER = 6
+    MAPTILER = 6,
+    MAPLIBRE = 7,
 }
 
 export type MapType = 'ROADMAP' | 'SATELLITE';

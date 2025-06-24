@@ -3,12 +3,12 @@ import { Mapping } from '../../services/mapping/Mapping';
 import { GeoLatLng, GeoPosition } from '../../model/AppModels';
 import { IMapProvider, MapOptions } from '../../services/mapping/interfaces/mapping';
 import { ExtendedAddressInfo } from '../../model/CoreDataModel';
-import { MapBoxMapProvider } from '../../services/mapping/providers/MapBox';
 import { Events } from '../../services/Events';
 import { Logging } from '../../services/Logging';
 import { HttpClient } from '@angular/common/http';
 import { AppManager } from '../../services/AppManager';
 import { Observable } from 'rxjs';
+import { MapLibreMapProvider } from 'src/app/services/mapping/providers/MapLibre';
 @Component({
     selector: 'app-poi-location-editor',
     templateUrl: './poi-location-editor.html',
@@ -45,7 +45,7 @@ export class PoiLocationEditorComponent implements OnInit, AfterContentInit, OnC
 
   ngOnInit() {
 
-    this.mapService = new MapBoxMapProvider(this.events, this.logging, this.http);
+    this.mapService = new MapLibreMapProvider(this.events, this.logging, this.http);
     this.mapService.initAPI();
 
     this.mapOptions = new MapOptions();
