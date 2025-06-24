@@ -13,6 +13,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { MapBoxMapProvider } from './MapBox';
 
+
 /**Map Provider for MapTiler MapBoxGL JS API
 * @module MapProviders
 */
