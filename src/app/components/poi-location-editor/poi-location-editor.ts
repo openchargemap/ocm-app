@@ -8,7 +8,7 @@ import { Logging } from '../../services/Logging';
 import { HttpClient } from '@angular/common/http';
 import { AppManager } from '../../services/AppManager';
 import { Observable } from 'rxjs';
-import { MapLibreMapProvider } from 'src/app/services/mapping/providers/MapLibre';
+import { MapBoxMapProvider } from 'src/app/services/mapping/providers/MapBox';
 @Component({
     selector: 'app-poi-location-editor',
     templateUrl: './poi-location-editor.html',
@@ -45,7 +45,7 @@ export class PoiLocationEditorComponent implements OnInit, AfterContentInit, OnC
 
   ngOnInit() {
 
-    this.mapService = new MapLibreMapProvider(this.events, this.logging, this.http);
+    this.mapService = new MapBoxMapProvider(this.events, this.logging, this.http);
     this.mapService.initAPI();
 
     this.mapOptions = new MapOptions();
