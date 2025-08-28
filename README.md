@@ -38,6 +38,7 @@ Copy `www` output to gh-pages branch and commit to publish. When updating live a
 
     - Android:
       - Update bundle id to `com.webprofusion.openchargemap` (including `capacitor.config.json`), version code in `/app/build.gradle.`
+      - Check correct mabox token in prod for mobile app
       - `npx cap add android`.
       - Set required permissions per plugin in AndroidManifest.xml/ Gelocation.
       - // resolve ERR_CLEARTEXT_NOT_PERMITTED debug error: add `android:usesCleartextTraffic="true"` to AndroidManifest.xml.
