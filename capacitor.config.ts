@@ -10,6 +10,11 @@ const config: CapacitorConfig = {
       keystoreAlias: "ocm",
     },
   },
+   plugins: {
+    Keyboard: {
+      resizeOnFullScreen: false
+    }
+  }
 };
 
 export default config;
