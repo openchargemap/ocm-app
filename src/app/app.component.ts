@@ -27,7 +27,6 @@ import { Events } from "./services/Events";
 import { SplashScreen } from "@capacitor/splash-screen";
 import { App } from "@capacitor/app";
 
-import '@maptiler/sdk/dist/maptiler-sdk.css';
 //const { PushNotifications, SplashScreen, StatusBar } = Plugins;
 
 @Component({
