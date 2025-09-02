@@ -13,8 +13,8 @@ import { Observable } from 'rxjs';
 // import { GoogleMapsWeb } from './providers/GoogleMapsWeb';
 // import { LeafletMap } from './providers/LeafletMap';
 // import { MapKitMapProvider } from './providers/MapKit';
-import { MapBoxMapProvider } from './providers/MapBox';
-// import { MapTilerMapProvider } from './providers/MapTiler';
+import { MapBoxMapProvider } from './providers/MapTiler'; //maptiler is provided by a cmapbox compatible provider
+ //import { MapTilerMapProvider } from './providers/MapTiler';
 //import { MapLibreMapProvider } from './providers/MapLibre';
 
 import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
@@ -96,9 +96,9 @@ export class Mapping implements IMapManager {
         }*/
 
         
-        if (this.mapOptions.mapAPI == MappingAPI.MAPBOX) {
+      /*  if (this.mapOptions.mapAPI == MappingAPI.MAPBOX) {
             this.mapProvider = new MapBoxMapProvider(this.events, this.logging, this.http);
-        }
+        }*/
             
 
         /*
@@ -107,9 +107,9 @@ export class Mapping implements IMapManager {
         }
             */
 
-       /* if (this.mapOptions.mapAPI == MappingAPI.MAPTILER) {
-            this.mapProvider = new MapTilerMapProvider(this.events, this.logging, this.http);
-        }*/
+        if (this.mapOptions.mapAPI == MappingAPI.MAPTILER) {
+            this.mapProvider = new MapBoxMapProvider(this.events, this.logging, this.http);
+        }
 
        /* if (this.mapOptions.mapAPI == MappingAPI.MAPLIBRE) {
             this.mapProvider = new MapLibreMapProvider(this.events, this.logging, this.http);

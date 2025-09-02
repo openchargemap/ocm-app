@@ -3,7 +3,7 @@ import { PlaceSearchResult } from './../../model/PlaceSearchResult';
 import { Component, Input, Output, ChangeDetectorRef, EventEmitter, OnInit } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { IMapProvider } from '../../services/mapping/interfaces/mapping';
-import { MapBoxMapProvider } from '../../services/mapping/providers/MapBox';
+import { MapBoxMapProvider } from '../../services/mapping/providers/MapTiler';
 import { HttpClient } from '@angular/common/http';
 import { Events } from '../../services/Events';
 import { GeoLatLng } from 'src/app/model/GeoPosition';

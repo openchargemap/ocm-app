@@ -10,7 +10,7 @@ import { Events } from '../../../services/Events';
 import { Observable } from 'rxjs';
 import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
 import { Logging, LogLevel } from './../../Logging';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl as * from 'maplibre-gl';
 import { environment } from '../../../../environments/environment';
 import { PlaceSearchResult } from '../../../model/AppModels';
 import { Injectable } from '@angular/core';
@@ -23,7 +23,7 @@ import { ExtendedPOIDetails } from '../../../model/CoreDataModel';
 let _this = null;
 
 @Injectable()
-export class MapBoxMapProvider implements IMapProvider {
+export class OldMapBoxMapProvider implements IMapProvider {
   mapAPIType: MappingAPI;
   mapReady: boolean;
   providerError: string;

@@ -8,7 +8,7 @@ import { Logging } from '../../services/Logging';
 import { HttpClient } from '@angular/common/http';
 import { AppManager } from '../../services/AppManager';
 import { Observable } from 'rxjs';
-import { MapBoxMapProvider } from 'src/app/services/mapping/providers/MapBox';
+import { MapBoxMapProvider } from 'src/app/services/mapping/providers/MapTiler';
 @Component({
     selector: 'app-poi-location-editor',
     templateUrl: './poi-location-editor.html',

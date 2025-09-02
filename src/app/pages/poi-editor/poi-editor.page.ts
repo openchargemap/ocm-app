@@ -16,10 +16,10 @@ interface ValidationResult {
 }
 
 @Component({
-    selector: 'app-poi-editor',
-    templateUrl: './poi-editor.page.html',
-    styleUrls: ['./poi-editor.page.scss'],
-    standalone: false
+  selector: 'app-poi-editor',
+  templateUrl: './poi-editor.page.html',
+  styleUrls: ['./poi-editor.page.scss'],
+  standalone: false
 })
 export class PoiEditorPage implements OnInit {
 
@@ -425,6 +425,10 @@ export class PoiEditorPage implements OnInit {
   validate(step: string = 'all'): ValidationResult {
     // validate
     let validationMsg = null;
+
+    if (this.item == null) {
+      return { isValid: false, msg: "POI item is not defined" };
+    }
 
     if (step == 'all' || step == 'location') {
 
