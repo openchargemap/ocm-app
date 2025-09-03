@@ -14,7 +14,7 @@ export const environment = {
   mapTilerToken: '',
   mapKitToken: '',
   enableStaticMaps: false,
-  defaultMapProvider:  MappingAPI.MAPTILER, // 1: GM native 4: MapBox // 5:MappingAPI.MAPKIT_JS  //6: mapbox GL with Maptiler,
+  defaultMapProvider:  MappingAPI.MAPLIBRE, // 1: GM native 4: MapBox // 5:MappingAPI.MAPKIT_JS  //6: mapbox GL with Maptiler,
   apiBase: 'https://api-01.openchargemap.io',
   apiKey: '1d192491-c085-4563-9dbb-b1f09a2e9c66',
   enabledFeatures: ['MAP', 'ADD_COMMENT', 'ADD_PHOTO', 'FAVOURITES', 'FILTER_OPTIONS_BY_COUNTRY', 'ADD_POI', 'EDIT_POI', 'LAYERS']

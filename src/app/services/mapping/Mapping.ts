@@ -15,7 +15,7 @@ import { Observable } from 'rxjs';
 // import { MapKitMapProvider } from './providers/MapKit';
 import { MapBoxMapProvider } from './providers/MapTiler'; //maptiler is provided by a cmapbox compatible provider
  //import { MapTilerMapProvider } from './providers/MapTiler';
-//import { MapLibreMapProvider } from './providers/MapLibre';
+import { MapLibreMapProvider } from './providers/MapLibre';
 
 import { GeoLatLng, GeoPosition, GeoBounds } from '../../model/GeoPosition';
 import { HttpClient } from '@angular/common/http';
@@ -99,7 +99,6 @@ export class Mapping implements IMapManager {
       /*  if (this.mapOptions.mapAPI == MappingAPI.MAPBOX) {
             this.mapProvider = new MapBoxMapProvider(this.events, this.logging, this.http);
         }*/
-            
 
         /*
         if (this.mapOptions.mapAPI == MappingAPI.MAPKIT_JS) {
@@ -111,9 +110,9 @@ export class Mapping implements IMapManager {
             this.mapProvider = new MapBoxMapProvider(this.events, this.logging, this.http);
         }
 
-       /* if (this.mapOptions.mapAPI == MappingAPI.MAPLIBRE) {
+        if (this.mapOptions.mapAPI == MappingAPI.MAPLIBRE) {
             this.mapProvider = new MapLibreMapProvider(this.events, this.logging, this.http);
-        }*/
+        }
     }
 
     isMapReady() {
