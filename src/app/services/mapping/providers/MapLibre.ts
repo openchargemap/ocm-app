@@ -101,30 +101,9 @@ export class MapLibreMapProvider implements IMapProvider {
 
         this.initAPI();
 
-        var mapStyle:StyleSpecification={
-          "version": 8,
-          "sources": {
-            "osm": {
-              "type": "raster",
-              "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-              "tileSize": 256,
-              "attribution": "&copy; OpenStreetMap Contributors",
-              "maxzoom": 19
-            }
-          },
-          "layers": [
-            {
-              "id": "osm",
-              "type": "raster",
-              "source": "osm"
-            }
-          ]
-};
-
-
-        this.map = new maplibregl.Map({
+      this.map = new maplibregl.Map({
           container: mapCanvasID,
-          style: mapStyle,
+          style: 'https://tiles.openfreemap.org/styles/liberty',
           zoom: 15,
           attributionControl: false
         });
