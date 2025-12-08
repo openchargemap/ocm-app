@@ -2,5 +2,10 @@
 	"appId": "com.webprofusion.openchargemap",
 	"appName": "Open Charge Map",
 	"webDir": "www/browser",
-	"android": {}
+	"android": {},
+	"plugins": {
+		"Keyboard": {
+			"resizeOnFullScreen": false
+		}
+	}
 }

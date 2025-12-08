@@ -6,7 +6,8 @@ import { Router } from '@angular/router';
 import { UserComment } from '../../model/CoreDataModel';
 
 @Component({
-    templateUrl: 'comment.html'
+    templateUrl: 'comment.html',
+    standalone: false
 })
 
 export class CommentPage {

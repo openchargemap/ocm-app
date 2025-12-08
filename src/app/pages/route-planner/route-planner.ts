@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
-  templateUrl: 'route-planner.html'
+    templateUrl: 'route-planner.html',
+    standalone: false
 })
 export class RoutePlannerPage {
 

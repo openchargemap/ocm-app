@@ -6,50 +6,50 @@
 
 import { Utils } from '../../../core/Utils';
 import { MappingAPI, IMapProvider, MapOptions, IMapManager, MapType } from '../interfaces/mapping';
-import { Events } from '../../../services/Events';
+import { Events } from '../../Events';
 import { Observable } from 'rxjs';
-import { GeoPosition, GeoLatLng, GeoBounds } from './../../../model/GeoPosition';
-import { Logging, LogLevel } from './../../Logging';
-import mapboxgl as * from 'maplibre-gl';
+import { GeoPosition, GeoLatLng, GeoBounds } from '../../../model/GeoPosition';
+import { Logging, LogLevel } from '../../Logging';
+import maplibregl, { StyleSpecification } from 'maplibre-gl';
 import { environment } from '../../../../environments/environment';
 import { PlaceSearchResult } from '../../../model/AppModels';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ExtendedPOIDetails } from '../../../model/CoreDataModel';
 
-/**Map Provider for MapBox GL JS API
+/**Map Provider for maplibre GL JS API
 * @module MapProviders
 */
 let _this = null;
 
 @Injectable()
-export class OldMapBoxMapProvider implements IMapProvider {
+export class MapLibreMapProvider implements IMapProvider {
   mapAPIType: MappingAPI;
   mapReady: boolean;
   providerError: string;
   mapCanvasID: string;
 
-  private map: mapboxgl.Map;
+  private map: maplibregl.Map;
   private markerList: Map<number, any>;
   private polylinePath: any;
   private _isMapAnimating: boolean = false;
 
-  private searchMarker: mapboxgl.Marker;
+  private searchMarker: maplibregl.Marker;
 
   public mapTileSet: string;
 
   /** @constructor */
   constructor(private events: Events, private logging: Logging, private http: HttpClient) {
     this.events = events;
-    this.mapAPIType = MappingAPI.MAPBOX;
+    this.mapAPIType = MappingAPI.MAPLIBRE;
 
     this.mapReady = false;
     this.markerList = new Map<number, any>();
   }
 
   initAPI() {
-    if (mapboxgl) {
-      mapboxgl.accessToken = environment.mapBoxToken;
+    if (maplibregl) {
+     // maplibregl.accessToken = environment.maplibreToken;
     }
   }
 
@@ -62,11 +62,9 @@ export class OldMapBoxMapProvider implements IMapProvider {
   }
 
   private getCurrentMapTileSet(mapType: MapType): string {
-    if (mapType == 'SATELLITE') {
-      return 'mapbox://styles/mapbox/satellite-streets-v12?optimize=true';
-    } else {
-      return 'mapbox://styles/mapbox/streets-v12?optimize=true';
-    }
+
+      return 'https://raw.githubusercontent.com/go2garret/maps/main/src/assets/json/openStreetMap.json';
+    
   }
 
   flyAroundPoint(timestamp) {
@@ -91,7 +89,7 @@ export class OldMapBoxMapProvider implements IMapProvider {
     this.mapCanvasID = mapCanvasID;
 
     let apiLoaded = true;
-    if (typeof mapboxgl === 'undefined') {
+    if (typeof maplibregl === 'undefined') {
       apiLoaded = false;
     } else {
       apiLoaded = true;
@@ -103,20 +101,20 @@ export class OldMapBoxMapProvider implements IMapProvider {
 
         this.initAPI();
 
-        this.map = new mapboxgl.Map({
+      this.map = new maplibregl.Map({
           container: mapCanvasID,
-          //style: this.getCurrentMapTileSet(mapConfig.mapType),
+          style: 'https://tiles.openfreemap.org/styles/liberty',
           zoom: 15,
           attributionControl: false
         });
 
-        this.map.addControl(new mapboxgl.AttributionControl({
+        this.map.addControl(new maplibregl.AttributionControl({
           compact: true,
           customAttribution: ["Open Charge Map Contributors"]
         }));
 
         // Add zoom and rotation controls to the map.
-        this.map.addControl(new mapboxgl.NavigationControl());
+        this.map.addControl(new maplibregl.NavigationControl());
 
         this.mapReady = true;
 
@@ -181,7 +179,7 @@ export class OldMapBoxMapProvider implements IMapProvider {
 
         let updateSearchMarker = Utils.debounce(() => {
           this.getMapCenter().subscribe(pos => {
-            this.searchMarker.setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
+            this.searchMarker.setLngLat(new maplibregl.LngLat(pos.coords.longitude, pos.coords.latitude));
           });
         }, 500, false);
 
@@ -236,7 +234,7 @@ export class OldMapBoxMapProvider implements IMapProvider {
   showPOIListOnMap(poiList: Array<any>, parentContext: any, isNativePOI: boolean = true) {
     let clearMarkersOnRefresh: boolean = false;
     let map = this.map;
-    let bounds = new mapboxgl.LngLatBounds();
+    let bounds = new maplibregl.LngLatBounds();
     let markersAdded = 0;
     let mapProviderContext = this;
 
@@ -287,7 +285,7 @@ export class OldMapBoxMapProvider implements IMapProvider {
               icon.height = 50;
             }
 
-            let markerOptions: mapboxgl.MarkerOptions = {
+            let markerOptions: maplibregl.MarkerOptions = {
               element: icon,
               color: color,
               anchor: 'bottom'
@@ -298,7 +296,7 @@ export class OldMapBoxMapProvider implements IMapProvider {
 
             if (poi.StatusType != null) { markerTooltip += " " + poi.StatusType.Title; }
 
-            let newMarker = new mapboxgl.Marker(markerOptions)
+            let newMarker = new maplibregl.Marker(markerOptions)
               .setLngLat([poi.AddressInfo.Longitude, poi.AddressInfo.Latitude])
               .addTo(map);
 
@@ -351,7 +349,7 @@ export class OldMapBoxMapProvider implements IMapProvider {
     if (this.map != null) {
 
       setTimeout(() => {
-        this.logging.log("MapBoxGL: refreshMapLayout", LogLevel.VERBOSE);
+        this.logging.log("maplibreGL: refreshMapLayout", LogLevel.VERBOSE);
         this.map.resize();
 
       }, 200);
@@ -361,11 +359,11 @@ export class OldMapBoxMapProvider implements IMapProvider {
 
   setMapCenter(pos: GeoPosition) {
     if (this.mapReady) {
-      this.map.setCenter(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude));
+      this.map.setCenter(new maplibregl.LngLat(pos.coords.longitude, pos.coords.latitude));
 
       if (!this.searchMarker) {
-        this.searchMarker = new mapboxgl.Marker({ color: '#99ccff', anchor: 'bottom' })
-          .setLngLat(new mapboxgl.LngLat(pos.coords.longitude, pos.coords.latitude))
+        this.searchMarker = new maplibregl.Marker({ color: '#99ccff', anchor: 'bottom' })
+          .setLngLat(new maplibregl.LngLat(pos.coords.longitude, pos.coords.latitude))
           .addTo(this.map);
 
         this.searchMarker.getElement().addEventListener('click', () => {
@@ -433,9 +431,9 @@ export class OldMapBoxMapProvider implements IMapProvider {
 
   moveToMapBounds(bounds: GeoBounds) {
     this.map.fitBounds(
-      new mapboxgl.LngLatBounds(
-        new mapboxgl.LngLat(bounds.southWest.longitude, bounds.southWest.latitude),
-        new mapboxgl.LngLat(bounds.northEast.longitude, bounds.northEast.latitude))
+      new maplibregl.LngLatBounds(
+        new maplibregl.LngLat(bounds.southWest.longitude, bounds.southWest.latitude),
+        new maplibregl.LngLat(bounds.northEast.longitude, bounds.northEast.latitude))
     );
   }
 
@@ -482,7 +480,7 @@ export class OldMapBoxMapProvider implements IMapProvider {
 
   async placeSearch(keyword: string, latitude?: number, longitude?: number): Promise<Array<PlaceSearchResult>> {
 
-    let api = `https://api.mapbox.com/geocoding/v5/mapbox.places/${keyword ? keyword : longitude + ',' + latitude}.json?access_token=${environment.mapBoxToken}`;
+    let api = `https://api.maplibre.com/geocoding/v5/maplibre.places/${keyword ? keyword : longitude + ',' + latitude}.json?access_token=${environment.mapBoxToken}`;
 
     return new Promise<Array<PlaceSearchResult>>(async (resolve, reject) => {
 

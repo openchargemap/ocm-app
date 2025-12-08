@@ -3,9 +3,10 @@ import { ModalController } from '@ionic/angular';
 import { environment } from '../../../environments/environment';
 
 @Component({
-  selector: 'app-about',
-  templateUrl: './about.page.html',
-  styleUrls: ['./about.page.css'],
+    selector: 'app-about',
+    templateUrl: './about.page.html',
+    styleUrls: ['./about.page.css'],
+    standalone: false
 })
 export class AboutPage implements OnInit {
 

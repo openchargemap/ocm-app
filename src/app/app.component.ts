@@ -30,8 +30,9 @@ import { App } from "@capacitor/app";
 //const { PushNotifications, SplashScreen, StatusBar } = Plugins;
 
 @Component({
-  selector: "app-root",
-  templateUrl: "app.component.html"
+    selector: "app-root",
+    templateUrl: "app.component.html",
+    standalone: false
 })
 export class AppComponent {
 

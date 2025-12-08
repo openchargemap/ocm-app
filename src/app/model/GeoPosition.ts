@@ -12,6 +12,18 @@ export class GeoLatLng implements GeolocationCoordinates {
         this.latitude = lat;
         this.longitude = lng;
     }
+
+    toJSON() {
+        JSON.stringify({
+            latitude: this.latitude,
+            longitude: this.longitude,
+            altitude: this.altitude,
+            accuracy: this.accuracy,
+            altitudeAccuracy: this.altitudeAccuracy,
+            speed: this.speed,
+            heading: this.heading
+        });
+    }
 }
 
 export class GeoPosition {

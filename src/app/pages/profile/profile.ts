@@ -5,7 +5,8 @@ import { Component } from '@angular/core';
 import { NavController, ModalController } from '@ionic/angular';
 
 @Component({
-    templateUrl: 'profile.html'
+    templateUrl: 'profile.html',
+    standalone: false
 })
 export class ProfilePage {
 

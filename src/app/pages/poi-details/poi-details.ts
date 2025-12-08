@@ -4,7 +4,8 @@ import { AppManager } from '../../services/AppManager';
 
 @Component({
     templateUrl: 'poi-details.html',
-    styleUrls: ['./poi-details.scss']
+    styleUrls: ['./poi-details.scss'],
+    standalone: false
 })
 
 export class POIDetailsPage {

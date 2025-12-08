@@ -9,7 +9,8 @@ import { Events } from '../../services/Events';
 import { OperatorInfo } from '../../model/CoreDataModel';
 
 @Component({
-  templateUrl: 'settings.html'
+    templateUrl: 'settings.html',
+    standalone: false
 })
 export class SettingsPage implements OnInit {
 

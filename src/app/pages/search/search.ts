@@ -19,11 +19,12 @@ import { PlaceSearchResult } from '../../model/AppModels';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { Events } from '../../services/Events';
-import { Geolocation, PositionOptions } from '@capacitor/geolocation';
+import { Geolocation, Position, PositionOptions } from '@capacitor/geolocation';
 
 @Component({
-  templateUrl: 'search.html',
-  styleUrls: ['./search.scss']
+    templateUrl: 'search.html',
+    styleUrls: ['./search.scss'],
+    standalone: false
 })
 
 export class SearchPage implements OnInit, AfterViewInit {
@@ -531,8 +532,8 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   _watchId = null;
 
-  private async getPosition(options: PositionOptions = {}): Promise<GeolocationPosition> {
-    return new Promise<GeolocationPosition>((resolve, reject) => {
+  private async getPosition(options: PositionOptions = {}): Promise<Position> {
+    return new Promise<Position>((resolve, reject) => {
       this._watchId = Geolocation.watchPosition(options, (position, err) => {
 
         if (this._watchId) {

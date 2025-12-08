@@ -3,9 +3,10 @@ import { OperatorInfo } from '../../model/CoreDataModel';
 import { ReferenceDataManager } from '../../services/ReferenceDataManager';
 
 @Component({
-  selector: 'app-operator-lookup',
-  templateUrl: './operator-lookup.component.html',
-  styleUrls: ['./operator-lookup.component.css'],
+    selector: 'app-operator-lookup',
+    templateUrl: './operator-lookup.component.html',
+    styleUrls: ['./operator-lookup.component.css'],
+    standalone: false
 })
 export class OperatorLookupComponent implements OnInit {
 

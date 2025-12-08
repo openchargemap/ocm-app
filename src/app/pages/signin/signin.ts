@@ -8,7 +8,8 @@ import { Location } from '@angular/common';
 import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 
 @Component({
-    templateUrl: 'signin.html'
+    templateUrl: 'signin.html',
+    standalone: false
 })
 export class SignInPage {
     email: string;

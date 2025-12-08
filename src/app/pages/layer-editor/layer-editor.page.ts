@@ -3,9 +3,10 @@ import { ModalController } from '@ionic/angular';
 import { ReferenceDataManager } from '../../services/ReferenceDataManager';
 
 @Component({
-  selector: 'app-layer-editor',
-  templateUrl: './layer-editor.page.html',
-  styleUrls: ['./layer-editor.page.css'],
+    selector: 'app-layer-editor',
+    templateUrl: './layer-editor.page.html',
+    styleUrls: ['./layer-editor.page.css'],
+    standalone: false
 })
 export class LayerEditorPage implements OnInit {
 

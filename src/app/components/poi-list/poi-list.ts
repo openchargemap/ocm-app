@@ -3,9 +3,10 @@ import { ExtendedPOIDetails } from '../../model/CoreDataModel';
 import { Utils } from '../../core/Utils';
 
 @Component({
-  selector: 'app-poi-list',
-  templateUrl: './poi-list.html',
-  styleUrls: ['./poi-list.scss'],
+    selector: 'app-poi-list',
+    templateUrl: './poi-list.html',
+    styleUrls: ['./poi-list.scss'],
+    standalone: false
 })
 export class PoiListComponent implements OnInit {
 
