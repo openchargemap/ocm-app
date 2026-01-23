@@ -220,6 +220,7 @@ export interface MediaItem {
 }
 
 export interface UserProfile {
+    ID?: number;
     Username: string;
     EmailAddress: string;
     Profile: string;

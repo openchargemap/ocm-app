@@ -356,9 +356,14 @@
             <span *ngIf="item.User">{{item.User.Username}}</span>
             <span *ngIf="!item.User">{{item.Username}}</span>
           </ion-label>
-          <ion-label slot="end">
+          <ion-note slot="end">
             {{item.DateCreated | date }}
-          </ion-label>
+          </ion-note>
+          <ion-buttons slot="end" *ngIf="canDeleteMediaItem(item)">
+            <ion-button fill="clear" color="danger" title="Delete photo" (click)="confirmDeleteMediaItem(item)">
+              <ion-icon name="trash" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
         </ion-item>
 
         <ion-card-content>

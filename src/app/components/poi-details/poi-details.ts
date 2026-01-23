@@ -1,10 +1,10 @@
 import { FavouriteEditorPage } from './../../pages/journeys/favourite-editor';
 import { MediaUploadPage } from './../../pages/mediaupload/mediaupload';
 import { CommentPage } from './../../pages/comment/comment';
-import { Logging } from './../../services/Logging';
+import { Logging, LogLevel } from './../../services/Logging';
 import { AppManager } from './../../services/AppManager';
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { NavController, ModalController, ActionSheetController } from '@ionic/angular';
+import { NavController, ModalController, ActionSheetController, AlertController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../../core/AppConfig';
 import { POIManager } from '../../services/POIManager';
@@ -39,6 +39,7 @@ export class PoiDetails implements OnInit {
     public logging: Logging,
     public modalController: ModalController,
     public actionSheetController: ActionSheetController,
+    public alertController: AlertController,
     public poiManager: POIManager,
     private router: Router
   ) {
@@ -302,7 +303,73 @@ export class PoiDetails implements OnInit {
     }
 
   }
+  canDeleteMediaItem(item: any): boolean {
+    if (!item || !this.appManager.isUserAuthenticated(false)) {
+      return false;
+    }
 
+    const profile = this.appManager.getUserProfile();
+    if (!profile) {
+      return false;
+    }
+
+    const profileId = profile.ID;
+    const ownerId = item.User?.ID;
+
+    return profileId != null && ownerId != null && profileId === ownerId;
+  }
+
+  async confirmDeleteMediaItem(item: any) {
+    if (!this.canDeleteMediaItem(item)) {
+      return;
+    }
+
+    const alert = await this.alertController.create({
+      header: 'Delete Photo',
+      message: 'Are you sure you want to delete this photo?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          role: 'destructive',
+          handler: () => {
+            this.deleteMediaItem(item);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async deleteMediaItem(item: any) {
+    try {
+      await this.appManager.api.deleteMediaItem(item.ID);
+
+      this.refresh();
+
+      await this.appManager.showToastNotification('Photo deleted.');
+    } catch (error) {
+      const status = error?.status;
+      const statusText = error?.statusText || error?.message;
+      const errorMessage = error?.error?.message;
+      const parts = ['Error deleting media item'];
+      if (status != null) {
+        parts.push(`status=${status}`);
+      }
+      if (statusText) {
+        parts.push(`statusText=${statusText}`);
+      }
+      if (errorMessage) {
+        parts.push(`message=${errorMessage}`);
+      }
+      this.logging.log(parts.join(' | '), LogLevel.ERROR);
+      await this.appManager.showToastNotification('Unable to delete photo.');
+    }
+  }
   refresh($refreshEvent: any = null) {
     if (this.poi) {
 
