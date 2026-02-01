@@ -21,7 +21,26 @@ import { ExtendedPOIDetails } from '../../../model/CoreDataModel';
 * @module MapProviders
 */
 let _this = null;
+let rtlPluginInitPromise: Promise<void> | null = null;
+const rtlPluginUrl = 'assets/mapbox-gl-rtl-text.js';
 
+function ensureRTLPluginLoaded(): Promise<void> {
+  const statusGetter = (maplibregl as any).getRTLTextPluginStatus;
+  if (typeof statusGetter === 'function') {
+    const status = statusGetter();
+    if (status === 'loaded') return Promise.resolve();
+    if (status === 'loading' && rtlPluginInitPromise) return rtlPluginInitPromise;
+  }
+
+  if (!rtlPluginInitPromise) {
+    const hasSetter = typeof (maplibregl as any).setRTLTextPlugin === 'function';
+    rtlPluginInitPromise = hasSetter
+      ? (maplibregl as any).setRTLTextPlugin(rtlPluginUrl, false)
+      : Promise.resolve();
+  }
+
+  return rtlPluginInitPromise;
+}
 @Injectable()
 export class MapLibreMapProvider implements IMapProvider {
   mapAPIType: MappingAPI;
@@ -85,7 +104,7 @@ export class MapLibreMapProvider implements IMapProvider {
   * @param mapcanvasID  dom element for map canvas
   * @param mapConfig  general map config/options
   */
-  initMap(mapCanvasID: string, mapConfig: MapOptions, parentMapManager: IMapManager) {
+   async initMap(mapCanvasID: string, mapConfig: MapOptions, parentMapManager: IMapManager) {
     this.mapCanvasID = mapCanvasID;
 
     let apiLoaded = true;
@@ -98,7 +117,16 @@ export class MapLibreMapProvider implements IMapProvider {
     if (apiLoaded) {
       if (this.map == null) {
         let mapCanvas = document.getElementById(mapCanvasID);
-
+        try {
+         await ensureRTLPluginLoaded();
+          const status = (maplibregl as any).getRTLTextPluginStatus?.();
+          if (status && status !== 'loaded') {
+            this.logging.log(`RTL plugin status before map init: ${status}`, LogLevel.INFO);
+          }
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err);
+          this.logging.log(`RTL plugin failed (source: ${rtlPluginUrl}): ${msg}`, LogLevel.WARNING);
+        }
         this.initAPI();
 
       this.map = new maplibregl.Map({
@@ -211,7 +239,6 @@ export class MapLibreMapProvider implements IMapProvider {
       this.logging.log("Call to initMap before API is ready:" + MappingAPI[this.mapAPIType], LogLevel.ERROR);
 
       this.mapReady = false;
-      return false;
     }
   }
 
