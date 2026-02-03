@@ -1,6 +1,5 @@
 <ion-item *ngIf="useFilteredOperators && !selectedOperator">
-  <ion-label position="floating">Network Operator</ion-label>
-  <ion-select [(ngModel)]="operatorId" (ionChange)="onOperatorChange()">
+  <ion-select label="Network Operator" label-placement="floating" [(ngModel)]="operatorId" (ionChange)="onOperatorChange()">
     <ion-select-option *ngFor="let i of operators" [value]="i.ID">{{
       i.Title
     }}</ion-select-option>
@@ -17,6 +16,7 @@
     showCancelButton="focus"
     (ionCancel)="cancelOperatorLookup()"
     autocomplete="on"
+    autocapitalize="on"
     [(ngModel)]="operatorSearchKeyword"
     (ionInput)="searchOperators($event)"
   ></ion-searchbar>

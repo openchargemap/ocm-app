@@ -17,7 +17,7 @@ export class SettingsPage implements OnInit {
   searchSettings: SearchSettings;
   maxPower = MAX_POWER;
 
-  public powerRange = { lower: 0, upper: this.maxPower };
+  public powerRange = { lower: 0, upper: this.maxPower ?? 500 };
 
   constructor(
     public appManager: AppManager,

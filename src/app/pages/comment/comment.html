@@ -19,30 +19,25 @@
   <ion-list>
 
     <ion-item>
-      <ion-label position="stacked">Comment Type</ion-label>
-      <ion-select [(ngModel)]="commentModel.CommentTypeID">
+      <ion-select label="Comment Type" label-placement="stacked" [(ngModel)]="commentModel.CommentTypeID">
         <ion-select-option *ngFor="let item of commentTypes" [value]="item.ID">{{item.Title}}</ion-select-option>
       </ion-select>
 
     </ion-item>
 
     <ion-item>
-      <ion-label position="stacked">What Did You Think?</ion-label>
-      <ion-input type="text" [(ngModel)]="commentModel.Comment" placeholder="(optional comment)"></ion-input>
+      <ion-input label="What Did You Think?" label-placement="stacked" type="text" [(ngModel)]="commentModel.Comment" placeholder="(optional comment)"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label position="stacked">Did You Successfully Charge?</ion-label>
-      <ion-select [(ngModel)]="commentModel.CheckinStatusTypeID">
+      <ion-select label="Did You Successfully Charge?" label-placement="stacked" [(ngModel)]="commentModel.CheckinStatusTypeID">
         <ion-select-option *ngFor="let item of checkinTypes" [value]="item.ID">{{item.Title}}</ion-select-option>
       </ion-select>
 
     </ion-item>
 
     <ion-item>
-      <ion-label position="stacked">Your Rating</ion-label>
-
-      <ion-select [(ngModel)]="commentModel.Rating">
+      <ion-select label="Your Rating" label-placement="stacked" [(ngModel)]="commentModel.Rating">
         <ion-select-option value="5">5 - Excellent</ion-select-option>
         <ion-select-option value="4">4 - Good</ion-select-option>
         <ion-select-option value="3">3 - Average</ion-select-option>

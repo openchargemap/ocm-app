@@ -18,16 +18,14 @@
   </p>
 
   <ion-item>
-    <ion-label position="stacked">Add to a Journey</ion-label>
-    <ion-select [(ngModel)]="selectedJourneyID">
+    <ion-select label="Add to a Journey" label-placement="stacked" [(ngModel)]="selectedJourneyID">
       <ion-select-option value="" checked>Create a New Journey</ion-select-option>
       <ion-select-option *ngFor="let journey of journeyManager.journeys" [value]="journey.ID">{{journey.Title}}</ion-select-option>
     </ion-select>
 
   </ion-item>
   <ion-item *ngIf="selectedJourneyID">
-    <ion-label position="stacked">Journey Stage</ion-label>
-    <ion-select [(ngModel)]="selectedStageIndex">
+    <ion-select label="Journey Stage" label-placement="stacked" [(ngModel)]="selectedStageIndex">
       <ion-select-option value="">Create a Journey Stage</ion-select-option>
       <ion-select-option *ngFor="let stage of journeyManager.getJourneyStages(selectedJourneyID); let i=index;" [value]="i"
         checked>{{stage.Title}}</ion-select-option>
@@ -35,17 +33,14 @@
 
   </ion-item>
   <ion-item *ngIf="!selectedJourneyID">
-    <ion-label position="stacked">New Journey Name</ion-label>
-    <ion-input type="text" [(ngModel)]="newJourneyName"></ion-input>
+    <ion-input label="New Journey Name" label-placement="stacked" type="text" [(ngModel)]="newJourneyName"></ion-input>
 
   </ion-item>
   <ion-item>
-    <ion-label position="stacked">Name for this step of your journey</ion-label>
-    <ion-input type="text" [(ngModel)]="waypoint.Title"></ion-input>
+    <ion-input label="Name for this step of your journey" label-placement="stacked" type="text" [(ngModel)]="waypoint.Title"></ion-input>
   </ion-item>
   <ion-item>
-    <ion-label position="stacked">Other Notes</ion-label>
-    <ion-textarea [(ngModel)]="waypoint.Notes"></ion-textarea>
+    <ion-textarea label="Other Notes" label-placement="stacked" [(ngModel)]="waypoint.Notes"></ion-textarea>
   </ion-item>
 
 </ion-content>

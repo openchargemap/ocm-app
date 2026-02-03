@@ -8,7 +8,7 @@
 
       <ion-item *ngIf="routeStartPlace==null">
         <ion-icon name="ionic" item-left></ion-icon>
-        <ion-searchbar [(ngModel)]="routeStart" (ionInput)="placeSearchRouteStart.getPlacesAutoComplete($event,'routeStart')" (ionCancel)="onPlaceSearchCancel($event)"
+        <ion-searchbar autocapitalize="on" [(ngModel)]="routeStart" (ionInput)="placeSearchRouteStart.getPlacesAutoComplete($event,'routeStart')" (ionCancel)="onPlaceSearchCancel($event)"
           placeholder="Starting Point" [debounce]="500"></ion-searchbar>
 
       </ion-item>
@@ -20,7 +20,7 @@
 
       <ion-item *ngIf="routeDestinationPlace==null">
         <ion-icon name="pin" item-left></ion-icon>
-        <ion-searchbar [(ngModel)]="routeDestination" (ionInput)="placeSearchRouteDestination.getPlacesAutoComplete($event,'routeDestination')"
+        <ion-searchbar autocapitalize="on" [(ngModel)]="routeDestination" (ionInput)="placeSearchRouteDestination.getPlacesAutoComplete($event,'routeDestination')"
           (ionCancel)="onPlaceSearchCancel($event)" placeholder="Destination" [debounce]="500"></ion-searchbar>
 
       </ion-item>
@@ -75,16 +75,14 @@
         <ion-icon name="cog"></ion-icon> Route Settings
       </ion-list-header>
       <ion-item>
-        <ion-label position="stacked">Search Distance ({{routeSearchDistance}})</ion-label>
-        <ion-range min="1" max="200" step="5" snaps="true" pin="true" [(ngModel)]="routeSearchDistance" light>
+        <ion-range label="Search Distance ({{routeSearchDistance}})" label-placement="stacked" min="1" max="200" step="5" snaps="true" pin="true" [(ngModel)]="routeSearchDistance" light>
           <ion-icon slot="start" small name="map"></ion-icon>
           <ion-icon slot="end" large name="map"></ion-icon>
         </ion-range>
 
       </ion-item>
       <ion-item>
-        <ion-label position="stacked">Energy Efficiency (kWh Per km)</ion-label>
-        <ion-input type="number" min="0.1" max="1" [(ngModel)]="kWhPerKM"></ion-input>
+        <ion-input label="Energy Efficiency (kWh Per km)" label-placement="stacked" type="number" min="0.1" max="1" [(ngModel)]="kWhPerKM"></ion-input>
 
       </ion-item>
     </ion-list>
