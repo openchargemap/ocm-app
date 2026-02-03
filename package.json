@@ -55,7 +55,7 @@
     "@angular-eslint/template-parser": "20.2.0",
     "@angular/build": "^20.2.1",
     "@angular/cli": "20.2.1",
-    "@angular/compiler": "20.2.2",
+    "@angular/compiler": "20.3.16",
     "@angular/compiler-cli": "20.2.2",
     "@angular/language-service": "20.2.2",
     "@capacitor/cli": "^7.0.0",
