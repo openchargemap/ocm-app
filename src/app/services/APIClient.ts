@@ -217,7 +217,12 @@ export class APIClient {
     return this.http.post(this.serviceBaseURL + '/poi/', jsonString, this.getHttpRequestOptions())
       .toPromise();
   }
+  deleteMediaItem(mediaItemId: number): Promise<any> {
+    const serviceURL = `${environment.apiBase}/v4/profile/mediaitem/${mediaItemId}`;
 
+    return this.http.delete(serviceURL, this.getHttpRequestOptions())
+      .toPromise();
+  }
   getPanoramioLocationPhotos(pos: GeoLatLng): Promise<any> {
     //
     return new Promise(resolve => {
