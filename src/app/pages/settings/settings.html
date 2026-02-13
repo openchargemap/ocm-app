@@ -58,6 +58,23 @@
           }}</ion-select-option>
       </ion-select>
     </ion-item>
+     <ion-item>
+      <ion-select [label]="'ocm.search.photos' | translate" [(ngModel)]="searchSettings.HasMedia" multiple="false" (ionChange)="onTriStateFilterChange()" cancelText="Cancel" okText="OK">
+        <ion-select-option *ngFor="let option of triStateFilterOptions" [value]="option.value">{{option.titleKey | translate}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-select [label]="'ocm.search.comments' | translate" [(ngModel)]="searchSettings.HasComment" multiple="false" (ionChange)="onTriStateFilterChange()" cancelText="Cancel" okText="OK">
+        <ion-select-option *ngFor="let option of triStateFilterOptions" [value]="option.value">{{option.titleKey | translate}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-select [label]="'ocm.search.checkins' | translate" [(ngModel)]="searchSettings.HasCheckins" multiple="false" (ionChange)="onTriStateFilterChange()" cancelText="Cancel" okText="OK">
+        <ion-select-option *ngFor="let option of triStateFilterOptions" [value]="option.value">{{option.titleKey | translate}}</ion-select-option>
+      </ion-select>
+    </ion-item>
     <ion-item>
       <ion-range label-placement="start" label="Power (kW)" dualKnobs="true" pin="true" [(ngModel)]="powerRange" [ticks]="false" [snaps]="false" [min]="0" [max]="maxPower">
         <ion-icon slot="start" size="small" name="flash">0</ion-icon>

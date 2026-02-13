@@ -65,6 +65,9 @@ export class APIClient {
     if (params.distance != null) serviceParams += '&distance=' + params.distance;
     if (params.distanceUnit != null) serviceParams += '&distanceunit=' + params.distanceUnit;
     if (params.includeComments != null) serviceParams += '&includecomments=' + params.includeComments;
+    if (params.hasmedia != null) serviceParams += '&hasmedia=' + params.hasmedia;
+    if (params.hascomment != null) serviceParams += '&hascomment=' + params.hascomment;
+    if (params.hascheckins != null) serviceParams += '&hascheckins=' + params.hascheckins;
     if (params.maxResults != null) serviceParams += '&maxresults=' + params.maxResults;
     if (params.countryIdList != null) serviceParams += '&countryid=' + this.getNumberListString(params.countryIdList);
     if (params.levelIdList != null) serviceParams += '&levelid=' + this.getNumberListString(params.levelIdList);

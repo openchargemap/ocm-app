@@ -18,7 +18,11 @@ export class SettingsPage implements OnInit {
   maxPower = MAX_POWER;
 
   public powerRange = { lower: 0, upper: this.maxPower ?? 500 };
-
+   public triStateFilterOptions = [
+    { value: 'any', titleKey: 'ocm.search.any' },
+    { value: 'true', titleKey: 'ocm.search.yes' },
+    { value: 'false', titleKey: 'ocm.search.no' }
+  ];
   constructor(
     public appManager: AppManager,
     public poiManager: POIManager,
@@ -49,6 +53,10 @@ export class SettingsPage implements OnInit {
     } else {
       return false;
     }
+  }
+  
+  onTriStateFilterChange() {
+    this.searchSettings.CheckForActiveFilters();
   }
 
   clearFilters() {
