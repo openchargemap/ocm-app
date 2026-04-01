@@ -2,3 +2,21 @@
   position: fixed;
   top: -1000px;
 }
+
+.batch-thumb {
+  --size: 72px;
+}
+
+.batch-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.upload-error {
+  color: var(--ion-color-danger, #b00020);
+}
+
+.upload-success {
+  color: var(--ion-color-success, #2dd36f);
+}
