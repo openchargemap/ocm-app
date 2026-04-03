@@ -71,7 +71,7 @@
           </ion-thumbnail>
           <ion-label>
             <h3>{{item.file.name}}</h3>
-            <p>{{(item.sizeBytes / 1024 / 1024).toFixed(2)}} MB · Rotation {{item.rotationDeg}}°</p>
+            <p>{{(item.sizeBytes / 1024 / 1024).toFixed(2)}} MB</p>
             <p *ngIf="item.uploadStatus === 'failed'" class="upload-error">Failed: {{item.lastError || 'Upload failed'}}</p>
             <p *ngIf="item.uploadStatus === 'uploaded'" class="upload-success">Uploaded</p>
             <ion-input label="Comment" label-placement="stacked" type="text" placeholder="(optional comment)" [(ngModel)]="item.comment" [disabled]="isBatchUploading"></ion-input>
