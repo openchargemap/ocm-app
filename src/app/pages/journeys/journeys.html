@@ -4,7 +4,7 @@
             <ion-back-button (click)="dismiss()"></ion-back-button>
         </ion-buttons>
         <ion-title>
-            Journeys
+            Journeys & Favourites
         </ion-title>
     </ion-toolbar>
 </ion-header>
@@ -14,17 +14,68 @@
     <div class="ion-padding">
 
         <p>
-            You can create and plan journeys to group your favourite charging routes together.
+            You can keep a simple favourites list, or organise charging locations into full journeys.
         </p>
 
-        <p *ngIf="journeyManager.journeys==null || journeyManager.journeys.length==0">
-            You have no journeys yet. Start by browsing to a charging location, then add it as Favourite to start a new
-            Journey.
+        <p *ngIf="(journeyManager.favourites==null || journeyManager.favourites.length==0) && (journeyManager.journeys==null || journeyManager.journeys.length==0)">
+            You have no favourites or journeys yet. Start by browsing to a charging location, then add it to favourites or a journey.
 
         </p>
 
     </div>
 
+    <ion-segment [(ngModel)]="selectedTab" class="ion-padding-horizontal">
+        <ion-segment-button value="favourites">
+            <ion-label>Favourites ({{journeyManager.favourites?.length || 0}})</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="journeys">
+            <ion-label>Journeys ({{journeyManager.journeys?.length || 0}})</ion-label>
+        </ion-segment-button>
+    </ion-segment>
+
+    <ion-card *ngIf="selectedTab === 'favourites' && journeyManager.favourites && journeyManager.favourites.length > 0">
+        <ion-card-content>
+          
+            <ion-list>
+                <ion-item *ngFor="let favourite of journeyManager.favourites">
+                    <ion-thumbnail slot="start">
+             
+                        <ion-icon *ngIf="!favourite.Poi" name="star" style="font-size:2rem;"></ion-icon>
+                    </ion-thumbnail>
+
+                    <ion-label *ngIf="favourite.Poi" (click)="viewPOIDetails(favourite.Poi)">
+                        <h2>{{favourite.Poi.AddressInfo.Title}}</h2>
+                        <p *ngIf="favourite.Poi.AddressInfo.AddressLine1">{{favourite.Poi.AddressInfo.AddressLine1}}</p>
+                        <p *ngIf="favourite.Poi.AddressInfo.Town">{{favourite.Poi.AddressInfo.Town}}</p>
+                    </ion-label>
+
+                    <ion-label *ngIf="!favourite.Poi">
+                        <h2>{{favourite.Title}}</h2>
+                        <p>Loading location details...</p>
+                    </ion-label>
+
+                    <ion-buttons slot="end">
+                        <ion-button *ngIf="favourite.Poi" fill="clear" (click)="launchNavigation(favourite.Poi)">
+                            <ion-icon name="navigate" slot="icon-only"></ion-icon>
+                        </ion-button>
+                        <ion-button fill="clear" color="danger" (click)="deleteFavourite(favourite.PoiID)">
+                            <ion-icon name="trash" slot="icon-only"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
+                </ion-item>
+            </ion-list>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngIf="selectedTab === 'favourites' && (!journeyManager.favourites || journeyManager.favourites.length === 0)">
+        <ion-card-content>
+            <p>
+                You have no favourites yet. Browse to a charging location and add it to favourites from the POI details screen.
+            </p>
+        </ion-card-content>
+    </ion-card>
+
+    <ng-container *ngIf="selectedTab === 'journeys'">
     <ion-card *ngFor="let journey of journeyManager.journeys">
 
         <ion-card-content>
@@ -40,14 +91,15 @@
             </ion-toolbar>
 
             <p>{{journey.Notes}}</p>
+            <p>
+                {{getJourneyWaypointCount(journey)}} steps, {{getJourneyPoiCount(journey)}} saved charging location<span *ngIf="getJourneyPoiCount(journey) !== 1">s</span>
+            </p>
 
             <ion-list *ngFor="let s of journey.Stages">
                 <ion-list-header style="font-size:1.5rem;">
                     {{s.Title}}
 
-                    <ion-icon name="car"></ion-icon> --
-                    <ion-icon name="time"></ion-icon> --
-                    <ion-icon name="flash"></ion-icon> --
+                    <ion-note slot="end">{{getStageWaypointCount(s)}} step<span *ngIf="getStageWaypointCount(s) !== 1">s</span>, {{getStagePoiCount(s)}} POI<span *ngIf="getStagePoiCount(s) !== 1">s</span></ion-note>
 
                 </ion-list-header>
 
@@ -89,6 +141,15 @@
 
         </ion-card-content>
 
+    </ion-card>
+    </ng-container>
+
+    <ion-card *ngIf="selectedTab === 'journeys' && (!journeyManager.journeys || journeyManager.journeys.length === 0)">
+        <ion-card-content>
+            <p>
+                You have no journeys yet. Add a charging location to a journey from the POI details screen to start planning a route.
+            </p>
+        </ion-card-content>
     </ion-card>
 
 </ion-content>

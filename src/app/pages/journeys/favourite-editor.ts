@@ -43,38 +43,36 @@ export class FavouriteEditorPage {
   }
 
   cancel() {
-    // FIXME: this.nav.pop
     this.modalController.dismiss();
   }
 
-  add() {
+  get canAdd(): boolean {
+    if (this.selectedJourneyID != null && this.selectedJourneyID !== '') {
+      return !!this.waypoint?.Title?.trim();
+    }
 
-    // TODO: validation
+    return !!this.newJourneyName?.trim() && !!this.waypoint?.Title?.trim();
+  }
+
+  add() {
+    if (!this.canAdd) {
+      return;
+    }
 
     // store new waypoint in journey
     if (this.selectedJourneyID != null && this.selectedJourneyID !== '') {
 
-      // TODO: should be injected instance of JourneyManager instead of via appManager
       this.journeyManager.addJourneyWaypoint(this.selectedJourneyID, this.selectedStageIndex, this.waypoint);
 
     } else {
       // start a new journey
       const journey = new Journey();
       journey.ID = Date.now().toString();
-      if (this.newJourneyName === '') {
-        this.newJourneyName = 'New Journey';
-      }
-      journey.Title = this.newJourneyName;
-
-
-      // add new journey
+      journey.Title = this.newJourneyName.trim();
 
       this.journeyManager.addJourney(journey, this.waypoint);
 
     }
-
-    // todo: async promise for server save
-    this.journeyManager.saveJourneys();
 
     this.modalController.dismiss();
   }

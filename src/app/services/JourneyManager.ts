@@ -1,4 +1,4 @@
-import { Logging } from './Logging';
+import { Logging, LogLevel } from './Logging';
 /**
 * @author Christopher Cook
 * @copyright Webprofusion Pty Ltd https://webprofusion.com
@@ -29,10 +29,17 @@ export class JourneyManager {
 
     public loadJourneys() {
         // load journeys from local cache, then check for newer server copy
+        this.journeys = [];
+        this.favourites = [];
+
         let journeyJson = localStorage.getItem("journeys");
         if (journeyJson != null) {
             this.journeys = JSON.parse(journeyJson);
+        }
 
+        const favouritesJson = localStorage.getItem("favourites");
+        if (favouritesJson != null) {
+            this.favourites = JSON.parse(favouritesJson);
         }
 
         // TODO: check server, reconcile sync
@@ -45,6 +52,8 @@ export class JourneyManager {
                 this.fetchAllJourneyPOIDetails(j);
             }
         }
+
+        this.fetchFavouritePOIDetails();
 
     }
 
@@ -73,6 +82,36 @@ export class JourneyManager {
                 this.updateStoredPOI(poi);
             }
         });
+    }
+
+    public async fetchFavouritePOIDetails(): Promise<void> {
+        if (this.favourites == null || this.favourites.length === 0) {
+            return;
+        }
+
+        const missingPoiIds: Array<number> = [];
+
+        for (const favourite of this.favourites) {
+            const hasCachedPoi = favourite.Poi != null && favourite.Poi.AddressInfo != null;
+            if (favourite.PoiID != null && !hasCachedPoi && missingPoiIds.indexOf(favourite.PoiID) === -1) {
+                missingPoiIds.push(favourite.PoiID);
+            }
+        }
+
+        if (missingPoiIds.length === 0) {
+            return;
+        }
+
+        for (const poiId of missingPoiIds) {
+            try {
+                const poi = await this.poiManager.getPOIById(poiId, true, true);
+                if (poi) {
+                    this.updateStoredPOI(poi);
+                }
+            } catch (error) {
+                this.logging.log('Journeys - failed to hydrate favourite POI ' + poiId + ': ' + error, LogLevel.ERROR);
+            }
+        }
     }
 
     /** Update details of a POI if it occurs in a journey or favourites */
@@ -108,12 +147,20 @@ export class JourneyManager {
 
 
         // update all favourites with latest info
+        let favouritesChanged = false;
         if (this.favourites != null) {
             for (let f of this.favourites) {
-                if (f.Type == "charging" && f.PoiID == poi.ID) {
+                if (f.PoiID == poi.ID) {
                     f.Poi = poi;
+                    f.Title = poi.AddressInfo?.Title || f.Title;
+                    f.Notes = poi.AddressInfo?.AddressLine1 || f.Notes;
+                    favouritesChanged = true;
                 }
             }
+        }
+
+        if (favouritesChanged) {
+            this.saveFavouritesCache();
         }
     }
 
@@ -124,7 +171,7 @@ export class JourneyManager {
         for (let j of cloneOfJourneys) {
             for (const s of j.Stages) {
                 for (let w of s.WayPoints) {
-                    for (let p of w.PoiList) {
+                    for (let p of (w.PoiList || [])) {
                         p.Poi = null;
                         p.Photos = null;
                     }
@@ -134,7 +181,49 @@ export class JourneyManager {
         const journeyString = JSON.stringify(cloneOfJourneys);
         localStorage.setItem("journeys", journeyString);
 
+        this.saveFavouritesCache();
+
         // TODO: send to server, merge synce and get results
+    }
+
+    public isFavourite(poiId: number): boolean {
+        return this.favourites != null && this.favourites.some((f) => f.PoiID === poiId);
+    }
+
+    public addFavourite(poi: any): boolean {
+        if (!poi || poi.ID == null || this.isFavourite(poi.ID)) {
+            return false;
+        }
+
+        const favourite = new BookmarkedPOI('charging', 1);
+        favourite.Title = poi.AddressInfo?.Title || 'Favourite';
+        favourite.Notes = poi.AddressInfo?.AddressLine1 || '';
+        favourite.PoiID = poi.ID;
+        favourite.Poi = poi;
+
+        this.favourites.push(favourite);
+        this.saveJourneys();
+        return true;
+    }
+
+    public removeFavourite(poiId: number): boolean {
+        const favouriteCount = this.favourites.length;
+        this.favourites = this.favourites.filter((favourite) => !(favourite.PoiID === poiId));
+
+        if (this.favourites.length !== favouriteCount) {
+            this.saveJourneys();
+            return true;
+        }
+
+        return false;
+    }
+
+    private saveFavouritesCache() {
+        const cloneOfFavourites = <Array<BookmarkedPOI>>JSON.parse(JSON.stringify(this.favourites || []));
+        for (const favourite of cloneOfFavourites) {
+            favourite.Photos = null;
+        }
+        localStorage.setItem("favourites", JSON.stringify(cloneOfFavourites));
     }
 
 
@@ -142,6 +231,9 @@ export class JourneyManager {
      * Add new journey wtih a default single stagem, optionally adding the given Waypoint
      */
     public addJourney(journey: Journey, waypoint?: WayPoint) {
+        if (journey.Stages == null) {
+            journey.Stages = [];
+        }
 
         let newStage: JourneyStage = new JourneyStage();
         newStage.Title = "Stage 1";
@@ -150,6 +242,7 @@ export class JourneyManager {
         }
         journey.Stages.push(newStage);
         this.journeys.push(journey);
+        this.saveJourneys();
     }
 
     public deleteJourney(journeyId: string) {
@@ -172,7 +265,7 @@ export class JourneyManager {
 
     public getJourneyStages(journeyId: string) {
         let j = this.getJourney(journeyId);
-        return j.Stages;
+        return j?.Stages || [];
     }
 
     /**
@@ -180,6 +273,9 @@ export class JourneyManager {
      */
     public addJourneyWaypoint(journeyId: string, stageIndex: number, waypoint: WayPoint) {
         let journey = this.getJourney(journeyId);
+        if (!journey) {
+            return;
+        }
 
         if (stageIndex == null) {
             // create new journey stage, then add waypoint
@@ -193,6 +289,8 @@ export class JourneyManager {
             if (stage.WayPoints == null) { stage.WayPoints = []; }
             stage.WayPoints.push(waypoint);
         }
+
+        this.saveJourneys();
     }
 
     /**
@@ -200,7 +298,11 @@ export class JourneyManager {
      */
     public addJourneyStage(journeyId: string, stage: JourneyStage): number {
         let journey = this.getJourney(journeyId);
+        if (!journey) {
+            return -1;
+        }
         let numStages = journey.Stages.push(stage);
+        this.saveJourneys();
         return numStages - 1;
     }
 

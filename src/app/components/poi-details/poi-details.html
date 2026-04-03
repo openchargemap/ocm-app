@@ -38,7 +38,7 @@
           <ion-icon name="camera"></ion-icon>
         </ion-fab-button>
         <ion-fab-button (click)="addFavourite()" title="Add to Favourites">
-          <ion-icon name="star"></ion-icon>
+          <ion-icon [name]="journeyManager.isFavourite(poi.ID) ? 'star' : 'star-outline'"></ion-icon>
         </ion-fab-button>
         <ion-fab-button (click)="edit()" title="Submit an Edit">
           <ion-icon name="create"></ion-icon>
@@ -59,8 +59,8 @@
 
       <ng-container *ngIf="selectedTab=='location'">
         <ion-button size="small" (click)="addFavourite()" title="Add to Favourites">
-          <ion-icon name="star" slot="start"></ion-icon>
-          <ion-label>Favourite</ion-label>
+          <ion-icon [name]="journeyManager.isFavourite(poi.ID) ? 'star' : 'star-outline'" slot="start"></ion-icon>
+          <ion-label>{{journeyManager.isFavourite(poi.ID) ? 'Favourited' : 'Favourite'}}</ion-label>
         </ion-button>
         <ion-button size="small" (click)="edit()" title="Submit an Edit">
           <ion-icon name="create" slot="start"></ion-icon>

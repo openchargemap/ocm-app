@@ -18,7 +18,6 @@ export class JourneyBaseItem implements ISyncItem {
 
 export class BookmarkedPOI extends JourneyBaseItem implements ISyncItem {
     public PoiID: number;
-    public Type: string;
     public Poi: any;
     public Photos: any;
 }

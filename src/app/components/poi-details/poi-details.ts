@@ -12,6 +12,7 @@ import { SignInPage } from '../../pages/signin/signin';
 import { Router } from '@angular/router';
 import { PoiEditorPage } from '../../pages/poi-editor/poi-editor.page';
 import { Utils } from '../../core/Utils';
+import { JourneyManager } from '../../services/JourneyManager';
 
 @Component({
     selector: 'poi-details',
@@ -41,6 +42,7 @@ export class PoiDetails implements OnInit {
     public actionSheetController: ActionSheetController,
     public alertController: AlertController,
     public poiManager: POIManager,
+    public journeyManager: JourneyManager,
     private router: Router
   ) {
 
@@ -214,11 +216,26 @@ export class PoiDetails implements OnInit {
   }
 
   async addFavourite() {
+    const poiId = this.poi?.ID;
+    const isFavourite = poiId != null && this.journeyManager.isFavourite(poiId);
 
-    // show action sheet to decide what to do with new favourite
     const actionSheet = await this.actionSheetController.create({
-      header: 'Add Favourite',
+      header: 'Favourite Options',
       buttons: [
+        {
+          text: isFavourite ? 'Remove from Favourites' : 'Add to Favourites',
+          handler: async () => {
+            if (isFavourite) {
+              if (this.journeyManager.removeFavourite(poiId)) {
+                await this.appManager.showToastNotification('Removed from favourites.');
+              }
+            } else {
+              if (this.journeyManager.addFavourite(this.poi)) {
+                await this.appManager.showToastNotification('Added to favourites.');
+              }
+            }
+          }
+        },
         {
           text: 'Add to Journey',
 

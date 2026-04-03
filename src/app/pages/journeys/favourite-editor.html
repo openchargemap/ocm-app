@@ -54,7 +54,7 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="primary">
-      <ion-button (click)="add()">
+      <ion-button (click)="add()" [disabled]="!canAdd">
         Add
         <ion-icon name="add" slot="end"></ion-icon>
       </ion-button>

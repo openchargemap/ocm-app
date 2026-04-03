@@ -1,9 +1,7 @@
 import { JourneyManager } from './../../services/JourneyManager';
-import { APIClient } from './../../services/APIClient';
 import { AppManager } from './../../services/AppManager';
 import { Component } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
-import { GeoLatLng } from '../../model/AppModels';
 
 import { POIDetailsPage } from '../poi-details/poi-details';
 
@@ -17,15 +15,14 @@ import { POIDetailsPage } from '../poi-details/poi-details';
  */
 export class JourneysPage {
 
+  selectedTab: 'favourites' | 'journeys' = 'favourites';
+
   constructor(
     public appManager: AppManager,
 
     public journeyManager: JourneyManager,
-    public api: APIClient,
     public modalController: ModalController,
     public alertController: AlertController) {
-
-    // this.discoverImages();
 
     // console.log(JSON.stringify(this.journeyManager.journeys, null, 4));
   }
@@ -34,36 +31,35 @@ export class JourneysPage {
     this.modalController.dismiss();
   }
 
-  discoverImages() {
-    // populate panormaio for each point
-    this.journeyManager.journeys.forEach(j => {
-      j.Stages.forEach(s => {
-        s.WayPoints.forEach(w => {
-          if (w.PoiList != null) {
-            w.PoiList.forEach(p => {
-
-              if (p.Poi) {
-                this.api.getPanoramioLocationPhotos(
-                  new GeoLatLng(p.Poi.AddressInfo.Latitude, p.Poi.AddressInfo.Longitude))
-                  .then((photos) => {
-                    p.Photos = photos;
-                  });
-              }
-            });
-          }
-        });
-      });
-    });
-
+  ionViewWillEnter() {
+    this.journeyManager.fetchFavouritePOIDetails();
   }
 
   getJson(p): string {
     return JSON.stringify(p, null, 4);
   }
 
+  getJourneyWaypointCount(journey): number {
+    return (journey?.Stages || []).reduce((count, stage) => count + ((stage?.WayPoints || []).length), 0);
+  }
+
+  getJourneyPoiCount(journey): number {
+    return (journey?.Stages || []).reduce((count, stage) => {
+      return count + (stage?.WayPoints || []).reduce((waypointCount, waypoint) => waypointCount + ((waypoint?.PoiList || []).length), 0);
+    }, 0);
+  }
+
+  getStageWaypointCount(stage): number {
+    return (stage?.WayPoints || []).length;
+  }
+
+  getStagePoiCount(stage): number {
+    return (stage?.WayPoints || []).reduce((count, waypoint) => count + ((waypoint?.PoiList || []).length), 0);
+  }
+
   viewPOIDetails(poi) {
     this.modalController
-      .create({ component: POIDetailsPage, componentProps: { item: poi } })
+      .create({ component: POIDetailsPage, componentProps: { item: poi }, cssClass: 'poi-details-modal' })
       .then(m => m.present());
   }
 
@@ -96,6 +92,26 @@ export class JourneysPage {
           text: 'Delete',
           handler: () => {
             this.journeyManager.deleteJourney(journeyId);
+          }
+        }
+      ]
+    }).then(a => a.present());
+
+  }
+
+  deleteFavourite(poiId) {
+
+    this.alertController.create({
+      header: 'Remove this Favourite?',
+      message: 'Are you sure you want to remove this charging location from favourites?',
+      buttons: [
+        {
+          text: 'No'
+        },
+        {
+          text: 'Remove',
+          handler: () => {
+            this.journeyManager.removeFavourite(poiId);
           }
         }
       ]
