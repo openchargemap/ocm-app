@@ -3,6 +3,31 @@
   top: -1000px;
 }
 
+.review-panel {
+  margin-top: 16px;
+  border: 1px solid var(--ion-color-step-150, #d7d8da);
+  border-radius: 12px;
+  background: var(--ion-color-light, #f4f5f8);
+  overflow: hidden;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 0;
+}
+
+.review-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.review-header p {
+  margin: 4px 0 0;
+  color: var(--ion-color-medium, #666);
+}
+
 .batch-thumb {
   --size: 72px;
 }
@@ -19,4 +44,16 @@
 
 .upload-success {
   color: var(--ion-color-success, #2dd36f);
+}
+
+.upload-processing {
+  color: var(--ion-color-medium, #666);
+}
+
+.review-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 0 16px 16px;
+  flex-wrap: wrap;
 }

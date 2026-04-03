@@ -1,6 +1,6 @@
 import { AppManager } from './../../services/AppManager';
 import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { NavController, NavParams, ModalController } from '@ionic/angular';
+import { AlertController, NavController, NavParams, ModalController } from '@ionic/angular';
 import { Logging, LogLevel } from '../../services/Logging';
 
 type UploadStatus = 'ready' | 'uploading' | 'uploaded' | 'failed';
@@ -33,13 +33,8 @@ export class MediaUploadPage implements OnDestroy {
     readonly uploadJpegQuality = 0.78;
 
     mode: string;
-    imgData: string | null;
-    comment: string;
     chargePointId: number;
     poi: any;
-
-    singleSelectedFile: File | null;
-    singleRotationDeg: 0 | 90 | 180 | 270;
 
     isBatchReviewOpen: boolean;
     batchItems: UploadReviewItem[];
@@ -48,10 +43,10 @@ export class MediaUploadPage implements OnDestroy {
     private processingQueue: Promise<unknown> = Promise.resolve();
 
     @ViewChild('inputFile', { static: true })
-    inputFileRef: ElementRef<HTMLInputElement>;
+    inputFileRef!: ElementRef<HTMLInputElement>;
 
     @ViewChild('processingCanvas', { static: true })
-    processingCanvasRef: ElementRef<HTMLCanvasElement>;
+    processingCanvasRef!: ElementRef<HTMLCanvasElement>;
 
 
     constructor(
@@ -59,16 +54,12 @@ export class MediaUploadPage implements OnDestroy {
         public appManager: AppManager,
         public nav: NavController,
         private modalController: ModalController,
+        private alertController: AlertController,
         public logging: Logging
     ) {
         this.mode = appManager.platformMode;
         this.chargePointId = this.navParams.get('id');
         this.poi = this.navParams.get('poi');
-
-        this.imgData = null;
-        this.comment = '';
-        this.singleSelectedFile = null;
-        this.singleRotationDeg = 0;
 
         this.isBatchReviewOpen = false;
         this.batchItems = [];
@@ -80,6 +71,10 @@ export class MediaUploadPage implements OnDestroy {
     }
 
     onChoosePhoto(): void {
+        if (this.isBatchUploading) {
+            return;
+        }
+
         this.inputFileRef?.nativeElement?.click();
     }
 
@@ -102,61 +97,13 @@ export class MediaUploadPage implements OnDestroy {
             return;
         }
 
-        if (validFiles.length === 1) {
-            await this.activateSingleFile(validFiles[0]);
-        } else {
-            this.activateBatchFiles(validFiles);
-        }
+        this.activateBatchFiles(validFiles);
 
         this.resetFileInput();
     }
 
     isBrowserMode(): boolean {
         return (this.appManager.isPlatform('desktop') || this.appManager.isPlatform('hybrid'));
-    }
-
-    async rotateImage(): Promise<void> {
-        if (!this.singleSelectedFile) {
-            return;
-        }
-
-        this.singleRotationDeg = this.nextRotation(this.singleRotationDeg);
-        await this.refreshSinglePreview();
-    }
-
-    async performUpload() {
-        if (this.isBatchReviewOpen && this.batchItems.length > 0) {
-            await this.uploadBatchItems(false);
-            return;
-        }
-
-        if (!this.imgData) {
-            await this.appManager.showToastNotification('Select an image to upload.');
-            return;
-        }
-
-        const submission = {
-            chargePointID: this.chargePointId,
-            comment: this.comment,
-            imageDataBase64: this.imgData
-        };
-
-        await this.appManager.showLoadingProgress('Uploading photo..');
-
-        try {
-            await this.appManager.submitMediaItem(submission);
-
-            this.appManager.dismissLoadingProgress().then(() => {
-                this.appManager.showToastNotification('Upload completed');
-                this.modalController.dismiss();
-            });
-
-            this.appManager.analytics.appEvent('MediaUpload', 'Completed');
-        } catch (rejected) {
-            await this.appManager.dismissLoadingProgress();
-            await this.appManager.showToastNotification('Upload failed, please try again.');
-            this.appManager.analytics.appEvent('MediaUpload', 'Failed');
-        }
     }
 
     async uploadBatchItems(retryOnlyFailed: boolean): Promise<void> {
@@ -246,25 +193,19 @@ export class MediaUploadPage implements OnDestroy {
         this.batchItems.splice(idx, 1);
 
         if (this.batchItems.length === 0) {
-            this.requestBatchReviewClose();
+            this.isBatchReviewOpen = false;
         }
     }
 
-    requestBatchReviewClose(): void {
+    async requestBatchReviewClose(): Promise<void> {
         if (this.isBatchUploading) {
             return;
         }
 
-        this.isBatchReviewOpen = false;
-    }
-
-    onBatchReviewDidDismiss(): void {
-        this.cleanupBatchState();
-        this.resetFileInput();
+        await this.confirmAndCloseBatchReview();
     }
 
     async cancel() {
-        this.cleanupSingleState();
         this.cleanupBatchState();
         await this.modalController.dismiss();
     }
@@ -323,17 +264,7 @@ export class MediaUploadPage implements OnDestroy {
         return !!file?.type && file.type.startsWith('image/');
     }
 
-    private async activateSingleFile(file: File): Promise<void> {
-        this.cleanupBatchState();
-        this.cleanupSingleState(false);
-
-        this.singleSelectedFile = file;
-        this.singleRotationDeg = 0;
-        await this.refreshSinglePreview();
-    }
-
     private activateBatchFiles(files: File[]): void {
-        this.cleanupSingleState();
         this.cleanupBatchState();
 
         this.batchItems = files.map((file, index) => ({
@@ -348,22 +279,6 @@ export class MediaUploadPage implements OnDestroy {
         }));
 
         this.isBatchReviewOpen = true;
-    }
-
-    private async refreshSinglePreview(): Promise<void> {
-        if (!this.singleSelectedFile) {
-            this.imgData = null;
-            return;
-        }
-
-        this.imgData = await this.enqueueImageProcessing(() =>
-            this.processFileToJpegBase64(
-                this.singleSelectedFile as File,
-                this.singleRotationDeg,
-                this.maxImageLongEdgePx,
-                this.uploadJpegQuality
-            )
-        );
     }
 
     private async generateUploadDataForItem(item: UploadReviewItem): Promise<string> {
@@ -483,15 +398,6 @@ export class MediaUploadPage implements OnDestroy {
         return next as 0 | 90 | 180 | 270;
     }
 
-    private cleanupSingleState(resetComment: boolean = true): void {
-        this.imgData = null;
-        this.singleSelectedFile = null;
-        this.singleRotationDeg = 0;
-        if (resetComment) {
-            this.comment = '';
-        }
-    }
-
     private cleanupBatchState(revokeUrls: boolean = true): void {
         if (revokeUrls) {
             for (const item of this.batchItems) {
@@ -501,6 +407,35 @@ export class MediaUploadPage implements OnDestroy {
         this.batchItems = [];
         this.isBatchReviewOpen = false;
         this.isBatchUploading = false;
+    }
+
+    private async confirmAndCloseBatchReview(): Promise<void> {
+        if (!this.batchItems.length) {
+            this.cleanupBatchState();
+            return;
+        }
+
+        const alert = await this.alertController.create({
+            header: 'Discard selected photos?',
+            message: 'Closing the review will remove the selected photos and any comments you added.',
+            buttons: [
+                {
+                    text: 'Keep Reviewing',
+                    role: 'cancel'
+                },
+                {
+                    text: 'Discard',
+                    role: 'destructive'
+                }
+            ]
+        });
+
+        await alert.present();
+
+        const { role } = await alert.onDidDismiss();
+        if (role === 'destructive') {
+            this.cleanupBatchState();
+        }
     }
 
     private resetFileInput(): void {
