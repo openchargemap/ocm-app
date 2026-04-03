@@ -46,6 +46,7 @@ export class SearchPage implements OnInit, AfterViewInit {
 
   public searchKeyword: string = '';
   public selectedPOI: any;
+  public isLocatingUser: boolean = false;
 
   public appConfig = new AppConfig();
 
@@ -549,29 +550,27 @@ export class SearchPage implements OnInit, AfterViewInit {
     this.mapping.updateMapCentrePos(searchPos.latitude, searchPos.longitude, true, this.defaultMapZoom);
   }
 
-  _watchId = null;
-
   private async getPosition(options: PositionOptions = {}): Promise<Position> {
-    return new Promise<Position>((resolve, reject) => {
-      this._watchId = Geolocation.watchPosition(options, (position, err) => {
-
-        if (this._watchId) {
-          Geolocation.clearWatch({ id: this._watchId });
-        }
-
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(position);
-      });
+    const position = await Geolocation.getCurrentPosition({
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      ...options
     });
+
+    if (!position) {
+      throw new Error('Failed to get user location.');
+    }
+
+    return position;
   }
 
   async locateUser(): Promise<any> {
 
-    // ensure we start with a real position even if user does not make a geolocation choice
-    this.useFallbackPosition();
+    if (this.isLocatingUser) {
+      return false;
+    }
+
+    this.isLocatingUser = true;
 
     try {
 
@@ -589,7 +588,9 @@ export class SearchPage implements OnInit, AfterViewInit {
 
       this.searchOnDemand = true;
 
+  this.mapping.focusMap();
       this.mapping.updateMapCentrePos(position.coords.latitude, position.coords.longitude, true, this.defaultMapZoom);
+  this.debouncedRefreshMapResults();
       localStorage.setItem("_locationEnabled", "true");
       return true;
 
@@ -599,7 +600,10 @@ export class SearchPage implements OnInit, AfterViewInit {
       this.appManager.showToastNotification('Your location could not be determined.');
 
       this.useFallbackPosition();
+      this.debouncedRefreshMapResults();
       return false;
+    } finally {
+      this.isLocatingUser = false;
     }
   }
 

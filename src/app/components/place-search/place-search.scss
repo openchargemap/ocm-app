@@ -1,9 +1,23 @@
 .place-search {
   position: absolute;
   z-index: 1000;
+  width: min(100%, 420px);
 }
+
+.place-search ion-list {
+  margin: 0;
+  max-height: min(70vh, 520px);
+  overflow-y: auto;
+}
+
 .place-attribution {
   font-size: 9px;
   color: gainsboro;
   max-width: 100%;
+}
+
+@media (min-width: 992px) {
+  .place-search {
+    min-width: 320px;
+  }
 }
