@@ -27,3 +27,13 @@
   color: var(--ion-color-medium);
   font-size: 80%;
 }
+
+@media (min-width: 992px) {
+  ion-modal.poi-details-modal {
+    --width: min(1180px, 92vw);
+    --height: min(880px, 92vh);
+    --max-width: 1180px;
+    --max-height: 880px;
+    --border-radius: 18px;
+  }
+}

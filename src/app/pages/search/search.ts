@@ -410,7 +410,11 @@ export class SearchPage implements OnInit, AfterViewInit {
 
       this.mapping.unfocusMap();
 
-      this.modalController.create({ component: POIDetailsPage, componentProps: { item: p } })
+      this.modalController.create({
+        component: POIDetailsPage,
+        componentProps: { item: p },
+        cssClass: 'poi-details-modal'
+      })
         .then(m => {
 
           m.onDidDismiss().then(() => {
@@ -434,7 +438,11 @@ export class SearchPage implements OnInit, AfterViewInit {
         if (this.poiViewMode === 'modal') {
           this.searchOnDemand = false; // suspend interactive searches while modal dialog active
 
-          this.modalController.create({ component: POIDetailsPage, componentProps: { item: poi } })
+          this.modalController.create({
+            component: POIDetailsPage,
+            componentProps: { item: poi },
+            cssClass: 'poi-details-modal'
+          })
             .then(m => {
 
               m.onDidDismiss().then(() => {
