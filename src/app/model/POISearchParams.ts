@@ -21,6 +21,9 @@ export class POISearchParams {
     public maxPowerKW: number = null;
 
     public submissionStatusTypeIdList: Array<number> = null;
+    public hasmedia: 'true' | 'false' | null = null;
+    public hascomment: 'true' | 'false' | null = null;
+    public hascheckins: 'true' | 'false' | null = null;
 
     public maxResults: number = 500;
     public additionalParams: string = null;

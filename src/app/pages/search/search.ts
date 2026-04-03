@@ -6,6 +6,7 @@ import { RoutePlannerPage } from './../route-planner/route-planner';
 import { POIDetailsPage } from './../poi-details/poi-details';
 import { GeoLatLng, GeoPosition } from './../../model/GeoPosition';
 import { POISearchParams } from './../../model/POISearchParams';
+import { TriStateBooleanFilter } from './../../model/SearchSettings';
 import { Utils } from './../../core/Utils';
 import { Logging, LogLevel } from './../../services/Logging';
 import { JourneyManager } from './../../services/JourneyManager';
@@ -264,7 +265,14 @@ export class SearchPage implements OnInit, AfterViewInit {
     }
     return null;
   }
+   private applyTriStatePOIFilter(value: TriStateBooleanFilter, params: POISearchParams, fieldName: 'hasmedia' | 'hascomment' | 'hascheckins'): boolean {
+    if (value === 'true' || value === 'false') {
+      params[fieldName] = value;
+      return true;
+    }
 
+    return false;
+  }
 
   async refreshMapResults() {
     if (!this.searchOnDemand) {
@@ -360,6 +368,9 @@ export class SearchPage implements OnInit, AfterViewInit {
       if (this.appManager.searchSettings.MaxResults != null && this.appManager.searchSettings.MaxResults > 0 && this.appManager.searchSettings.MaxResults <= 10000) {
         params.maxResults = this.appManager.searchSettings.MaxResults;
       }
+      this.applyTriStatePOIFilter(this.appManager.searchSettings.HasMedia, params, 'hasmedia');
+      this.applyTriStatePOIFilter(this.appManager.searchSettings.HasComment, params, 'hascomment');
+      this.applyTriStatePOIFilter(this.appManager.searchSettings.HasCheckins, params, 'hascheckins');
 
       if (this.journeyManager.getRoutePolyline() != null) {
         // when searching along a polyline we discard any other bounding box filters etc

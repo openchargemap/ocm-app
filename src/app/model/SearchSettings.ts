@@ -2,7 +2,7 @@ import { GeoLatLng } from "./GeoPosition";
 import { MapType } from "../services/mapping/interfaces/mapping";
 
 export const MAX_POWER: number = 1000;
-
+export type TriStateBooleanFilter = 'any' | 'true' | 'false';
 export class SearchSettings {
   OperatorList: Array<number>;
   ConnectionTypeList: Array<number>;
@@ -22,6 +22,9 @@ export class SearchSettings {
   EnableAdvancedEditorFeatures: boolean;
   EnablePOIPendingApproval: boolean;
   MaxResults: number;
+  HasMedia: TriStateBooleanFilter;
+  HasComment: TriStateBooleanFilter;
+  HasCheckins: TriStateBooleanFilter;
 
   constructor() {
     this.OperatorList = [];
@@ -39,6 +42,9 @@ export class SearchSettings {
     this.EnableAdvancedEditorFeatures = false;
     this.EnablePOIPendingApproval = false;
     this.MaxResults = 500;
+    this.HasMedia = 'any';
+    this.HasComment = 'any';
+    this.HasCheckins = 'any';
   }
 
   public LoadSettings() { }
@@ -53,6 +59,9 @@ export class SearchSettings {
     this.StatusTypeList = [];
     this.MinPowerKW = null;
     this.MaxPowerKW = null;
+    this.HasMedia = 'any';
+    this.HasComment = 'any';
+    this.HasCheckins = 'any';
   }
 
   public CheckForActiveFilters(): boolean {
@@ -64,7 +73,10 @@ export class SearchSettings {
       this.StatusTypeList.length > 0 ||
       this.MinPowerKW > 0 ||
       this.MaxPowerKW > 0 ||
-      (this.MaxPowerKW != null && this.MaxPowerKW < MAX_POWER)
+      (this.MaxPowerKW != null && this.MaxPowerKW < MAX_POWER) ||
+      this.HasMedia !== 'any' ||
+      this.HasComment !== 'any' ||
+      this.HasCheckins !== 'any'
     ) {
       this.HasActiveFilters = true;
     } else {

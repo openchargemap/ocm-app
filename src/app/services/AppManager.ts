@@ -9,6 +9,7 @@ import { Platform, ToastController, LoadingController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 import { UserProfile, SubmissionType, SearchSettings, Journey, WayPoint, GeoLatLng, Language } from '../model/AppModels';
+import { TriStateBooleanFilter } from '../model/SearchSettings';
 import { SubmissionQueue } from './SubmissionQueue';
 import { ReferenceDataManager } from './ReferenceDataManager';
 import { JourneyManager } from './JourneyManager';
@@ -85,7 +86,23 @@ export class AppManager {
     // this.journeyManager.setupTestJourneys();
     this.journeyManager.loadJourneys();
   }
+   private normalizeTriStateFilter(value: any): TriStateBooleanFilter {
+        if (value === true || value === 'true') {
+          return 'true';
+        }
 
+        if (value === false || value === 'false') {
+          return 'false';
+        }
+
+        return 'any';
+  }
+
+  private ensureFilterDefaults() {
+    this.searchSettings.HasMedia = this.normalizeTriStateFilter(this.searchSettings.HasMedia);
+    this.searchSettings.HasComment = this.normalizeTriStateFilter(this.searchSettings.HasComment);
+    this.searchSettings.HasCheckins = this.normalizeTriStateFilter(this.searchSettings.HasCheckins);
+  }
   /**
    * Load search filter settings from local storage
    */
@@ -97,10 +114,12 @@ export class AppManager {
 
         // clone settings into SearchSettings instance
         Object.assign(this.searchSettings, settings);
+        this.ensureFilterDefaults();
       } catch (ex) {
         // failed to load settings
       }
     }
+      this.ensureFilterDefaults();
   }
 
   savePushRegistration(token: string) {
