@@ -20,7 +20,8 @@ export class JourneyManager {
 
     public journeys: Array<Journey>;
     public favourites: Array<BookmarkedPOI>;
-    private routePolyline: string;
+    private routePolyline: string | null = null;
+    private readonly lastUsedJourneyStorageKey = 'lastUsedJourneyId';
 
     constructor(public api: APIClient, public poiManager: POIManager, public logging: Logging) {
         this.journeys = [];
@@ -40,6 +41,10 @@ export class JourneyManager {
         const favouritesJson = localStorage.getItem("favourites");
         if (favouritesJson != null) {
             this.favourites = JSON.parse(favouritesJson);
+        }
+
+        if (this.getLastUsedJourneyId() == null) {
+            localStorage.removeItem(this.lastUsedJourneyStorageKey);
         }
 
         // TODO: check server, reconcile sync
@@ -115,7 +120,7 @@ export class JourneyManager {
     }
 
     /** Update details of a POI if it occurs in a journey or favourites */
-    public updateStoredPOI(poi) {
+    public updateStoredPOI(poi: any) {
 
         // updated all journeys which use this poi, TODO: this is messy
         this.journeys.forEach(j => {
@@ -242,11 +247,15 @@ export class JourneyManager {
         }
         journey.Stages.push(newStage);
         this.journeys.push(journey);
+        this.setLastUsedJourneyId(journey.ID);
         this.saveJourneys();
     }
 
     public deleteJourney(journeyId: string) {
         this.journeys = this.journeys.filter(f => f.ID != journeyId);
+        if (this.getLastUsedJourneyId() === journeyId) {
+            this.setLastUsedJourneyId(null);
+        }
         this.saveJourneys();
     }
 
@@ -268,16 +277,32 @@ export class JourneyManager {
         return j?.Stages || [];
     }
 
+    public getJourneyWaypoint(journeyId: string, stageIndex: number, waypointIndex: number): WayPoint | null {
+        const stage = this.getJourneyStages(journeyId)?.[stageIndex];
+        return stage?.WayPoints?.[waypointIndex] || null;
+    }
+
+    private normaliseStageIndex(stageIndex: number | string | null | undefined): number | null {
+        if (stageIndex == null || stageIndex === '') {
+            return null;
+        }
+
+        const normalisedStageIndex = typeof stageIndex === 'number' ? stageIndex : parseInt(stageIndex, 10);
+        return Number.isNaN(normalisedStageIndex) ? null : normalisedStageIndex;
+    }
+
     /**
      * Add a WayPoint to the journey at the given stage index (stage must already exist)
      */
-    public addJourneyWaypoint(journeyId: string, stageIndex: number, waypoint: WayPoint) {
+    public addJourneyWaypoint(journeyId: string, stageIndex: number | string | null, waypoint: WayPoint) {
         let journey = this.getJourney(journeyId);
         if (!journey) {
             return;
         }
 
-        if (stageIndex == null) {
+        const normalisedStageIndex = this.normaliseStageIndex(stageIndex);
+
+        if (normalisedStageIndex == null) {
             // create new journey stage, then add waypoint
             let newStage: JourneyStage = new JourneyStage();
             newStage.Title = "Stage " + (journey.Stages.length + 1);
@@ -285,12 +310,74 @@ export class JourneyManager {
             journey.Stages.push(newStage);
         } else {
             // add to existing journey stage
-            let stage = journey.Stages[stageIndex];
+            let stage = journey.Stages[normalisedStageIndex];
+            if (stage == null) {
+                stage = new JourneyStage();
+                stage.Title = "Stage " + (normalisedStageIndex + 1);
+                journey.Stages[normalisedStageIndex] = stage;
+            }
             if (stage.WayPoints == null) { stage.WayPoints = []; }
             stage.WayPoints.push(waypoint);
         }
 
+        this.setLastUsedJourneyId(journeyId);
         this.saveJourneys();
+    }
+
+    public updateJourneyWaypoint(
+        sourceJourneyId: string,
+        sourceStageIndex: number,
+        sourceWaypointIndex: number,
+        targetJourneyId: string | null,
+        targetStageIndex: number | string | null,
+        waypoint: WayPoint,
+        newJourneyName?: string
+    ): void {
+        const sourceStage = this.getJourneyStages(sourceJourneyId)?.[sourceStageIndex];
+        if (sourceStage?.WayPoints == null || sourceStage.WayPoints[sourceWaypointIndex] == null) {
+            return;
+        }
+
+        const normalisedTargetStageIndex = this.normaliseStageIndex(targetStageIndex);
+
+        if (targetJourneyId != null && targetJourneyId !== ''
+            && targetJourneyId === sourceJourneyId
+            && normalisedTargetStageIndex === sourceStageIndex) {
+            sourceStage.WayPoints[sourceWaypointIndex] = waypoint;
+            this.setLastUsedJourneyId(targetJourneyId);
+            this.saveJourneys();
+            return;
+        }
+
+        sourceStage.WayPoints.splice(sourceWaypointIndex, 1);
+
+        if (targetJourneyId != null && targetJourneyId !== '') {
+            this.addJourneyWaypoint(targetJourneyId, normalisedTargetStageIndex, waypoint);
+            return;
+        }
+
+        const journey = new Journey();
+        journey.ID = Date.now().toString();
+        journey.Title = (newJourneyName || '').trim() || 'New Journey';
+        this.addJourney(journey, waypoint);
+    }
+
+    public getLastUsedJourneyId(): string | null {
+        const journeyId = localStorage.getItem(this.lastUsedJourneyStorageKey);
+        if (journeyId == null || journeyId === '') {
+            return null;
+        }
+
+        return this.getJourney(journeyId) != null ? journeyId : null;
+    }
+
+    public setLastUsedJourneyId(journeyId: string | null): void {
+        if (journeyId == null || journeyId === '') {
+            localStorage.removeItem(this.lastUsedJourneyStorageKey);
+            return;
+        }
+
+        localStorage.setItem(this.lastUsedJourneyStorageKey, journeyId);
     }
 
     /**
@@ -367,11 +454,11 @@ export class JourneyManager {
 
     }
 
-    public setRoutePolyline(polyline: string) {
+    public setRoutePolyline(polyline: string | null) {
         this.routePolyline = polyline;
     }
 
-    public getRoutePolyline() {
+    public getRoutePolyline(): string | null {
         return this.routePolyline;
     }
 }

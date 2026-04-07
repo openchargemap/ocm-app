@@ -95,7 +95,7 @@
                 {{getJourneyWaypointCount(journey)}} steps, {{getJourneyPoiCount(journey)}} saved charging location<span *ngIf="getJourneyPoiCount(journey) !== 1">s</span>
             </p>
 
-            <ion-list *ngFor="let s of journey.Stages">
+            <ion-list *ngFor="let s of journey.Stages; let i=index;">
                 <ion-list-header style="font-size:1.5rem;">
                     {{s.Title}}
 
@@ -103,14 +103,22 @@
 
                 </ion-list-header>
 
-                <ion-item *ngFor="let w of s.WayPoints">
+                <ion-item *ngFor="let w of s.WayPoints; let waypointIndex=index;">
 
-                    <h2>{{w.Title}}</h2>
                     <ion-thumbnail slot="start">
                         <ion-icon name="caret-down" style="font-size:4rem;"></ion-icon>
                     </ion-thumbnail>
 
-                    <p>{{w.Notes}}</p>
+                    <ion-label>
+                        <h2>{{w.Title}}</h2>
+                        <p *ngIf="w.Notes">{{w.Notes}}</p>
+                    </ion-label>
+
+                    <ion-buttons slot="end">
+                        <ion-button fill="clear" (click)="editWaypoint(journey.ID, i, waypointIndex, w)" *ngIf="getWaypointPoi(w)">
+                            <ion-icon name="create" slot="icon-only"></ion-icon>
+                        </ion-button>
+                    </ion-buttons>
 
                     <div *ngFor="let p of w.PoiList" style="text-align:right;width:100%;">
                         <div *ngIf="p.Poi">

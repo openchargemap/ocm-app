@@ -200,7 +200,7 @@ export class AppManager {
     let languages = [
       { 'code': 'ar', 'title': 'العربية / Arabic' },
       { 'code': 'bg', 'title': 'Bulgarian / Български' },
-      { 'code': 'ca', 'title': 'Catalan / Čatalà' },,
+      { 'code': 'ca', 'title': 'Catalan / Čatalà' },
       { 'code': 'cs', 'title': 'Czech / Čeština' },
       { 'code': 'de', 'title': 'German / Deutsch' },
       { 'code': 'el', 'title': 'Greek / Ελληνική' },
@@ -222,7 +222,7 @@ export class AppManager {
       { 'code': 'tr', 'title': 'Turkish / Türkçe' },
       { 'code': 'zh', 'title': 'Chinese / 中国的' },
     ];
-    return languages;
+    return languages.filter(language => language != null);
   }
 
   public setLanguage(languageCode: string) {

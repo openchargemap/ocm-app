@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Edit Favourite
+      {{isEditMode ? 'Edit Journey Waypoint' : 'Add to Journey'}}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -14,12 +14,12 @@
   </div>
 
   <p>
-    Add Charging Location as a Journey Waypoint
+    {{isEditMode ? 'Edit this journey waypoint' : 'Add Charging Location as a Journey Waypoint'}}
   </p>
 
   <ion-item>
-    <ion-select label="Add to a Journey" label-placement="stacked" [(ngModel)]="selectedJourneyID">
-      <ion-select-option value="" checked>Create a New Journey</ion-select-option>
+    <ion-select label="Add to a Journey" label-placement="stacked" [(ngModel)]="selectedJourneyID" (ionChange)="onJourneyChange()">
+      <ion-select-option value="">Create a New Journey</ion-select-option>
       <ion-select-option *ngFor="let journey of journeyManager.journeys" [value]="journey.ID">{{journey.Title}}</ion-select-option>
     </ion-select>
 
@@ -27,8 +27,7 @@
   <ion-item *ngIf="selectedJourneyID">
     <ion-select label="Journey Stage" label-placement="stacked" [(ngModel)]="selectedStageIndex">
       <ion-select-option value="">Create a Journey Stage</ion-select-option>
-      <ion-select-option *ngFor="let stage of journeyManager.getJourneyStages(selectedJourneyID); let i=index;" [value]="i"
-        checked>{{stage.Title}}</ion-select-option>
+      <ion-select-option *ngFor="let stage of journeyManager.getJourneyStages(selectedJourneyID); let i=index;" [value]="i">{{stage.Title}}</ion-select-option>
     </ion-select>
 
   </ion-item>
@@ -54,8 +53,8 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="primary">
-      <ion-button (click)="add()" [disabled]="!canAdd">
-        Add
+      <ion-button (click)="save()" [disabled]="!canAdd">
+        {{isEditMode ? 'Save' : 'Add'}}
         <ion-icon name="add" slot="end"></ion-icon>
       </ion-button>
     </ion-buttons>

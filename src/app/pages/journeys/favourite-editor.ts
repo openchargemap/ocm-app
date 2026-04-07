@@ -14,9 +14,14 @@ import { NavParams, ModalController } from '@ionic/angular';
  */
 export class FavouriteEditorPage {
 
-  selectedJourneyID;
-  selectedStageIndex: number;
+  selectedJourneyID: string | null = null;
+  selectedStageIndex: number | string | null = null;
   newJourneyName: string;
+  isEditMode = false;
+  private defaultNewJourneyName: string;
+  private sourceJourneyID: string | null = null;
+  private sourceStageIndex: number | null = null;
+  private sourceWaypointIndex: number | null = null;
 
   waypoint: WayPoint;
   poi;
@@ -28,18 +33,54 @@ export class FavouriteEditorPage {
     private modalController: ModalController
   ) {
 
-    this.poi = this.navParams.get('poi');
-    this.waypoint = new WayPoint();
-    this.waypoint.Title = this.poi.AddressInfo.Title;
-    this.waypoint.PoiIDs = [this.poi.ID];
-    this.waypoint.PoiList = [];
+    this.sourceJourneyID = this.navParams.get('journeyId');
+    this.sourceStageIndex = this.navParams.get('stageIndex');
+    this.sourceWaypointIndex = this.navParams.get('waypointIndex');
+    this.isEditMode = this.sourceJourneyID != null && this.sourceStageIndex != null && this.sourceWaypointIndex != null;
+
+    const existingWaypoint = this.navParams.get('waypoint');
+    this.poi = this.navParams.get('poi') || existingWaypoint?.PoiList?.[0]?.Poi;
+    this.waypoint = existingWaypoint
+      ? JSON.parse(JSON.stringify(existingWaypoint)) as WayPoint
+      : this.createWaypointFromPoi(this.poi);
+
+    this.defaultNewJourneyName = 'Trip to ' + this.poi.AddressInfo.Title;
+    this.newJourneyName = this.journeyManager.getJourney(this.sourceJourneyID || '')?.Title || this.defaultNewJourneyName;
+
+    if (this.isEditMode) {
+      this.selectedJourneyID = this.sourceJourneyID;
+      this.selectedStageIndex = this.sourceStageIndex;
+    } else {
+      const lastUsedJourneyId = this.journeyManager.getLastUsedJourneyId();
+      if (lastUsedJourneyId != null) {
+        this.selectedJourneyID = lastUsedJourneyId;
+        this.selectedStageIndex = '';
+      }
+    }
+  }
+
+  private createWaypointFromPoi(poi: any): WayPoint {
+    const waypoint = new WayPoint();
+    waypoint.Title = poi.AddressInfo.Title;
+    waypoint.PoiIDs = [poi.ID];
+    waypoint.PoiList = [];
 
     const bookmark = new BookmarkedPOI('charging', 1);
-    bookmark.Poi = this.poi;
-    bookmark.PoiID = this.poi.ID;
-    this.waypoint.PoiList.push(bookmark);
+    bookmark.Poi = poi;
+    bookmark.PoiID = poi.ID;
+    waypoint.PoiList.push(bookmark);
 
-    this.newJourneyName = 'Trip to ' + this.poi.AddressInfo.Title;
+    return waypoint;
+  }
+
+  onJourneyChange() {
+    this.selectedStageIndex = this.isEditMode && this.selectedJourneyID === this.sourceJourneyID
+      ? this.sourceStageIndex
+      : '';
+
+    if (this.selectedJourneyID == null || this.selectedJourneyID === '') {
+      this.newJourneyName = this.defaultNewJourneyName;
+    }
   }
 
   cancel() {
@@ -54,18 +95,24 @@ export class FavouriteEditorPage {
     return !!this.newJourneyName?.trim() && !!this.waypoint?.Title?.trim();
   }
 
-  add() {
+  save() {
     if (!this.canAdd) {
       return;
     }
 
-    // store new waypoint in journey
-    if (this.selectedJourneyID != null && this.selectedJourneyID !== '') {
-
+    if (this.isEditMode && this.sourceJourneyID != null && this.sourceStageIndex != null && this.sourceWaypointIndex != null) {
+      this.journeyManager.updateJourneyWaypoint(
+        this.sourceJourneyID,
+        this.sourceStageIndex,
+        this.sourceWaypointIndex,
+        this.selectedJourneyID,
+        this.selectedStageIndex,
+        this.waypoint,
+        this.newJourneyName.trim()
+      );
+    } else if (this.selectedJourneyID != null && this.selectedJourneyID !== '') {
       this.journeyManager.addJourneyWaypoint(this.selectedJourneyID, this.selectedStageIndex, this.waypoint);
-
     } else {
-      // start a new journey
       const journey = new Journey();
       journey.ID = Date.now().toString();
       journey.Title = this.newJourneyName.trim();

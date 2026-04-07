@@ -1,9 +1,11 @@
 import { JourneyManager } from './../../services/JourneyManager';
 import { AppManager } from './../../services/AppManager';
+import { Journey, JourneyStage, WayPoint, BookmarkedPOI } from './../../model/Journey';
 import { Component } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
 
 import { POIDetailsPage } from '../poi-details/poi-details';
+import { FavouriteEditorPage } from './favourite-editor';
 
 @Component({
     templateUrl: 'journeys.html',
@@ -35,39 +37,61 @@ export class JourneysPage {
     this.journeyManager.fetchFavouritePOIDetails();
   }
 
-  getJson(p): string {
+  getJson(p: unknown): string {
     return JSON.stringify(p, null, 4);
   }
 
-  getJourneyWaypointCount(journey): number {
-    return (journey?.Stages || []).reduce((count, stage) => count + ((stage?.WayPoints || []).length), 0);
+  getJourneyWaypointCount(journey: Journey): number {
+    return (journey?.Stages || []).reduce((count: number, stage: JourneyStage) => count + ((stage?.WayPoints || []).length), 0);
   }
 
-  getJourneyPoiCount(journey): number {
-    return (journey?.Stages || []).reduce((count, stage) => {
-      return count + (stage?.WayPoints || []).reduce((waypointCount, waypoint) => waypointCount + ((waypoint?.PoiList || []).length), 0);
+  getJourneyPoiCount(journey: Journey): number {
+    return (journey?.Stages || []).reduce((count: number, stage: JourneyStage) => {
+      return count + (stage?.WayPoints || []).reduce((waypointCount: number, waypoint: WayPoint) => waypointCount + ((waypoint?.PoiList || []).length), 0);
     }, 0);
   }
 
-  getStageWaypointCount(stage): number {
+  getStageWaypointCount(stage: JourneyStage): number {
     return (stage?.WayPoints || []).length;
   }
 
-  getStagePoiCount(stage): number {
-    return (stage?.WayPoints || []).reduce((count, waypoint) => count + ((waypoint?.PoiList || []).length), 0);
+  getStagePoiCount(stage: JourneyStage): number {
+    return (stage?.WayPoints || []).reduce((count: number, waypoint: WayPoint) => count + ((waypoint?.PoiList || []).length), 0);
   }
 
-  viewPOIDetails(poi) {
+  viewPOIDetails(poi: any) {
     this.modalController
       .create({ component: POIDetailsPage, componentProps: { item: poi }, cssClass: 'poi-details-modal' })
       .then(m => m.present());
+  }
+
+  getWaypointPoi(waypoint: WayPoint): any {
+    return waypoint?.PoiList?.find((bookmark: BookmarkedPOI) => bookmark?.Poi != null)?.Poi || null;
+  }
+
+  editWaypoint(journeyId: string, stageIndex: number, waypointIndex: number, waypoint: WayPoint) {
+    const poi = this.getWaypointPoi(waypoint);
+    if (poi == null) {
+      return;
+    }
+
+    this.modalController.create({
+      component: FavouriteEditorPage,
+      componentProps: {
+        poi,
+        waypoint,
+        journeyId,
+        stageIndex,
+        waypointIndex
+      }
+    }).then(m => m.present());
   }
 
   get staticMapSize(): string {
     return '60x60';
   }
 
-  getStaticMapURL(poi): string {
+  getStaticMapURL(poi: any): string {
 
     // scale=2 for retina
     return 'https://maps.googleapis.com/maps/api/staticmap?center='
@@ -76,7 +100,7 @@ export class JourneysPage {
       + poi.AddressInfo.Latitude + ',' + poi.AddressInfo.Longitude;
   }
 
-  deleteJourney(journeyId) {
+  deleteJourney(journeyId: string) {
 
     this.alertController.create({
       header: 'Delete this Journey?',
@@ -99,7 +123,7 @@ export class JourneysPage {
 
   }
 
-  deleteFavourite(poiId) {
+  deleteFavourite(poiId: number) {
 
     this.alertController.create({
       header: 'Remove this Favourite?',
@@ -119,7 +143,7 @@ export class JourneysPage {
 
   }
 
-  launchNavigation(poi) {
+  launchNavigation(poi: any) {
 
     let url = 'https://maps.google.com/?q=' + poi.AddressInfo.Latitude + ',' + poi.AddressInfo.Longitude;
     if (this.appManager.platform.is('ios')) {
