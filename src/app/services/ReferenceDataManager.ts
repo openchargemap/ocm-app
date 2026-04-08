@@ -67,6 +67,10 @@ export class ReferenceDataManager {
         this.filteredReferenceData = refData;
     }
 
+    public resetFilteredReferenceData() {
+        this.filteredReferenceData = this.referenceData;
+    }
+
     public referenceDataLoaded(): boolean {
         if (this.referenceData != null) {
             return true;

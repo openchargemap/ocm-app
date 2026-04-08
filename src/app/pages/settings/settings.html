@@ -6,7 +6,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="settings-page ion-padding" aria-labelledby="settings-title" aria-label="Settings page" id="settings-page-content">
+<ion-content class="settings-page ion-padding" aria-labelledby="settings-title" aria-label="Settings page"
+  id="settings-page-content">
   <h2 id="settings-search-filters-heading">Search Filters</h2>
   <p>Note: Filters will remove usable charging locations from your search results if we do not have complete data (i.e
     Operator or Power Levels).</p>
@@ -17,24 +18,44 @@
       <ion-label>Clear</ion-label>
     </ion-button>
   </p>
+
   <ion-list aria-labelledby="settings-search-filters-heading" id="settings-search-filters-list">
     <ion-item *ngIf="isCountryFilterFeatureEnabled" id="settings-country-filter-item">
 
       <ion-select [label]="'ocm.search.countries' | translate" [(ngModel)]="searchSettings.FilterOptionsByCountryId"
-        multiple="false" cancelText="Cancel" okText="OK" (ionChange)="onCountryChange()" placeholder="All" aria-label="Country filter" id="settings-country-filter-select">
-        <ion-select value="">(All Countries)</ion-select>
+        multiple="false" cancelText="Cancel" okText="OK" (ionChange)="onCountryChange()" placeholder="All"
+        aria-label="Country filter" id="settings-country-filter-select">
+        <ion-select-option [value]="null">(All Countries)</ion-select-option>
         <ion-select-option *ngFor="let item of countries" [value]="item.ID">{{item.Title}}</ion-select-option>
 
       </ion-select>
     </ion-item>
 
-    <app-operator-lookup mode="multi" [operatorList]="searchSettings.OperatorList" aria-label="Network operator filter" id="settings-operator-lookup"
-      (operatorRemoved)="onOperatorRemoved($event)" (operatorChanged)="onOperatorSelected($event)"
-      [useFilteredOperators]="false"></app-operator-lookup>
+        <ion-item id="settings-power-range-item">
+      <ion-range label-placement="start" label="Power (kW)" dualKnobs="true" pin="true" [(ngModel)]="powerRange"
+        [ticks]="false" [snaps]="false" [min]="0" [max]="maxPower" aria-label="Power range filter"
+        id="settings-power-range">
+        <ion-icon slot="start" size="small" name="flash">0</ion-icon>
+        <ion-icon slot="end" name="flash"></ion-icon>
+      </ion-range>
+    </ion-item>
+    <ion-item lines="none" id="settings-power-inputs-item">
+      <ion-input slot="start" type="number" label-placement="stacked" label="Min. kW" [(ngModel)]="powerRange.lower"
+        min="0" [max]="powerRange.upper" aria-label="Minimum power in kilowatts"
+        id="settings-min-power-input"></ion-input>
+      <ion-input slot="end" type="number" label-placement="stacked" label="Max. kW" [(ngModel)]="powerRange.upper"
+        [min]="powerRange.lower" [max]="maxPower" aria-label="Maximum power in kilowatts"
+        id="settings-max-power-input"></ion-input>
+
+    </ion-item>
+    <app-operator-lookup mode="multi" [operatorList]="searchSettings.OperatorList" aria-label="Network operator filter"
+      id="settings-operator-lookup" (operatorRemoved)="onOperatorRemoved($event)"
+      (operatorChanged)="onOperatorSelected($event)" [useFilteredOperators]="false"></app-operator-lookup>
     <ion-item id="settings-usage-type-item">
 
       <ion-select [label]="'ocm.search.usageTypes' | translate" [(ngModel)]="searchSettings.UsageTypeList"
-        multiple="true" cancelText="Cancel" okText="OK" placeholder="All" aria-label="Usage type filter" id="settings-usage-type-select">
+        multiple="true" cancelText="Cancel" okText="OK" placeholder="All" aria-label="Usage type filter"
+        id="settings-usage-type-select">
         <ion-select-option *ngFor="let item of usageTypes" [value]="item.ID">{{'ocm.reference.usageType.value_'+item.ID
           | nullableTranslate:item}}</ion-select-option>
 
@@ -43,94 +64,93 @@
 
     <ion-item id="settings-status-type-item">
       <ion-select [label]="'ocm.search.operationalStatusTypes' | translate" [(ngModel)]="searchSettings.StatusTypeList"
-        multiple="true" cancelText="Cancel" okText="OK" placeholder="All" aria-label="Operational status filter" id="settings-status-type-select">
+        multiple="true" cancelText="Cancel" okText="OK" placeholder="All" aria-label="Operational status filter"
+        id="settings-status-type-select">
         <ion-select-option *ngFor="let item of statusTypes"
           [value]="item.ID">{{'ocm.reference.statusType.value_'+item.ID | nullableTranslate:item }}</ion-select-option>
 
       </ion-select>
     </ion-item>
 
-    <ion-item id="settings-connection-type-item">
-      <ion-select [label]="'ocm.search.connectionTypes'| translate" [(ngModel)]="searchSettings.ConnectionTypeList"
-        multiple="true" cancelText="Cancel" okText="OK" placeholder="All" aria-label="Connection type filter" id="settings-connection-type-select">
-        <ion-select-option *ngFor="let item of connectionTypes"
-          [value]="item.ID">{{'ocm.reference.connectionType.value_'+item.ID | nullableTranslate:item
-          }}</ion-select-option>
-      </ion-select>
-    </ion-item>
-     <ion-item id="settings-has-media-item">
-      <ion-select [label]="'ocm.search.photos' | translate" [(ngModel)]="searchSettings.HasMedia" multiple="false" (ionChange)="onTriStateFilterChange()" cancelText="Cancel" okText="OK" aria-label="Photo filter" id="settings-has-media-select">
-        <ion-select-option *ngFor="let option of triStateFilterOptions" [value]="option.value">{{option.titleKey | translate}}</ion-select-option>
+    <app-connection-type-lookup mode="multi" [connectionTypeList]="searchSettings.ConnectionTypeList"
+      [useFilteredConnectionTypes]="useFilteredOptions" (connectionTypeChanged)="onConnectionTypeSelected($event)"
+      (connectionTypeRemoved)="onConnectionTypeRemoved($event)" aria-label="Connection type filter"
+      id="settings-connection-type-lookup"></app-connection-type-lookup>
+    <ion-item id="settings-has-media-item">
+      <ion-select [label]="'ocm.search.photos' | translate" [(ngModel)]="searchSettings.HasMedia" multiple="false"
+        (ionChange)="onTriStateFilterChange()" cancelText="Cancel" okText="OK" aria-label="Photo filter"
+        id="settings-has-media-select">
+        <ion-select-option *ngFor="let option of triStateFilterOptions" [value]="option.value">{{option.titleKey |
+          translate}}</ion-select-option>
       </ion-select>
     </ion-item>
 
     <ion-item id="settings-has-comment-item">
-      <ion-select [label]="'ocm.search.comments' | translate" [(ngModel)]="searchSettings.HasComment" multiple="false" (ionChange)="onTriStateFilterChange()" cancelText="Cancel" okText="OK" aria-label="Comment filter" id="settings-has-comment-select">
-        <ion-select-option *ngFor="let option of triStateFilterOptions" [value]="option.value">{{option.titleKey | translate}}</ion-select-option>
+      <ion-select [label]="'ocm.search.comments' | translate" [(ngModel)]="searchSettings.HasComment" multiple="false"
+        (ionChange)="onTriStateFilterChange()" cancelText="Cancel" okText="OK" aria-label="Comment filter"
+        id="settings-has-comment-select">
+        <ion-select-option *ngFor="let option of triStateFilterOptions" [value]="option.value">{{option.titleKey |
+          translate}}</ion-select-option>
       </ion-select>
     </ion-item>
 
     <ion-item id="settings-has-checkins-item">
-      <ion-select [label]="'ocm.search.checkins' | translate" [(ngModel)]="searchSettings.HasCheckins" multiple="false" (ionChange)="onTriStateFilterChange()" cancelText="Cancel" okText="OK" aria-label="Check-in filter" id="settings-has-checkins-select">
-        <ion-select-option *ngFor="let option of triStateFilterOptions" [value]="option.value">{{option.titleKey | translate}}</ion-select-option>
+      <ion-select [label]="'ocm.search.checkins' | translate" [(ngModel)]="searchSettings.HasCheckins" multiple="false"
+        (ionChange)="onTriStateFilterChange()" cancelText="Cancel" okText="OK" aria-label="Check-in filter"
+        id="settings-has-checkins-select">
+        <ion-select-option *ngFor="let option of triStateFilterOptions" [value]="option.value">{{option.titleKey |
+          translate}}</ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-item id="settings-power-range-item">
-      <ion-range label-placement="start" label="Power (kW)" dualKnobs="true" pin="true" [(ngModel)]="powerRange" [ticks]="false" [snaps]="false" [min]="0" [max]="maxPower" aria-label="Power range filter" id="settings-power-range">
-        <ion-icon slot="start" size="small" name="flash">0</ion-icon>
-        <ion-icon slot="end" name="flash"></ion-icon>
-      </ion-range>
-    </ion-item>
-    <ion-item lines="none" id="settings-power-inputs-item">
-    <ion-input slot="start" type="number" label-placement="stacked"
-          label="Min. kW" [(ngModel)]="powerRange.lower" min="0" [max]="powerRange.upper" aria-label="Minimum power in kilowatts" id="settings-min-power-input"></ion-input>
-    <ion-input slot="end" type="number" label-placement="stacked"
-          label="Max. kW" [(ngModel)]="powerRange.upper" [min]="powerRange.lower" [max]="maxPower" aria-label="Maximum power in kilowatts" id="settings-max-power-input"></ion-input>
 
-  </ion-item>
 
-</ion-list>
-<h2 id="settings-general-heading">
+  </ion-list>
+  <h2 id="settings-general-heading">
     General Settings
   </h2>
 
-<ion-item id="settings-language-item">
-  <ion-select label="Language" [(ngModel)]="searchSettings.Language" (ionChange)="onLanguageChange()"
-      multiple="false" placeholder="Select" aria-label="Language" id="settings-language-select">
-    <ion-select-option *ngFor="let item of languages" [value]="item.code">{{item.title}}</ion-select-option>
-  </ion-select>
-</ion-item>
+  <ion-item id="settings-language-item">
+    <ion-select label="Language" [(ngModel)]="searchSettings.Language" (ionChange)="onLanguageChange()" multiple="false"
+      placeholder="Select" aria-label="Language" id="settings-language-select">
+      <ion-select-option *ngFor="let item of languages" [value]="item.code">{{item.title}}</ion-select-option>
+    </ion-select>
+  </ion-item>
 
-<ion-item id="settings-map-type-item">
+  <ion-item id="settings-map-type-item">
 
-  <ion-select [label]="'ocm.details.location.map'| translate" [(ngModel)]="searchSettings.MapType"
-      (ionChange)="onMapTypeChange()" multiple="false" cancelText="Cancel" okText="OK" placeholder="Select" disabled="true" aria-label="Map type" id="settings-map-type-select">
-    <ion-select-option value="ROADMAP">Road Map</ion-select-option>
-    <ion-select-option value="SATELLITE">Satellite</ion-select-option>
-  </ion-select>
-</ion-item>
+    <ion-select [label]="'ocm.details.location.map'| translate" [(ngModel)]="searchSettings.MapType"
+      (ionChange)="onMapTypeChange()" multiple="false" cancelText="Cancel" okText="OK" placeholder="Select"
+      disabled="true" aria-label="Map type" id="settings-map-type-select">
+      <ion-select-option value="ROADMAP">Road Map</ion-select-option>
+      <ion-select-option value="SATELLITE">Satellite</ion-select-option>
+    </ion-select>
+  </ion-item>
 
-<ion-item id="settings-advanced-editor-item">
-  <ion-toggle label-placement="end" [(ngModel)]="searchSettings.EnableAdvancedEditorFeatures" aria-label="Enable Advanced Editor Options" id="settings-advanced-editor-toggle">Enable Advanced Editor Options</ion-toggle>
-</ion-item>
-<ion-item id="settings-pending-approval-item">
-  <ion-toggle label-placement="end" [(ngModel)]="searchSettings.EnablePOIPendingApproval" aria-label="Show POIs Pending Approval" id="settings-pending-approval-toggle">Show POIs Pending Approval</ion-toggle>
-</ion-item>
+  <ion-item id="settings-advanced-editor-item">
+    <ion-toggle label-placement="end" [(ngModel)]="searchSettings.EnableAdvancedEditorFeatures"
+      aria-label="Enable Advanced Editor Options" id="settings-advanced-editor-toggle">Enable Advanced Editor
+      Options</ion-toggle>
+  </ion-item>
+  <ion-item id="settings-pending-approval-item">
+    <ion-toggle label-placement="end" [(ngModel)]="searchSettings.EnablePOIPendingApproval"
+      aria-label="Show POIs Pending Approval" id="settings-pending-approval-toggle">Show POIs Pending
+      Approval</ion-toggle>
+  </ion-item>
 
-<ion-item id="settings-max-results-item">
-  <ion-input label="Max Results" type="number" placeholder="500" [(ngModel)]="searchSettings.MaxResults" min="100"
+  <ion-item id="settings-max-results-item">
+    <ion-input label="Max Results" type="number" placeholder="500" [(ngModel)]="searchSettings.MaxResults" min="100"
       max="10000" aria-label="Maximum results" id="settings-max-results-input"></ion-input>
-</ion-item>
+  </ion-item>
 
 </ion-content>
 <ion-footer>
-<ion-toolbar>
-  <ion-buttons slot="end">
-    <ion-button (click)="close()" aria-label="Close settings" id="settings-close-button">
-      <ion-icon name="close" slot="start"></ion-icon>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()" aria-label="Close settings" id="settings-close-button">
+        <ion-icon name="close" slot="start"></ion-icon>
         Close
       </ion-button>
-  </ion-buttons>
+    </ion-buttons>
 
-</ion-toolbar>
+  </ion-toolbar>
 </ion-footer>

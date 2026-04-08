@@ -129,7 +129,14 @@ export class SettingsPage implements OnInit {
   }
 
   async onCountryChange() {
-    this.appManager.referenceDataManager.refreshFilteredReferenceData(this.appManager.api, { CountryIds: [this.searchSettings.FilterOptionsByCountryId] });
+    if (this.searchSettings.FilterOptionsByCountryId > 0) {
+      this.appManager.referenceDataManager.refreshFilteredReferenceData(this.appManager.api, {
+        CountryIds: [this.searchSettings.FilterOptionsByCountryId]
+      });
+    } else {
+      this.searchSettings.FilterOptionsByCountryId = null;
+      this.appManager.referenceDataManager.resetFilteredReferenceData();
+    }
   }
 
   async onMapTypeChange() {
@@ -148,6 +155,19 @@ export class SettingsPage implements OnInit {
 
   async onOperatorRemoved(operatorId: number) {
     this.searchSettings.OperatorList = this.searchSettings.OperatorList.filter(f => f != operatorId);
+  }
+
+  onConnectionTypeSelected(connectionTypeId: number) {
+    if (connectionTypeId != null && !this.searchSettings.ConnectionTypeList.find(connectionType => connectionType == connectionTypeId)) {
+      this.searchSettings.ConnectionTypeList.push(connectionTypeId);
+    }
+
+    this.searchSettings.CheckForActiveFilters();
+  }
+
+  onConnectionTypeRemoved(connectionTypeId: number) {
+    this.searchSettings.ConnectionTypeList = this.searchSettings.ConnectionTypeList.filter(connectionType => connectionType != connectionTypeId);
+    this.searchSettings.CheckForActiveFilters();
   }
 
   close() {

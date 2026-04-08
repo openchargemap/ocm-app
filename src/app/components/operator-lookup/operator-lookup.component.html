@@ -14,17 +14,19 @@
   <ion-searchbar
     placeholder="Search network operators"
     showCancelButton="focus"
-    (ionCancel)="cancelOperatorLookup()"
+    (ionCancel)="onSearchCancel()"
     autocomplete="on"
     autocapitalize="on"
     [(ngModel)]="operatorSearchKeyword"
+    (ionFocus)="onSearchFocus()"
+    (ionBlur)="onSearchBlur()"
     (ionInput)="searchOperators($event)"
     aria-label="Search network operators"
     id="operator-lookup-searchbar"
   ></ion-searchbar>
 </ion-item>
 
-<ng-container *ngIf="operatorSearchResults.length > 0">
+<ng-container *ngIf="isSearchFocused && operatorSearchResults.length > 0">
   <ion-list aria-label="Network operator search results" id="operator-lookup-results-list">
     <ion-item
       *ngFor="let item of operatorSearchResults"

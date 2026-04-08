@@ -1,0 +1,68 @@
+<ion-item *ngIf="mode === 'single' && showSearchUI" id="connection-type-lookup-suggested-item">
+  <ion-select [label]="shortlistLabel" label-placement="floating" [(ngModel)]="connectionTypeId"
+    (ionChange)="onSuggestedConnectionTypeChange()" aria-label="Connection type shortlist"
+    id="connection-type-lookup-suggested-select">
+    <ion-select-option *ngIf="showUnknownOption" [value]="0">Unknown</ion-select-option>
+    <ion-select-option *ngFor="let item of suggestedConnectionTypes" [value]="item.ID">{{
+      'ocm.reference.connectionType.value_' + item.ID | nullableTranslate:item
+      }}</ion-select-option>
+  </ion-select>
+</ion-item>
+
+<ion-item *ngIf="mode === 'multi'" id="connection-type-lookup-suggested-multi-item">
+  <ion-select [label]="shortlistLabel" label-placement="floating" [(ngModel)]="suggestedConnectionTypeId"
+    (ionChange)="onSuggestedConnectionTypeChange()" aria-label="Suggested connection type shortlist"
+    id="connection-type-lookup-suggested-multi-select">
+    <ion-select-option *ngFor="let item of suggestedConnectionTypes" [value]="item.ID">{{
+      'ocm.reference.connectionType.value_' + item.ID | nullableTranslate:item
+      }}</ion-select-option>
+  </ion-select>
+</ion-item>
+
+<ion-item *ngIf="showSearchUI" id="connection-type-lookup-search-item">
+  <ion-searchbar
+    placeholder="Search all connection types"
+    showCancelButton="focus"
+    autocomplete="on"
+    autocapitalize="on"
+    [(ngModel)]="connectionTypeSearchKeyword"
+    (ionFocus)="onSearchFocus()"
+    (ionBlur)="onSearchBlur()"
+    (ionInput)="searchConnectionTypes()"
+    (ionCancel)="onSearchCancel()"
+    aria-label="Search all connection types"
+    id="connection-type-lookup-searchbar"
+  ></ion-searchbar>
+</ion-item>
+
+<ng-container *ngIf="isSearchFocused && connectionTypeSearchResults.length > 0">
+  <ion-list aria-label="Connection type search results" id="connection-type-lookup-results-list">
+    <ion-item
+      *ngFor="let item of connectionTypeSearchResults"
+      (click)="onSearchResultSelected(item)"
+      [attr.aria-label]="'Select connection type ' + item.Title"
+    >
+      <ion-label>
+        <p>{{ 'ocm.reference.connectionType.value_' + item.ID | nullableTranslate:item }}</p>
+        <p *ngIf="item.FormalName">{{ item.FormalName }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ng-container>
+
+<ng-container *ngIf="mode === 'single' && selectedConnectionType != null">
+  <ion-item id="connection-type-lookup-selected-item">
+    <ion-label>
+      <p>{{ 'ocm.reference.connectionType.value_' + selectedConnectionType.ID | nullableTranslate:selectedConnectionType }}</p>
+      <p *ngIf="selectedConnectionType.FormalName">{{ selectedConnectionType.FormalName }}</p>
+      <ion-button (click)="clearSelectedConnectionType()" aria-label="Change selected connection type" id="connection-type-lookup-change-button">Change</ion-button>
+    </ion-label>
+  </ion-item>
+</ng-container>
+
+<ng-container *ngIf="mode === 'multi' && connectionTypeList?.length > 0">
+  <ion-chip *ngFor="let item of connectionTypeList" [attr.aria-label]="'Selected connection type ' + getConnectionTypeInfo(item)?.Title">
+    <ion-label>{{ 'ocm.reference.connectionType.value_' + item | nullableTranslate:getConnectionTypeInfo(item) }}</ion-label>
+    <ion-icon name="close-circle" (click)="removeConnectionType(item)" [attr.aria-label]="'Remove connection type ' + getConnectionTypeInfo(item)?.Title"></ion-icon>
+  </ion-chip>
+</ng-container>

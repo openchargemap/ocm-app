@@ -1,0 +1,7 @@
+#connection-type-lookup-results-list ion-item {
+  --min-height: 44px;
+}
+
+#connection-type-lookup-selected-item ion-button {
+  margin-top: 8px;
+}

@@ -29,9 +29,16 @@ export class OperatorLookupComponent implements OnInit {
   operatorSearchResults: OperatorInfo[] = [];
   operatorSearchKeyword = "";
   selectedOperator: OperatorInfo = null;
+  isSearchFocused = false;
+  private searchBlurTimeoutId: number = null;
 
   get operators(): Array<OperatorInfo> {
     return this.referenceDataManager.getNetworkOperators(this.useFilteredOperators);
+  }
+
+  get suggestedOperators(): Array<OperatorInfo> {
+    const filteredOperators = this.referenceDataManager.getNetworkOperators(true) || [];
+    return this.filterSuggestionOperators(filteredOperators.length > 0 ? filteredOperators : this.operatorCache);
   }
 
   constructor(private referenceDataManager: ReferenceDataManager, public changeDetector: ChangeDetectorRef) { }
@@ -45,23 +52,50 @@ export class OperatorLookupComponent implements OnInit {
   }
 
   searchOperators() {
-    this.operatorSearchResults = [];
-
-    if (this.operatorSearchKeyword.length == 0) {
+    const keyword = this.operatorSearchKeyword.trim().toLowerCase();
+    if (keyword.length == 0) {
+      if (this.isSearchFocused) {
+        this.operatorSearchResults = this.getSelectableOperators(this.suggestedOperators).slice(0, 10);
+      } else {
+        this.operatorSearchResults = [];
+      }
       return;
     }
 
     if (this.operatorCache) {
-      this.operatorSearchResults = this.operatorCache.filter(o =>
-        o.Title.toLowerCase().startsWith(this.operatorSearchKeyword.toLowerCase())
+      this.operatorSearchResults = this.getSelectableOperators(this.operatorCache).filter(o =>
+        o.Title.toLowerCase().startsWith(keyword)
         ||
-        o.Title.toLowerCase().startsWith("(" + this.operatorSearchKeyword.toLowerCase())
+        o.Title.toLowerCase().startsWith("(" + keyword)
       ).slice(0, 10);
 
 
     } else {
       this.operatorSearchResults = [];
     }
+  }
+
+  onSearchFocus() {
+    this.clearSearchBlurTimeout();
+    this.isSearchFocused = true;
+    this.searchOperators();
+  }
+
+  onSearchBlur() {
+    this.clearSearchBlurTimeout();
+    this.searchBlurTimeoutId = window.setTimeout(() => {
+      this.isSearchFocused = false;
+      this.operatorSearchResults = [];
+      this.searchBlurTimeoutId = null;
+    }, 150);
+  }
+
+  onSearchCancel() {
+    this.clearSearchBlurTimeout();
+    this.isSearchFocused = false;
+    this.operatorSearchKeyword = '';
+    this.operatorSearchResults = [];
+    this.selectedOperator = null;
   }
 
   getOperatorInfo(operatorId: number): OperatorInfo {
@@ -80,6 +114,8 @@ export class OperatorLookupComponent implements OnInit {
       this.operatorSearchResults = [];
       this.selectedOperator = operatorInfo;
       this.operatorId = operatorInfo.ID;
+      this.isSearchFocused = false;
+      this.clearSearchBlurTimeout();
     }
 
     if (!this.operatorId) {
@@ -102,6 +138,27 @@ export class OperatorLookupComponent implements OnInit {
   }
 
   cancelOperatorLookup() {
-    this.selectedOperator = null;
+    this.onSearchCancel();
+  }
+
+  private getSelectableOperators(operators: Array<OperatorInfo>): Array<OperatorInfo> {
+    const selectedIds = new Set<number>(
+      this.mode === 'multi'
+        ? (this.operatorList || [])
+        : (this.operatorId != null ? [this.operatorId] : [])
+    );
+
+    return (operators || []).filter(operator => !selectedIds.has(operator.ID));
+  }
+
+  private filterSuggestionOperators(operators: Array<OperatorInfo>): Array<OperatorInfo> {
+    return (operators || []).filter(operator => !(operator.Title || '').trim().startsWith('('));
+  }
+
+  private clearSearchBlurTimeout() {
+    if (this.searchBlurTimeoutId != null) {
+      window.clearTimeout(this.searchBlurTimeoutId);
+      this.searchBlurTimeoutId = null;
+    }
   }
 }
