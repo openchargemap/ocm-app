@@ -16,11 +16,48 @@
 }
 
 .banner-content {
-  padding-right: 48px;
+  padding-left: 48px;
+}
+
+.poi-actions-toolbar {
+  --padding-start: 8px;
+  --padding-end: 8px;
+
+  ion-buttons {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}
+
+.poi-action-button {
+  margin-inline: 0;
 }
 
 
 p {
   display: block;
   padding: 4px;
+}
+
+@media (max-width: 640px) {
+  .banner {
+    padding-left: 3em;
+    padding-right: 1.25em;
+  }
+
+  .banner-content {
+    padding-right: 0;
+  }
+
+  .poi-action-button {
+    min-width: 40px;
+
+    ion-label {
+      display: none;
+    }
+
+    ion-icon[slot="start"] {
+      margin-inline-end: 0;
+    }
+  }
 }

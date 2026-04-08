@@ -1,6 +1,13 @@
 <div *ngIf="poi!=null && poi.AddressInfo!=null">
+   <ion-fab vertical="top" horizontal="start" slot="start">
+      <ion-fab-button size="small" (click)="close()" aria-label="Close details" title="Close">
+        <ion-icon name="close"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
 
   <div class="banner" [style.background-image]="backdropImage?'url(' + backdropImage + ')':''">
+
+   
 
     <div class="banner-content">
       <h2>
@@ -21,77 +28,50 @@
 
       <ion-badge color="primary" title="Average User Rating">{{avgRating | number:'1.1-1'}}</ion-badge>
     </div>
-     <ion-fab vertical="top" horizontal="start" slot="fixed">
-      <ion-fab-button  size="small" color="medium" (click)="close()">
-        <ion-icon name="close"></ion-icon>
-      </ion-fab-button>
-      </ion-fab>
-    <ion-fab vertical="top" horizontal="end" slot="fixed">
-      <ion-fab-button size="small" color="success">
-        <ion-icon name="add"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-list side="bottom">
-        <ion-fab-button (click)="addComment()" title="Add a comment or charging check-in">
-          <ion-icon name="chatbubbles"></ion-icon>
-        </ion-fab-button>
-        <ion-fab-button (click)="addMedia()" title="Add a Photo">
-          <ion-icon name="camera"></ion-icon>
-        </ion-fab-button>
-        <ion-fab-button (click)="addFavourite()" title="Add to Favourites">
-          <ion-icon [name]="journeyManager.isFavourite(poi.ID) ? 'star' : 'star-outline'"></ion-icon>
-        </ion-fab-button>
-        <ion-fab-button (click)="edit()" title="Submit an Edit">
-          <ion-icon name="create"></ion-icon>
-        </ion-fab-button>
-        <ion-fab-button (click)="refresh()" title="Refresh">
-          <ion-icon name="refresh"></ion-icon>
-        </ion-fab-button>
-      </ion-fab-list>
-
-    </ion-fab>
   </div>
   <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
     <ion-refresher-content pullingIcon="caret-down" pullingText="Pull to refresh" refreshingSpinner="circles"
       refreshingText="Refreshing..."></ion-refresher-content>
   </ion-refresher>
-  <ion-toolbar>
+  <ion-toolbar class="poi-actions-toolbar">
     <ion-buttons slot="start">
 
-      <ng-container *ngIf="selectedTab=='location'">
-        <ion-button size="small" (click)="addFavourite()" title="Add to Favourites">
-          <ion-icon [name]="journeyManager.isFavourite(poi.ID) ? 'star' : 'star-outline'" slot="start"></ion-icon>
-          <ion-label>{{journeyManager.isFavourite(poi.ID) ? 'Favourited' : 'Favourite'}}</ion-label>
+      <ion-button size="small" fill="clear" class="poi-action-button" (click)="addFavourite()" title="Add to Favourites"
+        aria-label="Favourite options">
+        <ion-icon [name]="journeyManager.isFavourite(poi.ID) ? 'star' : 'star-outline'" slot="start"></ion-icon>
+        <ion-label>{{journeyManager.isFavourite(poi.ID) ? 'Favourited' : 'Favourite'}}</ion-label>
+      </ion-button>
+      <ion-button size="small" fill="clear" class="poi-action-button" (click)="edit()" title="Submit an Edit"
+        aria-label="Edit location details">
+        <ion-icon name="create" slot="start"></ion-icon>
+        <ion-label>Edit</ion-label>
+      </ion-button>
+      <ion-button size="small" fill="clear" class="poi-action-button" (click)="addComment()"
+        title="Add a comment or charging check-in" aria-label="Add comment or check-in">
+        <ion-icon name="chatbubbles" slot="start"></ion-icon>
+        <ion-label>Add Comment</ion-label>
+      </ion-button>
+      <ion-button size="small" fill="clear" class="poi-action-button" (click)="addMedia()" title="Add a Photo"
+        aria-label="Add photo">
+        <ion-icon name="camera" slot="start"></ion-icon>
+        <ion-label> Add Photo</ion-label>
+      </ion-button>
+      <!--      <ion-button size="small" fill="clear" class="poi-action-button" (click)="refresh()" title="Refresh" aria-label="Refresh location details">
+          <ion-icon name="refresh" slot="start"></ion-icon>
+          <ion-label>Refresh</ion-label>
         </ion-button>
-        <ion-button size="small" (click)="edit()" title="Submit an Edit">
-          <ion-icon name="create" slot="start"></ion-icon>
-          <ion-label>Edit</ion-label>
-        </ion-button>
-      </ng-container>
-    </ion-buttons>
+      -->
 
+    </ion-buttons>
     <ion-buttons slot="end">
-
-      <ng-container *ngIf="selectedTab=='location'">
-        <ion-button size="small" (click)="launchNavigation()" title="Navigate to this location">
-          <ion-icon name="navigate" slot="start"></ion-icon>
-          <ion-label>Navigate</ion-label>
-        </ion-button>
-      </ng-container>
-
-      <ng-container *ngIf="selectedTab=='comments'">
-        <ion-button size="small" (click)="addComment()" title="Add a comment or charging check-in">
-          <ion-icon name="chatbubbles" slot="start"></ion-icon>
-          <ion-label>Add Comment</ion-label>
-        </ion-button>
-      </ng-container>
-
-      <ng-container *ngIf="selectedTab=='media'">
-        <ion-button size="small" (click)="addMedia()" title="Add a Photo">
-          <ion-icon name="camera" slot="start"></ion-icon>
-          <ion-label> Add Photo</ion-label>
-        </ion-button>
-      </ng-container>
+      <ion-button size="small" fill="clear" class="poi-action-button" (click)="launchNavigation()"
+        title="Navigate to this location" aria-label="Navigate to this location">
+        <ion-icon name="navigate" slot="start"></ion-icon>
+        <ion-label>Navigate</ion-label>
+      </ion-button>
     </ion-buttons>
+
+
   </ion-toolbar>
 
 
