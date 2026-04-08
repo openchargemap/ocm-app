@@ -15,6 +15,7 @@ import { GeoLatLng } from "./model/AppModels";
 import { Utils } from "./core/Utils";
 import { AboutPage } from "./pages/about/about.page";
 import { LayerEditorPage } from "./pages/layer-editor/layer-editor.page";
+import { SettingsPage } from "./pages/settings/settings";
 
 import {
   PushNotifications,
@@ -298,6 +299,20 @@ export class AppComponent {
 
     modal.onDidDismiss().then(data => {
       // focus map again..
+      this.mapping.focusMap();
+    });
+
+    await modal.present();
+  }
+
+  async settings() {
+    this.mapping.unfocusMap();
+
+    const modal = await this.modalController.create({
+      component: SettingsPage
+    });
+
+    modal.onDidDismiss().then(data => {
       this.mapping.focusMap();
     });
 

@@ -2,24 +2,24 @@
 
 	<ion-toolbar>
 		<ion-buttons slot="start">
-			<ion-menu-button></ion-menu-button>
+			<ion-menu-button aria-label="Open main menu"></ion-menu-button>
 		</ion-buttons>
 		<ion-searchbar autocapitalize="on" autocomplete="on" [(ngModel)]="searchKeyword" (ionInput)="search($event)"
 					   [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500"></ion-searchbar>
 		<ion-buttons slot="end">
-			<ion-button (click)="locateUser()" [disabled]="isLocatingUser">
+			<ion-button (click)="locateUser()" [disabled]="isLocatingUser" aria-label="Locate me">
 				<ion-icon *ngIf="!isLocatingUser" name="locate" slot="start"></ion-icon>
 				<ion-spinner *ngIf="isLocatingUser"></ion-spinner>
 			</ion-button>
 			<!--<ion-button (click)="openRoutePlannerModal()" *ngIf="sideViewAvailable==false">
 				<ion-icon name="map" slot="start"></ion-icon>
 			</ion-button>-->
-			<ion-button (click)="openSearchOptions()" [color]="appManager.searchSettings.HasActiveFilters?'danger':'default'">
+			<ion-button (click)="openSearchOptions()" [color]="appManager.searchSettings.HasActiveFilters?'danger':'default'" aria-label="Open settings">
 				<ion-icon name="options" slot="end"></ion-icon>
 
 			</ion-button>
 
-			<ion-button (click)="openSideView()" *ngIf="sideViewAvailable==true && poiViewMode=='modal'">
+			<ion-button (click)="openSideView()" *ngIf="sideViewAvailable==true && poiViewMode=='modal'" aria-label="Open route side view">
 				<ion-icon name="car" title="Route" slot="end"></ion-icon>
 			</ion-button>
 		</ion-buttons>

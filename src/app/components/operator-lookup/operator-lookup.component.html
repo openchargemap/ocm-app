@@ -1,5 +1,5 @@
-<ion-item *ngIf="useFilteredOperators && !selectedOperator">
-  <ion-select label="Network Operator" label-placement="floating" [(ngModel)]="operatorId" (ionChange)="onOperatorChange()">
+<ion-item *ngIf="useFilteredOperators && !selectedOperator" id="operator-lookup-filtered-item">
+  <ion-select label="Network Operator" label-placement="floating" [(ngModel)]="operatorId" (ionChange)="onOperatorChange()" aria-label="Network operator" id="operator-lookup-filtered-select">
     <ion-select-option *ngFor="let i of operators" [value]="i.ID">{{
       i.Title
     }}</ion-select-option>
@@ -9,7 +9,7 @@
   </ion-select>
 </ion-item>
 
-<ion-item *ngIf="!useFilteredOperators && !selectedOperator">
+<ion-item *ngIf="!useFilteredOperators && !selectedOperator" id="operator-lookup-search-item">
 
   <ion-searchbar
     placeholder="Search network operators"
@@ -19,14 +19,17 @@
     autocapitalize="on"
     [(ngModel)]="operatorSearchKeyword"
     (ionInput)="searchOperators($event)"
+    aria-label="Search network operators"
+    id="operator-lookup-searchbar"
   ></ion-searchbar>
 </ion-item>
 
 <ng-container *ngIf="operatorSearchResults.length > 0">
-  <ion-list>
+  <ion-list aria-label="Network operator search results" id="operator-lookup-results-list">
     <ion-item
       *ngFor="let item of operatorSearchResults"
       (click)="onOperatorChange(item)"
+      [attr.aria-label]="'Select operator ' + item.Title"
     >
       <ion-avatar item-left>
         <ion-icon name="card"></ion-icon>
@@ -40,21 +43,21 @@
 </ng-container>
 
 <ng-container *ngIf="selectedOperator != null">
-  <ion-item>
+  <ion-item id="operator-lookup-selected-item">
     <ion-avatar item-left>
       <ion-icon name="locate"></ion-icon>
     </ion-avatar>
     <ion-label>
       <p>{{ selectedOperator.Title }}</p>
       <p>{{ selectedOperator.WebsiteURL }}</p>
-      <ion-button (click)="selectedOperator = null">Change</ion-button>
+      <ion-button (click)="selectedOperator = null" aria-label="Change selected operator" id="operator-lookup-change-button">Change</ion-button>
     </ion-label>
   </ion-item>
 </ng-container>
 
 <ng-container *ngIf="operatorList?.length > 0">
-  <ion-chip *ngFor="let item of operatorList">
+  <ion-chip *ngFor="let item of operatorList" [attr.aria-label]="'Selected operator ' + getOperatorInfo(item).Title">
     <ion-label>{{ getOperatorInfo(item).Title}}</ion-label>
-    <ion-icon name="close-circle" (click)="removeOperator(item)"></ion-icon>
+    <ion-icon name="close-circle" (click)="removeOperator(item)" [attr.aria-label]="'Remove operator ' + getOperatorInfo(item).Title"></ion-icon>
   </ion-chip>
 </ng-container>
