@@ -23,7 +23,7 @@
     "@angular/platform-browser": "20.2.2",
     "@angular/platform-browser-dynamic": "20.2.2",
     "@angular/router": "20.2.2",
-    "@angular/service-worker": "20.2.2",
+    "@angular/service-worker": "20.3.25",
     "@auth0/angular-jwt": "5.2.0",
     "@capacitor/android": "^8.3.0",
     "@capacitor/app": "^8.1.0",
