@@ -200,7 +200,7 @@ export class AppManager {
     let languages = [
       { 'code': 'ar', 'title': 'العربية / Arabic' },
       { 'code': 'bg', 'title': 'Bulgarian / Български' },
-      { 'code': 'ca', 'title': 'Catalan / Čatalà' },
+      { 'code': 'ca', 'title': 'Catalan / Català' },
       { 'code': 'cs', 'title': 'Czech / Čeština' },
       { 'code': 'de', 'title': 'German / Deutsch' },
       { 'code': 'el', 'title': 'Greek / Ελληνική' },
