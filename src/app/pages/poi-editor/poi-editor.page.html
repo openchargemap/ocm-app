@@ -16,26 +16,31 @@
 
     <ion-segment [ngModel]="selectedTab">
       <ion-segment-button value="location" [disabled]="true" layout='icon-start'>
-        <ion-icon *ngIf="selectedTab=='location'" name="caret-forward"></ion-icon>
+        @if (selectedTab=='location') {
+          <ion-icon name="caret-forward"></ion-icon>
+        }
         <ion-label>Location</ion-label>
       </ion-segment-button>
       <ion-segment-button value="equipment" [disabled]="true" layout='icon-start'>
-        <ion-icon *ngIf="selectedTab=='equipment'" name="caret-forward"></ion-icon>
+        @if (selectedTab=='equipment') {
+          <ion-icon name="caret-forward"></ion-icon>
+        }
         <ion-label>Equipment</ion-label>
       </ion-segment-button>
       <ion-segment-button value="info" [disabled]="true" layout='icon-start'>
-        <ion-icon *ngIf="selectedTab=='info'" name="caret-forward"></ion-icon>
+        @if (selectedTab=='info') {
+          <ion-icon name="caret-forward"></ion-icon>
+        }
         <ion-label>Info</ion-label>
       </ion-segment-button>
     </ion-segment>
 
-    <ng-container *ngIf="selectedTab=='location'">
-      <ng-container *ngIf="step=='location'">
+    @if (selectedTab=='location') {
+      @if (step=='location') {
         <app-poi-location-editor #editorMap
-                                 [(latitude)]="item.AddressInfo.Latitude"
-                                 [(longitude)]="item.AddressInfo.Longitude"
-                                 (onUseSuggestedAddress)="useSuggestedAddress($event)"></app-poi-location-editor>
-
+          [(latitude)]="item.AddressInfo.Latitude"
+          [(longitude)]="item.AddressInfo.Longitude"
+        (onUseSuggestedAddress)="useSuggestedAddress($event)"></app-poi-location-editor>
         <ion-list>
           <ion-item>
             <ion-input label="Location Name" label-placement="floating" type="text" [(ngModel)]="item.AddressInfo.Title" autocapitalize="words" placeholder="A title for this location"></ion-input>
@@ -57,7 +62,9 @@
           </ion-item>
           <ion-item>
             <ion-select label="Country" label-placement="floating" [(ngModel)]="item.AddressInfo.CountryID" (ionChange)="onCountryChange()">
-              <ion-select-option *ngFor="let c of countries" [value]="c.ID">{{c.Title}}</ion-select-option>
+              @for (c of countries; track c) {
+                <ion-select-option [value]="c.ID">{{c.Title}}</ion-select-option>
+              }
             </ion-select>
           </ion-item>
           <ion-item>
@@ -66,11 +73,9 @@
           <ion-item>
             <ion-input label="Longitude" label-placement="floating" type="number" [(ngModel)]="item.AddressInfo.Longitude" placeholder="Longitude (if entering manually)"></ion-input>
           </ion-item>
-
         </ion-list>
-      </ng-container>
-      <ng-container *ngIf="step=='poi-nearby'">
-
+      }
+      @if (step=='poi-nearby') {
         <h3>Locations Nearby</h3>
         <p>
           <strong>The following locations already exist nearby.</strong>
@@ -79,142 +84,128 @@
           <p>Ensure you are not adding a duplicate site unless it is for different equipment from another network operator.</p>
           <p>You can edit any of these listings if required instead:</p>
         </div>
-
         <app-poi-list [poiList]='nearbySites' [enableEditOption]='true' (onEdit)='editPOI($event)'></app-poi-list>
-
-      </ng-container>
-
-    </ng-container>
-    <ng-container *ngIf="selectedTab=='equipment'">
-
-      <ng-container *ngIf="step=='copy-equipment'">
-
-        <ng-container *ngIf="!skipPOICopy">
+      }
+    }
+    @if (selectedTab=='equipment') {
+      @if (step=='copy-equipment') {
+        @if (!skipPOICopy) {
           <p class="instruction">You can copy the equipment settings from other sites operated by the same network operator or choose 'Next' to skip this step:
-       
           </p>
-
           <app-operator-lookup [operatorId]="item.OperatorID" (operatorChanged)="onOperatorChange($event)"></app-operator-lookup>
-
-          <ng-container *ngIf="item.AddressInfo.CountryID && item.OperatorID">
-            <ng-container *ngIf="selectedTemplatePOI">
+          @if (item.AddressInfo.CountryID && item.OperatorID) {
+            @if (selectedTemplatePOI) {
               <p>Copied the equipment configuration from:</p>
               <ion-item>
-
                 <ion-label>
                   {{selectedTemplatePOI.AddressInfo.Title}}
                   <br>
-                  {{selectedTemplatePOI.AddressInfo.AddressLine1}}
-                  <br>
-                  {{selectedTemplatePOI.Connections[0].ConnectionType?.Title}}
-                  <br>
-                  {{selectedTemplatePOI.Connections[0].PowerKW}}
-                  <br>
-                  {{selectedTemplatePOI.DateCreated}}
-
-                </ion-label>
-                <ion-button slot="start" size="small" (click)="changeTemplatePOI()">Change..</ion-button>
-              </ion-item>
-            </ng-container>
-
-            <ng-container *ngIf="!selectedTemplatePOI">
-              <ng-container *ngIf="templateSites.length>0">
-
-                <h4>Similar Sites</h4>
-                <app-poi-list [enableCopyOption]='true' [poiList]='templateSites' (onCopy)='useTemplatePOI($event)'></app-poi-list>
-              </ng-container>
-
-              <ng-container *ngIf="templateSites.length==0">
-                <p>
-                  There are no suggested sites to copy for this network operator. 
+                    {{selectedTemplatePOI.AddressInfo.AddressLine1}}
+                    <br>
+                      {{selectedTemplatePOI.Connections[0].ConnectionType?.Title}}
+                      <br>
+                        {{selectedTemplatePOI.Connections[0].PowerKW}}
+                        <br>
+                          {{selectedTemplatePOI.DateCreated}}
+                        </ion-label>
+                        <ion-button slot="start" size="small" (click)="changeTemplatePOI()">Change..</ion-button>
+                      </ion-item>
+                    }
+                    @if (!selectedTemplatePOI) {
+                      @if (templateSites.length>0) {
+                        <h4>Similar Sites</h4>
+                        <app-poi-list [enableCopyOption]='true' [poiList]='templateSites' (onCopy)='useTemplatePOI($event)'></app-poi-list>
+                      }
+                      @if (templateSites.length==0) {
+                        <p>
+                          There are no suggested sites to copy for this network operator.
+                        </p>
+                      }
+                    }
+                  }
+                }
+              }
+              @if (step=='edit-equipment') {
+                <app-operator-lookup [operatorId]="item.OperatorID" (operatorChanged)="onOperatorChange($event)" [useFilteredOperators]="false"></app-operator-lookup>
+                <ion-item>
+                  <ion-input label="Number of Stations or Parking Bays" label-placement="floating" min="1" type="number" [(ngModel)]="item.NumberOfPoints"></ion-input>
+                </ion-item>
+                <h4>Equipment</h4>
+                <ion-button (click)="addConnection()" size="small">
+                  <ion-icon name="add" slot="icon-only"></ion-icon>
+                </ion-button>
+                <app-equipment-details [item]="item" [enableEdit]="true" (onEdit)="editConnection($event)" (onDelete)="deleteConnection($event)"></app-equipment-details>
+              }
+            }
+            @if (selectedTab=='info') {
+              @if (validationMsg) {
+                <p color="warning">
+                  <strong>Your changes cannot be saved until the following issues are resolved:</strong>
+                  <ion-label color="danger">
+                  {{validationMsg}}</ion-label>
                 </p>
-              </ng-container>
-            </ng-container>
-
+              }
+              <p>Please provide any other facts related to this site. Additional comments (your charging experiences etc) can be added as check-in comments once the site is listed.</p>
+              <ion-item>
+                <ion-select label="Operational Status (All Equipment)" label-placement="floating" [(ngModel)]="item.StatusTypeID">
+                  @for (i of statusTypes; track i) {
+                    <ion-select-option [value]="i.ID">{{i.Title}}</ion-select-option>
+                  }
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-select label="Usage Type" label-placement="floating" [(ngModel)]="item.UsageTypeID">
+                  @for (i of usageTypes; track i) {
+                    <ion-select-option [value]="i.ID">{{i.Title}}</ion-select-option>
+                  }
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-input label="Usage Cost" label-placement="floating" type="text" [(ngModel)]="item.UsageCost"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input label="General Comments" label-placement="floating" type="text" [(ngModel)]="item.GeneralComments" autocapitalize="sentences" ></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input label="Main Telephone Number" label-placement="floating" type="tel" [(ngModel)]="item.AddressInfo.ContactTelephone1" placeholder=""></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input label="Other Telephone Number" label-placement="floating"  type="tel" [(ngModel)]="item.AddressInfo.ContactTelephone2" placeholder=""></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input label="Access Comments" label-placement="floating"  type="text" [(ngModel)]="item.AddressInfo.AccessComments" autocapitalize="sentences"  placeholder="Instructions for access or tips for finding charging location"></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-input label="Related Website" label-placement="floating" type="url" [(ngModel)]="item.AddressInfo.RelatedURL" placeholder="Website related to this site"></ion-input>
+              </ion-item>
+            }
           </ng-container>
-        </ng-container>
 
-      </ng-container>
+        </ion-content>
+        <ion-footer>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              @if (step!='location') {
+                <ion-button (click)="previous()">
+                  Previous
+                  <ion-icon name="caret-back" slot="start"></ion-icon>
+                </ion-button>
+              }
+            </ion-buttons>
+            <ion-buttons slot="end">
 
-      <ng-container *ngIf="step=='edit-equipment'">
-        <app-operator-lookup [operatorId]="item.OperatorID" (operatorChanged)="onOperatorChange($event)" [useFilteredOperators]="false"></app-operator-lookup>
-
-        <ion-item>
-
-          <ion-input label="Number of Stations or Parking Bays" label-placement="floating" min="1" type="number" [(ngModel)]="item.NumberOfPoints"></ion-input>
-        </ion-item>
-
-        <h4>Equipment</h4>
-
-        <ion-button (click)="addConnection()" size="small">
-          <ion-icon name="add" slot="icon-only"></ion-icon>
-        </ion-button>
-
-        <app-equipment-details [item]="item" [enableEdit]="true" (onEdit)="editConnection($event)" (onDelete)="deleteConnection($event)"></app-equipment-details>
-
-      </ng-container>
-    </ng-container>
-    <ng-container *ngIf="selectedTab=='info'">
-      <p *ngIf="validationMsg" color="warning">
-        <strong>Your changes cannot be saved until the following issues are resolved:</strong>
-        <ion-label color="danger">
-          {{validationMsg}}</ion-label>
-
-      </p>
-
-      <p>Please provide any other facts related to this site. Additional comments (your charging experiences etc) can be added as check-in comments once the site is listed.</p>
-
-      <ion-item>
-        <ion-select label="Operational Status (All Equipment)" label-placement="floating" [(ngModel)]="item.StatusTypeID">
-          <ion-select-option *ngFor="let i of statusTypes" [value]="i.ID">{{i.Title}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-select label="Usage Type" label-placement="floating" [(ngModel)]="item.UsageTypeID">
-          <ion-select-option *ngFor="let i of usageTypes" [value]="i.ID">{{i.Title}}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      <ion-item>
-        <ion-input label="Usage Cost" label-placement="floating" type="text" [(ngModel)]="item.UsageCost"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input label="General Comments" label-placement="floating" type="text" [(ngModel)]="item.GeneralComments" autocapitalize="sentences" ></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input label="Main Telephone Number" label-placement="floating" type="tel" [(ngModel)]="item.AddressInfo.ContactTelephone1" placeholder=""></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input label="Other Telephone Number" label-placement="floating"  type="tel" [(ngModel)]="item.AddressInfo.ContactTelephone2" placeholder=""></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input label="Access Comments" label-placement="floating"  type="text" [(ngModel)]="item.AddressInfo.AccessComments" autocapitalize="sentences"  placeholder="Instructions for access or tips for finding charging location"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input label="Related Website" label-placement="floating" type="url" [(ngModel)]="item.AddressInfo.RelatedURL" placeholder="Website related to this site"></ion-input>
-      </ion-item>
-
-    </ng-container>
-  </ng-container>
-
-</ion-content>
-<ion-footer>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-button (click)="previous()" *ngIf="step!='location'">
-        Previous
-        <ion-icon name="caret-back" slot="start"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-
-      <ion-button (click)="next()" *ngIf="!isReadyToSubmit && step!='info'">
-        Next
-        <ion-icon name="caret-forward" slot="end"></ion-icon>
-      </ion-button>
-      <ion-button (click)="save()" *ngIf="isReadyToSubmit" color="success">
-        Submit
-        <ion-icon name="send" slot="end"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer>
+              @if (!isReadyToSubmit && step!='info') {
+                <ion-button (click)="next()">
+                  Next
+                  <ion-icon name="caret-forward" slot="end"></ion-icon>
+                </ion-button>
+              }
+              @if (isReadyToSubmit) {
+                <ion-button (click)="save()" color="success">
+                  Submit
+                  <ion-icon name="send" slot="end"></ion-icon>
+                </ion-button>
+              }
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-footer>

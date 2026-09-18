@@ -3,8 +3,8 @@ import { MediaUploadPage } from './../../pages/mediaupload/mediaupload';
 import { CommentPage } from './../../pages/comment/comment';
 import { Logging, LogLevel } from './../../services/Logging';
 import { AppManager } from './../../services/AppManager';
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { NavController, ModalController, ActionSheetController, AlertController } from '@ionic/angular';
+import { Component, Input, OnInit, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
+import { NavController, ModalController, ActionSheetController, AlertController } from '@ionic/angular/lazy';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConfig } from '../../core/AppConfig';
 import { POIManager } from '../../services/POIManager';
@@ -18,6 +18,7 @@ import { JourneyManager } from '../../services/JourneyManager';
     selector: 'poi-details',
     templateUrl: 'poi-details.html',
     styleUrls: ['./poi-details.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

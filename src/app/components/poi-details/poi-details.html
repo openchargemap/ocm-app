@@ -1,67 +1,67 @@
-<div *ngIf="poi!=null && poi.AddressInfo!=null">
-   <ion-fab vertical="top" horizontal="start" slot="start">
+@if (poi!=null && poi.AddressInfo!=null) {
+  <div>
+    <ion-fab vertical="top" horizontal="start" slot="start">
       <ion-fab-button size="small" (click)="close()" aria-label="Close details" title="Close">
         <ion-icon name="close"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-
-  <div class="banner" [style.background-image]="backdropImage?'url(' + backdropImage + ')':''">
-
-   
-
-    <div class="banner-content">
-      <h2>
-        {{poi.AddressInfo.Title}}
-      </h2>
-      <div>
-        <small>OCM-{{poi.ID}}</small>
+    <div class="banner" [style.background-image]="backdropImage?'url(' + backdropImage + ')':''">
+      <div class="banner-content">
+        <h2>
+          {{poi.AddressInfo.Title}}
+        </h2>
+        <div>
+          <small>OCM-{{poi.ID}}</small>
+        </div>
+        @if (connectionSummary) {
+          <div>
+            <small>{{connectionSummary}}</small>
+          </div>
+        }
+        @if (poi.OperatorInfo) {
+          <div>
+            <small>{{poi.OperatorInfo.Title}}</small>
+          </div>
+        }
+        @if (poi.SubmissionStatusTypeID==1) {
+          <div>
+            <small>[Submission Awaiting Review]</small>
+          </div>
+        }
+        <ion-badge color="primary" title="Average User Rating">{{avgRating | number:'1.1-1'}}</ion-badge>
       </div>
-      <div *ngIf="connectionSummary">
-        <small>{{connectionSummary}}</small>
-      </div>
-      <div *ngIf="poi.OperatorInfo">
-        <small>{{poi.OperatorInfo.Title}}</small>
-      </div>
-      <div *ngIf="poi.SubmissionStatusTypeID==1">
-        <small>[Submission Awaiting Review]</small>
-      </div>
-
-      <ion-badge color="primary" title="Average User Rating">{{avgRating | number:'1.1-1'}}</ion-badge>
     </div>
-  </div>
-  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
-    <ion-refresher-content pullingIcon="caret-down" pullingText="Pull to refresh" refreshingSpinner="circles"
+    <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+      <ion-refresher-content pullingIcon="caret-down" pullingText="Pull to refresh" refreshingSpinner="circles"
       refreshingText="Refreshing..."></ion-refresher-content>
-  </ion-refresher>
-  <ion-toolbar class="poi-actions-toolbar">
-    <ion-buttons slot="start">
-
-      <ion-button size="small" fill="clear" class="poi-action-button" (click)="addFavourite()" title="Add to Favourites"
-        aria-label="Favourite options">
-        <ion-icon [name]="journeyManager.isFavourite(poi.ID) ? 'star' : 'star-outline'" slot="start"></ion-icon>
-        <ion-label>{{journeyManager.isFavourite(poi.ID) ? 'Favourited' : 'Favourite'}}</ion-label>
-      </ion-button>
-      <ion-button size="small" fill="clear" class="poi-action-button" (click)="edit()" title="Submit an Edit"
-        aria-label="Edit location details">
-        <ion-icon name="create" slot="start"></ion-icon>
-        <ion-label>Edit</ion-label>
-      </ion-button>
-      <ion-button size="small" fill="clear" class="poi-action-button" (click)="addComment()"
-        title="Add a comment or charging check-in" aria-label="Add comment or check-in">
-        <ion-icon name="chatbubbles" slot="start"></ion-icon>
-        <ion-label>Add Comment</ion-label>
-      </ion-button>
-      <ion-button size="small" fill="clear" class="poi-action-button" (click)="addMedia()" title="Add a Photo"
-        aria-label="Add photo">
-        <ion-icon name="camera" slot="start"></ion-icon>
-        <ion-label> Add Photo</ion-label>
-      </ion-button>
-      <!--      <ion-button size="small" fill="clear" class="poi-action-button" (click)="refresh()" title="Refresh" aria-label="Refresh location details">
-          <ion-icon name="refresh" slot="start"></ion-icon>
-          <ion-label>Refresh</ion-label>
+    </ion-refresher>
+    <ion-toolbar class="poi-actions-toolbar">
+      <ion-buttons slot="start">
+        <ion-button size="small" fill="clear" class="poi-action-button" (click)="addFavourite()" title="Add to Favourites"
+          aria-label="Favourite options">
+          <ion-icon [name]="journeyManager.isFavourite(poi.ID) ? 'star' : 'star-outline'" slot="start"></ion-icon>
+          <ion-label>{{journeyManager.isFavourite(poi.ID) ? 'Favourited' : 'Favourite'}}</ion-label>
         </ion-button>
+        <ion-button size="small" fill="clear" class="poi-action-button" (click)="edit()" title="Submit an Edit"
+          aria-label="Edit location details">
+          <ion-icon name="create" slot="start"></ion-icon>
+          <ion-label>Edit</ion-label>
+        </ion-button>
+        <ion-button size="small" fill="clear" class="poi-action-button" (click)="addComment()"
+          title="Add a comment or charging check-in" aria-label="Add comment or check-in">
+          <ion-icon name="chatbubbles" slot="start"></ion-icon>
+          <ion-label>Add Comment</ion-label>
+        </ion-button>
+        <ion-button size="small" fill="clear" class="poi-action-button" (click)="addMedia()" title="Add a Photo"
+          aria-label="Add photo">
+          <ion-icon name="camera" slot="start"></ion-icon>
+          <ion-label> Add Photo</ion-label>
+        </ion-button>
+        <!--      <ion-button size="small" fill="clear" class="poi-action-button" (click)="refresh()" title="Refresh" aria-label="Refresh location details">
+        <ion-icon name="refresh" slot="start"></ion-icon>
+        <ion-label>Refresh</ion-label>
+      </ion-button>
       -->
-
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-button size="small" fill="clear" class="poi-action-button" (click)="launchNavigation()"
@@ -70,305 +70,335 @@
         <ion-label>Navigate</ion-label>
       </ion-button>
     </ion-buttons>
-
-
   </ion-toolbar>
-
-
   <ion-segment [(ngModel)]="selectedTab">
     <ion-segment-button value="location" selected>
       <ion-label>
         Details
       </ion-label>
     </ion-segment-button>
-
     <ion-segment-button value="comments">
       <ion-label>Comments ({{poi.UserComments?poi.UserComments.length:0}})</ion-label>
-
     </ion-segment-button>
     <ion-segment-button value="media">
       <ion-label> Photos ({{poi.MediaItems?poi.MediaItems.length:0}})</ion-label>
     </ion-segment-button>
   </ion-segment>
-
-
-  <div *ngIf="selectedTab=='location'">
-
-    <ion-card *ngIf="poi.AddressInfo">
-
-      <ion-card-header>
-        <ion-card-subtitle>
-          {{ 'ocm.details.location.sectionTitle' | translate }}
-        </ion-card-subtitle>
-
-      </ion-card-header>
-      <ion-card-content>
-
-        <ion-grid>
-          <ion-row>
-            <ion-col>
-
-              <ion-label>
-                {{ 'ocm.details.location.address' | translate }}</ion-label>
-              <div class="details">
-                <div *ngIf="poi.AddressInfo.AddressLine1">
-                  {{poi.AddressInfo.AddressLine1}}</div>
-                <div *ngIf="poi.AddressInfo.AddressLine2">
-                  {{poi.AddressInfo.AddressLine2}}</div>
-                <div *ngIf="poi.AddressInfo.Town">
-                  {{poi.AddressInfo.Town}}</div>
-                <div *ngIf="poi.AddressInfo.StateOrProvince">
-                  {{poi.AddressInfo.StateOrProvince}}</div>
-                <div *ngIf="poi.AddressInfo.Postcode">
-                  {{poi.AddressInfo.Postcode}}</div>
-                <div *ngIf="poi.AddressInfo.Country">
-                  {{poi.AddressInfo.Country.Title}}</div>
-              </div>
-
-            </ion-col>
-            <ion-col>
-              <p *ngIf="poi.AddressInfo.AccessComments">
-                {{poi.AddressInfo.AccessComments}}
-              </p>
-
-              <p *ngIf="poi.AddressInfo.ContactTelephone1">
-                <ion-icon name="call"></ion-icon>
-                <span class="details">{{poi.AddressInfo.ContactTelephone1}}</span>
-              </p>
-              <p *ngIf="poi.AddressInfo.ContactTelephone2">
-                <ion-icon name="call"></ion-icon>
-                <span class="details">{{poi.AddressInfo.ContactTelephone2}}</span>
-              </p>
-
-              <p *ngIf="poi.AddressInfo.ContactEmail">
-                <ion-icon name="mail"></ion-icon>
-                <span class="details">{{poi.AddressInfo.ContactEmail}}</span>
-              </p>
-              <p *ngIf="poi.AddressInfo.RelatedURL">
-                <ion-icon name="globe"></ion-icon>
-                <span class="details">
-                  <a target="_system" href="{{poi.AddressInfo.RelatedURL}}">{{poi.AddressInfo.RelatedURL}}</a>
-                </span>
-              </p>
-
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-
-              <ion-label class="details-minor">
-                Lat/Long: {{poi.AddressInfo.Latitude | number:'1.1-6'}}
-                , {{poi.AddressInfo.Longitude | number:'1.1-6'}}
-              </ion-label>
-
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-
-      </ion-card-content>
-
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-subtitle>
-          {{ 'ocm.details.equipment.sectionTitle' | translate }}
-        </ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-
-        <p *ngIf="poi.NumberOfPoints!=null">
-          <span class="label">{{ 'ocm.details.numberOfPoints' | translate }}:</span>
-          <span class="details">{{poi.NumberOfPoints}}</span>
-        </p>
-
-        <app-equipment-details [item]="poi"></app-equipment-details>
-
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-subtitle>Usage Restrictions</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <p *ngIf="poi.StatusType!=null">
-          <span class="label">{{ 'ocm.details.operationalStatus' | translate }}:</span>
-          <span class="details">
-            {{poi.StatusType.Title}}
-          </span>
-        </p>
-        <p *ngIf="poi.UsageType!=null">
-          <span class="label">{{ 'ocm.details.usageType' | translate }}:</span>
-          <span class="details">{{poi.UsageType.Title}}</span>
-        </p>
-        <p *ngIf="poi.UsageCost!=null">
-          <span class="label">{{ 'ocm.details.usageCost' | translate }}:</span>
-          <span class="details">
-            {{poi.UsageCost}}</span>
-        </p>
-        <p *ngIf="poi.GeneralComments!=null"><br>{{ 'ocm.details.generalComments' | translate }}: <br>
-          <span class="details">{{poi.GeneralComments}}</span>
-        </p>
-
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card *ngIf="poi.OperatorInfo">
-      <ion-card-header>
-        <ion-card-subtitle>
-          {{ 'ocm.details.operator.sectionTitle' | translate }}
-        </ion-card-subtitle>
-
-      </ion-card-header>
-      <ion-card-content>
-        <div class="details">
-          <p class="ion-padding-left">
-            {{poi.OperatorInfo.Title}}
-          </p>
-          <p *ngIf="poi.OperatorInfo.WebsiteURL">
-            <ion-icon name="link"></ion-icon>
-            {{poi.OperatorInfo.WebsiteURL}}
-          </p>
-          <p *ngIf="poi.OperatorInfo.ContactEmail!=null">
-            <ion-icon name="mail"></ion-icon>
-            {{poi.OperatorInfo.ContactEmail}}
-          </p>
-          <p
-            *ngIf="poi.OperatorInfo.FaultReportEmail!=null && poi.OperatorInfo.FaultReportEmail!=poi.OperatorInfo.ContactEmail">
-            <ion-icon name="mail"></ion-icon>
-            {{poi.OperatorInfo.FaultReportEmail}}
-          </p>
-        </div>
-      </ion-card-content>
-    </ion-card>
-
-    <ion-card>
-      <ion-card-header>
-
-        {{ 'ocm.details.advancedDetails' | translate }}
-      </ion-card-header>
-      <ion-card-content>
-
-        <div *ngIf="poi.DataProvider" class="details">
-          <h3>
-            {{ 'ocm.details.dataProvider.sectionTitle' | translate }}
-          </h3>
-
-          <p>{{poi.DataProvider?.Title}}</p>
-          <a *ngIf="poi.DataProvider.WebsiteURL" (click)="launchURL(poi.DataProvider.WebsiteURL)"
-            href="javascript:void(0)">{{poi.DataProvider.WebsiteURL}}</a>
-
-          <p>{{poi.DataProvider?.License}}</p>
-        </div>
-      </ion-card-content>
-    </ion-card>
-
-  </div>
-
-  <div *ngIf="selectedTab=='comments'">
-
-    <ng-container *ngIf="poi._hasComments==true">
-      <ion-card *ngFor="let item of poi.UserComments">
-        <ion-item>
-          <ion-avatar slot="start">
-            <img *ngIf="item.User && item.User.ProfileImageURL" src="{{item.User?.ProfileImageURL}}" />
-          </ion-avatar>
-          <ion-label>
-            <span *ngIf="item.User">{{item.User.Username}}</span>
-            <span *ngIf="!item.User">{{item.Username}}</span>
-          </ion-label>
-          <ion-label slot="end">
-            {{item.DateCreated | date }}
-          </ion-label>
-        </ion-item>
-
-        <ion-card-content>
-
-          <p>{{item.Comment}}</p>
-          <p *ngIf="item.CommentTypeID!=10" class="details">
-            {{item.CommentType?.Title}}
-
-          </p>
-          <p *ngIf="item.Rating">
-            <span class="label">Rating:</span>
-            <span class="details">{{item.Rating}} out of 5</span>
-          </p>
-          <p *ngIf="item.CheckinStatusType">
-            <ng-container *ngIf="item.CheckinStatusType.IsPositive===true">
-              <ion-icon name="checkmark-circle" color="success" style="font-size:2em;"></ion-icon>
-            </ng-container>
-            <ng-container *ngIf="item.CheckinStatusType.IsPositive===false">
-              <ion-icon name="close-circle" color="danger"></ion-icon>
-            </ng-container>
-            {{item.CheckinStatusType.Title}}
-          </p>
-
-        </ion-card-content>
-      </ion-card>
-    </ng-container>
-
-    <ng-container *ngIf="poi._hasComments==false">
+  @if (selectedTab=='location') {
+    <div>
+      @if (poi.AddressInfo) {
+        <ion-card>
+          <ion-card-header>
+            <ion-card-subtitle>
+              {{ 'ocm.details.location.sectionTitle' | translate }}
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-grid>
+              <ion-row>
+                <ion-col>
+                  <ion-label>
+                  {{ 'ocm.details.location.address' | translate }}</ion-label>
+                  <div class="details">
+                    @if (poi.AddressInfo.AddressLine1) {
+                      <div>
+                      {{poi.AddressInfo.AddressLine1}}</div>
+                    }
+                    @if (poi.AddressInfo.AddressLine2) {
+                      <div>
+                      {{poi.AddressInfo.AddressLine2}}</div>
+                    }
+                    @if (poi.AddressInfo.Town) {
+                      <div>
+                      {{poi.AddressInfo.Town}}</div>
+                    }
+                    @if (poi.AddressInfo.StateOrProvince) {
+                      <div>
+                      {{poi.AddressInfo.StateOrProvince}}</div>
+                    }
+                    @if (poi.AddressInfo.Postcode) {
+                      <div>
+                      {{poi.AddressInfo.Postcode}}</div>
+                    }
+                    @if (poi.AddressInfo.Country) {
+                      <div>
+                      {{poi.AddressInfo.Country.Title}}</div>
+                    }
+                  </div>
+                </ion-col>
+                <ion-col>
+                  @if (poi.AddressInfo.AccessComments) {
+                    <p>
+                      {{poi.AddressInfo.AccessComments}}
+                    </p>
+                  }
+                  @if (poi.AddressInfo.ContactTelephone1) {
+                    <p>
+                      <ion-icon name="call"></ion-icon>
+                      <span class="details">{{poi.AddressInfo.ContactTelephone1}}</span>
+                    </p>
+                  }
+                  @if (poi.AddressInfo.ContactTelephone2) {
+                    <p>
+                      <ion-icon name="call"></ion-icon>
+                      <span class="details">{{poi.AddressInfo.ContactTelephone2}}</span>
+                    </p>
+                  }
+                  @if (poi.AddressInfo.ContactEmail) {
+                    <p>
+                      <ion-icon name="mail"></ion-icon>
+                      <span class="details">{{poi.AddressInfo.ContactEmail}}</span>
+                    </p>
+                  }
+                  @if (poi.AddressInfo.RelatedURL) {
+                    <p>
+                      <ion-icon name="globe"></ion-icon>
+                      <span class="details">
+                        <a target="_system" href="{{poi.AddressInfo.RelatedURL}}">{{poi.AddressInfo.RelatedURL}}</a>
+                      </span>
+                    </p>
+                  }
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+                  <ion-label class="details-minor">
+                    Lat/Long: {{poi.AddressInfo.Latitude | number:'1.1-6'}}
+                    , {{poi.AddressInfo.Longitude | number:'1.1-6'}}
+                  </ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-card-content>
+        </ion-card>
+      }
       <ion-card>
+        <ion-card-header>
+          <ion-card-subtitle>
+            {{ 'ocm.details.equipment.sectionTitle' | translate }}
+          </ion-card-subtitle>
+        </ion-card-header>
         <ion-card-content>
-
-          <p>
-            {{ 'ocm.details.commentsAndRatings.addPrompt' | translate }}
-          </p>
-
-
+          @if (poi.NumberOfPoints!=null) {
+            <p>
+              <span class="label">{{ 'ocm.details.numberOfPoints' | translate }}:</span>
+              <span class="details">{{poi.NumberOfPoints}}</span>
+            </p>
+          }
+          <app-equipment-details [item]="poi"></app-equipment-details>
         </ion-card-content>
       </ion-card>
-    </ng-container>
-
-  </div>
-  <div *ngIf="selectedTab=='media'">
-
-    <div *ngIf="poi._hasPhotos">
-
-      <ion-card *ngFor="let item of poi.MediaItems">
-        <img src="{{item.ItemMediumURL}}" />
-        <ion-item>
-          <ion-avatar slot="start">
-            <img *ngIf="item.User && item.User.ProfileImageURL" src="{{item.User?.ProfileImageURL}}" />
-          </ion-avatar>
-          <ion-label>
-            <span *ngIf="item.User">{{item.User.Username}}</span>
-            <span *ngIf="!item.User">{{item.Username}}</span>
-          </ion-label>
-          <ion-note slot="end">
-            {{item.DateCreated | date }}
-          </ion-note>
-          <ion-buttons slot="end" *ngIf="canDeleteMediaItem(item)">
-            <ion-button fill="clear" color="danger" title="Delete photo" (click)="confirmDeleteMediaItem(item)">
-              <ion-icon name="trash" slot="icon-only"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-item>
-
+      <ion-card>
+        <ion-card-header>
+          <ion-card-subtitle>Usage Restrictions</ion-card-subtitle>
+        </ion-card-header>
         <ion-card-content>
-          <p>{{item.Comment}}</p>
+          @if (poi.StatusType!=null) {
+            <p>
+              <span class="label">{{ 'ocm.details.operationalStatus' | translate }}:</span>
+              <span class="details">
+                {{poi.StatusType.Title}}
+              </span>
+            </p>
+          }
+          @if (poi.UsageType!=null) {
+            <p>
+              <span class="label">{{ 'ocm.details.usageType' | translate }}:</span>
+              <span class="details">{{poi.UsageType.Title}}</span>
+            </p>
+          }
+          @if (poi.UsageCost!=null) {
+            <p>
+              <span class="label">{{ 'ocm.details.usageCost' | translate }}:</span>
+              <span class="details">
+              {{poi.UsageCost}}</span>
+            </p>
+          }
+          @if (poi.GeneralComments!=null) {
+            <p><br>{{ 'ocm.details.generalComments' | translate }}: <br>
+              <span class="details">{{poi.GeneralComments}}</span>
+            </p>
+          }
         </ion-card-content>
-
+      </ion-card>
+      @if (poi.OperatorInfo) {
+        <ion-card>
+          <ion-card-header>
+            <ion-card-subtitle>
+              {{ 'ocm.details.operator.sectionTitle' | translate }}
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="details">
+              <p class="ion-padding-left">
+                {{poi.OperatorInfo.Title}}
+              </p>
+              @if (poi.OperatorInfo.WebsiteURL) {
+                <p>
+                  <ion-icon name="link"></ion-icon>
+                  {{poi.OperatorInfo.WebsiteURL}}
+                </p>
+              }
+              @if (poi.OperatorInfo.ContactEmail!=null) {
+                <p>
+                  <ion-icon name="mail"></ion-icon>
+                  {{poi.OperatorInfo.ContactEmail}}
+                </p>
+              }
+              @if (poi.OperatorInfo.FaultReportEmail!=null && poi.OperatorInfo.FaultReportEmail!=poi.OperatorInfo.ContactEmail) {
+                <p
+                  >
+                  <ion-icon name="mail"></ion-icon>
+                  {{poi.OperatorInfo.FaultReportEmail}}
+                </p>
+              }
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+      <ion-card>
+        <ion-card-header>
+          {{ 'ocm.details.advancedDetails' | translate }}
+        </ion-card-header>
+        <ion-card-content>
+          @if (poi.DataProvider) {
+            <div class="details">
+              <h3>
+                {{ 'ocm.details.dataProvider.sectionTitle' | translate }}
+              </h3>
+              <p>{{poi.DataProvider?.Title}}</p>
+              @if (poi.DataProvider.WebsiteURL) {
+                <a (click)="launchURL(poi.DataProvider.WebsiteURL)"
+                href="javascript:void(0)">{{poi.DataProvider.WebsiteURL}}</a>
+              }
+              <p>{{poi.DataProvider?.License}}</p>
+            </div>
+          }
+        </ion-card-content>
       </ion-card>
     </div>
-
-    <ng-container *ngIf="poi._hasPhotos==false">
-      <ion-card>
-        <ion-card-content>
-          <p>
-            {{ 'ocm.details.mediaItems.addPrompt' | translate }}
-          </p>
-        </ion-card-content>
-      </ion-card>
-    </ng-container>
-
-  </div>
-  <p *ngIf="appManager.isDebugMode==true" style="white-space: pre-wrap;">
+  }
+  @if (selectedTab=='comments') {
+    <div>
+      @if (poi._hasComments==true) {
+        @for (item of poi.UserComments; track item) {
+          <ion-card>
+            <ion-item>
+              <ion-avatar slot="start">
+                @if (item.User && item.User.ProfileImageURL) {
+                  <img src="{{item.User?.ProfileImageURL}}" />
+                }
+              </ion-avatar>
+              <ion-label>
+                @if (item.User) {
+                  <span>{{item.User.Username}}</span>
+                }
+                @if (!item.User) {
+                  <span>{{item.Username}}</span>
+                }
+              </ion-label>
+              <ion-label slot="end">
+                {{item.DateCreated | date }}
+              </ion-label>
+            </ion-item>
+            <ion-card-content>
+              <p>{{item.Comment}}</p>
+              @if (item.CommentTypeID!=10) {
+                <p class="details">
+                  {{item.CommentType?.Title}}
+                </p>
+              }
+              @if (item.Rating) {
+                <p>
+                  <span class="label">Rating:</span>
+                  <span class="details">{{item.Rating}} out of 5</span>
+                </p>
+              }
+              @if (item.CheckinStatusType) {
+                <p>
+                  @if (item.CheckinStatusType.IsPositive===true) {
+                    <ion-icon name="checkmark-circle" color="success" style="font-size:2em;"></ion-icon>
+                  }
+                  @if (item.CheckinStatusType.IsPositive===false) {
+                    <ion-icon name="close-circle" color="danger"></ion-icon>
+                  }
+                  {{item.CheckinStatusType.Title}}
+                </p>
+              }
+            </ion-card-content>
+          </ion-card>
+        }
+      }
+      @if (poi._hasComments==false) {
+        <ion-card>
+          <ion-card-content>
+            <p>
+              {{ 'ocm.details.commentsAndRatings.addPrompt' | translate }}
+            </p>
+          </ion-card-content>
+        </ion-card>
+      }
+    </div>
+  }
+  @if (selectedTab=='media') {
+    <div>
+      @if (poi._hasPhotos) {
+        <div>
+          @for (item of poi.MediaItems; track item) {
+            <ion-card>
+              <img src="{{item.ItemMediumURL}}" />
+              <ion-item>
+                <ion-avatar slot="start">
+                  @if (item.User && item.User.ProfileImageURL) {
+                    <img src="{{item.User?.ProfileImageURL}}" />
+                  }
+                </ion-avatar>
+                <ion-label>
+                  @if (item.User) {
+                    <span>{{item.User.Username}}</span>
+                  }
+                  @if (!item.User) {
+                    <span>{{item.Username}}</span>
+                  }
+                </ion-label>
+                <ion-note slot="end">
+                  {{item.DateCreated | date }}
+                </ion-note>
+                @if (canDeleteMediaItem(item)) {
+                  <ion-buttons slot="end">
+                    <ion-button fill="clear" color="danger" title="Delete photo" (click)="confirmDeleteMediaItem(item)">
+                      <ion-icon name="trash" slot="icon-only"></ion-icon>
+                    </ion-button>
+                  </ion-buttons>
+                }
+              </ion-item>
+              <ion-card-content>
+                <p>{{item.Comment}}</p>
+              </ion-card-content>
+            </ion-card>
+          }
+        </div>
+      }
+      @if (poi._hasPhotos==false) {
+        <ion-card>
+          <ion-card-content>
+            <p>
+              {{ 'ocm.details.mediaItems.addPrompt' | translate }}
+            </p>
+          </ion-card-content>
+        </ion-card>
+      }
+    </div>
+  }
+  @if (appManager.isDebugMode==true) {
+    <p style="white-space: pre-wrap;">
     {{json}}</p>
-
+  }
 </div>
-<div *ngIf="poi==null || poi.AddressInfo==null">
-  <h2>POI Not Found</h2>
-  <p>The POI details could not be loaded.</p>
-</div>
+}
+@if (poi==null || poi.AddressInfo==null) {
+  <div>
+    <h2>POI Not Found</h2>
+    <p>The POI details could not be loaded.</p>
+  </div>
+}

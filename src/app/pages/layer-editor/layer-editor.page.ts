@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ModalController } from '@ionic/angular/lazy';
 import { ReferenceDataManager } from '../../services/ReferenceDataManager';
 
 @Component({
     selector: 'app-layer-editor',
     templateUrl: './layer-editor.page.html',
     styleUrls: ['./layer-editor.page.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class LayerEditorPage implements OnInit {

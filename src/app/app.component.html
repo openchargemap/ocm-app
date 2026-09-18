@@ -20,45 +20,52 @@
               </ion-label>
             </ion-item>
 
-            <ion-item (click)="openRoutePlannerModal()" *ngIf="enabledFeatures.includes('ROUTE_PLANNER')" aria-label="Route Planner" id="main-menu-route-planner">
-              <ion-icon slot="start" name="map"></ion-icon>
-              <ion-label>
-               Route Planner
-              </ion-label>
-            </ion-item>
+            @if (enabledFeatures.includes('ROUTE_PLANNER')) {
+              <ion-item (click)="openRoutePlannerModal()" aria-label="Route Planner" id="main-menu-route-planner">
+                <ion-icon slot="start" name="map"></ion-icon>
+                <ion-label>
+                  Route Planner
+                </ion-label>
+              </ion-item>
+            }
 
-            <ion-item (click)="add()" *ngIf="enabledFeatures.includes('ADD_POI')" aria-label="Add Location" id="main-menu-add-location">
-              <ion-icon slot="start" name="add-circle-outline"></ion-icon>
-              <ion-label>
-                {{ 'ocm.general.addLocation' | translate }}
-              </ion-label>
-            </ion-item>
+            @if (enabledFeatures.includes('ADD_POI')) {
+              <ion-item (click)="add()" aria-label="Add Location" id="main-menu-add-location">
+                <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+                <ion-label>
+                  {{ 'ocm.general.addLocation' | translate }}
+                </ion-label>
+              </ion-item>
+            }
 
-            <ion-item (click)="journeys()" *ngIf="enabledFeatures.includes('FAVOURITES')" aria-label="Favourites" id="main-menu-favourites">
-              <ion-icon slot="start" name="map"></ion-icon>
-              <ion-label>
-                Favourites
-              </ion-label>
-            </ion-item>
+            @if (enabledFeatures.includes('FAVOURITES')) {
+              <ion-item (click)="journeys()" aria-label="Favourites" id="main-menu-favourites">
+                <ion-icon slot="start" name="map"></ion-icon>
+                <ion-label>
+                  Favourites
+                </ion-label>
+              </ion-item>
+            }
 
-            <ion-item (click)="addLayer()" *ngIf="enabledFeatures.includes('LAYERS')" aria-label="Add Layer" id="main-menu-add-layer">
-              <ion-icon slot="start" name="albums"></ion-icon>
-              <ion-label>
-                Add Layer
-              </ion-label>
-            </ion-item>
+            @if (enabledFeatures.includes('LAYERS')) {
+              <ion-item (click)="addLayer()" aria-label="Add Layer" id="main-menu-add-layer">
+                <ion-icon slot="start" name="albums"></ion-icon>
+                <ion-label>
+                  Add Layer
+                </ion-label>
+              </ion-item>
+            }
 
-            <ng-container *ngIf="!isUserAuthenticated()">
+            @if (!isUserAuthenticated()) {
               <ion-item (click)="signIn()" aria-label="Sign In" id="main-menu-sign-in">
                 <ion-icon slot="start" name="person"></ion-icon>
                 <ion-label>
                   {{'ocm.general.signIn' | translate }}
                 </ion-label>
               </ion-item>
-            </ng-container>
+            }
 
-            <ng-container *ngIf="isUserAuthenticated()">
-
+            @if (isUserAuthenticated()) {
               <ion-item (click)="profile()" aria-label="Profile" id="main-menu-profile">
                 <ion-icon slot="start" name="person"></ion-icon>
                 <ion-label>
@@ -70,31 +77,30 @@
                 <ion-label>
                   {{'ocm.general.signOut' | translate }}
                   <br>
-                  <small style="color:#c0c0c0">
+                    <small style="color:#c0c0c0">
                     {{getUserName()}}</small>
+                  </ion-label>
+                </ion-item>
+              }
+
+              <ion-item (click)="settings()" aria-label="Settings" id="main-menu-settings">
+                <ion-icon slot="start" name="settings-outline"></ion-icon>
+                <ion-label>
+                  {{ 'ocm.general.settings' | translate }}
                 </ion-label>
               </ion-item>
 
-            </ng-container>
+              <ion-item (click)="about()" aria-label="About" id="main-menu-about">
+                <ion-icon slot="start" name="information-circle-outline"></ion-icon>
+                <ion-label>
+                  {{ 'ocm.general.about' | translate }}
+                </ion-label>
+              </ion-item>
 
-            <ion-item (click)="settings()" aria-label="Settings" id="main-menu-settings">
-              <ion-icon slot="start" name="settings-outline"></ion-icon>
-              <ion-label>
-                {{ 'ocm.general.settings' | translate }}
-              </ion-label>
-            </ion-item>
-
-            <ion-item (click)="about()" aria-label="About" id="main-menu-about">
-              <ion-icon slot="start" name="information-circle-outline"></ion-icon>
-              <ion-label>
-                {{ 'ocm.general.about' | translate }}
-              </ion-label>
-            </ion-item>
-
-          </ion-menu-toggle>
-        </ion-list>
-      </ion-content>
-    </ion-menu>
-    <ion-router-outlet id="main-content"></ion-router-outlet>
-  </ion-split-pane>
-</ion-app>
+            </ion-menu-toggle>
+          </ion-list>
+        </ion-content>
+      </ion-menu>
+      <ion-router-outlet id="main-content"></ion-router-outlet>
+    </ion-split-pane>
+  </ion-app>

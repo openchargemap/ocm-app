@@ -1,12 +1,13 @@
 import { Logging } from './../../services/Logging';
 import { AppManager } from './../../services/AppManager';
-import { Component, NgZone } from '@angular/core';
-import { NavController, NavParams, LoadingController, ModalController } from '@ionic/angular';
+import { Component, NgZone, ChangeDetectionStrategy } from '@angular/core';
+import { NavController, NavParams, LoadingController, ModalController } from '@ionic/angular/lazy';
 import { Router } from '@angular/router';
 import { UserComment } from '../../model/CoreDataModel';
 
 @Component({
     templateUrl: 'comment.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

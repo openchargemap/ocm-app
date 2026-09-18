@@ -1,7 +1,7 @@
 import { Logging, LogLevel } from './Logging';
 // import { GoogleAnalytics } from "@ionic-native/google-analytics/ngx";
 import { Injectable } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Platform } from '@ionic/angular/lazy';
 
 @Injectable({
     providedIn: 'root',

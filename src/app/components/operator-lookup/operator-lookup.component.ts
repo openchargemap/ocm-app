@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { OperatorInfo } from '../../model/CoreDataModel';
 import { ReferenceDataManager } from '../../services/ReferenceDataManager';
 
@@ -6,6 +6,7 @@ import { ReferenceDataManager } from '../../services/ReferenceDataManager';
     selector: 'app-operator-lookup',
     templateUrl: './operator-lookup.component.html',
     styleUrls: ['./operator-lookup.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class OperatorLookupComponent implements OnInit {

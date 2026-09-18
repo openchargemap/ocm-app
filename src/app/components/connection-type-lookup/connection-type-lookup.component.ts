@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { ConnectionType } from '../../model/CoreDataModel';
 import { ReferenceDataManager } from '../../services/ReferenceDataManager';
 
@@ -6,6 +6,7 @@ import { ReferenceDataManager } from '../../services/ReferenceDataManager';
     selector: 'app-connection-type-lookup',
     templateUrl: './connection-type-lookup.component.html',
     styleUrls: ['./connection-type-lookup.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ConnectionTypeLookupComponent implements OnInit, OnChanges {

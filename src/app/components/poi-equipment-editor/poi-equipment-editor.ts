@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ConnectionInfo } from '../../model/AppModels';
-import { ModalController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular/lazy';
 import { ReferenceDataManager } from '../../services/ReferenceDataManager';
 import { StatusType, CurrentType } from '../../model/CoreDataModel';
 
@@ -8,6 +8,7 @@ import { StatusType, CurrentType } from '../../model/CoreDataModel';
     selector: 'app-poi-equipment-editor',
     templateUrl: './poi-equipment-editor.html',
     styleUrls: ['./poi-equipment-editor.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PoiEquipmentEditorComponent implements OnInit {

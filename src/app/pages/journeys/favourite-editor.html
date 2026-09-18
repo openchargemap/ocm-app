@@ -20,21 +20,27 @@
   <ion-item>
     <ion-select label="Add to a Journey" label-placement="stacked" [(ngModel)]="selectedJourneyID" (ionChange)="onJourneyChange()">
       <ion-select-option value="">Create a New Journey</ion-select-option>
-      <ion-select-option *ngFor="let journey of journeyManager.journeys" [value]="journey.ID">{{journey.Title}}</ion-select-option>
+      @for (journey of journeyManager.journeys; track journey) {
+        <ion-select-option [value]="journey.ID">{{journey.Title}}</ion-select-option>
+      }
     </ion-select>
 
   </ion-item>
-  <ion-item *ngIf="selectedJourneyID">
-    <ion-select label="Journey Stage" label-placement="stacked" [(ngModel)]="selectedStageIndex">
-      <ion-select-option value="">Create a Journey Stage</ion-select-option>
-      <ion-select-option *ngFor="let stage of journeyManager.getJourneyStages(selectedJourneyID); let i=index;" [value]="i">{{stage.Title}}</ion-select-option>
-    </ion-select>
-
-  </ion-item>
-  <ion-item *ngIf="!selectedJourneyID">
-    <ion-input label="New Journey Name" label-placement="stacked" type="text" [(ngModel)]="newJourneyName"></ion-input>
-
-  </ion-item>
+  @if (selectedJourneyID) {
+    <ion-item>
+      <ion-select label="Journey Stage" label-placement="stacked" [(ngModel)]="selectedStageIndex">
+        <ion-select-option value="">Create a Journey Stage</ion-select-option>
+        @for (stage of journeyManager.getJourneyStages(selectedJourneyID); track stage; let i = $index) {
+          <ion-select-option [value]="i">{{stage.Title}}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  }
+  @if (!selectedJourneyID) {
+    <ion-item>
+      <ion-input label="New Journey Name" label-placement="stacked" type="text" [(ngModel)]="newJourneyName"></ion-input>
+    </ion-item>
+  }
   <ion-item>
     <ion-input label="Name for this step of your journey" label-placement="stacked" type="text" [(ngModel)]="waypoint.Title"></ion-input>
   </ion-item>

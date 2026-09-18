@@ -1,5 +1,5 @@
-import { Component } from "@angular/core";
-import { Platform, ModalController } from "@ionic/angular";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Platform, ModalController } from "@ionic/angular/lazy";
 import { TranslateService } from "@ngx-translate/core";
 import { Mapping } from "./services/mapping/Mapping";
 import { RoutePlannerPage } from "./pages/route-planner/route-planner";
@@ -33,6 +33,7 @@ import { App } from "@capacitor/app";
 @Component({
     selector: "app-root",
     templateUrl: "app.component.html",
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AppComponent {

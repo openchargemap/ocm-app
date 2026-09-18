@@ -5,7 +5,7 @@ import { Logging, LogLevel } from './Logging';
 */
 import { APIClient } from './APIClient';
 import { Injectable } from '@angular/core';
-import { Platform, ToastController, LoadingController } from '@ionic/angular';
+import { Platform, ToastController, LoadingController } from '@ionic/angular/lazy';
 import { TranslateService } from '@ngx-translate/core';
 
 import { UserProfile, SubmissionType, SearchSettings, Journey, WayPoint, GeoLatLng, Language } from '../model/AppModels';

@@ -24,10 +24,12 @@
     </label>
   </div>
 
-  <div *ngIf="fileData && fileData.length>0">
-    Items Parsed: {{fileData.length}}
-    <app-poi-list [poiList]="fileData"></app-poi-list>
-  </div>
+  @if (fileData && fileData.length>0) {
+    <div>
+      Items Parsed: {{fileData.length}}
+      <app-poi-list [poiList]="fileData"></app-poi-list>
+    </div>
+  }
 
 </ion-content>
 <ion-footer>

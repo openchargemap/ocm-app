@@ -13,8 +13,8 @@ import { JourneyManager } from './../../services/JourneyManager';
 import { Mapping } from './../../services/mapping/Mapping';
 import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
-import { Component, OnInit, NgZone, ViewChild, AfterViewInit } from '@angular/core';
-import { NavController, Platform, ModalController, AlertController } from '@ionic/angular';
+import { Component, OnInit, NgZone, ViewChild, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
+import { NavController, Platform, ModalController, AlertController } from '@ionic/angular/lazy';
 import { PlaceSearch } from '../../components/place-search/place-search';
 import { PlaceSearchResult } from '../../model/AppModels';
 import { fromEvent } from 'rxjs';
@@ -25,6 +25,7 @@ import { Geolocation, Position, PositionOptions } from '@capacitor/geolocation';
 @Component({
     templateUrl: 'search.html',
     styleUrls: ['./search.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

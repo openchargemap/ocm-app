@@ -3,12 +3,13 @@ import { Logging } from './../../services/Logging';
 import { AppManager } from './../../services/AppManager';
 import { TranslateService } from '@ngx-translate/core';
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
-import { AlertController, LoadingController, ModalController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController } from '@ionic/angular/lazy';
 
 @Component({
     templateUrl: 'signin.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SignInPage {

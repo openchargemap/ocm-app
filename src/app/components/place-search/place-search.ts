@@ -1,12 +1,12 @@
 import { Logging } from './../../services/Logging';
 import { PlaceSearchResult } from './../../model/PlaceSearchResult';
-import { Component, Input, Output, ChangeDetectorRef, EventEmitter, OnInit } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Component, Input, Output, ChangeDetectorRef, EventEmitter, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Platform } from '@ionic/angular/lazy';
 import { IMapProvider } from '../../services/mapping/interfaces/mapping';
 import { MapBoxMapProvider } from '../../services/mapping/providers/MapTiler';
 import { HttpClient } from '@angular/common/http';
 import { Events } from '../../services/Events';
-import { GeoLatLng } from 'src/app/model/GeoPosition';
+import { GeoLatLng } from '../../model/GeoPosition';
 
 // declare var google: any;
 
@@ -19,6 +19,7 @@ declare var mapkit: any;
     selector: 'place-search',
     templateUrl: 'place-search.html',
     styleUrls: ['./place-search.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PlaceSearch implements OnInit {

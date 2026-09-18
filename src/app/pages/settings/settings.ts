@@ -1,8 +1,8 @@
 import { POIManager } from './../../services/POIManager';
 import { AppManager } from './../../services/AppManager';
 import { SearchSettings, MAX_POWER } from './../../model/SearchSettings';
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ModalController } from '@ionic/angular/lazy';
 import { Utils } from '../../core/Utils';
 import { Mapping } from '../../services/mapping/Mapping';
 import { Events } from '../../services/Events';
@@ -10,6 +10,7 @@ import { OperatorInfo } from '../../model/CoreDataModel';
 
 @Component({
     templateUrl: 'settings.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SettingsPage implements OnInit {

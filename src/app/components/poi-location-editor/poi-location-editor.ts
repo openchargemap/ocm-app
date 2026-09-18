@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, AfterContentInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, AfterContentInit, OnChanges, SimpleChanges, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { Mapping } from '../../services/mapping/Mapping';
 import { GeoLatLng, GeoPosition } from '../../model/AppModels';
 import { IMapProvider, MapOptions } from '../../services/mapping/interfaces/mapping';
@@ -8,11 +8,12 @@ import { Logging } from '../../services/Logging';
 import { HttpClient } from '@angular/common/http';
 import { AppManager } from '../../services/AppManager';
 import { Observable } from 'rxjs';
-import { MapBoxMapProvider } from 'src/app/services/mapping/providers/MapTiler';
+import { MapBoxMapProvider } from '../../services/mapping/providers/MapTiler';
 @Component({
     selector: 'app-poi-location-editor',
     templateUrl: './poi-location-editor.html',
     styleUrls: ['./poi-location-editor.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PoiLocationEditorComponent implements OnInit, AfterContentInit, OnChanges {

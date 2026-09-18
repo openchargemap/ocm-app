@@ -1,51 +1,61 @@
 <ion-grid>
 
-  <ion-row *ngFor="let i of item.Connections">
-    <ion-col>
-      <ion-row>
-        <ion-col size="3">
-
-          <div class="connector-icon" [style.mask-image]="'url(' + getConnectorTypeIcon(i.ConnectionTypeID) +')'"></div>
-          <ion-badge color="primary" *ngIf="i.Quantity">{{i.Quantity}} x</ion-badge>
-          <div class="info">{{i.StatusType?.Title}}</div>
-        </ion-col>
-        <ion-col>
-
-          <ion-row>
+  @for (i of item.Connections; track i) {
+    <ion-row>
+      <ion-col>
+        <ion-row>
+          <ion-col size="3">
+            <div class="connector-icon" [style.mask-image]="'url(' + getConnectorTypeIcon(i.ConnectionTypeID) +')'"></div>
+            @if (i.Quantity) {
+              <ion-badge color="primary">{{i.Quantity}} x</ion-badge>
+            }
+            <div class="info">{{i.StatusType?.Title}}</div>
+          </ion-col>
+          <ion-col>
+            <ion-row>
+              <ion-col>
+                <ion-note>
+                  <div>
+                    <strong title="{{i.ConnectionType?.FormalName}}">{{i.ConnectionType?.Title}}
+                    </strong>
+                  </div>
+                  @if (i.PowerKW) {
+                    <strong>{{i.PowerKW}} kW </strong>
+                  }
+                  @if (i.CurrentTypeID) {
+                    <div>{{i.CurrentType?.Title}}
+                    </div>
+                  }
+                </ion-note>
+                <ion-note>
+                  @if (i.Amps) {
+                    <span>{{i.Amps}}A </span>
+                  }
+                  @if (i.Voltage) {
+                    <span>{{i.Voltage}}V </span>
+                  }
+                </ion-note>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col class="info">{{i.Reference}}</ion-col>
+              <ion-col class="info">{{i.Comments}}</ion-col>
+            </ion-row>
+          </ion-col>
+          @if (enableEdit) {
             <ion-col>
-              <ion-note>
-                <div>
-                  <strong title="{{i.ConnectionType?.FormalName}}">{{i.ConnectionType?.Title}}
-                  </strong>
-                </div>
-
-                <strong *ngIf="i.PowerKW">{{i.PowerKW}} kW </strong>
-                <div *ngIf="i.CurrentTypeID">{{i.CurrentType?.Title}}
-                </div>
-              </ion-note>
-              <ion-note>
-                <span *ngIf="i.Amps">{{i.Amps}}A </span>
-                <span *ngIf="i.Voltage">{{i.Voltage}}V </span>
-              </ion-note>
-            </ion-col>
+              <ion-button (click)="editConnection(i)" size="small" color="secondary">
+                <ion-icon name="create" slot="icon-only"></ion-icon>
+              </ion-button>
+              <br>
+                <ion-button (click)="deleteConnection(i)" size="small" color="danger">
+                  <ion-icon name="trash" slot="icon-only"></ion-icon>
+                </ion-button>
+              </ion-col>
+            }
           </ion-row>
-          <ion-row>
-            <ion-col class="info">{{i.Reference}}</ion-col>
-            <ion-col class="info">{{i.Comments}}</ion-col>
-          </ion-row>
-        </ion-col>
-        <ion-col *ngIf="enableEdit">
-          <ion-button (click)="editConnection(i)" size="small" color="secondary">
-            <ion-icon name="create" slot="icon-only"></ion-icon>
-          </ion-button>
-          <br>
-          <ion-button (click)="deleteConnection(i)" size="small" color="danger">
-            <ion-icon name="trash" slot="icon-only"></ion-icon>
-          </ion-button>
         </ion-col>
       </ion-row>
+    }
 
-    </ion-col>
-  </ion-row>
-
-</ion-grid>
+  </ion-grid>

@@ -1,82 +1,76 @@
 <ion-header>
-    <ion-toolbar>
-        <ion-title>
-            {{'ocm.general.signIn' |translate}}
-        </ion-title>
-    </ion-toolbar>
+  <ion-toolbar>
+    <ion-title>
+      {{'ocm.general.signIn' |translate}}
+    </ion-title>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="signin-page ion-padding">
 
-    <ion-avatar item-left>
-        <img src="assets/images/icons/branding/AppIcon_128x128.png"/>
-    </ion-avatar>
+  <ion-avatar item-left>
+    <img src="assets/images/icons/branding/AppIcon_128x128.png"/>
+  </ion-avatar>
 
-    <ion-segment [(ngModel)]="mode">
-        <ion-segment-button value="signin">
-            <ion-label>Sign In</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="register">
-            <ion-label>Create Account</ion-label>
-        </ion-segment-button>
-    </ion-segment>
+  <ion-segment [(ngModel)]="mode">
+    <ion-segment-button value="signin">
+      <ion-label>Sign In</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="register">
+      <ion-label>Create Account</ion-label>
+    </ion-segment-button>
+  </ion-segment>
 
-    <ng-container *ngIf="mode=='signin'">
-        <p class="ion-padding">
-        Sign in using your Open Charge Map account.
+  @if (mode=='signin') {
+    <p class="ion-padding">
+      Sign in using your Open Charge Map account.
     </p>
-        <ion-list>
-            <ion-item>
-                <ion-input label="Email" label-placement="floating" type="text" [(ngModel)]="email"></ion-input>
-            </ion-item>
-            
-            <ion-item>
-                <ion-input label="Password" label-placement="floating" type="password" [(ngModel)]="password"></ion-input>
-            </ion-item>
-
-        </ion-list>
-
-        <p>
-            <a (click)="appManager.launchWebPage('https://openchargemap.org/site/loginprovider/passwordreset')">Reset your password</a>
-        </p>
-
-    </ng-container>
-    <ng-container *ngIf="mode=='register'">
-        <p class="ion-padding">
-        Create a new Open Charge Map account.
+    <ion-list>
+      <ion-item>
+        <ion-input label="Email" label-placement="floating" type="text" [(ngModel)]="email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input label="Password" label-placement="floating" type="password" [(ngModel)]="password"></ion-input>
+      </ion-item>
+    </ion-list>
+    <p>
+      <a (click)="appManager.launchWebPage('https://openchargemap.org/site/loginprovider/passwordreset')">Reset your password</a>
     </p>
-        <ion-list>
-            <ion-item>
-                <ion-input label="Email" label-placement="floating" type="text" [(ngModel)]="email"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-input label="Display Name or Nickname" label-placement="floating" type="text" [(ngModel)]="username"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-input label="Password" label-placement="floating" type="password" [(ngModel)]="password"></ion-input>
-            </ion-item>
-            <ion-item>
-                <ion-input label="Confirm Password" label-placement="floating" type="password" [(ngModel)]="confirmpassword"></ion-input>
-            </ion-item>
-
-        </ion-list>
-
-    </ng-container>
+  }
+  @if (mode=='register') {
+    <p class="ion-padding">
+      Create a new Open Charge Map account.
+    </p>
+    <ion-list>
+      <ion-item>
+        <ion-input label="Email" label-placement="floating" type="text" [(ngModel)]="email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input label="Display Name or Nickname" label-placement="floating" type="text" [(ngModel)]="username"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input label="Password" label-placement="floating" type="password" [(ngModel)]="password"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input label="Confirm Password" label-placement="floating" type="password" [(ngModel)]="confirmpassword"></ion-input>
+      </ion-item>
+    </ion-list>
+  }
 </ion-content>
 <ion-footer>
-    <ion-toolbar>
-        <ion-buttons slot="secondary">
-            <ion-button (click)="cancelSignIn()">
-                <ion-icon name="close" slot="start"></ion-icon> Cancel</ion-button>
+  <ion-toolbar>
+    <ion-buttons slot="secondary">
+      <ion-button (click)="cancelSignIn()">
+        <ion-icon name="close" slot="start"></ion-icon> Cancel</ion-button>
 
-        </ion-buttons>
-        <ion-buttons slot="primary">
+      </ion-buttons>
+      <ion-buttons slot="primary">
 
-            <ion-button (click)="performSignIn()" type="submit" color="primary">
-                <ion-icon name="log-in" slot="start"></ion-icon>
-                {{'ocm.general.signIn' | translate}}</ion-button>
+        <ion-button (click)="performSignIn()" type="submit" color="primary">
+          <ion-icon name="log-in" slot="start"></ion-icon>
+        {{'ocm.general.signIn' | translate}}</ion-button>
 
-        </ion-buttons>
+      </ion-buttons>
 
     </ion-toolbar>
-</ion-footer>
+  </ion-footer>

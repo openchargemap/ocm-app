@@ -21,56 +21,66 @@
         <ion-icon name="camera" aria-label="camera" slot="start"></ion-icon>
         <ion-label>Choose Photo..</ion-label>
       </ion-button>
-       <input type="file" #inputFile required accept="image/*" multiple (change)="onFileSelectionChanged($event)"/>
+      <input type="file" #inputFile required accept="image/*" multiple (change)="onFileSelectionChanged($event)"/>
     </div>
 
-    <div class="review-panel" *ngIf="isBatchReviewOpen">
-      <div class="review-header">
-        <div>
-          <h2>Review Photos</h2>
-          <p>{{batchItems.length}} selected</p>
+    @if (isBatchReviewOpen) {
+      <div class="review-panel">
+        <div class="review-header">
+          <div>
+            <h2>Review Photos</h2>
+            <p>{{batchItems.length}} selected</p>
+          </div>
+          <ion-button fill="clear" color="medium" (click)="requestBatchReviewClose()" [disabled]="isBatchUploading">
+            <ion-icon name="close" slot="icon-only"></ion-icon>
+          </ion-button>
         </div>
-        <ion-button fill="clear" color="medium" (click)="requestBatchReviewClose()" [disabled]="isBatchUploading">
-          <ion-icon name="close" slot="icon-only"></ion-icon>
-        </ion-button>
+        <ion-list>
+          @for (item of batchItems; track trackByItemId($index, item)) {
+            <ion-item>
+              <ion-thumbnail slot="start" class="batch-thumb">
+                <img [src]="item.previewUrl" alt="Selected upload preview" />
+              </ion-thumbnail>
+              <ion-label>
+                <h3>{{item.file.name}}</h3>
+                <p>{{(item.sizeBytes / 1024 / 1024).toFixed(2)}} MB</p>
+                @if (item.processState === 'rotating' || item.processState === 'processing') {
+                  <p class="upload-processing">Processing...</p>
+                }
+                @if (item.uploadStatus === 'failed') {
+                  <p class="upload-error">Failed: {{item.lastError || 'Upload failed'}}</p>
+                }
+                @if (item.uploadStatus === 'uploaded') {
+                  <p class="upload-success">Uploaded</p>
+                }
+                <ion-input label="Comment" label-placement="stacked" type="text" placeholder="(optional comment)" [(ngModel)]="item.comment" [disabled]="isBatchUploading"></ion-input>
+                <div class="batch-actions">
+                  <ion-button size="small" (click)="rotateBatchItem(item)" [disabled]="isBatchUploading || item.uploadStatus === 'uploading'">
+                    <ion-icon name="refresh" slot="start"></ion-icon>
+                    Rotate
+                  </ion-button>
+                  <ion-button size="small" color="danger" (click)="removeBatchItem(item.id)" [disabled]="isBatchUploading || item.uploadStatus === 'uploading'">
+                    <ion-icon name="trash" slot="start"></ion-icon>
+                    Remove
+                  </ion-button>
+                </div>
+              </ion-label>
+            </ion-item>
+          }
+        </ion-list>
+        <div class="review-actions">
+          <ion-button fill="outline" (click)="requestBatchReviewClose()" [disabled]="isBatchUploading">Clear</ion-button>
+          <ion-button (click)="uploadBatchItems(false)" [disabled]="isBatchUploading || !hasBatchPendingUploads">
+            Upload
+          </ion-button>
+          @if (failedCount > 0) {
+            <ion-button color="warning" (click)="uploadBatchItems(true)" [disabled]="isBatchUploading">
+              Retry failed ({{failedCount}})
+            </ion-button>
+          }
+        </div>
       </div>
-
-      <ion-list>
-        <ion-item *ngFor="let item of batchItems; trackBy: trackByItemId">
-          <ion-thumbnail slot="start" class="batch-thumb">
-            <img [src]="item.previewUrl" alt="Selected upload preview" />
-          </ion-thumbnail>
-          <ion-label>
-            <h3>{{item.file.name}}</h3>
-            <p>{{(item.sizeBytes / 1024 / 1024).toFixed(2)}} MB</p>
-            <p *ngIf="item.processState === 'rotating' || item.processState === 'processing'" class="upload-processing">Processing...</p>
-            <p *ngIf="item.uploadStatus === 'failed'" class="upload-error">Failed: {{item.lastError || 'Upload failed'}}</p>
-            <p *ngIf="item.uploadStatus === 'uploaded'" class="upload-success">Uploaded</p>
-            <ion-input label="Comment" label-placement="stacked" type="text" placeholder="(optional comment)" [(ngModel)]="item.comment" [disabled]="isBatchUploading"></ion-input>
-            <div class="batch-actions">
-              <ion-button size="small" (click)="rotateBatchItem(item)" [disabled]="isBatchUploading || item.uploadStatus === 'uploading'">
-                <ion-icon name="refresh" slot="start"></ion-icon>
-                Rotate
-              </ion-button>
-              <ion-button size="small" color="danger" (click)="removeBatchItem(item.id)" [disabled]="isBatchUploading || item.uploadStatus === 'uploading'">
-                <ion-icon name="trash" slot="start"></ion-icon>
-                Remove
-              </ion-button>
-            </div>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-
-      <div class="review-actions">
-        <ion-button fill="outline" (click)="requestBatchReviewClose()" [disabled]="isBatchUploading">Clear</ion-button>
-        <ion-button (click)="uploadBatchItems(false)" [disabled]="isBatchUploading || !hasBatchPendingUploads">
-          Upload
-        </ion-button>
-        <ion-button color="warning" *ngIf="failedCount > 0" (click)="uploadBatchItems(true)" [disabled]="isBatchUploading">
-          Retry failed ({{failedCount}})
-        </ion-button>
-      </div>
-    </div>
+    }
 
     <canvas #processingCanvas style="display:none;width:500;height:500;border:1px solid red;"></canvas>
   </div>

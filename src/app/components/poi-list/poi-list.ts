@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { ExtendedPOIDetails } from '../../model/CoreDataModel';
 import { Utils } from '../../core/Utils';
 
@@ -6,6 +6,7 @@ import { Utils } from '../../core/Utils';
     selector: 'app-poi-list',
     templateUrl: './poi-list.html',
     styleUrls: ['./poi-list.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PoiListComponent implements OnInit {

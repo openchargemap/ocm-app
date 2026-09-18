@@ -1,6 +1,6 @@
 import { AppManager } from './../../services/AppManager';
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { AlertController, NavController, NavParams, ModalController } from '@ionic/angular';
+import { Component, ElementRef, OnDestroy, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AlertController, NavController, NavParams, ModalController } from '@ionic/angular/lazy';
 import { Logging, LogLevel } from '../../services/Logging';
 
 type UploadStatus = 'ready' | 'uploading' | 'uploaded' | 'failed';
@@ -23,6 +23,7 @@ interface UploadReviewItem {
 @Component({
     templateUrl: 'mediaupload.html',
     styleUrls: ['./mediaupload.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MediaUploadPage implements OnDestroy {

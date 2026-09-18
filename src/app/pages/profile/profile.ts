@@ -1,11 +1,12 @@
 import { SignInPage } from './../signin/signin';
 import { TranslateService } from '@ngx-translate/core';
 import { AppManager } from './../../services/AppManager';
-import { Component } from '@angular/core';
-import { NavController, ModalController } from '@ionic/angular';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { NavController, ModalController } from '@ionic/angular/lazy';
 
 @Component({
     templateUrl: 'profile.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProfilePage {

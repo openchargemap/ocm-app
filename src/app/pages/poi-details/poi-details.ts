@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
-import { ModalController, NavParams } from '@ionic/angular';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ModalController, NavParams } from '@ionic/angular/lazy';
 import { AppManager } from '../../services/AppManager';
 
 @Component({
     templateUrl: 'poi-details.html',
     styleUrls: ['./poi-details.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

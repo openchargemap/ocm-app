@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { ExtendedPOIDetails, ConnectionInfo } from '../../model/CoreDataModel';
 import { Utils } from '../../core/Utils';
 
@@ -6,6 +6,7 @@ import { Utils } from '../../core/Utils';
     selector: 'app-equipment-details',
     templateUrl: './equipment-details.html',
     styleUrls: ['./equipment-details.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EquipmentDetailsComponent implements OnInit {

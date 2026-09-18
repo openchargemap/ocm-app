@@ -10,12 +10,14 @@
   <p>Please provide as much information as you can about the equipment. If you don't know then leave the field blank. At a minimum you should include the Connection Type and approximate Power kW (max).</p>
   <app-connection-type-lookup [connectionTypeId]="conn.ConnectionTypeID"
     [useFilteredConnectionTypes]="useFilteredConnectionTypes" [showUnknownOption]="true"
-    (connectionTypeChanged)="onConnectionTypeSelected($event)"></app-connection-type-lookup>
+  (connectionTypeChanged)="onConnectionTypeSelected($event)"></app-connection-type-lookup>
 
   <ion-item>
     <ion-select label="Supply Type" label-placement="floating" [(ngModel)]="conn.CurrentTypeID">
       <ion-select-option value="0">Unknown</ion-select-option>
-      <ion-select-option *ngFor="let t of currentTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
+      @for (t of currentTypes; track t) {
+        <ion-select-option [value]="t.ID">{{t.Title}}</ion-select-option>
+      }
     </ion-select>
   </ion-item>
   <ion-item>
@@ -29,7 +31,9 @@
   </ion-item>
   <ion-item>
     <ion-select label="Status" label-placement="floating" [(ngModel)]="conn.StatusTypeID">
-      <ion-select-option *ngFor="let t of statusTypes" [value]="t.ID">{{t.Title}}</ion-select-option>
+      @for (t of statusTypes; track t) {
+        <ion-select-option [value]="t.ID">{{t.Title}}</ion-select-option>
+      }
     </ion-select>
   </ion-item>
   <ion-item>
@@ -47,8 +51,8 @@
     <ion-buttons slot="start">
       <ion-button (click)="cancel()">
         <ion-icon name="close" slot="start"></ion-icon>
-            Cancel
-          </ion-button>
+        Cancel
+      </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
       <ion-button (click)="save()" color="success">

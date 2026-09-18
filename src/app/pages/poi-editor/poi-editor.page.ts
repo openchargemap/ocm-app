@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { POIDetails, OperatorInfo, ConnectionType, Country, ConnectionInfo, StatusType, ExtendedPOIDetails, ExtendedAddressInfo, UsageType } from '../../model/CoreDataModel';
 import { AppManager } from '../../services/AppManager';
-import { ModalController, LoadingController, AlertController } from '@ionic/angular';
+import { ModalController, LoadingController, AlertController } from '@ionic/angular/lazy';
 import { GeoLatLng, POISearchParams } from '../../model/AppModels';
 import { Utils } from '../../core/Utils';
 import { POIManager } from '../../services/POIManager';
@@ -19,6 +19,7 @@ interface ValidationResult {
   selector: 'app-poi-editor',
   templateUrl: './poi-editor.page.html',
   styleUrls: ['./poi-editor.page.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: false
 })
 export class PoiEditorPage implements OnInit {

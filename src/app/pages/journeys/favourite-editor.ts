@@ -1,11 +1,12 @@
 import { JourneyManager } from './../../services/JourneyManager';
 import { AppManager } from './../../services/AppManager';
 import { WayPoint, BookmarkedPOI, Journey } from './../../model/Journey';
-import { Component } from '@angular/core';
-import { NavParams, ModalController } from '@ionic/angular';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { NavParams, ModalController } from '@ionic/angular/lazy';
 
 @Component({
     templateUrl: 'favourite-editor.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

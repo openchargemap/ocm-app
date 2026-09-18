@@ -1,14 +1,15 @@
 import { JourneyManager } from './../../services/JourneyManager';
 import { AppManager } from './../../services/AppManager';
 import { Journey, JourneyStage, WayPoint, BookmarkedPOI } from './../../model/Journey';
-import { Component } from '@angular/core';
-import { ModalController, AlertController } from '@ionic/angular';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ModalController, AlertController } from '@ionic/angular/lazy';
 
 import { POIDetailsPage } from '../poi-details/poi-details';
 import { FavouriteEditorPage } from './favourite-editor';
 
 @Component({
     templateUrl: 'journeys.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 

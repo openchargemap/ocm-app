@@ -4,7 +4,7 @@ import { Logging } from './../../services/Logging';
 import { GoogleMapsDirections } from './../../services/GoogleMapsDirections';
 import { Mapping } from './../../services/mapping/Mapping';
 import { JourneyRoute } from './../../model/Journey';
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { PlaceSearchResult } from '../../model/AppModels';
 
@@ -16,6 +16,7 @@ declare var google;
 @Component({
     selector: 'route-planner',
     templateUrl: 'route-planner.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RoutePlanner {
