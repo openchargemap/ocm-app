@@ -48,6 +48,12 @@ export class SearchPage implements OnInit, AfterViewInit {
   public searchKeyword: string = '';
   public selectedPOI: any;
   public isLocatingUser: boolean = false;
+  public resultsExpanded = false;
+  public resultLimit = 20;
+  public routePlannerEnabled = Utils.isFeatureEnabled('ROUTE_PLANNER');
+
+  /** Which tab is active in the station list panel: the results list, or the inline filters. */
+  public panelTab: 'results' | 'filters' = 'results';
 
   public appConfig = new AppConfig();
 
@@ -106,8 +112,9 @@ export class SearchPage implements OnInit, AfterViewInit {
     if (clientHeight == null) {
       clientHeight = Utils.getClientHeight();
     }
-    const preferredContentHeight = clientHeight - 56;
-    return preferredContentHeight;
+    // Measure Ionic's content area so toolbar and safe-area sizes can vary.
+    const content = document.getElementById(this.mapCanvasID)?.closest('ion-content');
+    return content?.clientHeight || clientHeight;
   }
 
   enforceMapHeight(size: any) {

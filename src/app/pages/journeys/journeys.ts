@@ -9,6 +9,7 @@ import { FavouriteEditorPage } from './favourite-editor';
 
 @Component({
     templateUrl: 'journeys.html',
+    styleUrls: ['journeys.scss', 'favourites-list.scss', 'journey-cards.scss', 'waypoints.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })

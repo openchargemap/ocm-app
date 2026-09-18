@@ -1,6 +1,6 @@
-import { Logging } from './../../services/Logging';
+import { Logging, LogLevel } from './../../services/Logging';
 import { PlaceSearchResult } from './../../model/PlaceSearchResult';
-import { Component, Input, Output, ChangeDetectorRef, EventEmitter, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, ChangeDetectorRef, ElementRef, EventEmitter, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Platform } from '@ionic/angular/lazy';
 import { IMapProvider } from '../../services/mapping/interfaces/mapping';
 import { MapBoxMapProvider } from '../../services/mapping/providers/MapTiler';
@@ -22,18 +22,29 @@ declare var mapkit: any;
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class PlaceSearch implements OnInit {
+export class PlaceSearch implements OnInit, OnDestroy {
 
+    private static nextResultsId = 0;
     private placeSearchType: string;
-    private placeList: Array<PlaceSearchResult>;
-    private searchInProgress = false;
+    private requestSequence = 0;
 
     @Input()
     searchKeyword: string;
 
+    @Input()
+    anchoredToInput = false;
+
+    placeList: Array<PlaceSearchResult> = [];
+    searchInProgress = false;
     placeSearchFocused: boolean;
     placeSearchActive = false;
     placeAttribution = "";
+    activeResultIndex = -1;
+    readonly resultsId = `place-search-results-${PlaceSearch.nextResultsId++}`;
+
+    get activeDescendantId(): string | null {
+        return this.activeResultIndex >= 0 ? `${this.resultsId}-option-${this.activeResultIndex}` : null;
+    }
 
     @Output()
     selectedPlace: any;
@@ -43,7 +54,12 @@ export class PlaceSearch implements OnInit {
 
     mapService: IMapProvider;
 
-    constructor(public logging: Logging, public changeDetector: ChangeDetectorRef, private platform: Platform, private http: HttpClient, private events: Events) {
+    // Anchor tracking used only when anchoredToInput is true (see setupAnchoredPortal).
+    private anchorParent: HTMLElement | null = null;
+    private anchorHeader: HTMLElement | null = null;
+    private readonly onWindowResize = () => this.updateAnchorPosition();
+
+    constructor(public logging: Logging, public changeDetector: ChangeDetectorRef, private platform: Platform, private http: HttpClient, private events: Events, private elementRef: ElementRef<HTMLElement>) {
         this.searchKeyword = "";
         this.searchInProgress = false;
 
@@ -55,6 +71,53 @@ export class PlaceSearch implements OnInit {
         await this.platform.ready();
 
         this.mapService.initAPI();
+
+        if (this.anchoredToInput) {
+            this.setupAnchoredPortal();
+        }
+    }
+
+    ngOnDestroy() {
+        window.removeEventListener('resize', this.onWindowResize);
+    }
+
+    /*
+      ion-toolbar renders its projected content inside a shadow-DOM container that is
+      both overflow:hidden and CSS-contained (contain: content). That clips any
+      absolutely or fixed positioned descendant regardless of z-index, so the results
+      dropdown can never be made visible while it stays nested inside the toolbar.
+      Re-parent it next to <ion-header> (which has no such containment) and track the
+      search input's on-screen position so the dropdown still appears directly below it.
+    */
+    private setupAnchoredPortal() {
+        const hostEl = this.elementRef.nativeElement;
+        const header = hostEl.closest('ion-header') as HTMLElement | null;
+
+        if (!header || !hostEl.parentElement) {
+            return;
+        }
+
+        this.anchorParent = hostEl.parentElement;
+        this.anchorHeader = header;
+
+        header.appendChild(hostEl);
+
+        this.updateAnchorPosition();
+        window.addEventListener('resize', this.onWindowResize);
+    }
+
+    private updateAnchorPosition() {
+        if (!this.anchorParent || !this.anchorHeader) {
+            return;
+        }
+
+        const anchorRect = this.anchorParent.getBoundingClientRect();
+        const headerRect = this.anchorHeader.getBoundingClientRect();
+        const hostStyle = this.elementRef.nativeElement.style;
+
+        hostStyle.setProperty('--place-search-anchor-top', `${anchorRect.bottom - headerRect.top}px`);
+        hostStyle.setProperty('--place-search-anchor-left', `${anchorRect.left - headerRect.left}px`);
+        hostStyle.setProperty('--place-search-anchor-width', `${anchorRect.width}px`);
     }
 
     onSearchFocus() {
@@ -65,16 +128,18 @@ export class PlaceSearch implements OnInit {
     }
 
     onSearchCancel() {
-        // hide search block
-        // this.placeSearchActive = false;
-
-        // this.appManager.isRequestInProgress = false;
+        this.requestSequence++;
+        this.placeSearchActive = false;
+        this.activeResultIndex = -1;
     }
 
     public async getPlacesAutoComplete($event, searchType) {
 
         this.placeSearchType = searchType;
-        let keywordForSearch = $event.target.value;
+        const keywordForSearch = ($event?.detail?.value ?? $event?.target?.value ?? this.searchKeyword ?? '').trim();
+        this.searchKeyword = keywordForSearch;
+        const requestId = ++this.requestSequence;
+        this.activeResultIndex = -1;
 
         /* if (searchType == "poiSearch") {
 
@@ -97,34 +162,67 @@ export class PlaceSearch implements OnInit {
         if (keywordForSearch && keywordForSearch.length > 3) {
             this.logging.log("Starting place lookup for:" + keywordForSearch);
 
+            if (this.anchoredToInput) {
+                this.updateAnchorPosition();
+            }
+
             this.placeSearchActive = true;
             this.searchInProgress = true;
 
-            this.searchInProgress = false;
-            this.placeSearchActive = true;
-
             try {
-                this.placeList = await this.mapService.placeSearch(keywordForSearch);
+                const placeList = await this.mapService.placeSearch(keywordForSearch) || [];
 
-                if (this.placeList && this.placeList.length > 0) {
-                    this.placeAttribution = this.placeList[0].Attribution;
+                if (requestId !== this.requestSequence) {
+                    return;
                 }
 
-                let keywordToLatLngResult = await this.detectAlternativeSearchResultType(keywordForSearch);
+                const keywordToLatLngResult = await this.detectAlternativeSearchResultType(keywordForSearch);
 
                 if (keywordToLatLngResult) {
-                    this.placeList.unshift(keywordToLatLngResult);
+                    placeList.unshift(keywordToLatLngResult);
                 }
 
+                this.placeList = placeList;
+                this.placeAttribution = placeList.find(item => item.Attribution)?.Attribution || "";
             } catch (error) {
-
+                if (requestId === this.requestSequence) {
+                    this.placeList = [];
+                    this.placeAttribution = "";
+                    this.placeSearchActive = false;
+                }
+                this.logging.log(`Place lookup failed: ${error}`, LogLevel.ERROR);
+            } finally {
+                if (requestId === this.requestSequence) {
+                    this.searchInProgress = false;
+                }
             }
-
-            this.searchInProgress = false;
-            this.placeSearchActive = true;
         } else {
+            this.requestSequence++;
+            this.placeList = [];
+            this.placeAttribution = "";
             this.searchInProgress = false;
             this.placeSearchActive = false;
+        }
+    }
+
+    public onSearchKeyDown(event: KeyboardEvent) {
+        if (!this.placeSearchActive || this.placeList.length === 0) {
+            return;
+        }
+
+        if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            this.activeResultIndex = Math.min(this.activeResultIndex + 1, this.placeList.length - 1);
+        } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            this.activeResultIndex = Math.max(this.activeResultIndex - 1, 0);
+        } else if (event.key === 'Enter' && this.activeResultIndex >= 0) {
+            event.preventDefault();
+            this.placeSelected(this.placeList[this.activeResultIndex]);
+        } else if (event.key === 'Escape') {
+            event.preventDefault();
+            this.placeSearchActive = false;
+            this.activeResultIndex = -1;
         }
     }
 
@@ -207,6 +305,7 @@ export class PlaceSearch implements OnInit {
         this.placeChanged.emit(item);
 
         this.placeSearchActive = false;
+        this.activeResultIndex = -1;
     }
 
 }

@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular/lazy';
 import { RouterModule } from '@angular/router';
 import { SearchPage } from './search';
+import { MapLegendComponent } from './map-legend/map-legend.component';
 
 @NgModule({
   imports: [
@@ -22,6 +23,6 @@ import { SearchPage } from './search';
       }
     ])
   ],
-  declarations: [SearchPage]
+  declarations: [SearchPage, MapLegendComponent]
 })
 export class SearchPageModule { }

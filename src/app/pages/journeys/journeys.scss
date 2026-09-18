@@ -1,0 +1,159 @@
+.journeys-page {
+  --background: var(--ion-background-color);
+}
+
+.journeys-shell {
+  width: min(100% - 32px, 960px);
+  margin: 0 auto;
+  padding: 28px 0 48px;
+}
+
+.page-intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0 0 8px;
+    color: var(--ion-text-color);
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 750;
+    letter-spacing: -0.035em;
+    line-height: 1.08;
+  }
+
+  p {
+    max-width: 58ch;
+    margin: 0;
+    color: var(--ocm-muted);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+}
+
+.saved-summary {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 20px;
+  color: var(--ocm-muted);
+  font-size: 13px;
+
+  span {
+    display: grid;
+    gap: 2px;
+  }
+
+  strong {
+    color: var(--ion-text-color);
+    font-size: 20px;
+    line-height: 1;
+  }
+}
+
+ion-segment {
+  width: min(100%, 440px);
+  margin-bottom: 32px;
+  padding: 4px;
+  border: 1px solid var(--ion-border-color);
+  border-radius: 14px;
+
+  ion-segment-button {
+    --border-radius: 10px;
+    min-height: 44px;
+
+    ion-icon {
+      margin-inline-end: 8px;
+      font-size: 18px;
+    }
+  }
+}
+
+.tab-panel {
+  display: grid;
+  gap: 18px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  h2 {
+    margin: 0 0 4px;
+    color: var(--ion-text-color);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0;
+    color: var(--ocm-muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 132px;
+  padding: 24px;
+  border: 1px dashed var(--ion-border-color);
+  border-radius: 18px;
+  background: var(--ocm-surface);
+
+  > ion-icon {
+    flex: 0 0 auto;
+    padding: 13px;
+    border-radius: 50%;
+    background: var(--ocm-accent-soft);
+    color: var(--ion-color-primary);
+    font-size: 26px;
+  }
+
+  h3 {
+    margin: 0 0 5px;
+    color: var(--ion-text-color);
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  p {
+    max-width: 55ch;
+    margin: 0;
+    color: var(--ocm-muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 640px) {
+  .journeys-shell {
+    width: min(100% - 24px, 960px);
+    padding-top: 22px;
+  }
+
+  .page-intro {
+    display: grid;
+    gap: 18px;
+
+    h1 {
+      font-size: 30px;
+    }
+  }
+
+  .saved-summary {
+    gap: 28px;
+  }
+
+  ion-segment {
+    width: 100%;
+    margin-bottom: 26px;
+  }
+
+}

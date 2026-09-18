@@ -1,0 +1,10 @@
+:host { display: block; }
+.active-filters-note {
+  display: flex; align-items: center; gap: 10px; margin: 0 0 14px;
+  padding: 10px 14px; border-radius: 12px;
+  background: rgba(var(--ion-color-warning-rgb), .14);
+  color: var(--ion-color-warning-shade);
+  font-size: 13px; line-height: 1.4;
+  ion-icon { flex-shrink: 0; font-size: 16px; }
+  ion-button { margin-inline-start: auto; }
+}

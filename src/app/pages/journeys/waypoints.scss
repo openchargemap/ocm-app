@@ -1,0 +1,89 @@
+.waypoint-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.waypoint {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 18px 16px 18px 22px;
+
+  & + & {
+    border-top: 1px solid var(--ion-border-color);
+  }
+}
+
+.waypoint-number {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid var(--ion-border-color);
+  border-radius: 50%;
+  color: var(--ocm-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.waypoint-content {
+  min-width: 0;
+
+  > strong {
+    color: var(--ion-text-color);
+    font-size: 15px;
+  }
+
+  > p {
+    margin: 4px 0 10px;
+    color: var(--ocm-muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  ion-button {
+    margin: 10px 0 0;
+  }
+}
+
+.waypoint-location {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  max-width: 100%;
+  margin-top: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ion-color-primary);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.45;
+  text-align: start;
+  cursor: pointer;
+
+  ion-icon {
+    flex: 0 0 auto;
+    margin-top: 2px;
+  }
+
+  &:focus-visible {
+    border-radius: 4px;
+    outline: 3px solid var(--ion-color-primary);
+    outline-offset: 3px;
+  }
+}
+
+.edit-waypoint {
+  align-self: start;
+  margin: -6px -4px 0 0;
+}
+
+@media (max-width: 640px) {
+  .waypoint {
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    gap: 10px;
+    padding-inline: 14px 8px;
+  }
+}

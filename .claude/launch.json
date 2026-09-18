@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ocm-app",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["ng", "serve", "--configuration", "development", "--port", "4200"],
+      "port": 4200
+    }
+  ]
+}

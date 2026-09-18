@@ -1,32 +1,70 @@
-.search-page {
+:host { display: flex; flex-direction: column; }
+.explore-toolbar { --padding-start: 12px; --padding-end: 20px; }
+.explore-header { display: flex; align-items: center; gap: 12px; min-height: 80px; }
+.app-brand {
+  display: flex; align-items: center; gap: 10px; min-width: 245px;
+  img { border-radius: 11px; }
+  span { font-size: 19px; font-weight: 750; letter-spacing: -.6px; }
+  small { display: block; color: var(--ocm-muted); font-size: 11px; font-weight: 500; letter-spacing: .2px; margin-top: 3px; }
+  &.is-embedded { min-width: auto; }
+}
+.brand-link { display: flex; border-radius: 11px; }
+.brand-link:focus-visible { outline: 2px solid var(--ion-color-primary); outline-offset: 3px; }
+.location-search {
+  position: relative;
+  flex: 1 1 420px;
+  max-width: 560px;
+  margin-inline: auto;
+}
+ion-searchbar { width: 100%; padding: 0; }
+.route-button { flex-shrink: 0; }
+.search-page { --overflow: hidden; }
+#map-canvas { height: 100%; width: 100%; background: var(--ocm-surface-soft); }
+.explore-panel {
+  position: absolute; z-index: 5; top: 24px; inset-inline-start: 24px;
+  width: 360px; max-height: calc(100% - 56px); display: flex; flex-direction: column;
+  border: 1px solid var(--ion-border-color); border-radius: 22px;
+  background: var(--ocm-surface); box-shadow: var(--ocm-shadow); overflow: hidden;
+}
+.explore-intro {
+  padding: 24px; background: var(--ocm-accent-soft);
+  p { color: var(--ocm-muted); font-size: 13px; line-height: 1.6; margin: 0; }
+}
+.eyebrow { margin-bottom: 6px;display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 750; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ion-color-primary); }
+.panel-tabs { margin: 0 20px 4px; --background: var(--ocm-surface-soft); border-radius: 12px; }
+.results-heading {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 20px 20px 14px;
+  h2 { font-size: 15px; font-weight: 700; margin: 0 0 6px; }
+  span { color: var(--ocm-muted); font-size: 12px; }
+}
+.panel-map-legend { flex-shrink: 0; }
+.results-toggle { display: none; }
+.explore-results { overflow-y: auto; overscroll-behavior: contain; min-height: 0; padding: 0 12px 8px; }
+.empty-state {
+  text-align: center; padding: 30px 20px;
+  > ion-icon { font-size: 34px; color: var(--ion-color-primary); }
+  h3 { font-size: 16px; font-weight: 650; margin: 18px 0 8px; }
+  p { color: var(--ocm-muted); font-size: 13px; line-height: 1.6; }
+}
+.community-note { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 14px; color: var(--ocm-muted); font-size: 11px; border-top: 1px solid var(--ion-border-color); }
+.locate-control { bottom: calc(38px + var(--ion-safe-area-bottom, 0px)); inset-inline-end: 16px; }
+.offline-notice { position: absolute; z-index: 6; top: 16px; left: 50%; transform: translateX(-50%); width: min(90%, 480px); padding: 14px; border-radius: 12px; background: var(--ocm-surface); box-shadow: var(--ocm-shadow); font-size: 13px; }
 
-  #map-canvas {
-    width: 100%;
-    height: 98%;
-  }
-  #place-search {
-    min-height: 300px;
-   
-    position: absolute;
-    z-index: 100;
-    width: 100%;
-  }
-  
-  scroll-content {
-    overflow-y: hidden;
-  }
-  .banner {
-    padding-left: 2em;
-  }
-  .sideview {
-    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#eeeeee+0,cccccc+100;Gren+3D */
-    background: rgb(238, 238, 238);
-    /* Old browsers */
-    background: linear-gradient(
-      to bottom,
-      rgba(238, 238, 238, 1) 0%,
-      rgba(255, 255, 255, 1) 100%
-    );
-    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  }
+@media (max-width: 1100px) {
+  .app-brand { min-width: 210px; span { font-size: 17px; } }
+  .route-button { display: none; }
+}
+@media (max-width: 700px) {
+  .explore-toolbar { --padding-start: 8px; --padding-end: 8px; }
+  .explore-header { gap: 4px; min-height: 68px; }
+  .app-brand { display: none; }
+  .location-search { min-width: 0; }
+  .explore-panel { top: auto; bottom: calc(30px + var(--ion-safe-area-bottom, 0px)); inset-inline-start: 12px; width: calc(100% - 24px); max-height: 55%; border-radius: 20px; }
+  .explore-intro, .community-note { display: none; }
+  .results-heading { padding: 10px 16px; }
+  .results-toggle { display: block; }
+  .explore-results { display: none; }
+  .is-expanded .explore-results { display: block; }
+  .locate-control { top: 152px; bottom: auto; inset-inline-end: 12px; }
+  .panel-map-legend { --map-legend-label-display: none; }
 }

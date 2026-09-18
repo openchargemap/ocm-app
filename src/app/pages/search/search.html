@@ -1,48 +1,139 @@
 <ion-header>
-
-  <ion-toolbar>
-    <ion-buttons slot="start">
+  <ion-toolbar class="explore-toolbar">
+    <div class="explore-header">
       <ion-menu-button aria-label="Open main menu"></ion-menu-button>
-    </ion-buttons>
-    <ion-searchbar autocapitalize="on" autocomplete="on" [(ngModel)]="searchKeyword" (ionInput)="search($event)"
-    [placeholder]="'ocm.search.performSearch' | translate" [debounce]="500"></ion-searchbar>
-    <ion-buttons slot="end">
-      <ion-button (click)="locateUser()" [disabled]="isLocatingUser" aria-label="Locate me">
-        @if (!isLocatingUser) {
-          <ion-icon name="locate" slot="start"></ion-icon>
+      <div class="app-brand" [class.is-embedded]="appManager.isEmbeddedMode">
+        <a class="brand-link" href="https://openchargemap.org" target="_blank" rel="noopener noreferrer"
+          [attr.aria-label]="'ocm.explore.openWebsite' | translate">
+          <img src="assets/images/icons/branding/AppIcon_128x128.png" alt="" width="38" height="38">
+        </a>
+        @if (!appManager.isEmbeddedMode) {
+          <span>{{appManager.title}}<small>{{ 'ocm.explore.brandSubtitle' | translate }}</small></span>
         }
-        @if (isLocatingUser) {
-          <ion-spinner></ion-spinner>
-        }
-      </ion-button>
-      <!--<ion-button (click)="openRoutePlannerModal()" *ngIf="sideViewAvailable==false">
-      <ion-icon name="map" slot="start"></ion-icon>
-    </ion-button>-->
-    <ion-button (click)="openSearchOptions()" [color]="appManager.searchSettings.HasActiveFilters?'danger':'default'" aria-label="Open settings">
-      <ion-icon name="options" slot="end"></ion-icon>
-
-    </ion-button>
-
-    @if (sideViewAvailable==true && poiViewMode=='modal') {
-      <ion-button (click)="openSideView()" aria-label="Open route side view">
-        <ion-icon name="car" title="Route" slot="end"></ion-icon>
-      </ion-button>
-    }
-  </ion-buttons>
-</ion-toolbar>
-
+      </div>
+      <div class="location-search">
+        <ion-searchbar autocapitalize="on" autocomplete="on" [(ngModel)]="searchKeyword" (ionInput)="search($event)"
+          (keydown)="placeSearchMapPOI.onSearchKeyDown($event)"
+          [placeholder]="'ocm.explore.searchPlaceholder' | translate" [debounce]="500"
+          [attr.aria-label]="'ocm.explore.searchPlaceholder' | translate"
+          aria-autocomplete="list" [attr.aria-controls]="placeSearchMapPOI.resultsId"
+          [attr.aria-expanded]="placeSearchMapPOI.placeSearchActive"
+          [attr.aria-activedescendant]="placeSearchMapPOI.activeDescendantId"></ion-searchbar>
+        <place-search #placeSearchMapPOI [anchoredToInput]="true" (placeChanged)="placeSelected($event)"></place-search>
+      </div>
+      @if (routePlannerEnabled) {
+        <ion-button class="route-button" fill="clear" (click)="openRoutePlannerModal()">
+          <ion-icon name="git-branch-outline" slot="start"></ion-icon>
+          {{ 'ocm.explore.planRoute' | translate }}
+        </ion-button>
+      }
+      @if (sideViewAvailable && poiViewMode=='modal') {
+        <ion-button fill="clear" (click)="openSideView()" aria-label="Open route side view">
+          <ion-icon name="car-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+      }
+    </div>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content class="search-page">
+<ion-content class="search-page" [scrollY]="false">
+  <div id="map-canvas" role="region" [attr.aria-label]="'ocm.explore.chargingMap' | translate"></div>
 
-  <place-search #placeSearchMapPOI (placeChanged)="placeSelected($event)"></place-search>
+  <section class="explore-panel" [class.is-expanded]="resultsExpanded" [attr.aria-label]="'ocm.explore.locationsInView' | translate">
+    <div class="explore-intro">
+      <div class="eyebrow"><ion-icon name="flash" aria-hidden="true"></ion-icon>{{ 'ocm.explore.eyebrow' | translate }}</div>
+      <p>{{ 'ocm.explore.description' | translate }}</p>
+    </div>
+
+    <ion-segment class="panel-tabs" [(ngModel)]="panelTab" [attr.aria-label]="'ocm.explore.panelTabs' | translate">
+      <ion-segment-button value="results">
+        <ion-icon name="list-outline"></ion-icon>
+        <ion-label>{{ 'ocm.explore.resultsTab' | translate }}</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="filters">
+        <ion-icon name="options-outline"></ion-icon>
+        <ion-label>{{ 'ocm.explore.filtersTab' | translate }}{{appManager.searchSettings.HasActiveFilters ? ' •' : ''}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    @if (panelTab === 'results') {
+      <div class="results-heading">
+        <div>
+          <h2>{{ 'ocm.explore.locationsInView' | translate }}</h2>
+          <span role="status" aria-live="polite">
+            @if (appManager.isRequestInProgress) {
+              {{ 'ocm.general.loadingProgress' | translate }}
+            } @else {
+              {{ 'ocm.explore.locationCount' | translate: { count: (poiManager.poiList?.length || 0) } }}
+            }
+          </span>
+        </div>
+        <app-map-legend class="panel-map-legend"></app-map-legend>
+        <ion-button class="results-toggle" fill="clear" (click)="resultsExpanded = !resultsExpanded"
+          [attr.aria-expanded]="resultsExpanded" aria-controls="explore-panel-body"
+          [attr.aria-label]="(resultsExpanded ? 'ocm.explore.hideList' : 'ocm.explore.showList') | translate">
+          <ion-icon [name]="resultsExpanded ? 'chevron-down-outline' : 'chevron-forward-outline'" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+    } @else {
+      <div class="results-heading">
+        <div>
+          <h2>{{ 'ocm.explore.filtersTab' | translate }}</h2>
+          <span>{{ 'ocm.explore.filtersIntro' | translate }}</span>
+        </div>
+        <app-map-legend class="panel-map-legend"></app-map-legend>
+        <ion-button class="results-toggle" fill="clear" (click)="resultsExpanded = !resultsExpanded"
+          [attr.aria-expanded]="resultsExpanded" aria-controls="explore-panel-body"
+          [attr.aria-label]="(resultsExpanded ? 'ocm.explore.hideList' : 'ocm.explore.showList') | translate">
+          <ion-icon [name]="resultsExpanded ? 'chevron-down-outline' : 'chevron-forward-outline'" slot="icon-only"></ion-icon>
+        </ion-button>
+      </div>
+    }
+    <div id="explore-panel-body" class="explore-results" [attr.aria-busy]="appManager.isRequestInProgress">
+      @if (panelTab === 'results') {
+        @if (appManager.isOffline) {
+          <div class="empty-state" role="status">
+            <ion-icon name="cloud-offline-outline" aria-hidden="true"></ion-icon>
+            <h3>{{ 'ocm.explore.offlineTitle' | translate }}</h3>
+            <p>{{ 'ocm.explore.offlineDescription' | translate }}</p>
+          </div>
+        } @else if (appManager.isRequestInProgress && !poiManager.poiList?.length) {
+          <div class="empty-state">
+            <ion-spinner name="crescent" color="primary"></ion-spinner>
+            <p>{{ 'ocm.explore.loadingLocations' | translate }}</p>
+          </div>
+        } @else if (poiManager.poiList?.length) {
+          <app-poi-list [poiList]="poiManager.poiList | slice:0:resultLimit" [enableSelection]="true"
+            (onSelect)="viewPOIDetails({poiId: $event.ID}, $event, true)"></app-poi-list>
+          @if (poiManager.poiList.length > resultLimit) {
+            <ion-button fill="clear" expand="block" (click)="resultLimit = resultLimit + 20">
+              {{ 'ocm.explore.showMore' | translate }}
+            </ion-button>
+          }
+        } @else {
+          <div class="empty-state">
+            <ion-icon name="map-outline" aria-hidden="true"></ion-icon>
+            <h3>{{ 'ocm.explore.emptyTitle' | translate }}</h3>
+            <p>{{ 'ocm.explore.emptyDescription' | translate }}</p>
+            @if (appManager.searchSettings.HasActiveFilters) {
+              <ion-button fill="outline" size="small" (click)="panelTab = 'filters'">{{ 'ocm.explore.openFilters' | translate }}</ion-button>
+            }
+          </div>
+        }
+      } @else {
+        <app-search-filters idPrefix="explore-filters" [liveRefresh]="true"></app-search-filters>
+      }
+    </div>
+    <div class="community-note"><ion-icon name="people-outline" aria-hidden="true"></ion-icon>{{ 'ocm.explore.community' | translate }}</div>
+  </section>
 
   @if (appManager.isOffline) {
-    <div style="position: absolute;">
-      <p>There was a problem communicating with Open Charge Map. Please check your data connection.</p>
-    </div>
+    <div class="offline-notice" role="alert"><ion-icon name="cloud-offline-outline" aria-hidden="true"></ion-icon>{{ 'ocm.explore.offlineDescription' | translate }}</div>
   }
-
-  <div id="map-canvas" style="height:100%;width:100%;min-height:300px;"></div>
-
+  <ion-fab class="locate-control" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="locateUser()" [disabled]="isLocatingUser" [attr.aria-label]="'ocm.explore.locateMe' | translate">
+      @if (isLocatingUser) { <ion-spinner name="crescent"></ion-spinner> }
+      @else { <ion-icon name="locate-outline"></ion-icon> }
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

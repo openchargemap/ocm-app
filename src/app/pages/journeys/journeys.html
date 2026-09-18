@@ -1,203 +1,194 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button (click)="dismiss()"></ion-back-button>
+      <ion-button (click)="dismiss()" aria-label="Close journeys and favourites">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
     </ion-buttons>
-    <ion-title>
-      Journeys & Favourites
-    </ion-title>
+    <ion-title>Journeys & Favourites</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="journeys-page">
+  <main class="journeys-shell">
+    <header class="page-intro">
+      <div>
+        <h1>Your saved charging stops</h1>
+        <p>Keep useful locations close at hand, or organise them into journeys for later.</p>
+      </div>
+      <div class="saved-summary" aria-label="Saved items summary">
+        <span><strong>{{journeyManager.favourites?.length || 0}}</strong> favourites</span>
+        <span><strong>{{journeyManager.journeys?.length || 0}}</strong> journeys</span>
+      </div>
+    </header>
 
-  <div class="ion-padding">
+    <ion-segment [(ngModel)]="selectedTab" aria-label="Saved charging stops">
+      <ion-segment-button value="favourites">
+        <ion-icon name="heart-outline"></ion-icon>
+        <ion-label>Favourites</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="journeys">
+        <ion-icon name="map-outline"></ion-icon>
+        <ion-label>Journeys</ion-label>
+      </ion-segment-button>
+    </ion-segment>
 
-    <p>
-      You can keep a simple favourites list, or organise charging locations into full journeys.
-    </p>
-
-    @if ((journeyManager.favourites==null || journeyManager.favourites.length==0) && (journeyManager.journeys==null || journeyManager.journeys.length==0)) {
-      <p>
-        You have no favourites or journeys yet. Start by browsing to a charging location, then add it to favourites or a journey.
-      </p>
-    }
-
-  </div>
-
-  <ion-segment [(ngModel)]="selectedTab" class="ion-padding-horizontal">
-    <ion-segment-button value="favourites">
-      <ion-label>Favourites ({{journeyManager.favourites?.length || 0}})</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="journeys">
-      <ion-label>Journeys ({{journeyManager.journeys?.length || 0}})</ion-label>
-    </ion-segment-button>
-  </ion-segment>
-
-  @if (selectedTab === 'favourites' && journeyManager.favourites && journeyManager.favourites.length > 0) {
-    <ion-card>
-      <ion-card-content>
-        <ion-list>
-          @for (favourite of journeyManager.favourites; track favourite) {
-            <ion-item>
-              <ion-thumbnail slot="start">
-                @if (!favourite.Poi) {
-                  <ion-icon name="star" style="font-size:2rem;"></ion-icon>
-                }
-              </ion-thumbnail>
-              @if (favourite.Poi) {
-                <ion-label (click)="viewPOIDetails(favourite.Poi)">
-                  <h2>{{favourite.Poi.AddressInfo.Title}}</h2>
-                  @if (favourite.Poi.AddressInfo.AddressLine1) {
-                    <p>{{favourite.Poi.AddressInfo.AddressLine1}}</p>
-                  }
-                  @if (favourite.Poi.AddressInfo.Town) {
-                    <p>{{favourite.Poi.AddressInfo.Town}}</p>
-                  }
-                </ion-label>
-              }
-              @if (!favourite.Poi) {
-                <ion-label>
-                  <h2>{{favourite.Title}}</h2>
-                  <p>Loading location details...</p>
-                </ion-label>
-              }
-              <ion-buttons slot="end">
-                @if (favourite.Poi) {
-                  <ion-button fill="clear" (click)="launchNavigation(favourite.Poi)">
-                    <ion-icon name="navigate" slot="icon-only"></ion-icon>
-                  </ion-button>
-                }
-                <ion-button fill="clear" color="danger" (click)="deleteFavourite(favourite.PoiID)">
-                  <ion-icon name="trash" slot="icon-only"></ion-icon>
-                </ion-button>
-              </ion-buttons>
-            </ion-item>
+    @if (selectedTab === 'favourites') {
+      <section class="tab-panel" aria-labelledby="favourites-heading">
+        <div class="section-heading">
+          <div>
+            <h2 id="favourites-heading">Favourite locations</h2>
+            <p>Quick access to charging locations you want to remember.</p>
+          </div>
+          @if (journeyManager.favourites?.length) {
+            <ion-badge color="light">{{journeyManager.favourites.length}}</ion-badge>
           }
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
-  }
+        </div>
 
-  @if (selectedTab === 'favourites' && (!journeyManager.favourites || journeyManager.favourites.length === 0)) {
-    <ion-card>
-      <ion-card-content>
-        <p>
-          You have no favourites yet. Browse to a charging location and add it to favourites from the POI details screen.
-        </p>
-      </ion-card-content>
-    </ion-card>
-  }
-
-  @if (selectedTab === 'journeys') {
-    @for (journey of journeyManager.journeys; track journey) {
-      <ion-card>
-        <ion-card-content>
-          <ion-toolbar primary>
-            <ion-title>
-            {{journey.Title}}</ion-title>
-            <ion-buttons slot="primary">
-              <ion-button (click)="deleteJourney(journey.ID)">
-                <ion-icon name="close" slot="icon-only"></ion-icon>
-              </ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-          <p>{{journey.Notes}}</p>
-          <p>
-            {{getJourneyWaypointCount(journey)}} steps, {{getJourneyPoiCount(journey)}} saved charging location@if (getJourneyPoiCount(journey) !== 1) {
-            <span>s</span>
-          }
-        </p>
-        @for (s of journey.Stages; track s; let i = $index) {
-          <ion-list>
-            <ion-list-header style="font-size:1.5rem;">
-              {{s.Title}}
-              <ion-note slot="end">{{getStageWaypointCount(s)}} step@if (getStageWaypointCount(s) !== 1) {
-                <span>s</span>
-                }, {{getStagePoiCount(s)}} POI@if (getStagePoiCount(s) !== 1) {
-                <span>s</span>
-              }</ion-note>
-            </ion-list-header>
-            @for (w of s.WayPoints; track w; let waypointIndex = $index) {
+        @if (journeyManager.favourites && journeyManager.favourites.length > 0) {
+          <ion-list class="saved-list" lines="full">
+            @for (favourite of journeyManager.favourites; track favourite.PoiID) {
               <ion-item>
-                <ion-thumbnail slot="start">
-                  <ion-icon name="caret-down" style="font-size:4rem;"></ion-icon>
-                </ion-thumbnail>
-                <ion-label>
-                  <h2>{{w.Title}}</h2>
-                  @if (w.Notes) {
-                    <p>{{w.Notes}}</p>
-                  }
-                </ion-label>
+                <div class="location-marker" slot="start" aria-hidden="true">
+                  <ion-icon name="location"></ion-icon>
+                </div>
+                @if (favourite.Poi) {
+                  <ion-label>
+                    <button class="location-link" type="button" (click)="viewPOIDetails(favourite.Poi)">
+                      <strong>{{favourite.Poi.AddressInfo.Title}}</strong>
+                      @if (favourite.Poi.AddressInfo.AddressLine1 || favourite.Poi.AddressInfo.Town) {
+                        <span>
+                          {{favourite.Poi.AddressInfo.AddressLine1}}
+                          @if (favourite.Poi.AddressInfo.AddressLine1 && favourite.Poi.AddressInfo.Town) { · }
+                          {{favourite.Poi.AddressInfo.Town}}
+                        </span>
+                      }
+                    </button>
+                  </ion-label>
+                } @else {
+                  <ion-label>
+                    <strong>{{favourite.Title}}</strong>
+                    <p>Loading location details…</p>
+                  </ion-label>
+                }
                 <ion-buttons slot="end">
-                  @if (getWaypointPoi(w)) {
-                    <ion-button fill="clear" (click)="editWaypoint(journey.ID, i, waypointIndex, w)">
-                      <ion-icon name="create" slot="icon-only"></ion-icon>
+                  @if (favourite.Poi) {
+                    <ion-button fill="clear" (click)="launchNavigation(favourite.Poi)"
+                      [attr.aria-label]="'Navigate to ' + favourite.Poi.AddressInfo.Title">
+                      <ion-icon name="navigate-outline" slot="icon-only"></ion-icon>
                     </ion-button>
                   }
+                  <ion-button fill="clear" color="danger" (click)="deleteFavourite(favourite.PoiID)"
+                    [attr.aria-label]="'Remove ' + (favourite.Poi?.AddressInfo?.Title || favourite.Title) + ' from favourites'">
+                    <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+                  </ion-button>
                 </ion-buttons>
-                @for (p of w.PoiList; track p) {
-                  <div style="text-align:right;width:100%;">
-                    @if (p.Poi) {
-                      <div>
-                        <div (click)="viewPOIDetails(p.Poi)" tappable>
-                          @if (p.Poi.AddressInfo.AddressLine1) {
-                            <p>
-                            {{p.Poi.AddressInfo.AddressLine1}}</p>
-                          }
-                          @if (p.Poi.AddressInfo.AddressLine2) {
-                            <p>
-                            {{p.Poi.AddressInfo.AddressLine2}}</p>
-                          }
-                          @if (p.Poi.AddressInfo.Town) {
-                            <p>
-                            {{p.Poi.AddressInfo.Town}}</p>
-                          }
-                          @if (p.Poi.AddressInfo.StateOrProvince) {
-                            <p>
-                            {{p.Poi.AddressInfo.StateOrProvince}}</p>
-                          }
-                          @if (p.Poi.AddressInfo.Postcode) {
-                            <p>
-                            {{p.Poi.AddressInfo.Postcode}}</p>
-                          }
-                        </div>
-                        <ion-button clear item-right (click)="launchNavigation(p.Poi)">
-                          <ion-icon name="navigate" slot="start"></ion-icon>
-                          Navigate
-                        </ion-button>
-                      </div>
-                    }
-                  </div>
-                }
               </ion-item>
             }
           </ion-list>
+        } @else {
+          <div class="empty-state">
+            <ion-icon name="heart-outline" aria-hidden="true"></ion-icon>
+            <div>
+              <h3>No favourites yet</h3>
+              <p>Open a charging location and choose Save to keep it here.</p>
+            </div>
+          </div>
         }
-      </ion-card-content>
-    </ion-card>
-  }
-}
+      </section>
+    }
 
-@if (selectedTab === 'journeys' && (!journeyManager.journeys || journeyManager.journeys.length === 0)) {
-  <ion-card>
-    <ion-card-content>
-      <p>
-        You have no journeys yet. Add a charging location to a journey from the POI details screen to start planning a route.
-      </p>
-    </ion-card-content>
-  </ion-card>
-}
+    @if (selectedTab === 'journeys') {
+      <section class="tab-panel" aria-labelledby="journeys-heading">
+        <div class="section-heading">
+          <div>
+            <h2 id="journeys-heading">Planned journeys</h2>
+            <p>Charging stops grouped into stages for trips you plan to make.</p>
+          </div>
+          @if (journeyManager.journeys?.length) {
+            <ion-badge color="light">{{journeyManager.journeys.length}}</ion-badge>
+          }
+        </div>
 
+        @if (journeyManager.journeys && journeyManager.journeys.length > 0) {
+          <div class="journey-list">
+            @for (journey of journeyManager.journeys; track journey.ID) {
+              <article class="journey">
+                <header class="journey-header">
+                  <div>
+                    <h3>{{journey.Title}}</h3>
+                    @if (journey.Notes) {
+                      <p>{{journey.Notes}}</p>
+                    }
+                  </div>
+                  <ion-button fill="clear" color="danger" size="small" (click)="deleteJourney(journey.ID)"
+                    [attr.aria-label]="'Delete journey ' + journey.Title">
+                    <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+                  </ion-button>
+                </header>
+
+                <div class="journey-summary">
+                  <span><ion-icon name="flag-outline" aria-hidden="true"></ion-icon>{{getJourneyWaypointCount(journey)}} steps</span>
+                  <span><ion-icon name="flash-outline" aria-hidden="true"></ion-icon>{{getJourneyPoiCount(journey)}} charging locations</span>
+                </div>
+
+                @for (stage of journey.Stages; track stage; let stageIndex = $index) {
+                  <section class="journey-stage">
+                    <header>
+                      <h4>{{stage.Title || 'Journey stage'}}</h4>
+                      <span>{{getStageWaypointCount(stage)}} steps · {{getStagePoiCount(stage)}} locations</span>
+                    </header>
+
+                    <ol class="waypoint-list">
+                      @for (waypoint of stage.WayPoints; track waypoint; let waypointIndex = $index) {
+                        <li class="waypoint">
+                          <div class="waypoint-number" aria-hidden="true">{{waypointIndex + 1}}</div>
+                          <div class="waypoint-content">
+                            <strong>{{waypoint.Title}}</strong>
+                            @if (waypoint.Notes) {
+                              <p>{{waypoint.Notes}}</p>
+                            }
+                            @for (bookmark of waypoint.PoiList; track bookmark.PoiID) {
+                              @if (bookmark.Poi) {
+                                <button class="waypoint-location" type="button" (click)="viewPOIDetails(bookmark.Poi)">
+                                  <ion-icon name="location-outline" aria-hidden="true"></ion-icon>
+                                  <span>
+                                    {{bookmark.Poi.AddressInfo.AddressLine1 || bookmark.Poi.AddressInfo.Title}}
+                                    @if (bookmark.Poi.AddressInfo.Town) {, {{bookmark.Poi.AddressInfo.Town}}}
+                                  </span>
+                                </button>
+                                <ion-button fill="outline" size="small" (click)="launchNavigation(bookmark.Poi)">
+                                  <ion-icon name="navigate-outline" slot="start"></ion-icon>
+                                  Navigate
+                                </ion-button>
+                              }
+                            }
+                          </div>
+                          @if (getWaypointPoi(waypoint)) {
+                            <ion-button class="edit-waypoint" fill="clear" size="small"
+                              (click)="editWaypoint(journey.ID, stageIndex, waypointIndex, waypoint)"
+                              [attr.aria-label]="'Edit ' + waypoint.Title">
+                              <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+                            </ion-button>
+                          }
+                        </li>
+                      }
+                    </ol>
+                  </section>
+                }
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="empty-state">
+            <ion-icon name="map-outline" aria-hidden="true"></ion-icon>
+            <div>
+              <h3>No journeys yet</h3>
+              <p>Open a charging location and add it to a journey to plan your first stop.</p>
+            </div>
+          </div>
+        }
+      </section>
+    }
+  </main>
 </ion-content>
-
-<ion-footer>
-  <ion-toolbar>
-    <ion-buttons slot="end">
-      <ion-button (click)="dismiss()">
-        <ion-icon name="close" slot="start"></ion-icon> Close
-      </ion-button>
-
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer>

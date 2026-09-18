@@ -1,0 +1,18 @@
+.station-list { padding: 0; background: transparent; }
+.station-card {
+  border: 1px solid var(--ion-border-color); border-radius: 14px; margin-bottom: 10px; overflow: hidden;
+  ion-item { --padding-start: 16px; --inner-padding-end: 12px; --background-hover: var(--ion-color-primary); }
+  ion-label { margin: 16px 0; }
+  h3 { color: var(--ion-text-color); font-size: 15px; font-weight: 700; line-height: 1.4; margin: 9px 0 5px; }
+  p { font-size: 12px; color: var(--ocm-muted); line-height: 1.5; }
+}
+.station-topline { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.station-network { color: var(--ocm-muted); font-size: 10px; font-weight: 650; letter-spacing: .5px; text-transform: uppercase; }
+.power-badge { display: inline-flex; align-items: center; flex-shrink: 0; gap: 3px; border-radius: 6px; padding: 5px 7px; background: var(--ocm-accent-soft); color: var(--ion-color-primary); font-size: 11px; font-weight: 750; }
+.station-card .station-connectors { margin-top: 10px; color: var(--ion-text-color); }
+.station-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; margin-top: 12px; font-size: 11px; color: var(--ocm-muted); }
+.station-status { display: inline-flex; align-items: center; gap: 5px; }
+.status-dot { width: 6px; height: 6px; background: currentColor; border-radius: 50%; flex-shrink: 0; }
+.operational { color: var(--ion-color-primary); }
+.station-card .station-usage { font-size: 11px; margin-top: 5px; }
+.station-actions { padding: 0 12px 12px; }

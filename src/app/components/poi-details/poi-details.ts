@@ -33,6 +33,7 @@ export class PoiDetails implements OnInit {
   backdropImage: string;
   avgRating: number;
   connectionSummary: string;
+  maxPowerKW = 0;
 
   constructor(
     public appManager: AppManager,
@@ -59,14 +60,17 @@ export class PoiDetails implements OnInit {
       return;
     }
     this.selectedTab = 'location';
+    this.avgRating = null;
+    this.connectionSummary = '';
+    this.maxPowerKW = Math.max(0, ...(this.poi.Connections || []).map(c => c.PowerKW || 0));
 
     // create temporary properties for view model
     if (this.poi.MediaItems != null && this.poi.MediaItems.length > 0) {
       this.poi._hasPhotos = true;
       for (let i of this.poi.MediaItems) {
-        i.ItemMediumURL = i.ItemThumbnailURL.replace('.thmb.', '.medi.');
+        i.ItemMediumURL = i.ItemThumbnailURL?.replace('.thmb.', '.medi.') || i.ItemURL;
       }
-      this.backdropImage = this.poi.MediaItems[this.poi.MediaItems.length - 1].ItemThumbnailURL.replace('.thmb.', '.medi.');
+      this.backdropImage = this.poi.MediaItems[this.poi.MediaItems.length - 1].ItemMediumURL;
     } else {
       this.poi._hasPhotos = false;
       this.backdropImage = null;
@@ -96,7 +100,7 @@ export class PoiDetails implements OnInit {
     if (this.poi.Connections && this.poi.Connections.length > 0) {
       let summary = "";
       for (let c of this.poi.Connections) {
-        if (summary.indexOf(c.ConnectionType.Title) == -1) {
+        if (c.ConnectionType?.Title && summary.indexOf(c.ConnectionType.Title) == -1) {
           summary += (summary != "" ? ", " : "") + c.ConnectionType.Title;
 
         }

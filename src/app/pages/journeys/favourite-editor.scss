@@ -1,0 +1,128 @@
+.favourite-editor-page {
+  --background: var(--ion-background-color);
+}
+
+.editor-shell {
+  width: min(100% - 32px, 680px);
+  margin: 0 auto;
+  padding: 28px 0 48px;
+}
+
+.location-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
+
+  h1 {
+    margin: 0 0 4px;
+    color: var(--ion-text-color);
+    font-size: clamp(24px, 5vw, 32px);
+    font-weight: 750;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+
+  p {
+    margin: 0;
+    color: var(--ocm-muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+.location-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ocm-accent-soft);
+  color: var(--ion-color-primary);
+
+  ion-icon {
+    font-size: 25px;
+  }
+}
+
+.editor-form {
+  overflow: hidden;
+  border: 1px solid var(--ion-border-color);
+  border-radius: 18px;
+  background: var(--ocm-surface);
+}
+
+.form-heading {
+  padding: 22px 22px 18px;
+  border-bottom: 1px solid var(--ion-border-color);
+
+  h2 {
+    margin: 0 0 5px;
+    color: var(--ion-text-color);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0;
+    color: var(--ocm-muted);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+ion-list {
+  padding: 10px;
+  background: transparent;
+}
+
+ion-item {
+  --background: var(--ocm-surface);
+  --border-color: var(--ion-border-color);
+  --border-radius: 10px;
+  --border-style: solid;
+  --border-width: 1px;
+  --inner-border-width: 0;
+  --min-height: 66px;
+  --padding-start: 14px;
+  --inner-padding-end: 12px;
+  margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+ion-select,
+ion-input,
+ion-textarea {
+  --highlight-color-focused: var(--ion-color-primary);
+}
+
+ion-footer ion-toolbar {
+  --padding-start: max(12px, calc((100% - 680px) / 2));
+  --padding-end: max(12px, calc((100% - 680px) / 2));
+}
+
+@media (max-width: 480px) {
+  .editor-shell {
+    width: min(100% - 24px, 680px);
+    padding-top: 22px;
+  }
+
+  .location-summary {
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+
+  .location-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .form-heading {
+    padding: 18px 16px 16px;
+  }
+}

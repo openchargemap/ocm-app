@@ -1,5 +1,10 @@
 
 
 <ion-content class="poi-details">
+    <ion-fab class="close-details" vertical="top" horizontal="end" slot="fixed">
+      <ion-fab-button size="small" (click)="close()" aria-label="Close details">
+        <ion-icon name="close"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
     <poi-details [poi]="poi"></poi-details>
 </ion-content>

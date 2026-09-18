@@ -4,7 +4,7 @@
       <ion-header>
         <ion-toolbar>
           <ion-thumbnail slot="start">
-            <img src="assets/images/icons/branding/AppIcon_128x128.png"/>
+            <img src="assets/images/icons/branding/AppIcon_128x128.png" alt=""/>
           </ion-thumbnail>
           <ion-title>{{appManager.title}}</ion-title>
         </ion-toolbar>
@@ -13,8 +13,8 @@
         <ion-list aria-label="Primary navigation">
           <ion-menu-toggle auto-hide="false">
 
-            <ion-item [routerDirection]="'root'" [routerLink]="['/search']" aria-label="Search" id="main-menu-search">
-              <ion-icon slot="start" name="home"></ion-icon>
+            <ion-item [routerDirection]="'root'" [routerLink]="['/search']" routerLinkActive="selected" aria-label="Search" id="main-menu-search">
+              <ion-icon slot="start" name="compass-outline"></ion-icon>
               <ion-label>
                 {{ 'ocm.search.sectionTitle' | translate }}
               </ion-label>
@@ -22,7 +22,7 @@
 
             @if (enabledFeatures.includes('ROUTE_PLANNER')) {
               <ion-item (click)="openRoutePlannerModal()" aria-label="Route Planner" id="main-menu-route-planner">
-                <ion-icon slot="start" name="map"></ion-icon>
+                <ion-icon slot="start" name="git-branch-outline"></ion-icon>
                 <ion-label>
                   Route Planner
                 </ion-label>
@@ -40,7 +40,7 @@
 
             @if (enabledFeatures.includes('FAVOURITES')) {
               <ion-item (click)="journeys()" aria-label="Favourites" id="main-menu-favourites">
-                <ion-icon slot="start" name="map"></ion-icon>
+                <ion-icon slot="start" name="heart-outline"></ion-icon>
                 <ion-label>
                   Favourites
                 </ion-label>

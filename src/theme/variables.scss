@@ -1,0 +1,91 @@
+// Shared Open Charge Map design tokens. System fonts keep the app fast offline.
+:root, :root.ios, :root.md {
+  --ion-font-family: 'Inter', 'Aptos', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ion-color-primary: #08785d;
+  --ion-color-primary-rgb: 8, 120, 93;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #076a52;
+  --ion-color-primary-tint: #21866d;
+  --ion-color-secondary: #256c86;
+  --ion-color-secondary-rgb: 37, 108, 134;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #215f76;
+  --ion-color-secondary-tint: #3b7b92;
+  --ion-color-success: #08785d;
+  --ion-color-success-rgb: 8, 120, 93;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #076a52;
+  --ion-color-success-tint: #21866d;
+  --ion-color-medium: #63746f;
+  --ion-color-medium-rgb: 99, 116, 111;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #576662;
+  --ion-color-medium-tint: #73827d;
+  --ion-color-light: #edf3f0;
+  --ion-color-light-rgb: 237, 243, 240;
+  --ion-color-light-contrast: #18332c;
+  --ion-color-light-contrast-rgb: 24, 51, 44;
+  --ion-color-light-shade: #d1d6d3;
+  --ion-color-light-tint: #eff4f2;
+  --ion-background-color: #f3f6f4;
+  --ion-background-color-rgb: 243, 246, 244;
+  --ion-text-color: #18332c;
+  --ion-text-color-rgb: 24, 51, 44;
+  --ion-toolbar-background: #ffffff;
+  --ion-toolbar-color: #18332c;
+  --ion-card-background: #ffffff;
+  --ion-item-background: #ffffff;
+  --ion-border-color: #dce5e0;
+  --ocm-surface: #ffffff;
+  --ocm-surface-soft: #edf3f0;
+  --ocm-muted: #63746f;
+  --ocm-accent-soft: #e1f3eb;
+  --ocm-shadow: 0 8px 32px rgba(19, 49, 39, .1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root, :root.ios, :root.md {
+    --ion-color-primary: #69dfb5;
+    --ion-color-primary-rgb: 105, 223, 181;
+    --ion-color-primary-contrast: #102c23;
+    --ion-color-primary-contrast-rgb: 16, 44, 35;
+    --ion-color-primary-shade: #5cc49f;
+    --ion-color-primary-tint: #78e2bc;
+    --ion-color-success: #69dfb5;
+    --ion-color-success-rgb: 105, 223, 181;
+    --ion-color-success-contrast: #102c23;
+    --ion-color-success-contrast-rgb: 16, 44, 35;
+    --ion-color-success-shade: #5cc49f;
+    --ion-color-success-tint: #78e2bc;
+    --ion-color-medium: #a2b4ac;
+    --ion-color-medium-rgb: 162, 180, 172;
+    --ion-color-medium-contrast: #102c23;
+    --ion-color-medium-contrast-rgb: 16, 44, 35;
+    --ion-color-medium-shade: #8f9e97;
+    --ion-color-medium-tint: #abbbb4;
+    --ion-color-light: #243b33;
+    --ion-color-light-rgb: 36, 59, 51;
+    --ion-color-light-contrast: #edf5f0;
+    --ion-color-light-contrast-rgb: 237, 245, 240;
+    --ion-color-light-shade: #20342d;
+    --ion-color-light-tint: #3a4f47;
+    --ion-background-color: #101c18;
+    --ion-background-color-rgb: 16, 28, 24;
+    --ion-text-color: #edf5f0;
+    --ion-text-color-rgb: 237, 245, 240;
+    --ion-toolbar-background: #192a23;
+    --ion-toolbar-color: #edf5f0;
+    --ion-card-background: #192a23;
+    --ion-item-background: #192a23;
+    --ion-border-color: #30463c;
+    --ocm-surface: #192a23;
+    --ocm-surface-soft: #22372d;
+    --ocm-muted: #a2b4ac;
+    --ocm-accent-soft: #203e31;
+    --ocm-shadow: 0 8px 32px rgba(0, 0, 0, .24);
+  }
+}

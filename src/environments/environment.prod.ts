@@ -7,7 +7,7 @@ export const environment = {
   analyticsId: '',
   googleMapsKey: '',
   mapBoxToken: '',
-  mapTilerToken: '',
+  mapTilerToken: '69juSzDGh9p0kOKjAlcN',
   mapKitToken: '',
   enableStaticMaps: false,
   defaultMapProvider:  MappingAPI.MAPLIBRE, // 1: GM native 4: MapBox // 5:MappingAPI.MAPKIT_JS  //6: mapbox GL with Maptiler,

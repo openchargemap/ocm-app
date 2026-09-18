@@ -18,6 +18,12 @@ export class PoiListComponent implements OnInit {
   enableEditOption: boolean = false;
 
   @Input()
+  enableSelection = false;
+
+  @Output()
+  public onSelect = new EventEmitter<ExtendedPOIDetails>();
+
+  @Input()
   poiList: Array<ExtendedPOIDetails> = [];
 
   @Output()
@@ -30,6 +36,14 @@ export class PoiListComponent implements OnInit {
 
   ngOnInit() { }
 
+  selectPOI(poi: ExtendedPOIDetails) {
+    if (this.enableSelection) { this.onSelect.emit(poi); }
+  }
+
+  getMaxPower(poi: ExtendedPOIDetails): number {
+    return Math.max(0, ...(poi.Connections || []).map(c => c.PowerKW || 0));
+  }
+
   onCopyCommand(poi) {
     // emit copy command
     this.onCopy.emit(poi);
@@ -41,13 +55,7 @@ export class PoiListComponent implements OnInit {
   }
 
   getFormattedAddress(poi: ExtendedPOIDetails): string {
-    let address = "";
-    if (poi.AddressInfo.Title != poi.AddressInfo.AddressLine1) {
-      address += poi.AddressInfo.Title;
-    } else {
-      address += poi.AddressInfo.Town;
-    }
-    return address;
+    return [poi.AddressInfo.AddressLine1, poi.AddressInfo.Town].filter(Boolean).join(', ');
   }
 
   getFormattedConnectorList(poi: ExtendedPOIDetails): string {

@@ -1,0 +1,103 @@
+@if (searchSettings.HasActiveFilters === true) {
+  <p class="active-filters-note" danger>
+    <ion-icon name="alert"></ion-icon> One or more filters are currently being applied.
+    <ion-button size="small" color="light" (click)="clearFilters()" aria-label="Clear all active filters"
+      [id]="idPrefix + '-clear-filters-button'">
+      <ion-icon slot="start" name="close"></ion-icon>
+      <ion-label>Clear</ion-label>
+    </ion-button>
+  </p>
+}
+
+<ion-list [id]="idPrefix + '-list'">
+  @if (isCountryFilterFeatureEnabled) {
+    <ion-item [id]="idPrefix + '-country-filter-item'">
+      <ion-select [label]="'ocm.search.countries' | translate" [(ngModel)]="searchSettings.FilterOptionsByCountryId"
+        multiple="false" cancelText="Cancel" okText="OK" (ionChange)="onCountryChange()" placeholder="All"
+        aria-label="Country filter" [id]="idPrefix + '-country-filter-select'">
+        <ion-select-option [value]="null">(All Countries)</ion-select-option>
+        @for (item of countries; track item) {
+          <ion-select-option [value]="item.ID">{{item.Title}}</ion-select-option>
+        }
+      </ion-select>
+    </ion-item>
+  }
+
+  <ion-item [id]="idPrefix + '-power-range-item'">
+    <ion-range label-placement="start" label="Power (kW)" dualKnobs="true" pin="true" [value]="powerRange"
+      (ionChange)="onPowerRangeChange($event)" [ticks]="false" [snaps]="false" [min]="0" [max]="maxPower"
+      aria-label="Power range filter" [id]="idPrefix + '-power-range'">
+      <ion-icon slot="start" size="small" name="flash">0</ion-icon>
+      <ion-icon slot="end" name="flash"></ion-icon>
+    </ion-range>
+  </ion-item>
+  <ion-item lines="none" [id]="idPrefix + '-power-inputs-item'">
+    <ion-input slot="start" type="number" label-placement="stacked" label="Min. kW" [(ngModel)]="powerRange.lower"
+      (ionChange)="onPowerInputChange()" min="0" [max]="powerRange.upper" aria-label="Minimum power in kilowatts"
+      [id]="idPrefix + '-min-power-input'"></ion-input>
+    <ion-input slot="end" type="number" label-placement="stacked" label="Max. kW" [(ngModel)]="powerRange.upper"
+      (ionChange)="onPowerInputChange()" [min]="powerRange.lower" [max]="maxPower" aria-label="Maximum power in kilowatts"
+      [id]="idPrefix + '-max-power-input'"></ion-input>
+  </ion-item>
+  <app-operator-lookup mode="multi" [operatorList]="searchSettings.OperatorList" aria-label="Network operator filter"
+    [id]="idPrefix + '-operator-lookup'" (operatorRemoved)="onOperatorRemoved($event)"
+    (operatorChanged)="onOperatorSelected($event)" [useFilteredOperators]="false"></app-operator-lookup>
+  <ion-item [id]="idPrefix + '-usage-type-item'">
+    <ion-select [label]="'ocm.search.usageTypes' | translate" [(ngModel)]="searchSettings.UsageTypeList"
+      multiple="true" cancelText="Cancel" okText="OK" placeholder="All" aria-label="Usage type filter"
+      (ionChange)="onUsageTypeChange()" [id]="idPrefix + '-usage-type-select'">
+      @for (item of usageTypes; track item) {
+        <ion-select-option [value]="item.ID">{{'ocm.reference.usageType.value_'+item.ID
+        | nullableTranslate:item}}</ion-select-option>
+      }
+    </ion-select>
+  </ion-item>
+
+  <ion-item [id]="idPrefix + '-status-type-item'">
+    <ion-select [label]="'ocm.search.operationalStatusTypes' | translate" [(ngModel)]="searchSettings.StatusTypeList"
+      multiple="true" cancelText="Cancel" okText="OK" placeholder="All" aria-label="Operational status filter"
+      (ionChange)="onStatusTypeChange()" [id]="idPrefix + '-status-type-select'">
+      @for (item of statusTypes; track item) {
+        <ion-select-option
+        [value]="item.ID">{{'ocm.reference.statusType.value_'+item.ID | nullableTranslate:item }}</ion-select-option>
+      }
+    </ion-select>
+  </ion-item>
+
+  <app-connection-type-lookup mode="multi" [connectionTypeList]="searchSettings.ConnectionTypeList"
+    [useFilteredConnectionTypes]="useFilteredOptions" (connectionTypeChanged)="onConnectionTypeSelected($event)"
+    (connectionTypeRemoved)="onConnectionTypeRemoved($event)" aria-label="Connection type filter"
+    [id]="idPrefix + '-connection-type-lookup'"></app-connection-type-lookup>
+  <ion-item [id]="idPrefix + '-has-media-item'">
+    <ion-select [label]="'ocm.search.photos' | translate" [(ngModel)]="searchSettings.HasMedia" multiple="false"
+      (ionChange)="onTriStateFilterChange()" cancelText="Cancel" okText="OK" aria-label="Photo filter"
+      [id]="idPrefix + '-has-media-select'">
+      @for (option of triStateFilterOptions; track option) {
+        <ion-select-option [value]="option.value">{{option.titleKey |
+        translate}}</ion-select-option>
+      }
+    </ion-select>
+  </ion-item>
+
+  <ion-item [id]="idPrefix + '-has-comment-item'">
+    <ion-select [label]="'ocm.search.comments' | translate" [(ngModel)]="searchSettings.HasComment" multiple="false"
+      (ionChange)="onTriStateFilterChange()" cancelText="Cancel" okText="OK" aria-label="Comment filter"
+      [id]="idPrefix + '-has-comment-select'">
+      @for (option of triStateFilterOptions; track option) {
+        <ion-select-option [value]="option.value">{{option.titleKey |
+        translate}}</ion-select-option>
+      }
+    </ion-select>
+  </ion-item>
+
+  <ion-item lines="none" [id]="idPrefix + '-has-checkins-item'">
+    <ion-select [label]="'ocm.search.checkins' | translate" [(ngModel)]="searchSettings.HasCheckins" multiple="false"
+      (ionChange)="onTriStateFilterChange()" cancelText="Cancel" okText="OK" aria-label="Check-in filter"
+      [id]="idPrefix + '-has-checkins-select'">
+      @for (option of triStateFilterOptions; track option) {
+        <ion-select-option [value]="option.value">{{option.titleKey |
+        translate}}</ion-select-option>
+      }
+    </ion-select>
+  </ion-item>
+</ion-list>

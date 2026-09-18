@@ -1,49 +1,32 @@
-<ion-list>
-  @for (p of poiList; track p) {
-    <ion-item style="max-width:400px;">
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            {{p.AddressInfo.Title}}
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="3">
-            <p>
-              <img [src]="getIconForPOI(p)" style="width:24px"/>
-            </p>
-            <ion-note>
-              {{getFormattedDistance(p)}}
-            </ion-note>
-            @if (enableCopyOption) {
-              <ion-button size="small" (click)="onCopyCommand(p)">Copy</ion-button>
+<ion-list class="station-list">
+  @for (p of poiList; track p.ID) {
+    <div class="station-card">
+      <ion-item lines="none" [button]="enableSelection" [detail]="enableSelection" (click)="selectPOI(p)">
+        <ion-label class="ion-text-wrap">
+          <div class="station-topline">
+            <span class="station-network">{{p.OperatorInfo?.Title || ('ocm.details.sectionTitle' | translate)}}</span>
+            @if (getMaxPower(p); as power) { <span class="power-badge"><ion-icon name="flash" aria-hidden="true"></ion-icon>{{power}} kW</span> }
+          </div>
+          <h3>{{p.AddressInfo.Title}}</h3>
+          <p class="station-address">{{getFormattedAddress(p)}}</p>
+          @if (getFormattedConnectorList(p); as connectors) { <p class="station-connectors">{{connectors}}</p> }
+          <div class="station-meta">
+            @if (p.StatusType) {
+              <span class="station-status" [class.operational]="p.StatusType.IsOperational === true">
+                <span class="status-dot" aria-hidden="true"></span>{{p.StatusType.Title}}
+              </span>
             }
-            @if (enableEditOption) {
-              <ion-button size="small" (click)="onEditCommand(p)">Edit</ion-button>
-            }
-          </ion-col>
-          <ion-col>
-            <ion-row>
-              <ion-col>
-                <p>
-                  {{getFormattedAddress(p)}}
-                </p>
-                <ion-note>
-                  {{getFormattedConnectorList(p)}}
-                </ion-note>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                {{p.UsageType?.Title}}
-              </ion-col>
-              <ion-col>
-                {{p.OperatorInfo?.Title}}
-              </ion-col>
-            </ion-row>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
+            @if (p.AddressInfo.Distance != null) { <span>{{getFormattedDistance(p)}}</span> }
+          </div>
+          @if (p.UsageType?.Title) { <p class="station-usage">{{p.UsageType.Title}}</p> }
+        </ion-label>
+      </ion-item>
+      @if (enableCopyOption || enableEditOption) {
+        <div class="station-actions">
+          @if (enableCopyOption) { <ion-button size="small" fill="outline" (click)="onCopyCommand(p)">Copy</ion-button> }
+          @if (enableEditOption) { <ion-button size="small" fill="outline" (click)="onEditCommand(p)">Edit</ion-button> }
+        </div>
+      }
+    </div>
   }
 </ion-list>

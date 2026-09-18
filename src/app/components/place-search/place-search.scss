@@ -1,23 +1,32 @@
 .place-search {
   position: absolute;
   z-index: 1000;
-  width: min(100%, 420px);
+  top: 12px;
+  inset-inline-start: 24px;
+  width: min(calc(100% - 48px), 560px);
+  border: 1px solid var(--ion-border-color);
+  border-radius: 18px;
+  background: var(--ocm-surface);
+  box-shadow: var(--ocm-shadow);
+  overflow: hidden;
 }
-
-.place-search ion-list {
-  margin: 0;
-  max-height: min(70vh, 520px);
-  overflow-y: auto;
+.place-search--anchored {
+  /* Positioned via JS against the search input's on-screen rect (see place-search.ts
+     setupAnchoredPortal): ion-toolbar's shadow-DOM container clips overflowing/fixed
+     descendants regardless of z-index, so the anchored dropdown is re-parented next
+     to ion-header and placed with computed pixel coordinates instead of percentages. */
+  top: var(--place-search-anchor-top, calc(100% + 6px));
+  inset-inline-start: var(--place-search-anchor-left, 0);
+  width: var(--place-search-anchor-width, 100%);
 }
-
-.place-attribution {
-  font-size: 9px;
-  color: gainsboro;
-  max-width: 100%;
-}
-
-@media (min-width: 992px) {
-  .place-search {
-    min-width: 320px;
-  }
-}
+.place-search-progress { display: grid; min-height: 64px; place-items: center; }
+.place-search ion-list { margin: 0; padding: 8px; max-height: min(65vh, 520px); overflow-y: auto; }
+.place-search ion-item { --border-radius: 10px; }
+.place-search [role='option'].is-active ion-item { --background: var(--ocm-accent-soft); }
+.place-search ion-icon { color: var(--ion-color-primary); font-size: 20px; }
+.place-search ion-label strong { color: var(--ion-text-color); font-size: 14px; }
+.place-search ion-label p { color: var(--ion-text-color); font-size: 14px; line-height: 1.5; }
+.place-search ion-label strong + p { margin-top: 3px; color: var(--ocm-muted); font-size: 12px; }
+.place-attribution { padding: 8px 16px 10px; color: var(--ocm-muted); font-size: 10px; }
+@media (min-width: 1101px) { .place-search:not(.place-search--anchored) { inset-inline-start: 340px; } }
+@media (max-width: 700px) { .place-search:not(.place-search--anchored) { inset-inline-start: 12px; width: calc(100% - 24px); } }

@@ -6,6 +6,7 @@ import { NavParams, ModalController } from '@ionic/angular/lazy';
 
 @Component({
     templateUrl: 'favourite-editor.html',
+    styleUrls: ['favourite-editor.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })

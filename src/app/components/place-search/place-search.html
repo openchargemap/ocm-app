@@ -1,24 +1,31 @@
 @if (placeSearchActive) {
-  <div class="place-search">
+  <div class="place-search" [class.place-search--anchored]="anchoredToInput">
     @if (searchInProgress) {
-      <div>
+      <div class="place-search-progress" role="status" aria-live="polite" aria-label="Searching for places">
         <ion-spinner></ion-spinner>
       </div>
     }
-    <ion-list>
-      @for (item of placeList; track item) {
-        <ion-item (click)="placeSelected(item)">
-          <ion-avatar item-left>
-            <ion-icon name="locate"></ion-icon>
-          </ion-avatar>
-          <ion-label>
-            <p>{{item.Address}}</p>
-          </ion-label>
-        </ion-item>
-      }
-      <ion-item>
-        <p class="place-attribution" [innerHTML]="placeAttribution"></p>
-      </ion-item>
-    </ion-list>
+    <div [id]="resultsId" role="listbox" aria-label="Matching places">
+      <ion-list>
+        @for (item of placeList; track item; let index = $index) {
+          <div role="option" [id]="resultsId + '-option-' + index"
+            [attr.aria-selected]="activeResultIndex === index" [class.is-active]="activeResultIndex === index"
+            (mouseenter)="activeResultIndex = index">
+            <ion-item button detail="false" tabindex="-1" (click)="placeSelected(item)">
+              <ion-icon name="location-outline" slot="start" aria-hidden="true"></ion-icon>
+              <ion-label class="ion-text-wrap">
+                <strong>{{item.Title}}</strong>
+                @if (item.Address && item.Address !== item.Title) {
+                  <p>{{item.Address}}</p>
+                }
+              </ion-label>
+            </ion-item>
+          </div>
+        }
+      </ion-list>
+    </div>
+    @if (placeAttribution) {
+      <div class="place-attribution" [innerHTML]="placeAttribution"></div>
+    }
   </div>
 }

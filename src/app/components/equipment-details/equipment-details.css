@@ -1,10 +1,14 @@
-.connector-icon {
-    mask-size: 100%;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    mask-position: center;
-    width: 64px;
-    height: 64px;
-    background-color: currentColor;
-    mask-image: none;
-}
+.connector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr)); gap: 12px; }
+.connector-card { padding: 18px; border: 1px solid var(--ion-border-color); border-radius: 14px; background: var(--ocm-surface-soft); min-width: 0; }
+.connector-heading { display: flex; align-items: center; gap: 12px; }
+.connector-icon { mask-size: contain; mask-repeat: no-repeat; mask-position: center; width: 42px; height: 48px; flex-shrink: 0; background-color: var(--ion-color-primary); }
+.connector-title { flex: 1; min-width: 0; }
+.connector-title h3 { font-size: 14px; font-weight: 700; line-height: 1.4; color: var(--ion-text-color); margin: 0 0 4px; }
+.connector-title p { font-size: 12px; color: var(--ocm-muted); margin: 0; }
+.connector-power { display: flex; flex-direction: column; align-items: flex-end; color: var(--ion-color-primary); font-size: 25px; font-weight: 750; letter-spacing: -.8px; }
+.connector-power span { font-size: 11px; font-weight: 550; letter-spacing: 0; }
+.connector-specs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; border-top: 1px solid var(--ion-border-color); padding-top: 12px; margin-top: 14px; font-size: 11px; color: var(--ocm-muted); }
+.connector-specs span { display: inline-flex; align-items: center; gap: 5px; }
+.connector-specs .operational { color: var(--ion-color-primary); }
+.connector-note { color: var(--ocm-muted); font-size: 12px; line-height: 1.5; margin: 12px 0 0; overflow-wrap: anywhere; }
+.connector-actions { display: flex; justify-content: flex-end; margin-top: 12px; }

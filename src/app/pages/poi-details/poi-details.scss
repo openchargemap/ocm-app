@@ -12,3 +12,5 @@ ion-label {
 ion-title > small {
   color: var(--ion-color-favorite)
 }
+.close-details { top: calc(12px + var(--ion-safe-area-top, 0px)); right: 12px; }
+.close-details ion-fab-button { --background: var(--ocm-surface); --color: var(--ion-text-color); --box-shadow: var(--ocm-shadow); }

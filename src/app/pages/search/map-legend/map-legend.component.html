@@ -1,0 +1,21 @@
+<ion-button class="map-legend-toggle" fill="clear" size="small" (click)="expanded = !expanded"
+  [attr.aria-expanded]="expanded" aria-controls="map-legend-content"
+  [attr.aria-label]="(expanded ? 'ocm.explore.hideMapKey' : 'ocm.explore.showMapKey') | translate">
+  <ion-icon name="location-outline" slot="start" aria-hidden="true"></ion-icon>
+  <span class="label">{{ 'ocm.explore.mapKey' | translate }}</span>
+  <ion-icon [name]="expanded ? 'chevron-up-outline' : 'chevron-down-outline'" slot="end" aria-hidden="true"></ion-icon>
+</ion-button>
+@if (expanded) {
+  <div id="map-legend-content" class="map-legend-content">
+    @for (group of groups; track group.labelKey) {
+      <section class="map-legend-group">
+        <h3>{{ group.labelKey | translate }}</h3>
+        <ul>
+          @for (item of group.items; track item.labelKey) {
+            <li><img [src]="item.icon" alt="" width="24" height="35">{{ item.labelKey | translate }}</li>
+          }
+        </ul>
+      </section>
+    }
+  </div>
+}

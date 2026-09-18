@@ -10,7 +10,10 @@
         <ion-item>
           <ion-icon name="ionic" item-left></ion-icon>
           <ion-searchbar autocapitalize="on" [(ngModel)]="routeStart" (ionInput)="placeSearchRouteStart.getPlacesAutoComplete($event,'routeStart')" (ionCancel)="onPlaceSearchCancel($event)"
-          placeholder="Starting Point" [debounce]="500"></ion-searchbar>
+          (keydown)="placeSearchRouteStart.onSearchKeyDown($event)" placeholder="Starting Point" [debounce]="500"
+          aria-autocomplete="list" [attr.aria-controls]="placeSearchRouteStart.resultsId"
+          [attr.aria-expanded]="placeSearchRouteStart.placeSearchActive"
+          [attr.aria-activedescendant]="placeSearchRouteStart.activeDescendantId"></ion-searchbar>
         </ion-item>
       }
       @if (routeStartPlace!=null) {
@@ -24,7 +27,11 @@
         <ion-item>
           <ion-icon name="pin" item-left></ion-icon>
           <ion-searchbar autocapitalize="on" [(ngModel)]="routeDestination" (ionInput)="placeSearchRouteDestination.getPlacesAutoComplete($event,'routeDestination')"
-          (ionCancel)="onPlaceSearchCancel($event)" placeholder="Destination" [debounce]="500"></ion-searchbar>
+          (ionCancel)="onPlaceSearchCancel($event)" (keydown)="placeSearchRouteDestination.onSearchKeyDown($event)"
+          placeholder="Destination" [debounce]="500" aria-autocomplete="list"
+          [attr.aria-controls]="placeSearchRouteDestination.resultsId"
+          [attr.aria-expanded]="placeSearchRouteDestination.placeSearchActive"
+          [attr.aria-activedescendant]="placeSearchRouteDestination.activeDescendantId"></ion-searchbar>
         </ion-item>
       }
       @if (routeDestinationPlace!=null) {

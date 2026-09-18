@@ -1,67 +1,88 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>
-      {{isEditMode ? 'Edit Journey Waypoint' : 'Add to Journey'}}
-    </ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()" aria-label="Cancel">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{isEditMode ? 'Edit journey stop' : 'Add to journey'}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="journeys-page ion-padding">
-
-  <div class="banner">
-    <h1>{{poi.AddressInfo.Title}}</h1>
-    <p>{{poi.AddressInfo.AddressLine1}}</p>
-  </div>
-
-  <p>
-    {{isEditMode ? 'Edit this journey waypoint' : 'Add Charging Location as a Journey Waypoint'}}
-  </p>
-
-  <ion-item>
-    <ion-select label="Add to a Journey" label-placement="stacked" [(ngModel)]="selectedJourneyID" (ionChange)="onJourneyChange()">
-      <ion-select-option value="">Create a New Journey</ion-select-option>
-      @for (journey of journeyManager.journeys; track journey) {
-        <ion-select-option [value]="journey.ID">{{journey.Title}}</ion-select-option>
-      }
-    </ion-select>
-
-  </ion-item>
-  @if (selectedJourneyID) {
-    <ion-item>
-      <ion-select label="Journey Stage" label-placement="stacked" [(ngModel)]="selectedStageIndex">
-        <ion-select-option value="">Create a Journey Stage</ion-select-option>
-        @for (stage of journeyManager.getJourneyStages(selectedJourneyID); track stage; let i = $index) {
-          <ion-select-option [value]="i">{{stage.Title}}</ion-select-option>
+<ion-content class="favourite-editor-page">
+  <main class="editor-shell">
+    <header class="location-summary">
+      <div class="location-icon" aria-hidden="true">
+        <ion-icon name="location"></ion-icon>
+      </div>
+      <div>
+        <h1>{{poi.AddressInfo.Title}}</h1>
+        @if (poi.AddressInfo.AddressLine1 || poi.AddressInfo.Town) {
+          <p>
+            {{poi.AddressInfo.AddressLine1}}
+            @if (poi.AddressInfo.AddressLine1 && poi.AddressInfo.Town) { · }
+            {{poi.AddressInfo.Town}}
+          </p>
         }
-      </ion-select>
-    </ion-item>
-  }
-  @if (!selectedJourneyID) {
-    <ion-item>
-      <ion-input label="New Journey Name" label-placement="stacked" type="text" [(ngModel)]="newJourneyName"></ion-input>
-    </ion-item>
-  }
-  <ion-item>
-    <ion-input label="Name for this step of your journey" label-placement="stacked" type="text" [(ngModel)]="waypoint.Title"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-textarea label="Other Notes" label-placement="stacked" [(ngModel)]="waypoint.Notes"></ion-textarea>
-  </ion-item>
+      </div>
+    </header>
 
+    <section class="editor-form" aria-labelledby="journey-details-heading">
+      <div class="form-heading">
+        <h2 id="journey-details-heading">{{isEditMode ? 'Journey stop details' : 'Where should this stop go?'}}</h2>
+        <p>{{isEditMode ? 'Update the journey, stage or notes for this charging stop.' : 'Choose an existing journey or start a new one.'}}</p>
+      </div>
+
+      <ion-list lines="none">
+        <ion-item>
+          <ion-select label="Journey" label-placement="stacked" [(ngModel)]="selectedJourneyID" (ionChange)="onJourneyChange()">
+            <ion-select-option value="">Create a new journey</ion-select-option>
+            @for (journey of journeyManager.journeys; track journey.ID) {
+              <ion-select-option [value]="journey.ID">{{journey.Title}}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+
+        @if (selectedJourneyID) {
+          <ion-item>
+            <ion-select label="Journey stage" label-placement="stacked" [(ngModel)]="selectedStageIndex">
+              <ion-select-option value="">Create a new stage</ion-select-option>
+              @for (stage of journeyManager.getJourneyStages(selectedJourneyID); track stage; let i = $index) {
+                <ion-select-option [value]="i">{{stage.Title}}</ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
+        }
+
+        @if (!selectedJourneyID) {
+          <ion-item>
+            <ion-input label="Journey name" label-placement="stacked" type="text" [(ngModel)]="newJourneyName"
+              autocomplete="off" autocapitalize="sentences"></ion-input>
+          </ion-item>
+        }
+
+        <ion-item>
+          <ion-input label="Stop name" label-placement="stacked" type="text" [(ngModel)]="waypoint.Title"
+            autocomplete="off" autocapitalize="sentences"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-textarea label="Notes (optional)" label-placement="stacked" [(ngModel)]="waypoint.Notes"
+            autoGrow="true" rows="3" autocapitalize="sentences"></ion-textarea>
+        </ion-item>
+      </ion-list>
+    </section>
+  </main>
 </ion-content>
+
 <ion-footer>
   <ion-toolbar>
-    <ion-buttons slot="secondary">
-      <ion-button (click)="cancel()">
-        <ion-icon name="close" slot="start"></ion-icon>
-        Cancel
-
-      </ion-button>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()">Cancel</ion-button>
     </ion-buttons>
-    <ion-buttons slot="primary">
-      <ion-button (click)="save()" [disabled]="!canAdd">
-        {{isEditMode ? 'Save' : 'Add'}}
-        <ion-icon name="add" slot="end"></ion-icon>
+    <ion-buttons slot="end">
+      <ion-button (click)="save()" [disabled]="!canAdd" color="primary" fill="solid">
+        {{isEditMode ? 'Save changes' : 'Add stop'}}
       </ion-button>
     </ion-buttons>
   </ion-toolbar>

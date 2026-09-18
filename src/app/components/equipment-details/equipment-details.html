@@ -1,61 +1,32 @@
-<ion-grid>
-
+<div class="connector-grid">
   @for (i of item.Connections; track i) {
-    <ion-row>
-      <ion-col>
-        <ion-row>
-          <ion-col size="3">
-            <div class="connector-icon" [style.mask-image]="'url(' + getConnectorTypeIcon(i.ConnectionTypeID) +')'"></div>
-            @if (i.Quantity) {
-              <ion-badge color="primary">{{i.Quantity}} x</ion-badge>
-            }
-            <div class="info">{{i.StatusType?.Title}}</div>
-          </ion-col>
-          <ion-col>
-            <ion-row>
-              <ion-col>
-                <ion-note>
-                  <div>
-                    <strong title="{{i.ConnectionType?.FormalName}}">{{i.ConnectionType?.Title}}
-                    </strong>
-                  </div>
-                  @if (i.PowerKW) {
-                    <strong>{{i.PowerKW}} kW </strong>
-                  }
-                  @if (i.CurrentTypeID) {
-                    <div>{{i.CurrentType?.Title}}
-                    </div>
-                  }
-                </ion-note>
-                <ion-note>
-                  @if (i.Amps) {
-                    <span>{{i.Amps}}A </span>
-                  }
-                  @if (i.Voltage) {
-                    <span>{{i.Voltage}}V </span>
-                  }
-                </ion-note>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col class="info">{{i.Reference}}</ion-col>
-              <ion-col class="info">{{i.Comments}}</ion-col>
-            </ion-row>
-          </ion-col>
-          @if (enableEdit) {
-            <ion-col>
-              <ion-button (click)="editConnection(i)" size="small" color="secondary">
-                <ion-icon name="create" slot="icon-only"></ion-icon>
-              </ion-button>
-              <br>
-                <ion-button (click)="deleteConnection(i)" size="small" color="danger">
-                  <ion-icon name="trash" slot="icon-only"></ion-icon>
-                </ion-button>
-              </ion-col>
-            }
-          </ion-row>
-        </ion-col>
-      </ion-row>
-    }
-
-  </ion-grid>
+    <article class="connector-card">
+      <div class="connector-heading">
+        <div class="connector-icon" [style.mask-image]="'url(' + getConnectorTypeIcon(i.ConnectionTypeID) + ')'"></div>
+        <div class="connector-title">
+          <h3 [title]="i.ConnectionType?.FormalName || ''">{{i.ConnectionType?.Title || ('ocm.explore.unknownConnector' | translate)}}</h3>
+          @if (i.CurrentType) { <p>{{i.CurrentType.Title}}</p> }
+        </div>
+        @if (i.PowerKW) { <div class="connector-power">{{i.PowerKW}}<span>kW</span></div> }
+      </div>
+      <div class="connector-specs">
+        @if (i.Quantity) { <span><ion-icon name="layers-outline" aria-hidden="true"></ion-icon>{{ 'ocm.poi.connectorCount' | translate: {count: i.Quantity} }}</span> }
+        @if (i.StatusType) { <span [class.operational]="i.StatusType.IsOperational === true">{{i.StatusType.Title}}</span> }
+        @if (i.Amps) { <span>{{i.Amps}} A</span> }
+        @if (i.Voltage) { <span>{{i.Voltage}} V</span> }
+      </div>
+      @if (i.Reference) { <p class="connector-note">{{i.Reference}}</p> }
+      @if (i.Comments) { <p class="connector-note">{{i.Comments}}</p> }
+      @if (enableEdit) {
+        <div class="connector-actions">
+          <ion-button (click)="editConnection(i)" size="small" fill="outline" aria-label="Edit connector">
+            <ion-icon name="create-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+          <ion-button (click)="deleteConnection(i)" size="small" fill="clear" color="danger" aria-label="Delete connector">
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      }
+    </article>
+  }
+</div>
