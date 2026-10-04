@@ -22,7 +22,7 @@
     "@angular/localize": "22.1.7",
     "@angular/platform-browser": "22.1.7",
     "@angular/platform-browser-dynamic": "22.1.7",
-    "@angular/router": "22.1.7",
+    "@angular/router": "22.2.0",
     "@angular/service-worker": "22.1.7",
     "@auth0/angular-jwt": "5.2.0",
     "@capacitor/android": "^8.5.2",
